@@ -4,10 +4,6 @@
 	import Tab, { Label } from '@smui/tab';
 	import TabBar from '@smui/tab-bar';
 	import { onMount } from 'svelte';
-	import FloatWindow from './FloatWindow.svelte';
-	import MessageDisplay from './MessageDisplay.svelte'
-	import MessageEditor from './MessageEditor.svelte'
-	import MessageListEdit from './MessageListEditor.svelte'
 	//
 	import * as ipfs_profiles from './ipfs_profile_proxy.js'
 	import * as utils from './utilities.js'
@@ -143,7 +139,6 @@
 
 
 	let message_edit_list_name = ""
-	let message_edit_type = "message"
 	let message_edit_list = []
 	let message_edit_source = false
 
@@ -723,19 +718,7 @@
 // MESSAGES MESSAGES MESSAGES MESSAGES MESSAGES MESSAGES MESSAGES MESSAGES MESSAGES MESSAGES
 
 
-	function pop_editor() {
-		message_edit_from_contact = true
-		selected.answer_message = false
-		filtered_cc_list = filtered_cc_list.filter(ident => {
-			return ident.cid !== selected.cid
-		})
-		start_floating_window(1);
-	}
-
-	function show_subject() {
-
-	}
-
+	
 
 	// ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
 
@@ -751,35 +734,6 @@
 			}
 			i++
 		} while ( el )
-	}
-
- 
-	function get_selected_message(dom_el,parts_of_0) {
-		let found_message = false
-		if ( dom_el && (dom_el.id.length === 0) ) {
-			do {
-				dom_el = dom_el.parentNode;
-			} while ( dom_el && (dom_el.id.length === 0) )
-		}
-		if ( dom_el && (dom_el.id.length !== 0) ) {
-			let parts = dom_el.id.split('_')
-			if ( parts[0] === parts_of_0 ) {
-				if ( parts[1] === 'contact' ) {
-					let index = parseInt(parts[2])
-					message_edit_source = inbound_contact_messages
-					found_message = inbound_contact_messages[index]
-				} else if ( parts[1] === 'intro' ) {
-					let index = parseInt(parts[2])
-					message_edit_source = inbound_solicitation_messages
-					found_message = inbound_solicitation_messages[index]
-				} else if ( parts[1] === 'category' ) { // category
-					let index = parseInt(parts[2])
-					message_edit_source = processed_messages
-					found_message = processed_messages[index]
-				}
-			}
-		}
-		return found_message
 	}
 
 
@@ -817,65 +771,6 @@
 		}
 		//
 	}
-
-	// ---- check_box_block
-	// ---- 
-	function check_box_block(ev) {
-		ev.stopPropagation()
-		// enter or remove element into the operation list....
-		let dom_el = ev.target
-		let m = get_selected_message(dom_el,'doop-m')
-		if ( m ) {
-			if ( dom_el.checked ) {
-				message_edit_list.push(m.f_cid)
-			} else {
-				const index = message_edit_list.indexOf(m.f_cid);
-				message_edit_list = [...message_edit_list.slice(0, index), ...message_edit_list.slice(index + 1)];
-			}
-		}
-		console.log(message_edit_list)
-	}
-
-
-	function doops_messages(ev) {
-		//
-		message_edit_list_name = "Message Ops"
-		message_edit_type = "message"
-
-		//
-		start_floating_window(2);
-	}
-
-
-	function doops_processed(ev) {
-		message_edit_list_name = "Processed Message Ops"
-		message_edit_type = "message"
-		//
-		start_floating_window(2);
-	}
-
-	function doops_intros(ev) {
-		message_edit_list_name = "Introduction Ops"
-		message_edit_type = "introduction"
-		//
-		start_floating_window(2);
-	}
-
-	function full_message(ev) {
-		if ( ev ) {
-			let dom_el = ev.target;
-			let m = get_selected_message(dom_el,'m')
-			if ( m ) {
-				message_selected = m
-				let contact = find_contact_from_message(message_selected)
-				if ( contact ) {
-					contact.answer_message = `&lt;subject ${message_selected.subject}&gt;<br>` + message_selected.message
-				}
-				start_floating_window(0);
-			}
-		}
-	}
-
 
 	async function fetch_messages(identify) {
 		if ( identify ) {
@@ -940,16 +835,6 @@
 			cid_individuals_map = Object.assign(cid_individuals_map,indivs_map)
 		}
 		window.set_contact_map(cid_individuals_map)
-	}
-
-	function find_contact_from_message(message) {
-		if ( message === undefined ) return false
-		for ( let contact of individuals ) {
-			if ( (contact.name == message.name) && (message.user_cid === contact.cid) ) {
-				return contact
-			}
-		}
-		return false
 	}
 
 	async function check_contacts(message_list,clear) {
@@ -1040,23 +925,6 @@
 	}
 
 	let pre_clear_i = 0
-	let cleared_c_form = false
-	function clear_contact_form() {
-		pre_clear_i = i
-		i = -1
-		reset_inputs(false)
-		cleared_c_form = true
-	}
-
-	function harmonize_contact_form(ev) {
-		if ( i < 0 ) {
-			i = pre_clear_i
-			cleared_c_form = false
-		} else {
-			cleared_c_form = false
-		}
-	}
-
 
 	function exising_contact(contact) {
 		//
@@ -1199,36 +1067,6 @@
 		return false
 	}
 
-	async function add_contact() {
-		let contact = new Contact()
-		contact.set(c_name,c_DOB,c_place_of_origin,c_cool_public_info,c_business,c_public_key,c_signer_public_key,c_biometric_blob)
-		contact.extend_contact("cid",'')
-		contact.extend_contact("answer_message",'')
-		contact.extend_contact("received_keys",false)  // only comes in from the intro message...
-		contact.extend_contact("must_send_keys",true)  // only comes in from the intro message...
-		//
-		let user_data = contact.clear_identity()
-		//
-		let cid = await ipfs_profiles.fetch_contact_cid(user_data,true)
-		if ( cid_individuals_map[cid] === undefined ) {  // the user is already a contact
-			user_data.cid = cid
-			contact.extend_contact("cid",cid)
-			//
-			if ( individuals[0] === empty_identity.identity() ) {
-				individuals[0] = user_data
-			} else {
-				individuals.push(user_data);
-			}
-			//
-			i = individuals.length - 1;
-			//
-			cid_individuals_map[cid] = user_data
-			messages_update_contacts(cid,true)
-			//
-			await update_contact_page()
-		}
-		//
-	}
 
 	async function update_contact() {
 		selected.name = c_name;
@@ -1246,22 +1084,6 @@
 		selected.cid = cid
 		cid_individuals_map[cid] = user_data
 		messages_update_contacts(cid,true)
-		//
-		await update_contact_page()
-		//
-	}
-
-	async function remove_contact() {
-		if ( i < 0 ) return
-		// Remove selected person from the source array (people), not the filtered array
-		const index = individuals.indexOf(selected);
-		individuals = [...individuals.slice(0, index), ...individuals.slice(index + 1)];
-
-		i = Math.min(i, filteredIndviduals.length - 2);
-
-		let cid = selected.cid
-		delete cid_individuals_map[cid]
-		messages_update_contacts(cid,false)
 		//
 		await update_contact_page()
 		//
@@ -1311,264 +1133,6 @@
 
 
 	// ---- ---- ---- ---- ---- ---- ----
-
-// MANIFEST MANIFEST MANIFEST MANIFEST MANIFEST MANIFEST MANIFEST MANIFEST MANIFEST 
-
-	let cache_contact_form_vars = []
-
-
-	function expand_el(el) {
-		let str = ""
-		for ( let ky in el ) {
-			let el_it = `<li>
-					${ky} : ${JSON.stringify(el[ky])}
-					</li>`
-			str += el_it
-		}
-		let el_view = `<ul style="margin-left:4px">
-				${str}
-			</ul>`
-		return el_view
-	}
-
-	async function view_user_dir() {
-		if ( active_user ) {
-			let identify = active_identity
-			let dir_data = await ipfs_profiles.get_dir(identify,false)
-			let listed = ""
-			for ( let el of dir_data ) {
-				let el_it = `<li>
-					${expand_el(el)}
-					</li>`
-				listed += el_it
-			}
-			dir_view = `<ul style="margin-left:12px">
-				${listed}
-			</ul>`
-		}
-	}
-
-	function from_dir_data(file_name,dir_data) {
-		if ( Array.isArray(dir_data) ) {
-			for ( let field of dir_data ) {
-				if ( field.file === file_name ) {
-					return field
-				}
-			}
-		} else {
-			let field = dir_data[file_name]
-			return field
-		}
-		return false
-	}
-
-	async function view_user_contacts() {
-		if ( active_user ) {
-			let identify = active_identity
-			if ( typeof identify.files !== 'object' ) {
-				identify.files = {}
-			}
-			//
-			if ( (identify.files.contacts === undefined) || (typeof identify.files.contacts !== 'object') ) {
-				let dir_data = await ipfs_profiles.get_dir(identify,false)
-				identify.files.contacts = from_dir_data("contacts",dir_data)
-			}
-			//
-			if ( identify ) {
-				let contacts_cid = identify.files.contacts.cid
-				let c_data = await ipfs_profiles.fetch_contacts(contacts_cid,identify)
-				dir_view = JSON.stringify(c_data,null,4)
-				dir_view = `
-<pre>
-	<code>
-${dir_view}
-	</code>
-</pre>
-`
-			}
-		}
-	}
-
-	async function view_user_manifest() {
-		if ( active_user ) {
-			let identify = active_identity
-			if ( typeof identify.files !== 'object' ) {
-				identify.files = {}
-			}
-			if ( (identify.files.manifest === undefined) || (typeof identify.files.manifest !== 'object') ) {
-				let dir_data = await ipfs_profiles.get_dir(identify,false)
-				identify.files.manifest = from_dir_data("manifest",dir_data)
-			}
-			if ( identify ) {
-				let manifest_cid = identify.files.manifest.cid
-				let btype = business
-				let c_data = await ipfs_profiles.fetch_manifest(manifest_cid,identify,btype)
-				dir_view = JSON.stringify(c_data,false,4)
-				dir_view = `
-<pre>
-	<code>
-${dir_view}
-	</code>
-</pre>
-`
-			}
-		}
-	}
-
-
-	async function view_cid_json() {
-		if ( j_cid && j_cid.length ) {
-			let c_data = await ipfs_profiles.fetch_cid_json(j_cid)
-			if ( c_data ) {
-				dir_view = JSON.stringify(c_data,false,4)
-				dir_view = `
-<pre>
-	<code>
-${dir_view}
-	</code>
-</pre>`
-
-			} else {
-				dir_view = `
-<pre>
-	<code>
-Can't Fetch
-	</code>
-</pre>`
-			}
-		}
-	}
-
-
-	async function view_contact_form() {
-		let t_cid = man_cid
-		if ( t_cid ) {
-			let tmplt = await ipfs_profiles.get_contact_template(t_cid)	// we have to get the actaul data, what came in was {name,size,cid}
-			if ( tmplt ) {
-				dir_view = false
-				//
-				tmplt.cid = t_cid // 
-				manifest_selected_entry.html = utils.clear_char(tmplt.txt_full,'\n')
-			}
-
-		}
-	}
-
-
-	//
-	async function man_add_contact_form() {
-		//
-		manifest_obj.custom_contact_forms = manifest_contact_form_list
-		//
-		let identify = active_identity
-		if ( identify ) {
-			let act_cid = identify.cid
-			ipfs_profiles.dont_store_html(manifest_obj)
-			let update_cid = await ipfs_profiles.update_manifest_to_ipfs(identify,business,manifest_obj)
-			identify.files.manifest.cid = update_cid
-			await update_identity(identify)
-		}
-		//
-	}
-
-	async function man_prefer_contact_form() {
-		//
-		manifest_obj.custom_contact_forms = manifest_contact_form_list
-		manifest_obj.default_contact_form = man_cid
-		//
-		let identify = active_identity
-		if ( identify ) {
-			let act_cid = identify.cid
-			ipfs_profiles.dont_store_html(manifest_obj)
-			let update_cid = await ipfs_profiles.update_manifest_to_ipfs(identify,business,manifest_obj)
-			identify.files.manifest.cid = update_cid
-			await update_identity(identify)
-		}
-		//
-	}
-
-	async function reset_man_cid(evt) {
-		//
-		let paste_cid = evt.clipboardData.getData('text/plain')
-		//
-		let a_contact_form = {
-			"info" :  "",
-			"cid" : paste_cid,
-			"wrapped_key" : "",
-			"html" : ""
-		}
-		//
-		let tmplt = await ipfs_profiles.get_contact_template(paste_cid)	// we have to get the actaul data, what came in was {name,size,cid}
-		//
-		if ( tmplt ) {
-			tmplt.cid = paste_cid //
-			a_contact_form.info = tmplt.title
-			a_contact_form.html = tmplt.txt_full
-			//
-			man_sel_not_customized = true
-			cache_contact_form_vars = tmplt.var_map
-					//
-			manifest_contact_form_list = manifest_contact_form_list.concat(a_contact_form);
-			manifest_index = manifest_contact_form_list.length - 1;
-		}
-		//
-	}
-
-	async function man_update_contact_form() {
-		//
-		// open up some controls for populating vars, creating security on-offs, etc.
-		//
-		manifest_selected_entry.info = man_title;
-		manifest_selected_entry.cid = man_cid;
-		manifest_selected_entry.wrapped_key = man_wrapped_key;
-		manifest_selected_entry.html = man_html;
-		//
-		let identify = active_identity
-		if ( identify ) {
-			let act_cid = identify.cid
-			ipfs_profiles.dont_store_html(manifest_obj)
-			let update_cid = await ipfs_profiles.update_manifest_to_ipfs(identify,business,manifest_obj)
-			identify.files.manifest.cid = update_cid
-			await update_identity(identify)
-		}
-		//
-	}
-
-	async function man_remove_contact_form() {
-		// Remove selected person from the source array (people), not the filtered array
-		const index = manifest_contact_form_list.indexOf(manifest_selected_entry);
-		manifest_contact_form_list = [...manifest_contact_form_list.slice(0, index), ...manifest_contact_form_list.slice(index + 1)];
-		manifest_index = Math.min(manifest_index, filtered_manifest_contact_form_list.length - 2);
-		//
-		manifest_obj.custom_contact_forms = manifest_contact_form_list
-		//
-		let identify = active_identity
-		if ( identify ) {
-			let act_cid = identify.cid
-			ipfs_profiles.dont_store_html(manifest_obj)
-			let update_cid = await ipfs_profiles.update_manifest_to_ipfs(identify,business,manifest_obj)
-			identify.files.manifest.cid = update_cid
-			await update_identity(identify)
-		}
-		//
-	}
-
-/*
-{
-	"default_contact_form":false,
-	"custom_contact_forms": {
-		"default_clear_contact_cid" : {
-			"encrypted" :false,
-			"preference"  :1,
-			"wrapped_key" :false,
-			"info" : "default contact form : service provision "
-		}
-	},
-	"sorted_cids":[false],
-	"max_preference":1,
-	"op_history":[]
-}
-*/
 
 	async function fetch_manifest(identify) {
 		if ( identify && identify.files ) {
@@ -2032,13 +1596,6 @@ Can't Fetch
 		color:navy;
 	}
 
-	.processed-category {
-		font-weight: bold;
-		color:rgb(22, 63, 63);
-		font-size:larger;
-		text-transform:capitalize;
-	}
-
 	.cid-grabber {
 		font-weight:bolder;
 		color:navy;
@@ -2050,13 +1607,18 @@ Can't Fetch
 		font-style: oblique;
 	}
 
+	.instructor {
+		padding: 3px;
+		margin-bottom: 4px;
+	}
+
 </style>
 
 <div>
 	<!--
 	  Note: tabs must be unique. (They cannot === each other.)
 	-->
-	<TabBar tabs={['Identify', 'User', 'Messages', 'Introductions', 'Processed', 'Contacts', 'Manifest', 'About Us']} let:tab bind:active>
+	<TabBar tabs={['Identify', 'User', 'About Us']} let:tab bind:active>
 	  <!-- Note: the `tab` property is required! -->
 	  <Tab {tab}>
 		<Label><span class={ (tab === active) ? "active-tab" : "plain-tab"}>{tab}</span></Label>
@@ -2081,28 +1643,20 @@ Can't Fetch
 		</div>
 		{:else}
 		<div class="splash-if-you-will" >
-			Please join us in using this way of sending messages.
+			Get started with your Intergalactic Identity.
 			<div>
 				Click on the <span>User</span> tab.
 			</div>
 		</div>
 		{/if}
 		<div class="front-page-explain">
-			Pro-mail is like e-mail. 
+			Make your identity to be kept within the browser. 
 			<br>
-			But, where e-mail is complicated, Pro-mail is simpler.
+			Get an Intergalactic identity for use in messaging and running web sessions.
 			<br>
-			And, where Pro-mail is more complicated, it's more fun.
+			Set up your personal URL and frame page.
 			<br>
-			No just more fun.
-			<br>
-			More secure
-			<br>
-			More customizable.
-			<br>
-			More Manageable
-			<br>
-			Easier to Filter and Maintain
+			Make use of a browser extension to translate your URL into a Web3 style domain.
 		</div>
 	</div>
   	{:else if (active === 'User')}
@@ -2140,7 +1694,7 @@ Can't Fetch
 			<div class="add-profile-div" style="text-align:center" >
 				{#if creation_to_do }
 					<div style = { green ? "background-color:rgba(245,255,250,0.9)" : "background-color:rgba(250,250,250,0.3)" } >
-						<button class="long_button" on:click={add_profile} disabled={creator_disabled}>Create my contact profile.</button>
+						<button class="long_button" on:click={add_profile} disabled={creator_disabled}>Create my Intergalactic Identity.</button>
 					</div>
 				{:else}
 					<div style = { green ? "background-color:rgba(245,255,250,0.9)" : "background-color:rgba(250,250,250,0.3)" } >
@@ -2150,41 +1704,48 @@ Can't Fetch
 			</div>
 			<div class="nice_message">
 				<blockquote>
-				Enter your information above. This information will be used to make an identifier for sending and receiving messages.
-				When you click on the button, "Create my contact profile", your information will go to a gateway server. The gateway server
-				will use your information to make an ID, called a CID. This "User" tab, that you are looking at now, will store the CID for you as part of your identity.
-				It will also store other information that the server will create for you so that you may begin sending and receiving message between 
-				you and your contacts.
+					<div class="instructor" >
+						<b>Enter your information above</b> This information will be used to make your Intergalactic identity.
+					</div>
+					<div class="instructor" >
+						When you click on the button, <span style="font-weight:bolder;color:navy">Create my Intergalactic Identity</span>, your information will be stored within 
+						your browser under the domain of this page.
+						Then, processes on this page will create your identitfier. At the top level, 
+						you will have a <i><b>base64 hash</b></i> of an encryption of the data that you entered.
+					</div>
+					<div class="instructor" >
+						The hash will be associated with a JSON structure being stored in your browser within IndexedDB.
+						Within the local structure, you will have private and public keys. 
+					</div>
 				</blockquote>
 				<blockquote>
-				Your identity will be a structure containing directory and file information and public and private keys.
-				<b>This web app uses the structure to store your private information locally in the browser database.</b>
-				And, you will be able to download the idenity structure as a JSON obect at any time.
+				You will be able to download the identity structure as a JSON obect at any time.
 				<b>This JSON structure information will never be sent from the browser by these pages.</b> It will be stored in the bowser database 
 				as long as you want.
 				</blockquote>
 				<blockquote>
-				Use the buttons on the right side of the page to create or delete and identity. And, use the <b>Identity</b> buttons,
+				Use the buttons on the right side of the page to create or delete an identity. And, use the <b>Identity</b> buttons,
 				with the <i>down</i> triangle ▼ and the <i>up</i> triangle ▲ to download your JSON to disk and to upload your identity, respectively.
-				For exampe, you may download your identity to a thumb drive for safe keeping. Or you may upload your identity into another
-				browser or restore to a browser if it has been previously deleted.
+					<blockquote>
+					For exampe, you may download your identity to a thumb drive for safe keeping. Or you may upload your identity into another
+					browser or restore to a browser if it has been previously deleted.
+					</blockquote>
 				</blockquote>
 				<blockquote>
-				The information you enter above should be unique. For example, I know that my name is shared by at least three other people on the planet,
-				all of whom were born in the same year. But, they are from different towns or countries. So, I don't hesitate to enter my place of origin.
-				And, I am willing to share my real place of origin with anyone.
+				The information you enter above should be unique. 
+					<blockquote>
+					For example, I know that my name is shared by at least three other people on the planet,
+					all of whom were born in the same year. But, they are from different towns or countries. So, I don't hesitate to enter my place of origin.
+					Furthermore, I am willing to share my real place of origin with anyone.
+					</blockquote>
 				</blockquote>
 				<blockquote>
-				Some of the public information that you enter, not including keys, may be used later in an API link only if you have interests for which you would be willing to receive unsolicited mail. 
-				You may choose the groups or businesses that may publish to topics that you select. You may make selections at a later time. And, the process of managing
-				topics will be workable on topics pages separate from these message pages. Topic management will, hopefully, direct most 
-				advertisement messaging away from your personal and business messaging.
-				</blockquote>
-				<blockquote>
-				<span style="color:blue;">Note:</span> no information will be sent to any organization as a result of signing up.
-				All information, excluding private keys, and your personalized assets such as your contact pages, public and encrypted,
-				will be stored in the Interplanetary File System (IPFS). Most of the informaion kept in the IPFS will be encrypted, and will
-				only be accessibly by keys stored in your identity. (So, do download your idenity structure an keep it safe between sessions.)
+				<span style="color:blue;">Note:</span> no information will be sent to any organization as a result of entering information here.
+				All information will be stored locally except for the public information needed to generate your personal frame page. 
+				A single page will be generated for your personal frame page at subdomain of the governing URL of this page. 
+				Again, this information will be stored within the browser database on your device. 
+				You will access your peronal frame page by your peronal URL (such as an <span>of-this.world</span> url.)
+				The database record will only be accessible from this URL.
 				</blockquote>
 			</div>
 		</div>
@@ -2216,298 +1777,41 @@ Can't Fetch
 			</div>
 		</div>
 	</div>
-	{:else if (active === 'Messages')}
-		<div>Your Message History</div>
-		<div>
-			<div class="tableFixHead" >
-				<table style="width:100%">
-					<thead>
-						<tr>
-							<th  class="button-header"  style="width:5%">
-								<button class="header-button"  on:click={doops_messages}>Op</button>
-							</th><th style="width:20%">Date</th><th style="width:30%">Sender</th><th style="width:55%;text-align: left;">Subject</th>
-						</tr>
-					</thead>
-					{#if inbound_contact_messages.length }
-						{#each inbound_contact_messages as a_message, c_i }
-							<tr on:click={full_message} id="m_contact_{c_i}" class="element-poster"  on:mouseover="{show_subject}">
-								<td class="op-select"style="width:5%;text-align:center">
-									<input id="doop-m_contact_{c_i}" type="checkbox" on:click={check_box_block}  >
-								</td>
-								<td class="date"  style="width:20%;text-align:center">{a_message.date}</td>
-								<td class="sender"  style="width:30%">{a_message.name}</td>
-								<td class="subject" style="width:55%">{@html a_message.subject}</td>
-							</tr>
-						{/each}
-						{/if}
-				</table>
-			</div>
-		</div>
-	{:else if active === 'Introductions' }
-		<div>Introduction Messages</div>
-		<div>
-			<div class="tableFixHead" >
-				<table style="width:100%">
-					<thead>
-						<tr>
-							<th class="button-header"  style="width:5%">
-								<button class="header-button"  on:click={doops_intros}>Op</button>
-							</th><th style="width:20%">Date</th><th style="width:30%">Sender</th><th style="width:55%;text-align: left;">Subject</th>
-						</tr>
-					</thead>
-					{#if inbound_solicitation_messages.length }
-						{#each inbound_solicitation_messages as a_message, i_i }
-							<tr on:click={full_message} id="m_intro_{i_i}" class="element-poster"  on:mouseover="{show_subject}">
-								<td class="op-select"style="width:5%;text-align:center">
-									<input id="doop-m_intro_{i_i}" type="checkbox"on:click={check_box_block}  >
-								</td>
-								<td class="date"  style="width:20%;text-align:center">{a_message.date}</td>
-								<td class="sender"  style="width:30%">{a_message.name}</td>
-								<td class="subject" style="width:60%">{@html a_message.subject}</td>
-							</tr>
-						{/each}
-					{/if}
-				</table>
-			</div>
-		</div>
-		{:else if active === 'Processed' }
-		<div>
-			<span class="processed-category" >{processed_category}</span></div>
-		<div>
-			<div class="tableFixHead" >
-				<table style="width:100%">
-					<thead>
-						<tr>
-							<th class="button-header"  style="width:5%">
-								<button class="header-button"  on:click={doops_processed}>Op</button>
-							</th><th style="width:20%">Date</th><th style="width:30%">Sender</th><th style="width:55%;text-align: left;">Subject</th>
-						</tr>
-					</thead>
-					{#if processed_messages.length }
-						{#each processed_messages as a_message, p_i }
-							<tr on:click={full_message} id="m_category_{p_i}" class="element-poster"  on:mouseover="{show_subject}">
-								<td class="op-select"style="width:5%;text-align:center">
-									<input id="doop-m_category_{p_i}" type="checkbox" on:click={check_box_block}  >
-								</td>
-								<td class="date"  style="width:20%;text-align:center">{a_message.date}</td>
-								<td class="sender"  style="width:30%">{a_message.name}</td>
-								<td class="subject" style="width:60%">{@html a_message.subject}</td>
-							</tr>
-						{/each}
-					{/if}
-				</table>
-			</div>
-		</div>
-	{:else if (active === 'Contacts')}
-	<div class="items">
-		<div class="item" >
-			<input placeholder="filter prefix" bind:value={prefix}>
-			<select bind:value={i} size={5} >
-				{#each filteredIndviduals as individual, i}
-					<option value={i}  on:click={harmonize_contact_form} >{individual.name}</option>
-				{/each}
-			</select>
-			<div class='buttons'>
-				<button class='classy-small' on:click={add_contact} disabled={c_empty_fields}>add</button>
-				<button class='classy-small' on:click={update_contact} disabled={!c_name || !selected || cleared_c_form}>update</button>
-				<button class='classy-small' on:click={remove_contact} disabled={!selected || cleared_c_form}>delete</button>
-			</div>
-		</div>
-		<div class="item" style="border-top:darkslategrey solid 2px;">
-			<div class="top-of-contact">
-				<button class="long_button classy-small" on:click={clear_contact_form} >clear form</button>
-			</div>
-			<div class="inner_div" >
-				<label for="name"style="display:inline" >Name: </label>
-				<input id="name" bind:value={c_name} placeholder="Name" style="display:inline">
-				<input bind:checked={c_business}  type="checkbox" style="display:inline">
-				{#if c_business }
-					<span>Business</span>
-				{:else}
-					<span>Person</span>
-				{/if}
-			</div>
-			<div class="inner_div" >
-				{#if c_business }
-					<label for="DOB" style="display:inline" >Year of Inception: </label><input id="DOB" bind:value={c_DOB} placeholder="Year of Inception" style="display:inline" >
-				{:else}
-					<label for="DOB" style="display:inline" >DOB: </label><input id="DOB" bind:value={c_DOB} placeholder="Date of Birth" style="display:inline" >
-				{/if}
-			</div>
-			<div class="inner_div" >
-				{#if c_business }
-					<label  for="POO" style="display:inline" >Main Office: </label><input id="POO" bind:value={c_place_of_origin} placeholder="Main Office" style="display:inline" >
-				{:else}
-					<label for="POO" style="display:inline" >Place of Origin: </label><input id="POO" bind:value={c_place_of_origin} placeholder="Place of Origin" style="display:inline" >
-				{/if}
-			</div>
-			<div class="inner_div" >
-			<label for="self-text">Cool Public Info</label><br>
-			<textarea id="self-text" bind:value={c_cool_public_info} placeholder="Copy info given to you by your new contact" />
-			</div>
-			<div class="inner_div" >
-				<label for="CID" style="display:inline;font-size:smaller" >CID: </label><input id="CID" bind:value={c_cid} placeholder="cid" style="display:inline;width:70%" disabled >
-				<label for="PK" style="display:inline;font-size:smaller" >PK</label>
-				<input id="PK" type="checkbox" style="display:inline" checked={(c_public_key && (c_public_key.length > 0))} disabled >
-			</div>
-		</div>
-		<div class="item"  style="border-top:darkslategrey solid 2px;" >
-			<span class="top_instructions" >Compose a new message for:</span> {c_name}
-			<br><br>
-			<button class="long_button" on:click={pop_editor}>compose</button>
-		</div>
-	</div>
-	{:else if (active === 'Manifest') }
-	<div>
-		<blockquote>
-			The manifest is your list of custom contact forms. 
-			When you send a message to someone, you may send them a link to one of your contact forms that will best handle 
-			the way that your contact might respond to you. Use the tools here to manage your collection of contact forms.
-		</blockquote>
-		<div class="manifest-grid-container" >
-			<div class="manifester">
-				<div  style="display:block" >
-					<div style="display:inline;float:left">
-						<input placeholder="filter prefix" bind:value={man_prefix}>
-						<select bind:value={manifest_index} size={5}>
-							{#each filtered_manifest_contact_form_list as contact_item, manifest_index}
-								<option value={manifest_index}>{contact_item.info}</option>
-							{/each}
-						</select>
-					</div>
-					<div class='buttons' style="display:inline;float:clear" >
-						<button on:click={view_user_dir} >directory</button>
-						<button on:click={view_user_contacts} >contacts file</button>
-						<button on:click={view_user_manifest} >manifest file</button>
-						<button on:click={view_contact_form} >view contact form</button>
-						<button on:click={view_cid_json} >view json from cid</button>
-					</div>
-				</div>
-				<div class="inner_div" style="background-color:beige;border:solid 1px grey" >
-					<div style="height:fit-content" >
-						<div class="manifest-contact-entry-instruct" >
-							Use the contact form explorer "Contact Template Management" to find IPFS Links to enter in the field below.
-						</div>
-						<label for="man_cid"style="display:inline" >Manifest IPFS Link: </label>
-						<input id="man_cid" bind:value={man_cid} placeholder="cid" style="display:inline" on:paste={reset_man_cid} >
-					</div>
-					<div class='buttons'>
-						<button on:click={man_add_contact_form} disabled="{!man_title}">sync</button>
-						<button class={man_contact_is_default ?  "man-default-selected" : "man-default-not-selected"} on:click={man_prefer_contact_form} disabled="{!man_title}">
-							{#if man_contact_is_default }
-								default
-							{:else}
-								set default
-							{/if}
-						</button>
-						<button on:click={man_remove_contact_form} disabled="{!manifest_selected_entry}">delete</button>
-						<button on:click={man_update_contact_form} disabled="{!man_title || !manifest_selected_entry}">customize</button>
-					</div>	
-				</div>
-				<div class="inner_div" >
-					<div style="background-color:beige;border-bottom: darkgreen 1px solid;margin-bottom: 4px;">
-						<label for="preference"style="display:inline" >Max Preference All Forms: </label>
-						<input id="preference" bind:value={man_max_preference} placeholder="Preference Number" style="display:inline" disabled >	
-					</div>
-					<label for="name"style="display:inline" >Name: </label>
-					<input id="name" bind:value={man_title} placeholder="Name" style="display:inline" disabled={man_sel_not_customized}>
-					<br>
-					<label for="man_sel_pref" >Selected Form Preference: </label>
-					<input id="man_sel_pref" bind:value={man_preference} placeholder="1.0" style="display:inline" >
-					<div>
-						<label for="man_sel_pref" >Wrapped Key: </label><br>
-						<textarea id="man_contact_key" bind:value={man_wrapped_key} style="display:inline" disabled />
-						<label for="man_contact_enc" >encrypted</label>
-						<input id="man_contact_enc" type="checkbox" checked={man_encrypted ? true : false } style="display:inline" disabled />
-					</div>
-				
-				</div>
-			</div>
-			{#if (dir_view !== false) }
-				<div class="manifester">
-					{@html dir_view}
-				</div>
-			{:else if manifest_selected_form }
-				<div class="manifester">
-					{@html manifest_selected_form}
-				</div>
-			{:else}
-				<div class="manifester">
-					No form defined.
-				</div>
-			{/if}
-		</div>
-		<div style="height:fit-content" >
-			<label for="j_cid" style="display:inline" >CID For JSON File: </label>
-			<input id="j_cid" bind:value={j_cid} placeholder="cid" style="display:inline" >
-		</div>
 
-	</div>
 	{:else if (active === 'About Us') }
 	<div  class="team_message" >
 		<blockquote>
-		This service is free. It is a way for you to set up messaging with other people.
-		It is like email, but it offers an alernative ways of running your message process.
+		This service is free.
 		</blockquote>
 		<blockquote>
-		For one, there is no email service associated with this way of handling messages. 
-		All messages and interfaces for interacting with the processes are stored on the InterPlanetary File System.
+		Use this service to create an identity, and then, use it to create and optionally maintain a personal frame page initially accessible at unique subdomain 
+		of <b>of-this.world</b>
 		</blockquote>
 		<blockquote>
-		Your contact pages is stored there. This tool makes the contact page and stores it for you. Then when someone wants to send 
-		you a message, they access your contact page. The person who sends you a message will write a message on your page and click send.
-		The contact page you use will send a message service that is baked into the contact page.
+		That is three things made here:
+		<ol style="padding-left:4%">
+			<li><b>Intergalactic Identity</b> - with locally stored information</li>
+			<li><b>A web page</b> - stored on peer 2 peer Web3 style storage free for you to use, access, edit, move, etc.</li>
+			<li><b>A subdomain</b> - <b style="color:darkseagreen">your name</b>.of-this.world</li>
+		</ol>
 		</blockquote>
 		<blockquote>
-		This tool, makes and stores the kind of contact page you want to store. So, by selecting the type of contact page, you will also be selecting 
-		how you want to communicate. You also get to select your style of contact page. Maybe you want to have your picture on it, maybe not.
-		Depending on the community of contact page makers, you may find different styles. Each style is part of a template. And, you select the template.
+		The frame page makes your personal, human and private, web usage into one in which you command authorization in your relation to services.
 		</blockquote>
 		<blockquote>
-		<span style="font-weight: bold;">How to get the word out about your page?</span> You are probably used to handing out a business card with your email on it.
-		But, instead of that, you can hand out the link to your contact page. The actual link that you receive when you sign up might be hard to read. 
-		But, you can give out the contents of the fields that you entered in order to make your contact page. 
+		As the commander of services, you require the service to ask you for authorization.
+		</blockquote>
+		<blockquote>
+		<span style="font-weight: bold;">You require that businesses log into you. You don't have to log into them.</span> 
 		</blockquote>
 		<blockquote>
 		The reason we have asked for information you might tell anyone is that we are asking for information you want to share. This information should identify you,
-		but not give away secrets. When someone sends a message, we can find your contact page by reprocessing the same information.
+		but not give away secrets. Given the informtion, programs provided by this page will make an identity for you. This will be your distributable identity.
 		</blockquote>
 		<blockquote>
-		If you don't want to print you contact information on your business card, you can always just give out the hash code.
-		But, keep in mind, your contacts will have to type it.
-		</blockquote>
-		<blockquote>
-		Now, you can store contact information in your list of contacts. Each of these links will find the contact page.
-		</blockquote>
-		<blockquote>
-		Now about getting unsoliceted mail or blog feeds from organizations. For these you get a separate number. Messages being sent through a messaging service will use
-		an API link to send messages to the agreed upon topic (the topic you tell the organization that they can bug you about.) You can use your topic dashbaord to 
-		select the latest news from organization you care about. 
-		</blockquote>
-		<blockquote>
-		Messages from contacts will show up in your mail stream (promail). Find links to that on your management dashboard (also generated by when you sign up.)
-		To help you find your information when you go back to your browser, the information you enter on signing up will be stored in your broswer's database (indexedDb).
-		If you switch browsers, you can always enter your information again, and click "restore". You will also find an option to remove your information from your browser.
+		You may user your distributed identity in any website that will take one.
 		</blockquote>
 	</div>
 	{/if}
   </div>
-
-<FloatWindow title={message_selected.name} scale_size_array={all_window_scales} index={0} use_smoke={false}>
-	<MessageDisplay {...message_selected} on:message={handle_message} />
-</FloatWindow>
-
-<!---->
-{#if selected !== undefined }
-<FloatWindow title={selected.name} scale_size_array={all_window_scales} index={1} use_smoke={false}>
-	<MessageEditor {...selected} reply_to={message_selected} from_contact={message_edit_from_contact}
-									active_identity={active_identity}
-									cc_list={filtered_cc_list}
-									contact_form_list={filtered_manifest_contact_form_list}/>
-</FloatWindow>
-{/if}
-
-<FloatWindow title={message_edit_list_name} scale_size_array={all_window_scales} index={2} use_smoke={false}>
-	<MessageListEdit message_edit_type="Message Ops" active_identity={active_identity} on:message={handle_message} />
-</FloatWindow>
 

@@ -1,7 +1,7 @@
 {
-  "name": "interplanetary_contact",
+  "name": "intergalactic_contact",
   "version": "0.1.0",
-  "description": "An extra-mail system based on IPFS",
+  "description": "An UI for creating the ID and files of the Intergalactic user",
   "main": "index.js",
   "scripts": {
     "build": "rollup -c",
@@ -10,7 +10,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/copious-world/interplanetary_contact.git"
+    "url": "git+https://github.com/copious-world/intergalactic-content.git"
   },
   "keywords": [
     "extra-mail",
@@ -21,9 +21,9 @@
   "author": "Richard Leddy",
   "license": "GPL-3.0-or-later",
   "bugs": {
-    "url": "https://github.com/copious-world/interplanetary_contact/issues"
+    "url": "https://github.com/copious-world/intergalactic-content/issues"
   },
-  "homepage": "https://github.com/copious-world/interplanetary_contact#readme",
+  "homepage": "https://github.com/copious-world/intergalactic-content#readme",
   "devDependencies": {
     "@rollup/plugin-commonjs": "^16.0.0",
     "@rollup/plugin-node-resolve": "^10.0.0",

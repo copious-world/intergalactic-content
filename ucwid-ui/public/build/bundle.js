@@ -1,5 +1,678 @@
-var app=function(){"use strict";function t(){}function e(t,e){for(const n in e)t[n]=e[n];return t}function n(t){return t()}function i(){return Object.create(null)}function a(t){t.forEach(n)}function s(t){return"function"==typeof t}function o(t,e){return t!=t?e==e:t!==e||t&&"object"==typeof t||"function"==typeof t}function l(t,e,n,i){if(t){const a=c(t,e,n,i);return t[0](a)}}function c(t,n,i,a){return t[1]&&a?e(i.ctx.slice(),t[1](a(n))):i.ctx}function r(t,e,n,i,a,s,o){const l=function(t,e,n,i){if(t[2]&&i){const a=t[2](i(n));if(void 0===e.dirty)return a;if("object"==typeof a){const t=[],n=Math.max(e.dirty.length,a.length);for(let i=0;i<n;i+=1)t[i]=e.dirty[i]|a[i];return t}return e.dirty|a}return e.dirty}(e,i,a,s);if(l){const a=c(e,n,i,o);t.p(a,l)}}function u(t){const e={};for(const n in t)"$"!==n[0]&&(e[n]=t[n]);return e}function d(t,e){const n={};e=new Set(e);for(const i in t)e.has(i)||"$"===i[0]||(n[i]=t[i]);return n}function f(t){return null==t?"":t}function p(e){return e&&s(e.destroy)?e.destroy:t}function m(t,e){t.appendChild(e)}function h(t,e,n){t.insertBefore(e,n||null)}function v(t){t.parentNode.removeChild(t)}function b(t,e){for(let n=0;n<t.length;n+=1)t[n]&&t[n].d(e)}function g(t){return document.createElement(t)}function _(t){return document.createTextNode(t)}function y(){return _(" ")}function w(){return _("")}function $(t,e,n,i){return t.addEventListener(e,n,i),()=>t.removeEventListener(e,n,i)}function C(t,e,n){null==n?t.removeAttribute(e):t.getAttribute(e)!==n&&t.setAttribute(e,n)}function k(t,e){const n=Object.getOwnPropertyDescriptors(t.__proto__);for(const i in e)null==e[i]?t.removeAttribute(i):"style"===i?t.style.cssText=e[i]:"__value"===i?t.value=t[i]=e[i]:n[i]&&n[i].set?t[i]=e[i]:C(t,i,e[i])}function A(t,e){e=""+e,t.wholeText!==e&&(t.data=e)}function S(t,e){t.value=null==e?"":e}function x(t,e,n,i){t.style.setProperty(e,n,i?"important":"")}function T(t,e){for(let n=0;n<t.options.length;n+=1){const i=t.options[n];if(i.__value===e)return void(i.selected=!0)}}function O(t){const e=t.querySelector(":checked")||t.options[0];return e&&e.__value}class E{constructor(t=null){this.a=t,this.e=this.n=null}m(t,e,n=null){this.e||(this.e=g(e.nodeName),this.t=e,this.h(t)),this.i(n)}h(t){this.e.innerHTML=t,this.n=Array.from(this.e.childNodes)}i(t){for(let e=0;e<this.n.length;e+=1)h(this.t,this.n[e],t)}p(t){this.d(),this.h(t),this.i(this.a)}d(){this.n.forEach(v)}}let I;function R(t){I=t}function L(){if(!I)throw new Error("Function called outside component initialization");return I}function D(t){L().$$.on_mount.push(t)}function P(){const t=L();return(e,n)=>{const i=t.$$.callbacks[e];if(i){const a=function(t,e){const n=document.createEvent("CustomEvent");return n.initCustomEvent(t,!1,!1,e),n}(e,n);i.slice().forEach((e=>{e.call(t,a)}))}}}function M(t,e){L().$$.context.set(t,e)}function j(t){return L().$$.context.get(t)}const N=[],H=[],B=[],F=[],z=Promise.resolve();let V=!1;function W(t){B.push(t)}let K=!1;const U=new Set;function Y(){if(!K){K=!0;do{for(let t=0;t<N.length;t+=1){const e=N[t];R(e),q(e.$$)}for(R(null),N.length=0;H.length;)H.pop()();for(let t=0;t<B.length;t+=1){const e=B[t];U.has(e)||(U.add(e),e())}B.length=0}while(N.length);for(;F.length;)F.pop()();V=!1,K=!1,U.clear()}}function q(t){if(null!==t.fragment){t.update(),a(t.before_update);const e=t.dirty;t.dirty=[-1],t.fragment&&t.fragment.p(t.ctx,e),t.after_update.forEach(W)}}const G=new Set;let J;function X(){J={r:0,c:[],p:J}}function Z(){J.r||a(J.c),J=J.p}function Q(t,e){t&&t.i&&(G.delete(t),t.i(e))}function tt(t,e,n,i){if(t&&t.o){if(G.has(t))return;G.add(t),J.c.push((()=>{G.delete(t),i&&(n&&t.d(1),i())})),t.o(e)}}function et(t,e){tt(t,1,1,(()=>{e.delete(t.key)}))}function nt(t,e){const n={},i={},a={$$scope:1};let s=t.length;for(;s--;){const o=t[s],l=e[s];if(l){for(const t in o)t in l||(i[t]=1);for(const t in l)a[t]||(n[t]=l[t],a[t]=1);t[s]=l}else for(const t in o)a[t]=1}for(const t in i)t in n||(n[t]=void 0);return n}function it(t){return"object"==typeof t&&null!==t?t:{}}function at(t){t&&t.c()}function st(t,e,i,o){const{fragment:l,on_mount:c,on_destroy:r,after_update:u}=t.$$;l&&l.m(e,i),o||W((()=>{const e=c.map(n).filter(s);r?r.push(...e):a(e),t.$$.on_mount=[]})),u.forEach(W)}function ot(t,e){const n=t.$$;null!==n.fragment&&(a(n.on_destroy),n.fragment&&n.fragment.d(e),n.on_destroy=n.fragment=null,n.ctx=[])}function lt(t,e){-1===t.$$.dirty[0]&&(N.push(t),V||(V=!0,z.then(Y)),t.$$.dirty.fill(0)),t.$$.dirty[e/31|0]|=1<<e%31}function ct(e,n,s,o,l,c,r=[-1]){const u=I;R(e);const d=e.$$={fragment:null,ctx:null,props:c,update:t,not_equal:l,bound:i(),on_mount:[],on_destroy:[],on_disconnect:[],before_update:[],after_update:[],context:new Map(u?u.$$.context:n.context||[]),callbacks:i(),dirty:r,skip_bound:!1};let f=!1;if(d.ctx=s?s(e,n.props||{},((t,n,...i)=>{const a=i.length?i[0]:n;return d.ctx&&l(d.ctx[t],d.ctx[t]=a)&&(!d.skip_bound&&d.bound[t]&&d.bound[t](a),f&&lt(e,t)),n})):[],d.update(),f=!0,a(d.before_update),d.fragment=!!o&&o(d.ctx),n.target){if(n.hydrate){const t=function(t){return Array.from(t.childNodes)}(n.target);d.fragment&&d.fragment.l(t),t.forEach(v)}else d.fragment&&d.fragment.c();n.intro&&Q(e.$$.fragment),st(e,n.target,n.anchor,n.customElement),Y()}R(u)}class rt{$destroy(){ot(this,1),this.$destroy=t}$on(t,e){const n=this.$$.callbacks[t]||(this.$$.callbacks[t]=[]);return n.push(e),()=>{const t=n.indexOf(e);-1!==t&&n.splice(t,1)}}$set(t){var e;this.$$set&&(e=t,0!==Object.keys(e).length)&&(this.$$.skip_bound=!0,this.$$set(t),this.$$.skip_bound=!1)}}
-/*! *****************************************************************************
+
+(function(l, r) { if (l.getElementById('livereloadscript')) return; r = l.createElement('script'); r.async = 1; r.src = '//' + (window.location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=1'; r.id = 'livereloadscript'; l.getElementsByTagName('head')[0].appendChild(r) })(window.document);
+var app = (function () {
+    'use strict';
+
+    function noop() { }
+    function assign(tar, src) {
+        // @ts-ignore
+        for (const k in src)
+            tar[k] = src[k];
+        return tar;
+    }
+    function add_location(element, file, line, column, char) {
+        element.__svelte_meta = {
+            loc: { file, line, column, char }
+        };
+    }
+    function run(fn) {
+        return fn();
+    }
+    function blank_object() {
+        return Object.create(null);
+    }
+    function run_all(fns) {
+        fns.forEach(run);
+    }
+    function is_function(thing) {
+        return typeof thing === 'function';
+    }
+    function safe_not_equal(a, b) {
+        return a != a ? b == b : a !== b || ((a && typeof a === 'object') || typeof a === 'function');
+    }
+    function is_empty(obj) {
+        return Object.keys(obj).length === 0;
+    }
+    function create_slot(definition, ctx, $$scope, fn) {
+        if (definition) {
+            const slot_ctx = get_slot_context(definition, ctx, $$scope, fn);
+            return definition[0](slot_ctx);
+        }
+    }
+    function get_slot_context(definition, ctx, $$scope, fn) {
+        return definition[1] && fn
+            ? assign($$scope.ctx.slice(), definition[1](fn(ctx)))
+            : $$scope.ctx;
+    }
+    function get_slot_changes(definition, $$scope, dirty, fn) {
+        if (definition[2] && fn) {
+            const lets = definition[2](fn(dirty));
+            if ($$scope.dirty === undefined) {
+                return lets;
+            }
+            if (typeof lets === 'object') {
+                const merged = [];
+                const len = Math.max($$scope.dirty.length, lets.length);
+                for (let i = 0; i < len; i += 1) {
+                    merged[i] = $$scope.dirty[i] | lets[i];
+                }
+                return merged;
+            }
+            return $$scope.dirty | lets;
+        }
+        return $$scope.dirty;
+    }
+    function update_slot(slot, slot_definition, ctx, $$scope, dirty, get_slot_changes_fn, get_slot_context_fn) {
+        const slot_changes = get_slot_changes(slot_definition, $$scope, dirty, get_slot_changes_fn);
+        if (slot_changes) {
+            const slot_context = get_slot_context(slot_definition, ctx, $$scope, get_slot_context_fn);
+            slot.p(slot_context, slot_changes);
+        }
+    }
+    function exclude_internal_props(props) {
+        const result = {};
+        for (const k in props)
+            if (k[0] !== '$')
+                result[k] = props[k];
+        return result;
+    }
+    function compute_rest_props(props, keys) {
+        const rest = {};
+        keys = new Set(keys);
+        for (const k in props)
+            if (!keys.has(k) && k[0] !== '$')
+                rest[k] = props[k];
+        return rest;
+    }
+    function null_to_empty(value) {
+        return value == null ? '' : value;
+    }
+    function action_destroyer(action_result) {
+        return action_result && is_function(action_result.destroy) ? action_result.destroy : noop;
+    }
+
+    function append(target, node) {
+        target.appendChild(node);
+    }
+    function insert(target, node, anchor) {
+        target.insertBefore(node, anchor || null);
+    }
+    function detach(node) {
+        node.parentNode.removeChild(node);
+    }
+    function destroy_each(iterations, detaching) {
+        for (let i = 0; i < iterations.length; i += 1) {
+            if (iterations[i])
+                iterations[i].d(detaching);
+        }
+    }
+    function element(name) {
+        return document.createElement(name);
+    }
+    function text(data) {
+        return document.createTextNode(data);
+    }
+    function space() {
+        return text(' ');
+    }
+    function empty() {
+        return text('');
+    }
+    function listen(node, event, handler, options) {
+        node.addEventListener(event, handler, options);
+        return () => node.removeEventListener(event, handler, options);
+    }
+    function prevent_default(fn) {
+        return function (event) {
+            event.preventDefault();
+            // @ts-ignore
+            return fn.call(this, event);
+        };
+    }
+    function stop_propagation(fn) {
+        return function (event) {
+            event.stopPropagation();
+            // @ts-ignore
+            return fn.call(this, event);
+        };
+    }
+    function attr(node, attribute, value) {
+        if (value == null)
+            node.removeAttribute(attribute);
+        else if (node.getAttribute(attribute) !== value)
+            node.setAttribute(attribute, value);
+    }
+    function set_attributes(node, attributes) {
+        // @ts-ignore
+        const descriptors = Object.getOwnPropertyDescriptors(node.__proto__);
+        for (const key in attributes) {
+            if (attributes[key] == null) {
+                node.removeAttribute(key);
+            }
+            else if (key === 'style') {
+                node.style.cssText = attributes[key];
+            }
+            else if (key === '__value') {
+                node.value = node[key] = attributes[key];
+            }
+            else if (descriptors[key] && descriptors[key].set) {
+                node[key] = attributes[key];
+            }
+            else {
+                attr(node, key, attributes[key]);
+            }
+        }
+    }
+    function children(element) {
+        return Array.from(element.childNodes);
+    }
+    function set_input_value(input, value) {
+        input.value = value == null ? '' : value;
+    }
+    function set_style(node, key, value, important) {
+        node.style.setProperty(key, value, important ? 'important' : '');
+    }
+    function select_option(select, value) {
+        for (let i = 0; i < select.options.length; i += 1) {
+            const option = select.options[i];
+            if (option.__value === value) {
+                option.selected = true;
+                return;
+            }
+        }
+    }
+    function select_value(select) {
+        const selected_option = select.querySelector(':checked') || select.options[0];
+        return selected_option && selected_option.__value;
+    }
+    function custom_event(type, detail) {
+        const e = document.createEvent('CustomEvent');
+        e.initCustomEvent(type, false, false, detail);
+        return e;
+    }
+
+    let current_component;
+    function set_current_component(component) {
+        current_component = component;
+    }
+    function get_current_component() {
+        if (!current_component)
+            throw new Error('Function called outside component initialization');
+        return current_component;
+    }
+    function onMount(fn) {
+        get_current_component().$$.on_mount.push(fn);
+    }
+    function setContext(key, context) {
+        get_current_component().$$.context.set(key, context);
+    }
+    function getContext(key) {
+        return get_current_component().$$.context.get(key);
+    }
+    // TODO figure out if we still want to support
+    // shorthand events, or if we want to implement
+    // a real bubbling mechanism
+    function bubble(component, event) {
+        const callbacks = component.$$.callbacks[event.type];
+        if (callbacks) {
+            callbacks.slice().forEach(fn => fn(event));
+        }
+    }
+
+    const dirty_components = [];
+    const binding_callbacks = [];
+    const render_callbacks = [];
+    const flush_callbacks = [];
+    const resolved_promise = Promise.resolve();
+    let update_scheduled = false;
+    function schedule_update() {
+        if (!update_scheduled) {
+            update_scheduled = true;
+            resolved_promise.then(flush);
+        }
+    }
+    function add_render_callback(fn) {
+        render_callbacks.push(fn);
+    }
+    function add_flush_callback(fn) {
+        flush_callbacks.push(fn);
+    }
+    let flushing = false;
+    const seen_callbacks = new Set();
+    function flush() {
+        if (flushing)
+            return;
+        flushing = true;
+        do {
+            // first, call beforeUpdate functions
+            // and update components
+            for (let i = 0; i < dirty_components.length; i += 1) {
+                const component = dirty_components[i];
+                set_current_component(component);
+                update(component.$$);
+            }
+            set_current_component(null);
+            dirty_components.length = 0;
+            while (binding_callbacks.length)
+                binding_callbacks.pop()();
+            // then, once components are updated, call
+            // afterUpdate functions. This may cause
+            // subsequent updates...
+            for (let i = 0; i < render_callbacks.length; i += 1) {
+                const callback = render_callbacks[i];
+                if (!seen_callbacks.has(callback)) {
+                    // ...so guard against infinite loops
+                    seen_callbacks.add(callback);
+                    callback();
+                }
+            }
+            render_callbacks.length = 0;
+        } while (dirty_components.length);
+        while (flush_callbacks.length) {
+            flush_callbacks.pop()();
+        }
+        update_scheduled = false;
+        flushing = false;
+        seen_callbacks.clear();
+    }
+    function update($$) {
+        if ($$.fragment !== null) {
+            $$.update();
+            run_all($$.before_update);
+            const dirty = $$.dirty;
+            $$.dirty = [-1];
+            $$.fragment && $$.fragment.p($$.ctx, dirty);
+            $$.after_update.forEach(add_render_callback);
+        }
+    }
+    const outroing = new Set();
+    let outros;
+    function group_outros() {
+        outros = {
+            r: 0,
+            c: [],
+            p: outros // parent group
+        };
+    }
+    function check_outros() {
+        if (!outros.r) {
+            run_all(outros.c);
+        }
+        outros = outros.p;
+    }
+    function transition_in(block, local) {
+        if (block && block.i) {
+            outroing.delete(block);
+            block.i(local);
+        }
+    }
+    function transition_out(block, local, detach, callback) {
+        if (block && block.o) {
+            if (outroing.has(block))
+                return;
+            outroing.add(block);
+            outros.c.push(() => {
+                outroing.delete(block);
+                if (callback) {
+                    if (detach)
+                        block.d(1);
+                    callback();
+                }
+            });
+            block.o(local);
+        }
+    }
+
+    const globals = (typeof window !== 'undefined'
+        ? window
+        : typeof globalThis !== 'undefined'
+            ? globalThis
+            : global);
+    function outro_and_destroy_block(block, lookup) {
+        transition_out(block, 1, 1, () => {
+            lookup.delete(block.key);
+        });
+    }
+    function update_keyed_each(old_blocks, dirty, get_key, dynamic, ctx, list, lookup, node, destroy, create_each_block, next, get_context) {
+        let o = old_blocks.length;
+        let n = list.length;
+        let i = o;
+        const old_indexes = {};
+        while (i--)
+            old_indexes[old_blocks[i].key] = i;
+        const new_blocks = [];
+        const new_lookup = new Map();
+        const deltas = new Map();
+        i = n;
+        while (i--) {
+            const child_ctx = get_context(ctx, list, i);
+            const key = get_key(child_ctx);
+            let block = lookup.get(key);
+            if (!block) {
+                block = create_each_block(key, child_ctx);
+                block.c();
+            }
+            else if (dynamic) {
+                block.p(child_ctx, dirty);
+            }
+            new_lookup.set(key, new_blocks[i] = block);
+            if (key in old_indexes)
+                deltas.set(key, Math.abs(i - old_indexes[key]));
+        }
+        const will_move = new Set();
+        const did_move = new Set();
+        function insert(block) {
+            transition_in(block, 1);
+            block.m(node, next);
+            lookup.set(block.key, block);
+            next = block.first;
+            n--;
+        }
+        while (o && n) {
+            const new_block = new_blocks[n - 1];
+            const old_block = old_blocks[o - 1];
+            const new_key = new_block.key;
+            const old_key = old_block.key;
+            if (new_block === old_block) {
+                // do nothing
+                next = new_block.first;
+                o--;
+                n--;
+            }
+            else if (!new_lookup.has(old_key)) {
+                // remove old block
+                destroy(old_block, lookup);
+                o--;
+            }
+            else if (!lookup.has(new_key) || will_move.has(new_key)) {
+                insert(new_block);
+            }
+            else if (did_move.has(old_key)) {
+                o--;
+            }
+            else if (deltas.get(new_key) > deltas.get(old_key)) {
+                did_move.add(new_key);
+                insert(new_block);
+            }
+            else {
+                will_move.add(old_key);
+                o--;
+            }
+        }
+        while (o--) {
+            const old_block = old_blocks[o];
+            if (!new_lookup.has(old_block.key))
+                destroy(old_block, lookup);
+        }
+        while (n)
+            insert(new_blocks[n - 1]);
+        return new_blocks;
+    }
+    function validate_each_keys(ctx, list, get_context, get_key) {
+        const keys = new Set();
+        for (let i = 0; i < list.length; i++) {
+            const key = get_key(get_context(ctx, list, i));
+            if (keys.has(key)) {
+                throw new Error('Cannot have duplicate keys in a keyed each');
+            }
+            keys.add(key);
+        }
+    }
+
+    function get_spread_update(levels, updates) {
+        const update = {};
+        const to_null_out = {};
+        const accounted_for = { $$scope: 1 };
+        let i = levels.length;
+        while (i--) {
+            const o = levels[i];
+            const n = updates[i];
+            if (n) {
+                for (const key in o) {
+                    if (!(key in n))
+                        to_null_out[key] = 1;
+                }
+                for (const key in n) {
+                    if (!accounted_for[key]) {
+                        update[key] = n[key];
+                        accounted_for[key] = 1;
+                    }
+                }
+                levels[i] = n;
+            }
+            else {
+                for (const key in o) {
+                    accounted_for[key] = 1;
+                }
+            }
+        }
+        for (const key in to_null_out) {
+            if (!(key in update))
+                update[key] = undefined;
+        }
+        return update;
+    }
+    function get_spread_object(spread_props) {
+        return typeof spread_props === 'object' && spread_props !== null ? spread_props : {};
+    }
+
+    function bind(component, name, callback) {
+        const index = component.$$.props[name];
+        if (index !== undefined) {
+            component.$$.bound[index] = callback;
+            callback(component.$$.ctx[index]);
+        }
+    }
+    function create_component(block) {
+        block && block.c();
+    }
+    function mount_component(component, target, anchor, customElement) {
+        const { fragment, on_mount, on_destroy, after_update } = component.$$;
+        fragment && fragment.m(target, anchor);
+        if (!customElement) {
+            // onMount happens before the initial afterUpdate
+            add_render_callback(() => {
+                const new_on_destroy = on_mount.map(run).filter(is_function);
+                if (on_destroy) {
+                    on_destroy.push(...new_on_destroy);
+                }
+                else {
+                    // Edge case - component was destroyed immediately,
+                    // most likely as a result of a binding initialising
+                    run_all(new_on_destroy);
+                }
+                component.$$.on_mount = [];
+            });
+        }
+        after_update.forEach(add_render_callback);
+    }
+    function destroy_component(component, detaching) {
+        const $$ = component.$$;
+        if ($$.fragment !== null) {
+            run_all($$.on_destroy);
+            $$.fragment && $$.fragment.d(detaching);
+            // TODO null out other refs, including component.$$ (but need to
+            // preserve final state?)
+            $$.on_destroy = $$.fragment = null;
+            $$.ctx = [];
+        }
+    }
+    function make_dirty(component, i) {
+        if (component.$$.dirty[0] === -1) {
+            dirty_components.push(component);
+            schedule_update();
+            component.$$.dirty.fill(0);
+        }
+        component.$$.dirty[(i / 31) | 0] |= (1 << (i % 31));
+    }
+    function init(component, options, instance, create_fragment, not_equal, props, dirty = [-1]) {
+        const parent_component = current_component;
+        set_current_component(component);
+        const $$ = component.$$ = {
+            fragment: null,
+            ctx: null,
+            // state
+            props,
+            update: noop,
+            not_equal,
+            bound: blank_object(),
+            // lifecycle
+            on_mount: [],
+            on_destroy: [],
+            on_disconnect: [],
+            before_update: [],
+            after_update: [],
+            context: new Map(parent_component ? parent_component.$$.context : options.context || []),
+            // everything else
+            callbacks: blank_object(),
+            dirty,
+            skip_bound: false
+        };
+        let ready = false;
+        $$.ctx = instance
+            ? instance(component, options.props || {}, (i, ret, ...rest) => {
+                const value = rest.length ? rest[0] : ret;
+                if ($$.ctx && not_equal($$.ctx[i], $$.ctx[i] = value)) {
+                    if (!$$.skip_bound && $$.bound[i])
+                        $$.bound[i](value);
+                    if (ready)
+                        make_dirty(component, i);
+                }
+                return ret;
+            })
+            : [];
+        $$.update();
+        ready = true;
+        run_all($$.before_update);
+        // `false` as a special case of no DOM component
+        $$.fragment = create_fragment ? create_fragment($$.ctx) : false;
+        if (options.target) {
+            if (options.hydrate) {
+                const nodes = children(options.target);
+                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                $$.fragment && $$.fragment.l(nodes);
+                nodes.forEach(detach);
+            }
+            else {
+                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                $$.fragment && $$.fragment.c();
+            }
+            if (options.intro)
+                transition_in(component.$$.fragment);
+            mount_component(component, options.target, options.anchor, options.customElement);
+            flush();
+        }
+        set_current_component(parent_component);
+    }
+    /**
+     * Base class for Svelte components. Used when dev=false.
+     */
+    class SvelteComponent {
+        $destroy() {
+            destroy_component(this, 1);
+            this.$destroy = noop;
+        }
+        $on(type, callback) {
+            const callbacks = (this.$$.callbacks[type] || (this.$$.callbacks[type] = []));
+            callbacks.push(callback);
+            return () => {
+                const index = callbacks.indexOf(callback);
+                if (index !== -1)
+                    callbacks.splice(index, 1);
+            };
+        }
+        $set($$props) {
+            if (this.$$set && !is_empty($$props)) {
+                this.$$.skip_bound = true;
+                this.$$set($$props);
+                this.$$.skip_bound = false;
+            }
+        }
+    }
+
+    function dispatch_dev(type, detail) {
+        document.dispatchEvent(custom_event(type, Object.assign({ version: '3.37.0' }, detail)));
+    }
+    function append_dev(target, node) {
+        dispatch_dev('SvelteDOMInsert', { target, node });
+        append(target, node);
+    }
+    function insert_dev(target, node, anchor) {
+        dispatch_dev('SvelteDOMInsert', { target, node, anchor });
+        insert(target, node, anchor);
+    }
+    function detach_dev(node) {
+        dispatch_dev('SvelteDOMRemove', { node });
+        detach(node);
+    }
+    function listen_dev(node, event, handler, options, has_prevent_default, has_stop_propagation) {
+        const modifiers = options === true ? ['capture'] : options ? Array.from(Object.keys(options)) : [];
+        if (has_prevent_default)
+            modifiers.push('preventDefault');
+        if (has_stop_propagation)
+            modifiers.push('stopPropagation');
+        dispatch_dev('SvelteDOMAddEventListener', { node, event, handler, modifiers });
+        const dispose = listen(node, event, handler, options);
+        return () => {
+            dispatch_dev('SvelteDOMRemoveEventListener', { node, event, handler, modifiers });
+            dispose();
+        };
+    }
+    function attr_dev(node, attribute, value) {
+        attr(node, attribute, value);
+        if (value == null)
+            dispatch_dev('SvelteDOMRemoveAttribute', { node, attribute });
+        else
+            dispatch_dev('SvelteDOMSetAttribute', { node, attribute, value });
+    }
+    function prop_dev(node, property, value) {
+        node[property] = value;
+        dispatch_dev('SvelteDOMSetProperty', { node, property, value });
+    }
+    function set_data_dev(text, data) {
+        data = '' + data;
+        if (text.wholeText === data)
+            return;
+        dispatch_dev('SvelteDOMSetData', { node: text, data });
+        text.data = data;
+    }
+    function validate_each_argument(arg) {
+        if (typeof arg !== 'string' && !(arg && typeof arg === 'object' && 'length' in arg)) {
+            let msg = '{#each} only iterates over array-like objects.';
+            if (typeof Symbol === 'function' && arg && Symbol.iterator in arg) {
+                msg += ' You can use a spread to convert this iterable into an array.';
+            }
+            throw new Error(msg);
+        }
+    }
+    function validate_slots(name, slot, keys) {
+        for (const slot_key of Object.keys(slot)) {
+            if (!~keys.indexOf(slot_key)) {
+                console.warn(`<${name}> received an unexpected slot "${slot_key}".`);
+            }
+        }
+    }
+    /**
+     * Base class for Svelte components with some minor dev-enhancements. Used when dev=true.
+     */
+    class SvelteComponentDev extends SvelteComponent {
+        constructor(options) {
+            if (!options || (!options.target && !options.$$inline)) {
+                throw new Error("'target' is a required option");
+            }
+            super();
+        }
+        $destroy() {
+            super.$destroy();
+            this.$destroy = () => {
+                console.warn('Component was already destroyed'); // eslint-disable-line no-console
+            };
+        }
+        $capture_state() { }
+        $inject_state() { }
+    }
+
+    /*! *****************************************************************************
     Copyright (c) Microsoft Corporation.
 
     Permission to use, copy, modify, and/or distribute this software for any
@@ -12,8 +685,53 @@ var app=function(){"use strict";function t(){}function e(t,e){for(const n in e)t
     LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
     OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
     PERFORMANCE OF THIS SOFTWARE.
-    ***************************************************************************** */var ut=function(t,e){return(ut=Object.setPrototypeOf||{__proto__:[]}instanceof Array&&function(t,e){t.__proto__=e}||function(t,e){for(var n in e)Object.prototype.hasOwnProperty.call(e,n)&&(t[n]=e[n])})(t,e)};function dt(t,e){if("function"!=typeof e&&null!==e)throw new TypeError("Class extends value "+String(e)+" is not a constructor or null");function n(){this.constructor=t}ut(t,e),t.prototype=null===e?Object.create(e):(n.prototype=e.prototype,new n)}var ft=function(){return(ft=Object.assign||function(t){for(var e,n=1,i=arguments.length;n<i;n++)for(var a in e=arguments[n])Object.prototype.hasOwnProperty.call(e,a)&&(t[a]=e[a]);return t}).apply(this,arguments)};
-/**
+    ***************************************************************************** */
+    /* global Reflect, Promise */
+
+    var extendStatics = function(d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+
+    function __extends(d, b) {
+        if (typeof b !== "function" && b !== null)
+            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    }
+
+    var __assign = function() {
+        __assign = Object.assign || function __assign(t) {
+            for (var s, i = 1, n = arguments.length; i < n; i++) {
+                s = arguments[i];
+                for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
+            }
+            return t;
+        };
+        return __assign.apply(this, arguments);
+    };
+
+    function __read(o, n) {
+        var m = typeof Symbol === "function" && o[Symbol.iterator];
+        if (!m) return o;
+        var i = m.call(o), r, ar = [], e;
+        try {
+            while ((n === void 0 || n-- > 0) && !(r = i.next()).done) ar.push(r.value);
+        }
+        catch (error) { e = { error: error }; }
+        finally {
+            try {
+                if (r && !r.done && (m = i["return"])) m.call(i);
+            }
+            finally { if (e) throw e.error; }
+        }
+        return ar;
+    }
+
+    /**
      * @license
      * Copyright 2016 Google Inc.
      *
@@ -35,8 +753,58 @@ var app=function(){"use strict";function t(){}function e(t,e){for(const n in e)t
      * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
      * THE SOFTWARE.
      */
-var pt=function(){function t(t){void 0===t&&(t={}),this.adapter=t}return Object.defineProperty(t,"cssClasses",{get:function(){return{}},enumerable:!1,configurable:!0}),Object.defineProperty(t,"strings",{get:function(){return{}},enumerable:!1,configurable:!0}),Object.defineProperty(t,"numbers",{get:function(){return{}},enumerable:!1,configurable:!0}),Object.defineProperty(t,"defaultAdapter",{get:function(){return{}},enumerable:!1,configurable:!0}),t.prototype.init=function(){},t.prototype.destroy=function(){},t}();
-/**
+    var MDCFoundation = /** @class */ (function () {
+        function MDCFoundation(adapter) {
+            if (adapter === void 0) { adapter = {}; }
+            this.adapter = adapter;
+        }
+        Object.defineProperty(MDCFoundation, "cssClasses", {
+            get: function () {
+                // Classes extending MDCFoundation should implement this method to return an object which exports every
+                // CSS class the foundation class needs as a property. e.g. {ACTIVE: 'mdc-component--active'}
+                return {};
+            },
+            enumerable: false,
+            configurable: true
+        });
+        Object.defineProperty(MDCFoundation, "strings", {
+            get: function () {
+                // Classes extending MDCFoundation should implement this method to return an object which exports all
+                // semantic strings as constants. e.g. {ARIA_ROLE: 'tablist'}
+                return {};
+            },
+            enumerable: false,
+            configurable: true
+        });
+        Object.defineProperty(MDCFoundation, "numbers", {
+            get: function () {
+                // Classes extending MDCFoundation should implement this method to return an object which exports all
+                // of its semantic numbers as constants. e.g. {ANIMATION_DELAY_MS: 350}
+                return {};
+            },
+            enumerable: false,
+            configurable: true
+        });
+        Object.defineProperty(MDCFoundation, "defaultAdapter", {
+            get: function () {
+                // Classes extending MDCFoundation may choose to implement this getter in order to provide a convenient
+                // way of viewing the necessary methods of an adapter. In the future, this could also be used for adapter
+                // validation.
+                return {};
+            },
+            enumerable: false,
+            configurable: true
+        });
+        MDCFoundation.prototype.init = function () {
+            // Subclasses should override this method to perform initialization routines (registering events, etc.)
+        };
+        MDCFoundation.prototype.destroy = function () {
+            // Subclasses should override this method to perform de-initialization routines (de-registering events, etc.)
+        };
+        return MDCFoundation;
+    }());
+
+    /**
      * @license
      * Copyright 2019 Google Inc.
      *
@@ -57,8 +825,47 @@ var pt=function(){function t(t){void 0===t&&(t={}),this.adapter=t}return Object.
      * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
      * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
      * THE SOFTWARE.
-     */var mt=Object.freeze({__proto__:null,applyPassive:function(t){return void 0===t&&(t=window),!!function(t){void 0===t&&(t=window);var e=!1;try{var n={get passive(){return e=!0,!1}},i=function(){};t.document.addEventListener("test",i,n),t.document.removeEventListener("test",i,n)}catch(t){e=!1}return e}(t)&&{passive:!0}}});
-/**
+     */
+    /**
+     * Determine whether the current browser supports passive event listeners, and
+     * if so, use them.
+     */
+    function applyPassive$1(globalObj) {
+        if (globalObj === void 0) { globalObj = window; }
+        return supportsPassiveOption(globalObj) ?
+            { passive: true } :
+            false;
+    }
+    function supportsPassiveOption(globalObj) {
+        if (globalObj === void 0) { globalObj = window; }
+        // See
+        // https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
+        var passiveSupported = false;
+        try {
+            var options = {
+                // This function will be called when the browser
+                // attempts to access the passive property.
+                get passive() {
+                    passiveSupported = true;
+                    return false;
+                }
+            };
+            var handler = function () { };
+            globalObj.document.addEventListener('test', handler, options);
+            globalObj.document.removeEventListener('test', handler, options);
+        }
+        catch (err) {
+            passiveSupported = false;
+        }
+        return passiveSupported;
+    }
+
+    var events = /*#__PURE__*/Object.freeze({
+        __proto__: null,
+        applyPassive: applyPassive$1
+    });
+
+    /**
      * @license
      * Copyright 2018 Google Inc.
      *
@@ -79,8 +886,64 @@ var pt=function(){function t(t){void 0===t&&(t={}),this.adapter=t}return Object.
      * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
      * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
      * THE SOFTWARE.
-     */function ht(t,e){return(t.matches||t.webkitMatchesSelector||t.msMatchesSelector).call(t,e)}var vt,bt=Object.freeze({__proto__:null,closest:function(t,e){if(t.closest)return t.closest(e);for(var n=t;n;){if(ht(n,e))return n;n=n.parentElement}return null},matches:ht,estimateScrollWidth:function(t){var e=t;if(null!==e.offsetParent)return e.scrollWidth;var n=e.cloneNode(!0);n.style.setProperty("position","absolute"),n.style.setProperty("transform","translate(-9999px, -9999px)"),document.documentElement.appendChild(n);var i=n.scrollWidth;return document.documentElement.removeChild(n),i}}),gt={BG_FOCUSED:"mdc-ripple-upgraded--background-focused",FG_ACTIVATION:"mdc-ripple-upgraded--foreground-activation",FG_DEACTIVATION:"mdc-ripple-upgraded--foreground-deactivation",ROOT:"mdc-ripple-upgraded",UNBOUNDED:"mdc-ripple-upgraded--unbounded"},_t={VAR_FG_SCALE:"--mdc-ripple-fg-scale",VAR_FG_SIZE:"--mdc-ripple-fg-size",VAR_FG_TRANSLATE_END:"--mdc-ripple-fg-translate-end",VAR_FG_TRANSLATE_START:"--mdc-ripple-fg-translate-start",VAR_LEFT:"--mdc-ripple-left",VAR_TOP:"--mdc-ripple-top"},yt={DEACTIVATION_TIMEOUT_MS:225,FG_DEACTIVATION_MS:150,INITIAL_ORIGIN_SCALE:.6,PADDING:10,TAP_DELAY_MS:300};
-/**
+     */
+    /**
+     * @fileoverview A "ponyfill" is a polyfill that doesn't modify the global prototype chain.
+     * This makes ponyfills safer than traditional polyfills, especially for libraries like MDC.
+     */
+    function closest(element, selector) {
+        if (element.closest) {
+            return element.closest(selector);
+        }
+        var el = element;
+        while (el) {
+            if (matches$1(el, selector)) {
+                return el;
+            }
+            el = el.parentElement;
+        }
+        return null;
+    }
+    function matches$1(element, selector) {
+        var nativeMatches = element.matches
+            || element.webkitMatchesSelector
+            || element.msMatchesSelector;
+        return nativeMatches.call(element, selector);
+    }
+    /**
+     * Used to compute the estimated scroll width of elements. When an element is
+     * hidden due to display: none; being applied to a parent element, the width is
+     * returned as 0. However, the element will have a true width once no longer
+     * inside a display: none context. This method computes an estimated width when
+     * the element is hidden or returns the true width when the element is visble.
+     * @param {Element} element the element whose width to estimate
+     */
+    function estimateScrollWidth(element) {
+        // Check the offsetParent. If the element inherits display: none from any
+        // parent, the offsetParent property will be null (see
+        // https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/offsetParent).
+        // This check ensures we only clone the node when necessary.
+        var htmlEl = element;
+        if (htmlEl.offsetParent !== null) {
+            return htmlEl.scrollWidth;
+        }
+        var clone = htmlEl.cloneNode(true);
+        clone.style.setProperty('position', 'absolute');
+        clone.style.setProperty('transform', 'translate(-9999px, -9999px)');
+        document.documentElement.appendChild(clone);
+        var scrollWidth = clone.scrollWidth;
+        document.documentElement.removeChild(clone);
+        return scrollWidth;
+    }
+
+    var ponyfill = /*#__PURE__*/Object.freeze({
+        __proto__: null,
+        closest: closest,
+        matches: matches$1,
+        estimateScrollWidth: estimateScrollWidth
+    });
+
+    /**
      * @license
      * Copyright 2016 Google Inc.
      *
@@ -102,7 +965,84 @@ var pt=function(){function t(t){void 0===t&&(t={}),this.adapter=t}return Object.
      * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
      * THE SOFTWARE.
      */
-/**
+    var cssClasses$3 = {
+        // Ripple is a special case where the "root" component is really a "mixin" of sorts,
+        // given that it's an 'upgrade' to an existing component. That being said it is the root
+        // CSS class that all other CSS classes derive from.
+        BG_FOCUSED: 'mdc-ripple-upgraded--background-focused',
+        FG_ACTIVATION: 'mdc-ripple-upgraded--foreground-activation',
+        FG_DEACTIVATION: 'mdc-ripple-upgraded--foreground-deactivation',
+        ROOT: 'mdc-ripple-upgraded',
+        UNBOUNDED: 'mdc-ripple-upgraded--unbounded',
+    };
+    var strings$4 = {
+        VAR_FG_SCALE: '--mdc-ripple-fg-scale',
+        VAR_FG_SIZE: '--mdc-ripple-fg-size',
+        VAR_FG_TRANSLATE_END: '--mdc-ripple-fg-translate-end',
+        VAR_FG_TRANSLATE_START: '--mdc-ripple-fg-translate-start',
+        VAR_LEFT: '--mdc-ripple-left',
+        VAR_TOP: '--mdc-ripple-top',
+    };
+    var numbers$1 = {
+        DEACTIVATION_TIMEOUT_MS: 225,
+        FG_DEACTIVATION_MS: 150,
+        INITIAL_ORIGIN_SCALE: 0.6,
+        PADDING: 10,
+        TAP_DELAY_MS: 300, // Delay between touch and simulated mouse events on touch devices
+    };
+
+    /**
+     * Stores result from supportsCssVariables to avoid redundant processing to
+     * detect CSS custom variable support.
+     */
+    var supportsCssVariables_;
+    function supportsCssVariables(windowObj, forceRefresh) {
+        if (forceRefresh === void 0) { forceRefresh = false; }
+        var CSS = windowObj.CSS;
+        var supportsCssVars = supportsCssVariables_;
+        if (typeof supportsCssVariables_ === 'boolean' && !forceRefresh) {
+            return supportsCssVariables_;
+        }
+        var supportsFunctionPresent = CSS && typeof CSS.supports === 'function';
+        if (!supportsFunctionPresent) {
+            return false;
+        }
+        var explicitlySupportsCssVars = CSS.supports('--css-vars', 'yes');
+        // See: https://bugs.webkit.org/show_bug.cgi?id=154669
+        // See: README section on Safari
+        var weAreFeatureDetectingSafari10plus = (CSS.supports('(--css-vars: yes)') &&
+            CSS.supports('color', '#00000000'));
+        supportsCssVars =
+            explicitlySupportsCssVars || weAreFeatureDetectingSafari10plus;
+        if (!forceRefresh) {
+            supportsCssVariables_ = supportsCssVars;
+        }
+        return supportsCssVars;
+    }
+    function getNormalizedEventCoords(evt, pageOffset, clientRect) {
+        if (!evt) {
+            return { x: 0, y: 0 };
+        }
+        var x = pageOffset.x, y = pageOffset.y;
+        var documentX = x + clientRect.left;
+        var documentY = y + clientRect.top;
+        var normalizedX;
+        var normalizedY;
+        // Determine touch point relative to the ripple container.
+        if (evt.type === 'touchstart') {
+            var touchEvent = evt;
+            normalizedX = touchEvent.changedTouches[0].pageX - documentX;
+            normalizedY = touchEvent.changedTouches[0].pageY - documentY;
+        }
+        else {
+            var mouseEvent = evt;
+            normalizedX = mouseEvent.pageX - documentX;
+            normalizedY = mouseEvent.pageY - documentY;
+        }
+        return { x: normalizedX, y: normalizedY };
+    }
+
+    /**
      * @license
      * Copyright 2016 Google Inc.
      *
@@ -124,30 +1064,446 @@ var pt=function(){function t(t){void 0===t&&(t={}),this.adapter=t}return Object.
      * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
      * THE SOFTWARE.
      */
-var wt=["touchstart","pointerdown","mousedown","keydown"],$t=["touchend","pointerup","mouseup","contextmenu"],Ct=[],kt=function(t){function e(n){var i=t.call(this,ft(ft({},e.defaultAdapter),n))||this;return i.activationAnimationHasEnded_=!1,i.activationTimer_=0,i.fgDeactivationRemovalTimer_=0,i.fgScale_="0",i.frame_={width:0,height:0},i.initialSize_=0,i.layoutFrame_=0,i.maxRadius_=0,i.unboundedCoords_={left:0,top:0},i.activationState_=i.defaultActivationState_(),i.activationTimerCallback_=function(){i.activationAnimationHasEnded_=!0,i.runDeactivationUXLogicIfReady_()},i.activateHandler_=function(t){return i.activate_(t)},i.deactivateHandler_=function(){return i.deactivate_()},i.focusHandler_=function(){return i.handleFocus()},i.blurHandler_=function(){return i.handleBlur()},i.resizeHandler_=function(){return i.layout()},i}return dt(e,t),Object.defineProperty(e,"cssClasses",{get:function(){return gt},enumerable:!1,configurable:!0}),Object.defineProperty(e,"strings",{get:function(){return _t},enumerable:!1,configurable:!0}),Object.defineProperty(e,"numbers",{get:function(){return yt},enumerable:!1,configurable:!0}),Object.defineProperty(e,"defaultAdapter",{get:function(){return{addClass:function(){},browserSupportsCssVars:function(){return!0},computeBoundingRect:function(){return{top:0,right:0,bottom:0,left:0,width:0,height:0}},containsEventTarget:function(){return!0},deregisterDocumentInteractionHandler:function(){},deregisterInteractionHandler:function(){},deregisterResizeHandler:function(){},getWindowPageOffset:function(){return{x:0,y:0}},isSurfaceActive:function(){return!0},isSurfaceDisabled:function(){return!0},isUnbounded:function(){return!0},registerDocumentInteractionHandler:function(){},registerInteractionHandler:function(){},registerResizeHandler:function(){},removeClass:function(){},updateCssVariable:function(){}}},enumerable:!1,configurable:!0}),e.prototype.init=function(){var t=this,n=this.supportsPressRipple_();if(this.registerRootHandlers_(n),n){var i=e.cssClasses,a=i.ROOT,s=i.UNBOUNDED;requestAnimationFrame((function(){t.adapter.addClass(a),t.adapter.isUnbounded()&&(t.adapter.addClass(s),t.layoutInternal_())}))}},e.prototype.destroy=function(){var t=this;if(this.supportsPressRipple_()){this.activationTimer_&&(clearTimeout(this.activationTimer_),this.activationTimer_=0,this.adapter.removeClass(e.cssClasses.FG_ACTIVATION)),this.fgDeactivationRemovalTimer_&&(clearTimeout(this.fgDeactivationRemovalTimer_),this.fgDeactivationRemovalTimer_=0,this.adapter.removeClass(e.cssClasses.FG_DEACTIVATION));var n=e.cssClasses,i=n.ROOT,a=n.UNBOUNDED;requestAnimationFrame((function(){t.adapter.removeClass(i),t.adapter.removeClass(a),t.removeCssVars_()}))}this.deregisterRootHandlers_(),this.deregisterDeactivationHandlers_()},e.prototype.activate=function(t){this.activate_(t)},e.prototype.deactivate=function(){this.deactivate_()},e.prototype.layout=function(){var t=this;this.layoutFrame_&&cancelAnimationFrame(this.layoutFrame_),this.layoutFrame_=requestAnimationFrame((function(){t.layoutInternal_(),t.layoutFrame_=0}))},e.prototype.setUnbounded=function(t){var n=e.cssClasses.UNBOUNDED;t?this.adapter.addClass(n):this.adapter.removeClass(n)},e.prototype.handleFocus=function(){var t=this;requestAnimationFrame((function(){return t.adapter.addClass(e.cssClasses.BG_FOCUSED)}))},e.prototype.handleBlur=function(){var t=this;requestAnimationFrame((function(){return t.adapter.removeClass(e.cssClasses.BG_FOCUSED)}))},e.prototype.supportsPressRipple_=function(){return this.adapter.browserSupportsCssVars()},e.prototype.defaultActivationState_=function(){return{activationEvent:void 0,hasDeactivationUXRun:!1,isActivated:!1,isProgrammatic:!1,wasActivatedByPointer:!1,wasElementMadeActive:!1}},e.prototype.registerRootHandlers_=function(t){var e=this;t&&(wt.forEach((function(t){e.adapter.registerInteractionHandler(t,e.activateHandler_)})),this.adapter.isUnbounded()&&this.adapter.registerResizeHandler(this.resizeHandler_)),this.adapter.registerInteractionHandler("focus",this.focusHandler_),this.adapter.registerInteractionHandler("blur",this.blurHandler_)},e.prototype.registerDeactivationHandlers_=function(t){var e=this;"keydown"===t.type?this.adapter.registerInteractionHandler("keyup",this.deactivateHandler_):$t.forEach((function(t){e.adapter.registerDocumentInteractionHandler(t,e.deactivateHandler_)}))},e.prototype.deregisterRootHandlers_=function(){var t=this;wt.forEach((function(e){t.adapter.deregisterInteractionHandler(e,t.activateHandler_)})),this.adapter.deregisterInteractionHandler("focus",this.focusHandler_),this.adapter.deregisterInteractionHandler("blur",this.blurHandler_),this.adapter.isUnbounded()&&this.adapter.deregisterResizeHandler(this.resizeHandler_)},e.prototype.deregisterDeactivationHandlers_=function(){var t=this;this.adapter.deregisterInteractionHandler("keyup",this.deactivateHandler_),$t.forEach((function(e){t.adapter.deregisterDocumentInteractionHandler(e,t.deactivateHandler_)}))},e.prototype.removeCssVars_=function(){var t=this,n=e.strings;Object.keys(n).forEach((function(e){0===e.indexOf("VAR_")&&t.adapter.updateCssVariable(n[e],null)}))},e.prototype.activate_=function(t){var e=this;if(!this.adapter.isSurfaceDisabled()){var n=this.activationState_;if(!n.isActivated){var i=this.previousActivationEvent_;if(!(i&&void 0!==t&&i.type!==t.type))n.isActivated=!0,n.isProgrammatic=void 0===t,n.activationEvent=t,n.wasActivatedByPointer=!n.isProgrammatic&&(void 0!==t&&("mousedown"===t.type||"touchstart"===t.type||"pointerdown"===t.type)),void 0!==t&&Ct.length>0&&Ct.some((function(t){return e.adapter.containsEventTarget(t)}))?this.resetActivationState_():(void 0!==t&&(Ct.push(t.target),this.registerDeactivationHandlers_(t)),n.wasElementMadeActive=this.checkElementMadeActive_(t),n.wasElementMadeActive&&this.animateActivation_(),requestAnimationFrame((function(){Ct=[],n.wasElementMadeActive||void 0===t||" "!==t.key&&32!==t.keyCode||(n.wasElementMadeActive=e.checkElementMadeActive_(t),n.wasElementMadeActive&&e.animateActivation_()),n.wasElementMadeActive||(e.activationState_=e.defaultActivationState_())})))}}},e.prototype.checkElementMadeActive_=function(t){return void 0===t||"keydown"!==t.type||this.adapter.isSurfaceActive()},e.prototype.animateActivation_=function(){var t=this,n=e.strings,i=n.VAR_FG_TRANSLATE_START,a=n.VAR_FG_TRANSLATE_END,s=e.cssClasses,o=s.FG_DEACTIVATION,l=s.FG_ACTIVATION,c=e.numbers.DEACTIVATION_TIMEOUT_MS;this.layoutInternal_();var r="",u="";if(!this.adapter.isUnbounded()){var d=this.getFgTranslationCoordinates_(),f=d.startPoint,p=d.endPoint;r=f.x+"px, "+f.y+"px",u=p.x+"px, "+p.y+"px"}this.adapter.updateCssVariable(i,r),this.adapter.updateCssVariable(a,u),clearTimeout(this.activationTimer_),clearTimeout(this.fgDeactivationRemovalTimer_),this.rmBoundedActivationClasses_(),this.adapter.removeClass(o),this.adapter.computeBoundingRect(),this.adapter.addClass(l),this.activationTimer_=setTimeout((function(){return t.activationTimerCallback_()}),c)},e.prototype.getFgTranslationCoordinates_=function(){var t,e=this.activationState_,n=e.activationEvent;return{startPoint:t={x:(t=e.wasActivatedByPointer?function(t,e,n){if(!t)return{x:0,y:0};var i,a,s=e.x,o=e.y,l=s+n.left,c=o+n.top;if("touchstart"===t.type){var r=t;i=r.changedTouches[0].pageX-l,a=r.changedTouches[0].pageY-c}else{var u=t;i=u.pageX-l,a=u.pageY-c}return{x:i,y:a}}(n,this.adapter.getWindowPageOffset(),this.adapter.computeBoundingRect()):{x:this.frame_.width/2,y:this.frame_.height/2}).x-this.initialSize_/2,y:t.y-this.initialSize_/2},endPoint:{x:this.frame_.width/2-this.initialSize_/2,y:this.frame_.height/2-this.initialSize_/2}}},e.prototype.runDeactivationUXLogicIfReady_=function(){var t=this,n=e.cssClasses.FG_DEACTIVATION,i=this.activationState_,a=i.hasDeactivationUXRun,s=i.isActivated;(a||!s)&&this.activationAnimationHasEnded_&&(this.rmBoundedActivationClasses_(),this.adapter.addClass(n),this.fgDeactivationRemovalTimer_=setTimeout((function(){t.adapter.removeClass(n)}),yt.FG_DEACTIVATION_MS))},e.prototype.rmBoundedActivationClasses_=function(){var t=e.cssClasses.FG_ACTIVATION;this.adapter.removeClass(t),this.activationAnimationHasEnded_=!1,this.adapter.computeBoundingRect()},e.prototype.resetActivationState_=function(){var t=this;this.previousActivationEvent_=this.activationState_.activationEvent,this.activationState_=this.defaultActivationState_(),setTimeout((function(){return t.previousActivationEvent_=void 0}),e.numbers.TAP_DELAY_MS)},e.prototype.deactivate_=function(){var t=this,e=this.activationState_;if(e.isActivated){var n=ft({},e);e.isProgrammatic?(requestAnimationFrame((function(){return t.animateDeactivation_(n)})),this.resetActivationState_()):(this.deregisterDeactivationHandlers_(),requestAnimationFrame((function(){t.activationState_.hasDeactivationUXRun=!0,t.animateDeactivation_(n),t.resetActivationState_()})))}},e.prototype.animateDeactivation_=function(t){var e=t.wasActivatedByPointer,n=t.wasElementMadeActive;(e||n)&&this.runDeactivationUXLogicIfReady_()},e.prototype.layoutInternal_=function(){var t=this;this.frame_=this.adapter.computeBoundingRect();var n=Math.max(this.frame_.height,this.frame_.width);this.maxRadius_=this.adapter.isUnbounded()?n:Math.sqrt(Math.pow(t.frame_.width,2)+Math.pow(t.frame_.height,2))+e.numbers.PADDING;var i=Math.floor(n*e.numbers.INITIAL_ORIGIN_SCALE);this.adapter.isUnbounded()&&i%2!=0?this.initialSize_=i-1:this.initialSize_=i,this.fgScale_=""+this.maxRadius_/this.initialSize_,this.updateLayoutCssVars_()},e.prototype.updateLayoutCssVars_=function(){var t=e.strings,n=t.VAR_FG_SIZE,i=t.VAR_LEFT,a=t.VAR_TOP,s=t.VAR_FG_SCALE;this.adapter.updateCssVariable(n,this.initialSize_+"px"),this.adapter.updateCssVariable(s,this.fgScale_),this.adapter.isUnbounded()&&(this.unboundedCoords_={left:Math.round(this.frame_.width/2-this.initialSize_/2),top:Math.round(this.frame_.height/2-this.initialSize_/2)},this.adapter.updateCssVariable(i,this.unboundedCoords_.left+"px"),this.adapter.updateCssVariable(a,this.unboundedCoords_.top+"px"))},e}(pt),At={ACTIVE:"mdc-tab-indicator--active",FADE:"mdc-tab-indicator--fade",NO_TRANSITION:"mdc-tab-indicator--no-transition"},St={CONTENT_SELECTOR:".mdc-tab-indicator__content"},xt=function(t){function e(n){return t.call(this,ft(ft({},e.defaultAdapter),n))||this}return dt(e,t),Object.defineProperty(e,"cssClasses",{get:function(){return At},enumerable:!1,configurable:!0}),Object.defineProperty(e,"strings",{get:function(){return St},enumerable:!1,configurable:!0}),Object.defineProperty(e,"defaultAdapter",{get:function(){return{addClass:function(){},removeClass:function(){},computeContentClientRect:function(){return{top:0,right:0,bottom:0,left:0,width:0,height:0}},setContentStyleProperty:function(){}}},enumerable:!1,configurable:!0}),e.prototype.computeContentClientRect=function(){return this.adapter.computeContentClientRect()},e}(pt),Tt=function(t){function e(){return null!==t&&t.apply(this,arguments)||this}return dt(e,t),e.prototype.activate=function(){this.adapter.addClass(xt.cssClasses.ACTIVE)},e.prototype.deactivate=function(){this.adapter.removeClass(xt.cssClasses.ACTIVE)},e}(xt),Ot=function(t){function e(){return null!==t&&t.apply(this,arguments)||this}return dt(e,t),e.prototype.activate=function(t){if(t){var e=this.computeContentClientRect(),n=t.width/e.width,i=t.left-e.left;this.adapter.addClass(xt.cssClasses.NO_TRANSITION),this.adapter.setContentStyleProperty("transform","translateX("+i+"px) scaleX("+n+")"),this.computeContentClientRect(),this.adapter.removeClass(xt.cssClasses.NO_TRANSITION),this.adapter.addClass(xt.cssClasses.ACTIVE),this.adapter.setContentStyleProperty("transform","")}else this.adapter.addClass(xt.cssClasses.ACTIVE)},e.prototype.deactivate=function(){this.adapter.removeClass(xt.cssClasses.ACTIVE)},e}(xt),Et={ACTIVE:"mdc-tab--active"},It={ARIA_SELECTED:"aria-selected",CONTENT_SELECTOR:".mdc-tab__content",INTERACTED_EVENT:"MDCTab:interacted",RIPPLE_SELECTOR:".mdc-tab__ripple",TABINDEX:"tabIndex",TAB_INDICATOR_SELECTOR:".mdc-tab-indicator"},Rt=function(t){function e(n){var i=t.call(this,ft(ft({},e.defaultAdapter),n))||this;return i.focusOnActivate_=!0,i}return dt(e,t),Object.defineProperty(e,"cssClasses",{get:function(){return Et},enumerable:!1,configurable:!0}),Object.defineProperty(e,"strings",{get:function(){return It},enumerable:!1,configurable:!0}),Object.defineProperty(e,"defaultAdapter",{get:function(){return{addClass:function(){},removeClass:function(){},hasClass:function(){return!1},setAttr:function(){},activateIndicator:function(){},deactivateIndicator:function(){},notifyInteracted:function(){},getOffsetLeft:function(){return 0},getOffsetWidth:function(){return 0},getContentOffsetLeft:function(){return 0},getContentOffsetWidth:function(){return 0},focus:function(){}}},enumerable:!1,configurable:!0}),e.prototype.handleClick=function(){this.adapter.notifyInteracted()},e.prototype.isActive=function(){return this.adapter.hasClass(Et.ACTIVE)},e.prototype.setFocusOnActivate=function(t){this.focusOnActivate_=t},e.prototype.activate=function(t){this.adapter.addClass(Et.ACTIVE),this.adapter.setAttr(It.ARIA_SELECTED,"true"),this.adapter.setAttr(It.TABINDEX,"0"),this.adapter.activateIndicator(t),this.focusOnActivate_&&this.adapter.focus()},e.prototype.deactivate=function(){this.isActive()&&(this.adapter.removeClass(Et.ACTIVE),this.adapter.setAttr(It.ARIA_SELECTED,"false"),this.adapter.setAttr(It.TABINDEX,"-1"),this.adapter.deactivateIndicator())},e.prototype.computeDimensions=function(){var t=this.adapter.getOffsetWidth(),e=this.adapter.getOffsetLeft(),n=this.adapter.getContentOffsetWidth(),i=this.adapter.getContentOffsetLeft();return{contentLeft:e+i,contentRight:e+i+n,rootLeft:e,rootRight:e+t}},e}(pt);const Lt=/^[a-z]+(?::(?:preventDefault|stopPropagation|passive|nonpassive|capture|once|self))+$/,Dt=/^[^$]+(?:\$(?:preventDefault|stopPropagation|passive|nonpassive|capture|once|self))+$/;function Pt(t){let e,n=[];const i=t.$on;function a(e){!function(t,e){const n=t.$$.callbacks[e.type];n&&n.slice().forEach((t=>t(e)))}(t,e)}return t.$on=(a,...s)=>{let o=a,l=()=>{};e?l=e(o):n.push(o);const c=o.match(Lt),r=o.match(Dt),u=c||r;if(c&&console&&console.warn('Event modifiers in SMUI now use "$" instead of ":", so that all events can be bound with modifiers. Please update your event binding: ',o),u){const t=o.split(c?":":"$");o=t[0]}const d=i.call(t,o,...s);return(...t)=>(l(),d(...t))},t=>{const i=[];e=e=>{let n=e,s=a,o=!1;const l=n.match(Lt),c=n.match(Dt);if(l||c){const t=n.split(l?":":"$");n=t[0],o=Object.fromEntries(t.slice(1).map((t=>[t,!0]))),o.nonpassive&&(o.passive=!1,delete o.nonpassive),o.preventDefault&&(r=s,s=function(t){return t.preventDefault(),r.call(this,t)},delete o.preventDefault),o.stopPropagation&&(s=function(t){return function(e){return e.stopPropagation(),t.call(this,e)}}(s),delete o.stopPropagation)}var r;const u=$(t,n,s,o),d=()=>{u();const t=i.indexOf(d);t>-1&&i.splice(t,1)};return i.push(d),d};for(let t=0;t<n.length;t++)e(n[t]);return{destroy:()=>{for(let t=0;t<i.length;t++)i[t]()}}}}function Mt(t){return Object.entries(t).filter((([t,e])=>""!==t&&e)).map((([t])=>t)).join(" ")}function jt(t,e,n={},i={bubbles:!0}){if("undefined"!=typeof Event&&t){const a=new Event(e,i);a.detail=n;return("getElement"in t?t.getElement():t).dispatchEvent(a),a}}function Nt(t,e){let n=Object.getOwnPropertyNames(t);const i={};for(let a=0;a<n.length;a++){const s=n[a],o=s.indexOf("$");-1!==o&&-1!==e.indexOf(s.substring(0,o+1))||-1===e.indexOf(s)&&(i[s]=t[s])}return i}function Ht(t,e){let n=Object.getOwnPropertyNames(t);const i={};for(let a=0;a<n.length;a++){const s=n[a];s.substring(0,e.length)===e&&(i[s.substring(e.length)]=t[s])}return i}function Bt(t,e){let n=[];if(e)for(let i=0;i<e.length;i++){const a=Array.isArray(e[i]),s=a?e[i][0]:e[i];a&&e[i].length>1?n.push(s(t,e[i][1])):n.push(s(t))}return{update(t){if((t&&t.length||0)!=n.length)throw new Error("You must not change the length of an actions array.");if(t)for(let e=0;e<t.length;e++)if(n[e]&&"update"in n[e]){Array.isArray(t[e])&&t[e].length>1?n[e].update(t[e][1]):n[e].update()}},destroy(){for(let t=0;t<n.length;t++)n[t]&&"destroy"in n[t]&&n[t].destroy()}}}const{applyPassive:Ft}=mt,{matches:zt}=bt;function Vt(t,{ripple:e=!0,surface:n=!1,unbounded:i=!1,disabled:a=!1,color:s=null,active:o=null,eventTarget:l=null,activeTarget:c=null,addClass:r=(e=>t.classList.add(e)),removeClass:u=(e=>t.classList.remove(e)),addStyle:d=((e,n)=>t.style.setProperty(e,n)),initPromise:f=Promise.resolve()}={}){let p,m,h=j("SMUI:addLayoutListener"),v=o,b=l,g=c;function _(){n&&(r("mdc-ripple-surface"),"primary"===s?(r("smui-ripple-surface--primary"),u("smui-ripple-surface--secondary")):"secondary"===s?(u("smui-ripple-surface--primary"),r("smui-ripple-surface--secondary")):(u("smui-ripple-surface--primary"),u("smui-ripple-surface--secondary"))),p&&v!==o&&(v=o,o?p.activate():!1===o&&p.deactivate()),e&&!p?(p=new kt({addClass:r,browserSupportsCssVars:()=>function(t,e){void 0===e&&(e=!1);var n,i=t.CSS;if("boolean"==typeof vt&&!e)return vt;if(!i||"function"!=typeof i.supports)return!1;var a=i.supports("--css-vars","yes"),s=i.supports("(--css-vars: yes)")&&i.supports("color","#00000000");return n=a||s,e||(vt=n),n}(window),computeBoundingRect:()=>t.getBoundingClientRect(),containsEventTarget:e=>t.contains(e),deregisterDocumentInteractionHandler:(t,e)=>document.documentElement.removeEventListener(t,e,Ft()),deregisterInteractionHandler:(e,n)=>(l||t).removeEventListener(e,n,Ft()),deregisterResizeHandler:t=>window.removeEventListener("resize",t),getWindowPageOffset:()=>({x:window.pageXOffset,y:window.pageYOffset}),isSurfaceActive:()=>null==o?zt(c||t,":active"):o,isSurfaceDisabled:()=>!!a,isUnbounded:()=>!!i,registerDocumentInteractionHandler:(t,e)=>document.documentElement.addEventListener(t,e,Ft()),registerInteractionHandler:(e,n)=>(l||t).addEventListener(e,n,Ft()),registerResizeHandler:t=>window.addEventListener("resize",t),removeClass:u,updateCssVariable:d}),f.then((()=>{p.init(),p.setUnbounded(i)}))):p&&!e&&f.then((()=>{p.destroy(),p=null})),!p||b===l&&g===c||(b=l,g=c,p.destroy(),requestAnimationFrame((()=>{p&&(p.init(),p.setUnbounded(i))}))),!e&&i&&r("mdc-ripple-upgraded--unbounded")}return _(),h&&(m=h((function(){p&&p.layout()}))),{update(p){({ripple:e,surface:n,unbounded:i,disabled:a,color:s,active:o,eventTarget:l,activeTarget:c,addClass:r,removeClass:u,addStyle:d,initPromise:f}={ripple:!0,surface:!1,unbounded:!1,disabled:!1,color:null,active:null,eventTarget:null,activeTarget:null,addClass:e=>t.classList.add(e),removeClass:e=>t.classList.remove(e),addStyle:(e,n)=>t.style.setProperty(e,n),initPromise:Promise.resolve(),...p}),_()},destroy(){p&&(p.destroy(),p=null,u("mdc-ripple-surface"),u("smui-ripple-surface--primary"),u("smui-ripple-surface--secondary")),m&&m()}}}function Wt(t){let n,i,o,c,u;const d=t[7].default,f=l(d,t,t[6],null);let m=[{href:t[0]},t[4]],b={};for(let t=0;t<m.length;t+=1)b=e(b,m[t]);return{c(){n=g("a"),f&&f.c(),k(n,b)},m(e,a){h(e,n,a),f&&f.m(n,null),t[8](n),o=!0,c||(u=[p(i=Bt.call(null,n,t[1])),p(t[3].call(null,n))],c=!0)},p(t,[e]){f&&f.p&&64&e&&r(f,d,t,t[6],e,null,null),k(n,b=nt(m,[(!o||1&e)&&{href:t[0]},16&e&&t[4]])),i&&s(i.update)&&2&e&&i.update.call(null,t[1])},i(t){o||(Q(f,t),o=!0)},o(t){tt(f,t),o=!1},d(e){e&&v(n),f&&f.d(e),t[8](null),c=!1,a(u)}}}function Kt(t,n,i){const a=["href","use","getElement"];let s=d(n,a),{$$slots:o={},$$scope:l}=n,{href:c="javascript:void(0);"}=n,{use:r=[]}=n;const f=Pt(L());let p=null;return t.$$set=t=>{n=e(e({},n),u(t)),i(4,s=d(n,a)),"href"in t&&i(0,c=t.href),"use"in t&&i(1,r=t.use),"$$scope"in t&&i(6,l=t.$$scope)},[c,r,p,f,s,function(){return p},l,o,function(t){H[t?"unshift":"push"]((()=>{p=t,i(2,p)}))}]}class Ut extends rt{constructor(t){super(),ct(this,t,Kt,Wt,o,{href:0,use:1,getElement:5})}get getElement(){return this.$$.ctx[5]}}function Yt(t){let n,i,o,c,u;const d=t[6].default,f=l(d,t,t[5],null);let m=[t[3]],b={};for(let t=0;t<m.length;t+=1)b=e(b,m[t]);return{c(){n=g("button"),f&&f.c(),k(n,b)},m(e,a){h(e,n,a),f&&f.m(n,null),t[7](n),o=!0,c||(u=[p(i=Bt.call(null,n,t[0])),p(t[2].call(null,n))],c=!0)},p(t,[e]){f&&f.p&&32&e&&r(f,d,t,t[5],e,null,null),k(n,b=nt(m,[8&e&&t[3]])),i&&s(i.update)&&1&e&&i.update.call(null,t[0])},i(t){o||(Q(f,t),o=!0)},o(t){tt(f,t),o=!1},d(e){e&&v(n),f&&f.d(e),t[7](null),c=!1,a(u)}}}function qt(t,n,i){const a=["use","getElement"];let s=d(n,a),{$$slots:o={},$$scope:l}=n,{use:c=[]}=n;const r=Pt(L());let f=null;return t.$$set=t=>{n=e(e({},n),u(t)),i(3,s=d(n,a)),"use"in t&&i(0,c=t.use),"$$scope"in t&&i(5,l=t.$$scope)},[c,f,r,s,function(){return f},l,o,function(t){H[t?"unshift":"push"]((()=>{f=t,i(1,f)}))}]}class Gt extends rt{constructor(t){super(),ct(this,t,qt,Yt,o,{use:0,getElement:4})}get getElement(){return this.$$.ctx[4]}}function Jt(t){let n,i,o,c,u,d,f,b,_,y,w;const $=t[21].default,C=l($,t,t[20],null);let A=[{class:o=Mt({[t[6]]:!0,"mdc-tab-indicator__content":!0,"mdc-tab-indicator__content--underline":"underline"===t[3],"mdc-tab-indicator__content--icon":"icon"===t[3]})},{style:c=Object.entries(t[10]).map(Xt).join(" ")},{"aria-hidden":u="icon"===t[3]?"true":null},Ht(t[12],"content$")],S={};for(let t=0;t<A.length;t+=1)S=e(S,A[t]);let x=[{class:f=Mt({[t[2]]:!0,"mdc-tab-indicator":!0,"mdc-tab-indicator--active":t[0],"mdc-tab-indicator--fade":"fade"===t[4],...t[9]})},Nt(t[12],["content$"])],T={};for(let t=0;t<x.length;t+=1)T=e(T,x[t]);return{c(){n=g("span"),i=g("span"),C&&C.c(),k(i,S),k(n,T)},m(e,a){h(e,n,a),m(n,i),C&&C.m(i,null),t[22](i),t[23](n),_=!0,y||(w=[p(d=Bt.call(null,i,t[5])),p(b=Bt.call(null,n,t[1])),p(t[11].call(null,n))],y=!0)},p(t,[e]){C&&C.p&&1048576&e&&r(C,$,t,t[20],e,null,null),k(i,S=nt(A,[(!_||72&e&&o!==(o=Mt({[t[6]]:!0,"mdc-tab-indicator__content":!0,"mdc-tab-indicator__content--underline":"underline"===t[3],"mdc-tab-indicator__content--icon":"icon"===t[3]})))&&{class:o},(!_||1024&e&&c!==(c=Object.entries(t[10]).map(Xt).join(" ")))&&{style:c},(!_||8&e&&u!==(u="icon"===t[3]?"true":null))&&{"aria-hidden":u},4096&e&&Ht(t[12],"content$")])),d&&s(d.update)&&32&e&&d.update.call(null,t[5]),k(n,T=nt(x,[(!_||533&e&&f!==(f=Mt({[t[2]]:!0,"mdc-tab-indicator":!0,"mdc-tab-indicator--active":t[0],"mdc-tab-indicator--fade":"fade"===t[4],...t[9]})))&&{class:f},4096&e&&Nt(t[12],["content$"])])),b&&s(b.update)&&2&e&&b.update.call(null,t[1])},i(t){_||(Q(C,t),_=!0)},o(t){tt(C,t),_=!1},d(e){e&&v(n),C&&C.d(e),t[22](null),t[23](null),y=!1,a(w)}}}const Xt=([t,e])=>`${t}: ${e};`;function Zt(t,n,i){const a=["use","class","active","type","transition","content$use","content$class","activate","deactivate","computeContentClientRect","getElement"];let s=d(n,a),{$$slots:o={},$$scope:l}=n;const c=Pt(L());let r,f,p,{use:m=[]}=n,{class:h=""}=n,{active:v=!1}=n,{type:b="underline"}=n,{transition:g="slide"}=n,{content$use:_=[]}=n,{content$class:y=""}=n,w={},$={},C=[],k=g;function A(){const t={fade:Tt,slide:Ot}[g]||Ot;return t?new t({addClass:(...t)=>S((()=>function(t){w[t]||i(9,w[t]=!0,w)}(...t))),removeClass:(...t)=>S((()=>function(t){t in w&&!w[t]||i(9,w[t]=!1,w)}(...t))),computeContentClientRect:x,setContentStyleProperty:(...t)=>S((()=>function(t,e){$[t]!=e&&(""===e||null==e?(delete $[t],i(10,$),i(19,k),i(4,g),i(17,f)):i(10,$[t]=e,$))}(...t)))}):void 0}function S(t){C.length?C[C.length-1].push(t):t()}function x(){return C.push([]),i(18,C),p.getBoundingClientRect()}return D((()=>(i(17,f=A()),f.init(),()=>{f.destroy()}))),t.$$set=t=>{n=e(e({},n),u(t)),i(12,s=d(n,a)),"use"in t&&i(1,m=t.use),"class"in t&&i(2,h=t.class),"active"in t&&i(0,v=t.active),"type"in t&&i(3,b=t.type),"transition"in t&&i(4,g=t.transition),"content$use"in t&&i(5,_=t.content$use),"content$class"in t&&i(6,y=t.content$class),"$$scope"in t&&i(20,l=t.$$scope)},t.$$.update=()=>{655376&t.$$.dirty&&k!==g&&(i(19,k=g),f&&f.destroy(),i(9,w={}),i(10,$={}),i(17,f=A()),f.init()),262144&t.$$.dirty&&C.length&&requestAnimationFrame((()=>{const t=C.shift();i(18,C);for(const e of t)e()}))},[v,m,h,b,g,_,y,r,p,w,$,c,s,function(t){i(0,v=!0),f.activate(t)},function(){i(0,v=!1),f.deactivate()},x,function(){return r},f,C,k,l,o,function(t){H[t?"unshift":"push"]((()=>{p=t,i(8,p)}))},function(t){H[t?"unshift":"push"]((()=>{r=t,i(7,r)}))}]}class Qt extends rt{constructor(t){super(),ct(this,t,Zt,Jt,o,{use:1,class:2,active:0,type:3,transition:4,content$use:5,content$class:6,activate:13,deactivate:14,computeContentClientRect:15,getElement:16})}get activate(){return this.$$.ctx[13]}get deactivate(){return this.$$.ctx[14]}get computeContentClientRect(){return this.$$.ctx[15]}get getElement(){return this.$$.ctx[16]}}const te=t=>({}),ee=t=>({}),ne=t=>({}),ie=t=>({});function ae(t){let n,i;const a=[{active:t[18]},Ht(t[24],"tabIndicator$")];let s={$$slots:{default:[se]},$$scope:{ctx:t}};for(let t=0;t<a.length;t+=1)s=e(s,a[t]);return n=new Qt({props:s}),t[31](n),{c(){at(n.$$.fragment)},m(t,e){st(n,t,e),i=!0},p(t,e){const i=17039360&e[0]?nt(a,[262144&e[0]&&{active:t[18]},16777216&e[0]&&it(Ht(t[24],"tabIndicator$"))]):{};16&e[1]&&(i.$$scope={dirty:e,ctx:t}),n.$set(i)},i(t){i||(Q(n.$$.fragment,t),i=!0)},o(t){tt(n.$$.fragment,t),i=!1},d(e){t[31](null),ot(n,e)}}}function se(t){let e;const n=t[30]["tab-indicator"],i=l(n,t,t[35],ie);return{c(){i&&i.c()},m(t,n){i&&i.m(t,n),e=!0},p(t,e){i&&i.p&&16&e[1]&&r(i,n,t,t[35],e,ne,ie)},i(t){e||(Q(i,t),e=!0)},o(t){tt(i,t),e=!1},d(t){i&&i.d(t)}}}function oe(t){let n,i;const a=[{active:t[18]},Ht(t[24],"tabIndicator$")];let s={$$slots:{default:[le]},$$scope:{ctx:t}};for(let t=0;t<a.length;t+=1)s=e(s,a[t]);return n=new Qt({props:s}),t[33](n),{c(){at(n.$$.fragment)},m(t,e){st(n,t,e),i=!0},p(t,e){const i=17039360&e[0]?nt(a,[262144&e[0]&&{active:t[18]},16777216&e[0]&&it(Ht(t[24],"tabIndicator$"))]):{};16&e[1]&&(i.$$scope={dirty:e,ctx:t}),n.$set(i)},i(t){i||(Q(n.$$.fragment,t),i=!0)},o(t){tt(n.$$.fragment,t),i=!1},d(e){t[33](null),ot(n,e)}}}function le(t){let e;const n=t[30]["tab-indicator"],i=l(n,t,t[35],ee);return{c(){i&&i.c()},m(t,n){i&&i.m(t,n),e=!0},p(t,e){i&&i.p&&16&e[1]&&r(i,n,t,t[35],e,te,ee)},i(t){e||(Q(i,t),e=!0)},o(t){tt(i,t),e=!1},d(t){i&&i.d(t)}}}function ce(t){let n,i,a,o,c,u,d,f,b,_;const w=t[30].default,$=l(w,t,t[35],null);let A=t[6]&&ae(t),S=[{class:a=Mt({[t[9]]:!0,"mdc-tab__content":!0})},Ht(t[24],"content$")],x={};for(let t=0;t<S.length;t+=1)x=e(x,S[t]);let T=!t[6]&&oe(t);return{c(){n=g("span"),$&&$.c(),i=y(),A&&A.c(),c=y(),T&&T.c(),u=y(),d=g("span"),k(n,x),C(d,"class","mdc-tab__ripple")},m(e,a){h(e,n,a),$&&$.m(n,null),m(n,i),A&&A.m(n,null),t[32](n),h(e,c,a),T&&T.m(e,a),h(e,u,a),h(e,d,a),f=!0,b||(_=p(o=Bt.call(null,n,t[8])),b=!0)},p(t,e){$&&$.p&&16&e[1]&&r($,w,t,t[35],e,null,null),t[6]?A?(A.p(t,e),64&e[0]&&Q(A,1)):(A=ae(t),A.c(),Q(A,1),A.m(n,null)):A&&(X(),tt(A,1,1,(()=>{A=null})),Z()),k(n,x=nt(S,[(!f||512&e[0]&&a!==(a=Mt({[t[9]]:!0,"mdc-tab__content":!0})))&&{class:a},16777216&e[0]&&Ht(t[24],"content$")])),o&&s(o.update)&&256&e[0]&&o.update.call(null,t[8]),t[6]?T&&(X(),tt(T,1,1,(()=>{T=null})),Z()):T?(T.p(t,e),64&e[0]&&Q(T,1)):(T=oe(t),T.c(),Q(T,1),T.m(u.parentNode,u))},i(t){f||(Q($,t),Q(A),Q(T),f=!0)},o(t){tt($,t),tt(A),tt(T),f=!1},d(e){e&&v(n),$&&$.d(e),A&&A.d(),t[32](null),e&&v(c),T&&T.d(e),e&&v(u),e&&v(d),b=!1,_()}}}function re(t){let n,i,a;const o=[{use:[[Vt,{ripple:t[3],unbounded:!1,addClass:t[21],removeClass:t[22],addStyle:t[23]}],t[20],...t[0]]},{class:Mt({[t[1]]:!0,"mdc-tab":!0,"mdc-tab--active":t[18],"mdc-tab--stacked":t[4],"mdc-tab--min-width":t[5],...t[15]})},{style:Object.entries(t[16]).map(ue).concat([t[2]]).join(" ")},{role:"tab"},{"aria-selected":t[18]?"true":"false"},{tabindex:t[18]||t[19]?"0":"-1"},{href:t[7]},t[17],Nt(t[24],["content$","tabIndicator$"])];var l=t[10];function c(t){let n={$$slots:{default:[ce]},$$scope:{ctx:t}};for(let t=0;t<o.length;t+=1)n=e(n,o[t]);return{props:n}}return l&&(n=new l(c(t)),t[34](n),n.$on("click",(function(){s(t[11]&&t[11].handleClick())&&(t[11]&&t[11].handleClick()).apply(this,arguments)}))),{c(){n&&at(n.$$.fragment),i=w()},m(t,e){n&&st(n,t,e),h(t,i,e),a=!0},p(e,a){t=e;const r=33521855&a[0]?nt(o,[15728649&a[0]&&{use:[[Vt,{ripple:t[3],unbounded:!1,addClass:t[21],removeClass:t[22],addStyle:t[23]}],t[20],...t[0]]},294962&a[0]&&{class:Mt({[t[1]]:!0,"mdc-tab":!0,"mdc-tab--active":t[18],"mdc-tab--stacked":t[4],"mdc-tab--min-width":t[5],...t[15]})},65540&a[0]&&{style:Object.entries(t[16]).map(ue).concat([t[2]]).join(" ")},o[3],262144&a[0]&&{"aria-selected":t[18]?"true":"false"},786432&a[0]&&{tabindex:t[18]||t[19]?"0":"-1"},128&a[0]&&{href:t[7]},131072&a[0]&&it(t[17]),16777216&a[0]&&it(Nt(t[24],["content$","tabIndicator$"]))]):{};if(17064768&a[0]|16&a[1]&&(r.$$scope={dirty:a,ctx:t}),l!==(l=t[10])){if(n){X();const t=n;tt(t.$$.fragment,1,0,(()=>{ot(t,1)})),Z()}l?(n=new l(c(t)),t[34](n),n.$on("click",(function(){s(t[11]&&t[11].handleClick())&&(t[11]&&t[11].handleClick()).apply(this,arguments)})),at(n.$$.fragment),Q(n.$$.fragment,1),st(n,i.parentNode,i)):n=null}else l&&n.$set(r)},i(t){a||(n&&Q(n.$$.fragment,t),a=!0)},o(t){n&&tt(n.$$.fragment,t),a=!1},d(e){t[34](null),e&&v(i),n&&ot(n,e)}}}const ue=([t,e])=>`${t}: ${e};`;function de(t,n,i){const a=["use","class","style","tab","ripple","stacked","minWidth","indicatorSpanOnlyContent","href","content$use","content$class","component","activate","deactivate","focus","getElement"];let s=d(n,a),{$$slots:o={},$$scope:l}=n;const c=Pt(L());let r,f,p,m,{use:h=[]}=n,{class:v=""}=n,{style:b=""}=n,{tab:g}=n,{ripple:_=!0}=n,{stacked:y=!1}=n,{minWidth:w=!1}=n,{indicatorSpanOnlyContent:$=!1}=n,{href:C=null}=n,{content$use:k=[]}=n,{content$class:A=""}=n,S={},x={},T={},O=j("SMUI:tab:focusOnActivate"),E=g===j("SMUI:tab:initialActive"),I=!1,{component:R=(null==C?Gt:Ut)}=n;if(M("SMUI:label:context","tab"),M("SMUI:icon:context","tab"),!g)throw new Error("The tab property is required! It should be passed down from the TabBar to the Tab.");function P(t){return t in S?S[t]:K().classList.contains(t)}function N(t){S[t]||i(15,S[t]=!0,S)}function B(t){t in S&&!S[t]||i(15,S[t]=!1,S)}function F(t,e){T[t]!==e&&i(17,T[t]=e,T)}function z(t,e){i(18,E=!0),e&&f.setFocusOnActivate(!1),f.activate(t),e&&f.setFocusOnActivate(O)}function V(){i(18,E=!1),f.deactivate()}function W(){K().focus()}function K(){return r.getElement()}return D((()=>{i(11,f=new Rt({setAttr:F,addClass:N,removeClass:B,hasClass:P,activateIndicator:t=>m.activate(t),deactivateIndicator:()=>m.deactivate(),notifyInteracted:()=>jt(K(),"MDCTab:interacted",{tabId:g}),getOffsetLeft:()=>K().offsetLeft,getOffsetWidth:()=>K().offsetWidth,getContentOffsetLeft:()=>p.offsetLeft,getContentOffsetWidth:()=>p.offsetWidth,focus:W}));const t={tabId:g,get element(){return K()},get active(){return E},forceAccessible(t){i(19,I=t)},computeIndicatorClientRect:()=>m.computeContentClientRect(),computeDimensions:()=>f.computeDimensions(),focus:W,activate:z,deactivate:V};return jt(K(),"SMUI:tab:mount",t),f.init(),()=>{jt(K(),"SMUI:tab:unmount",t),f.destroy()}})),t.$$set=t=>{n=e(e({},n),u(t)),i(24,s=d(n,a)),"use"in t&&i(0,h=t.use),"class"in t&&i(1,v=t.class),"style"in t&&i(2,b=t.style),"tab"in t&&i(25,g=t.tab),"ripple"in t&&i(3,_=t.ripple),"stacked"in t&&i(4,y=t.stacked),"minWidth"in t&&i(5,w=t.minWidth),"indicatorSpanOnlyContent"in t&&i(6,$=t.indicatorSpanOnlyContent),"href"in t&&i(7,C=t.href),"content$use"in t&&i(8,k=t.content$use),"content$class"in t&&i(9,A=t.content$class),"component"in t&&i(10,R=t.component),"$$scope"in t&&i(35,l=t.$$scope)},t.$$.update=()=>{2048&t.$$.dirty[0]&&f&&f.setFocusOnActivate(O)},[h,v,b,_,y,w,$,C,k,A,R,f,r,p,m,S,x,T,E,I,c,N,B,function(t,e){x[t]!=e&&(""===e||null==e?(delete x[t],i(16,x)):i(16,x[t]=e,x))},s,g,z,V,W,K,o,function(t){H[t?"unshift":"push"]((()=>{m=t,i(14,m)}))},function(t){H[t?"unshift":"push"]((()=>{p=t,i(13,p)}))},function(t){H[t?"unshift":"push"]((()=>{m=t,i(14,m)}))},function(t){H[t?"unshift":"push"]((()=>{r=t,i(12,r)}))},l]}class fe extends rt{constructor(t){super(),ct(this,t,de,re,o,{use:0,class:1,style:2,tab:25,ripple:3,stacked:4,minWidth:5,indicatorSpanOnlyContent:6,href:7,content$use:8,content$class:9,component:10,activate:26,deactivate:27,focus:28,getElement:29},[-1,-1])}get activate(){return this.$$.ctx[26]}get deactivate(){return this.$$.ctx[27]}get focus(){return this.$$.ctx[28]}get getElement(){return this.$$.ctx[29]}}function pe(t){let n,i,o,c,u,d;const f=t[9].default,m=l(f,t,t[8],null);let b=[{class:i=Mt({[t[1]]:!0,"mdc-button__label":"button"===t[4],"mdc-fab__label":"fab"===t[4],"mdc-tab__text-label":"tab"===t[4],"mdc-image-list__label":"image-list"===t[4],"mdc-snackbar__label":"snackbar"===t[4],"mdc-banner__text":"banner"===t[4],"mdc-segmented-button__label":"segmented-button"===t[4],"mdc-data-table__pagination-rows-per-page-label":"data-table:pagination"===t[4],"mdc-data-table__header-cell-label":"data-table:sortable-header-cell"===t[4]})},"snackbar"===t[4]?{"aria-atomic":"false"}:{},{tabindex:t[5]},t[6]],_={};for(let t=0;t<b.length;t+=1)_=e(_,b[t]);return{c(){n=g("span"),m&&m.c(),k(n,_)},m(e,i){h(e,n,i),m&&m.m(n,null),t[10](n),c=!0,u||(d=[p(o=Bt.call(null,n,t[0])),p(t[3].call(null,n))],u=!0)},p(t,[e]){m&&m.p&&256&e&&r(m,f,t,t[8],e,null,null),k(n,_=nt(b,[(!c||2&e&&i!==(i=Mt({[t[1]]:!0,"mdc-button__label":"button"===t[4],"mdc-fab__label":"fab"===t[4],"mdc-tab__text-label":"tab"===t[4],"mdc-image-list__label":"image-list"===t[4],"mdc-snackbar__label":"snackbar"===t[4],"mdc-banner__text":"banner"===t[4],"mdc-segmented-button__label":"segmented-button"===t[4],"mdc-data-table__pagination-rows-per-page-label":"data-table:pagination"===t[4],"mdc-data-table__header-cell-label":"data-table:sortable-header-cell"===t[4]})))&&{class:i},"snackbar"===t[4]?{"aria-atomic":"false"}:{},{tabindex:t[5]},64&e&&t[6]])),o&&s(o.update)&&1&e&&o.update.call(null,t[0])},i(t){c||(Q(m,t),c=!0)},o(t){tt(m,t),c=!1},d(e){e&&v(n),m&&m.d(e),t[10](null),u=!1,a(d)}}}function me(t,n,i){const a=["use","class","getElement"];let s=d(n,a),{$$slots:o={},$$scope:l}=n;const c=Pt(L());let r,{use:f=[]}=n,{class:p=""}=n;const m=j("SMUI:label:context"),h=j("SMUI:label:tabindex");return t.$$set=t=>{n=e(e({},n),u(t)),i(6,s=d(n,a)),"use"in t&&i(0,f=t.use),"class"in t&&i(1,p=t.class),"$$scope"in t&&i(8,l=t.$$scope)},[f,p,r,c,m,h,s,function(){return r},l,o,function(t){H[t?"unshift":"push"]((()=>{r=t,i(2,r)}))}]}class he extends rt{constructor(t){super(),ct(this,t,me,pe,o,{use:0,class:1,getElement:7})}get getElement(){return this.$$.ctx[7]}}
-/**
-     * @license
-     * Copyright 2018 Google Inc.
-     *
-     * Permission is hereby granted, free of charge, to any person obtaining a copy
-     * of this software and associated documentation files (the "Software"), to deal
-     * in the Software without restriction, including without limitation the rights
-     * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-     * copies of the Software, and to permit persons to whom the Software is
-     * furnished to do so, subject to the following conditions:
-     *
-     * The above copyright notice and this permission notice shall be included in
-     * all copies or substantial portions of the Software.
-     *
-     * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-     * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-     * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-     * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-     * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-     * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-     * THE SOFTWARE.
-     */var ve,be={ANIMATING:"mdc-tab-scroller--animating",SCROLL_AREA_SCROLL:"mdc-tab-scroller__scroll-area--scroll",SCROLL_TEST:"mdc-tab-scroller__test"},ge={AREA_SELECTOR:".mdc-tab-scroller__scroll-area",CONTENT_SELECTOR:".mdc-tab-scroller__scroll-content"},_e=function(t){this.adapter=t},ye=function(t){function e(){return null!==t&&t.apply(this,arguments)||this}return dt(e,t),e.prototype.getScrollPositionRTL=function(){var t=this.adapter.getScrollAreaScrollLeft(),e=this.calculateScrollEdges_().right;return Math.round(e-t)},e.prototype.scrollToRTL=function(t){var e=this.calculateScrollEdges_(),n=this.adapter.getScrollAreaScrollLeft(),i=this.clampScrollValue_(e.right-t);return{finalScrollPosition:i,scrollDelta:i-n}},e.prototype.incrementScrollRTL=function(t){var e=this.adapter.getScrollAreaScrollLeft(),n=this.clampScrollValue_(e-t);return{finalScrollPosition:n,scrollDelta:n-e}},e.prototype.getAnimatingScrollPosition=function(t){return t},e.prototype.calculateScrollEdges_=function(){return{left:0,right:this.adapter.getScrollContentOffsetWidth()-this.adapter.getScrollAreaOffsetWidth()}},e.prototype.clampScrollValue_=function(t){var e=this.calculateScrollEdges_();return Math.min(Math.max(e.left,t),e.right)},e}(_e),we=function(t){function e(){return null!==t&&t.apply(this,arguments)||this}return dt(e,t),e.prototype.getScrollPositionRTL=function(t){var e=this.adapter.getScrollAreaScrollLeft();return Math.round(t-e)},e.prototype.scrollToRTL=function(t){var e=this.adapter.getScrollAreaScrollLeft(),n=this.clampScrollValue_(-t);return{finalScrollPosition:n,scrollDelta:n-e}},e.prototype.incrementScrollRTL=function(t){var e=this.adapter.getScrollAreaScrollLeft(),n=this.clampScrollValue_(e-t);return{finalScrollPosition:n,scrollDelta:n-e}},e.prototype.getAnimatingScrollPosition=function(t,e){return t-e},e.prototype.calculateScrollEdges_=function(){var t=this.adapter.getScrollContentOffsetWidth();return{left:this.adapter.getScrollAreaOffsetWidth()-t,right:0}},e.prototype.clampScrollValue_=function(t){var e=this.calculateScrollEdges_();return Math.max(Math.min(e.right,t),e.left)},e}(_e),$e=function(t){function e(){return null!==t&&t.apply(this,arguments)||this}return dt(e,t),e.prototype.getScrollPositionRTL=function(t){var e=this.adapter.getScrollAreaScrollLeft();return Math.round(e-t)},e.prototype.scrollToRTL=function(t){var e=this.adapter.getScrollAreaScrollLeft(),n=this.clampScrollValue_(t);return{finalScrollPosition:n,scrollDelta:e-n}},e.prototype.incrementScrollRTL=function(t){var e=this.adapter.getScrollAreaScrollLeft(),n=this.clampScrollValue_(e+t);return{finalScrollPosition:n,scrollDelta:e-n}},e.prototype.getAnimatingScrollPosition=function(t,e){return t+e},e.prototype.calculateScrollEdges_=function(){return{left:this.adapter.getScrollContentOffsetWidth()-this.adapter.getScrollAreaOffsetWidth(),right:0}},e.prototype.clampScrollValue_=function(t){var e=this.calculateScrollEdges_();return Math.min(Math.max(e.right,t),e.left)},e}(_e),Ce=function(t){function e(n){var i=t.call(this,ft(ft({},e.defaultAdapter),n))||this;return i.isAnimating_=!1,i}return dt(e,t),Object.defineProperty(e,"cssClasses",{get:function(){return be},enumerable:!1,configurable:!0}),Object.defineProperty(e,"strings",{get:function(){return ge},enumerable:!1,configurable:!0}),Object.defineProperty(e,"defaultAdapter",{get:function(){return{eventTargetMatchesSelector:function(){return!1},addClass:function(){},removeClass:function(){},addScrollAreaClass:function(){},setScrollAreaStyleProperty:function(){},setScrollContentStyleProperty:function(){},getScrollContentStyleValue:function(){return""},setScrollAreaScrollLeft:function(){},getScrollAreaScrollLeft:function(){return 0},getScrollContentOffsetWidth:function(){return 0},getScrollAreaOffsetWidth:function(){return 0},computeScrollAreaClientRect:function(){return{top:0,right:0,bottom:0,left:0,width:0,height:0}},computeScrollContentClientRect:function(){return{top:0,right:0,bottom:0,left:0,width:0,height:0}},computeHorizontalScrollbarHeight:function(){return 0}}},enumerable:!1,configurable:!0}),e.prototype.init=function(){var t=this.adapter.computeHorizontalScrollbarHeight();this.adapter.setScrollAreaStyleProperty("margin-bottom",-t+"px"),this.adapter.addScrollAreaClass(e.cssClasses.SCROLL_AREA_SCROLL)},e.prototype.getScrollPosition=function(){if(this.isRTL_())return this.computeCurrentScrollPositionRTL_();var t=this.calculateCurrentTranslateX_();return this.adapter.getScrollAreaScrollLeft()-t},e.prototype.handleInteraction=function(){this.isAnimating_&&this.stopScrollAnimation_()},e.prototype.handleTransitionEnd=function(t){var n=t.target;this.isAnimating_&&this.adapter.eventTargetMatchesSelector(n,e.strings.CONTENT_SELECTOR)&&(this.isAnimating_=!1,this.adapter.removeClass(e.cssClasses.ANIMATING))},e.prototype.incrementScroll=function(t){0!==t&&this.animate_(this.getIncrementScrollOperation_(t))},e.prototype.incrementScrollImmediate=function(t){if(0!==t){var e=this.getIncrementScrollOperation_(t);0!==e.scrollDelta&&(this.stopScrollAnimation_(),this.adapter.setScrollAreaScrollLeft(e.finalScrollPosition))}},e.prototype.scrollTo=function(t){if(this.isRTL_())return this.scrollToRTL_(t);this.scrollTo_(t)},e.prototype.getRTLScroller=function(){return this.rtlScrollerInstance_||(this.rtlScrollerInstance_=this.rtlScrollerFactory_()),this.rtlScrollerInstance_},e.prototype.calculateCurrentTranslateX_=function(){var t=this.adapter.getScrollContentStyleValue("transform");if("none"===t)return 0;var e=/\((.+?)\)/.exec(t);if(!e)return 0;var n=function(t,e){var n="function"==typeof Symbol&&t[Symbol.iterator];if(!n)return t;var i,a,s=n.call(t),o=[];try{for(;(void 0===e||e-- >0)&&!(i=s.next()).done;)o.push(i.value)}catch(t){a={error:t}}finally{try{i&&!i.done&&(n=s.return)&&n.call(s)}finally{if(a)throw a.error}}return o}(e[1].split(","),6);n[0],n[1],n[2],n[3];var i=n[4];return n[5],parseFloat(i)},e.prototype.clampScrollValue_=function(t){var e=this.calculateScrollEdges_();return Math.min(Math.max(e.left,t),e.right)},e.prototype.computeCurrentScrollPositionRTL_=function(){var t=this.calculateCurrentTranslateX_();return this.getRTLScroller().getScrollPositionRTL(t)},e.prototype.calculateScrollEdges_=function(){return{left:0,right:this.adapter.getScrollContentOffsetWidth()-this.adapter.getScrollAreaOffsetWidth()}},e.prototype.scrollTo_=function(t){var e=this.getScrollPosition(),n=this.clampScrollValue_(t),i=n-e;this.animate_({finalScrollPosition:n,scrollDelta:i})},e.prototype.scrollToRTL_=function(t){var e=this.getRTLScroller().scrollToRTL(t);this.animate_(e)},e.prototype.getIncrementScrollOperation_=function(t){if(this.isRTL_())return this.getRTLScroller().incrementScrollRTL(t);var e=this.getScrollPosition(),n=t+e,i=this.clampScrollValue_(n);return{finalScrollPosition:i,scrollDelta:i-e}},e.prototype.animate_=function(t){var n=this;0!==t.scrollDelta&&(this.stopScrollAnimation_(),this.adapter.setScrollAreaScrollLeft(t.finalScrollPosition),this.adapter.setScrollContentStyleProperty("transform","translateX("+t.scrollDelta+"px)"),this.adapter.computeScrollAreaClientRect(),requestAnimationFrame((function(){n.adapter.addClass(e.cssClasses.ANIMATING),n.adapter.setScrollContentStyleProperty("transform","none")})),this.isAnimating_=!0)},e.prototype.stopScrollAnimation_=function(){this.isAnimating_=!1;var t=this.getAnimatingScrollPosition_();this.adapter.removeClass(e.cssClasses.ANIMATING),this.adapter.setScrollContentStyleProperty("transform","translateX(0px)"),this.adapter.setScrollAreaScrollLeft(t)},e.prototype.getAnimatingScrollPosition_=function(){var t=this.calculateCurrentTranslateX_(),e=this.adapter.getScrollAreaScrollLeft();return this.isRTL_()?this.getRTLScroller().getAnimatingScrollPosition(e,t):e-t},e.prototype.rtlScrollerFactory_=function(){var t=this.adapter.getScrollAreaScrollLeft();this.adapter.setScrollAreaScrollLeft(t-1);var e=this.adapter.getScrollAreaScrollLeft();if(e<0)return this.adapter.setScrollAreaScrollLeft(t),new we(this.adapter);var n=this.adapter.computeScrollAreaClientRect(),i=this.adapter.computeScrollContentClientRect(),a=Math.round(i.right-n.right);return this.adapter.setScrollAreaScrollLeft(t),a===e?new $e(this.adapter):new ye(this.adapter)},e.prototype.isRTL_=function(){return"rtl"===this.adapter.getScrollContentStyleValue("direction")},e}(pt);
-/**
+    // Activation events registered on the root element of each instance for activation
+    var ACTIVATION_EVENT_TYPES = [
+        'touchstart', 'pointerdown', 'mousedown', 'keydown',
+    ];
+    // Deactivation events registered on documentElement when a pointer-related down event occurs
+    var POINTER_DEACTIVATION_EVENT_TYPES = [
+        'touchend', 'pointerup', 'mouseup', 'contextmenu',
+    ];
+    // simultaneous nested activations
+    var activatedTargets = [];
+    var MDCRippleFoundation = /** @class */ (function (_super) {
+        __extends(MDCRippleFoundation, _super);
+        function MDCRippleFoundation(adapter) {
+            var _this = _super.call(this, __assign(__assign({}, MDCRippleFoundation.defaultAdapter), adapter)) || this;
+            _this.activationAnimationHasEnded_ = false;
+            _this.activationTimer_ = 0;
+            _this.fgDeactivationRemovalTimer_ = 0;
+            _this.fgScale_ = '0';
+            _this.frame_ = { width: 0, height: 0 };
+            _this.initialSize_ = 0;
+            _this.layoutFrame_ = 0;
+            _this.maxRadius_ = 0;
+            _this.unboundedCoords_ = { left: 0, top: 0 };
+            _this.activationState_ = _this.defaultActivationState_();
+            _this.activationTimerCallback_ = function () {
+                _this.activationAnimationHasEnded_ = true;
+                _this.runDeactivationUXLogicIfReady_();
+            };
+            _this.activateHandler_ = function (e) { return _this.activate_(e); };
+            _this.deactivateHandler_ = function () { return _this.deactivate_(); };
+            _this.focusHandler_ = function () { return _this.handleFocus(); };
+            _this.blurHandler_ = function () { return _this.handleBlur(); };
+            _this.resizeHandler_ = function () { return _this.layout(); };
+            return _this;
+        }
+        Object.defineProperty(MDCRippleFoundation, "cssClasses", {
+            get: function () {
+                return cssClasses$3;
+            },
+            enumerable: false,
+            configurable: true
+        });
+        Object.defineProperty(MDCRippleFoundation, "strings", {
+            get: function () {
+                return strings$4;
+            },
+            enumerable: false,
+            configurable: true
+        });
+        Object.defineProperty(MDCRippleFoundation, "numbers", {
+            get: function () {
+                return numbers$1;
+            },
+            enumerable: false,
+            configurable: true
+        });
+        Object.defineProperty(MDCRippleFoundation, "defaultAdapter", {
+            get: function () {
+                return {
+                    addClass: function () { return undefined; },
+                    browserSupportsCssVars: function () { return true; },
+                    computeBoundingRect: function () { return ({ top: 0, right: 0, bottom: 0, left: 0, width: 0, height: 0 }); },
+                    containsEventTarget: function () { return true; },
+                    deregisterDocumentInteractionHandler: function () { return undefined; },
+                    deregisterInteractionHandler: function () { return undefined; },
+                    deregisterResizeHandler: function () { return undefined; },
+                    getWindowPageOffset: function () { return ({ x: 0, y: 0 }); },
+                    isSurfaceActive: function () { return true; },
+                    isSurfaceDisabled: function () { return true; },
+                    isUnbounded: function () { return true; },
+                    registerDocumentInteractionHandler: function () { return undefined; },
+                    registerInteractionHandler: function () { return undefined; },
+                    registerResizeHandler: function () { return undefined; },
+                    removeClass: function () { return undefined; },
+                    updateCssVariable: function () { return undefined; },
+                };
+            },
+            enumerable: false,
+            configurable: true
+        });
+        MDCRippleFoundation.prototype.init = function () {
+            var _this = this;
+            var supportsPressRipple = this.supportsPressRipple_();
+            this.registerRootHandlers_(supportsPressRipple);
+            if (supportsPressRipple) {
+                var _a = MDCRippleFoundation.cssClasses, ROOT_1 = _a.ROOT, UNBOUNDED_1 = _a.UNBOUNDED;
+                requestAnimationFrame(function () {
+                    _this.adapter.addClass(ROOT_1);
+                    if (_this.adapter.isUnbounded()) {
+                        _this.adapter.addClass(UNBOUNDED_1);
+                        // Unbounded ripples need layout logic applied immediately to set coordinates for both shade and ripple
+                        _this.layoutInternal_();
+                    }
+                });
+            }
+        };
+        MDCRippleFoundation.prototype.destroy = function () {
+            var _this = this;
+            if (this.supportsPressRipple_()) {
+                if (this.activationTimer_) {
+                    clearTimeout(this.activationTimer_);
+                    this.activationTimer_ = 0;
+                    this.adapter.removeClass(MDCRippleFoundation.cssClasses.FG_ACTIVATION);
+                }
+                if (this.fgDeactivationRemovalTimer_) {
+                    clearTimeout(this.fgDeactivationRemovalTimer_);
+                    this.fgDeactivationRemovalTimer_ = 0;
+                    this.adapter.removeClass(MDCRippleFoundation.cssClasses.FG_DEACTIVATION);
+                }
+                var _a = MDCRippleFoundation.cssClasses, ROOT_2 = _a.ROOT, UNBOUNDED_2 = _a.UNBOUNDED;
+                requestAnimationFrame(function () {
+                    _this.adapter.removeClass(ROOT_2);
+                    _this.adapter.removeClass(UNBOUNDED_2);
+                    _this.removeCssVars_();
+                });
+            }
+            this.deregisterRootHandlers_();
+            this.deregisterDeactivationHandlers_();
+        };
+        /**
+         * @param evt Optional event containing position information.
+         */
+        MDCRippleFoundation.prototype.activate = function (evt) {
+            this.activate_(evt);
+        };
+        MDCRippleFoundation.prototype.deactivate = function () {
+            this.deactivate_();
+        };
+        MDCRippleFoundation.prototype.layout = function () {
+            var _this = this;
+            if (this.layoutFrame_) {
+                cancelAnimationFrame(this.layoutFrame_);
+            }
+            this.layoutFrame_ = requestAnimationFrame(function () {
+                _this.layoutInternal_();
+                _this.layoutFrame_ = 0;
+            });
+        };
+        MDCRippleFoundation.prototype.setUnbounded = function (unbounded) {
+            var UNBOUNDED = MDCRippleFoundation.cssClasses.UNBOUNDED;
+            if (unbounded) {
+                this.adapter.addClass(UNBOUNDED);
+            }
+            else {
+                this.adapter.removeClass(UNBOUNDED);
+            }
+        };
+        MDCRippleFoundation.prototype.handleFocus = function () {
+            var _this = this;
+            requestAnimationFrame(function () { return _this.adapter.addClass(MDCRippleFoundation.cssClasses.BG_FOCUSED); });
+        };
+        MDCRippleFoundation.prototype.handleBlur = function () {
+            var _this = this;
+            requestAnimationFrame(function () { return _this.adapter.removeClass(MDCRippleFoundation.cssClasses.BG_FOCUSED); });
+        };
+        /**
+         * We compute this property so that we are not querying information about the client
+         * until the point in time where the foundation requests it. This prevents scenarios where
+         * client-side feature-detection may happen too early, such as when components are rendered on the server
+         * and then initialized at mount time on the client.
+         */
+        MDCRippleFoundation.prototype.supportsPressRipple_ = function () {
+            return this.adapter.browserSupportsCssVars();
+        };
+        MDCRippleFoundation.prototype.defaultActivationState_ = function () {
+            return {
+                activationEvent: undefined,
+                hasDeactivationUXRun: false,
+                isActivated: false,
+                isProgrammatic: false,
+                wasActivatedByPointer: false,
+                wasElementMadeActive: false,
+            };
+        };
+        /**
+         * supportsPressRipple Passed from init to save a redundant function call
+         */
+        MDCRippleFoundation.prototype.registerRootHandlers_ = function (supportsPressRipple) {
+            var _this = this;
+            if (supportsPressRipple) {
+                ACTIVATION_EVENT_TYPES.forEach(function (evtType) {
+                    _this.adapter.registerInteractionHandler(evtType, _this.activateHandler_);
+                });
+                if (this.adapter.isUnbounded()) {
+                    this.adapter.registerResizeHandler(this.resizeHandler_);
+                }
+            }
+            this.adapter.registerInteractionHandler('focus', this.focusHandler_);
+            this.adapter.registerInteractionHandler('blur', this.blurHandler_);
+        };
+        MDCRippleFoundation.prototype.registerDeactivationHandlers_ = function (evt) {
+            var _this = this;
+            if (evt.type === 'keydown') {
+                this.adapter.registerInteractionHandler('keyup', this.deactivateHandler_);
+            }
+            else {
+                POINTER_DEACTIVATION_EVENT_TYPES.forEach(function (evtType) {
+                    _this.adapter.registerDocumentInteractionHandler(evtType, _this.deactivateHandler_);
+                });
+            }
+        };
+        MDCRippleFoundation.prototype.deregisterRootHandlers_ = function () {
+            var _this = this;
+            ACTIVATION_EVENT_TYPES.forEach(function (evtType) {
+                _this.adapter.deregisterInteractionHandler(evtType, _this.activateHandler_);
+            });
+            this.adapter.deregisterInteractionHandler('focus', this.focusHandler_);
+            this.adapter.deregisterInteractionHandler('blur', this.blurHandler_);
+            if (this.adapter.isUnbounded()) {
+                this.adapter.deregisterResizeHandler(this.resizeHandler_);
+            }
+        };
+        MDCRippleFoundation.prototype.deregisterDeactivationHandlers_ = function () {
+            var _this = this;
+            this.adapter.deregisterInteractionHandler('keyup', this.deactivateHandler_);
+            POINTER_DEACTIVATION_EVENT_TYPES.forEach(function (evtType) {
+                _this.adapter.deregisterDocumentInteractionHandler(evtType, _this.deactivateHandler_);
+            });
+        };
+        MDCRippleFoundation.prototype.removeCssVars_ = function () {
+            var _this = this;
+            var rippleStrings = MDCRippleFoundation.strings;
+            var keys = Object.keys(rippleStrings);
+            keys.forEach(function (key) {
+                if (key.indexOf('VAR_') === 0) {
+                    _this.adapter.updateCssVariable(rippleStrings[key], null);
+                }
+            });
+        };
+        MDCRippleFoundation.prototype.activate_ = function (evt) {
+            var _this = this;
+            if (this.adapter.isSurfaceDisabled()) {
+                return;
+            }
+            var activationState = this.activationState_;
+            if (activationState.isActivated) {
+                return;
+            }
+            // Avoid reacting to follow-on events fired by touch device after an already-processed user interaction
+            var previousActivationEvent = this.previousActivationEvent_;
+            var isSameInteraction = previousActivationEvent && evt !== undefined && previousActivationEvent.type !== evt.type;
+            if (isSameInteraction) {
+                return;
+            }
+            activationState.isActivated = true;
+            activationState.isProgrammatic = evt === undefined;
+            activationState.activationEvent = evt;
+            activationState.wasActivatedByPointer = activationState.isProgrammatic ? false : evt !== undefined && (evt.type === 'mousedown' || evt.type === 'touchstart' || evt.type === 'pointerdown');
+            var hasActivatedChild = evt !== undefined &&
+                activatedTargets.length > 0 &&
+                activatedTargets.some(function (target) { return _this.adapter.containsEventTarget(target); });
+            if (hasActivatedChild) {
+                // Immediately reset activation state, while preserving logic that prevents touch follow-on events
+                this.resetActivationState_();
+                return;
+            }
+            if (evt !== undefined) {
+                activatedTargets.push(evt.target);
+                this.registerDeactivationHandlers_(evt);
+            }
+            activationState.wasElementMadeActive = this.checkElementMadeActive_(evt);
+            if (activationState.wasElementMadeActive) {
+                this.animateActivation_();
+            }
+            requestAnimationFrame(function () {
+                // Reset array on next frame after the current event has had a chance to bubble to prevent ancestor ripples
+                activatedTargets = [];
+                if (!activationState.wasElementMadeActive
+                    && evt !== undefined
+                    && (evt.key === ' ' || evt.keyCode === 32)) {
+                    // If space was pressed, try again within an rAF call to detect :active, because different UAs report
+                    // active states inconsistently when they're called within event handling code:
+                    // - https://bugs.chromium.org/p/chromium/issues/detail?id=635971
+                    // - https://bugzilla.mozilla.org/show_bug.cgi?id=1293741
+                    // We try first outside rAF to support Edge, which does not exhibit this problem, but will crash if a CSS
+                    // variable is set within a rAF callback for a submit button interaction (#2241).
+                    activationState.wasElementMadeActive = _this.checkElementMadeActive_(evt);
+                    if (activationState.wasElementMadeActive) {
+                        _this.animateActivation_();
+                    }
+                }
+                if (!activationState.wasElementMadeActive) {
+                    // Reset activation state immediately if element was not made active.
+                    _this.activationState_ = _this.defaultActivationState_();
+                }
+            });
+        };
+        MDCRippleFoundation.prototype.checkElementMadeActive_ = function (evt) {
+            return (evt !== undefined && evt.type === 'keydown') ?
+                this.adapter.isSurfaceActive() :
+                true;
+        };
+        MDCRippleFoundation.prototype.animateActivation_ = function () {
+            var _this = this;
+            var _a = MDCRippleFoundation.strings, VAR_FG_TRANSLATE_START = _a.VAR_FG_TRANSLATE_START, VAR_FG_TRANSLATE_END = _a.VAR_FG_TRANSLATE_END;
+            var _b = MDCRippleFoundation.cssClasses, FG_DEACTIVATION = _b.FG_DEACTIVATION, FG_ACTIVATION = _b.FG_ACTIVATION;
+            var DEACTIVATION_TIMEOUT_MS = MDCRippleFoundation.numbers.DEACTIVATION_TIMEOUT_MS;
+            this.layoutInternal_();
+            var translateStart = '';
+            var translateEnd = '';
+            if (!this.adapter.isUnbounded()) {
+                var _c = this.getFgTranslationCoordinates_(), startPoint = _c.startPoint, endPoint = _c.endPoint;
+                translateStart = startPoint.x + "px, " + startPoint.y + "px";
+                translateEnd = endPoint.x + "px, " + endPoint.y + "px";
+            }
+            this.adapter.updateCssVariable(VAR_FG_TRANSLATE_START, translateStart);
+            this.adapter.updateCssVariable(VAR_FG_TRANSLATE_END, translateEnd);
+            // Cancel any ongoing activation/deactivation animations
+            clearTimeout(this.activationTimer_);
+            clearTimeout(this.fgDeactivationRemovalTimer_);
+            this.rmBoundedActivationClasses_();
+            this.adapter.removeClass(FG_DEACTIVATION);
+            // Force layout in order to re-trigger the animation.
+            this.adapter.computeBoundingRect();
+            this.adapter.addClass(FG_ACTIVATION);
+            this.activationTimer_ = setTimeout(function () { return _this.activationTimerCallback_(); }, DEACTIVATION_TIMEOUT_MS);
+        };
+        MDCRippleFoundation.prototype.getFgTranslationCoordinates_ = function () {
+            var _a = this.activationState_, activationEvent = _a.activationEvent, wasActivatedByPointer = _a.wasActivatedByPointer;
+            var startPoint;
+            if (wasActivatedByPointer) {
+                startPoint = getNormalizedEventCoords(activationEvent, this.adapter.getWindowPageOffset(), this.adapter.computeBoundingRect());
+            }
+            else {
+                startPoint = {
+                    x: this.frame_.width / 2,
+                    y: this.frame_.height / 2,
+                };
+            }
+            // Center the element around the start point.
+            startPoint = {
+                x: startPoint.x - (this.initialSize_ / 2),
+                y: startPoint.y - (this.initialSize_ / 2),
+            };
+            var endPoint = {
+                x: (this.frame_.width / 2) - (this.initialSize_ / 2),
+                y: (this.frame_.height / 2) - (this.initialSize_ / 2),
+            };
+            return { startPoint: startPoint, endPoint: endPoint };
+        };
+        MDCRippleFoundation.prototype.runDeactivationUXLogicIfReady_ = function () {
+            var _this = this;
+            // This method is called both when a pointing device is released, and when the activation animation ends.
+            // The deactivation animation should only run after both of those occur.
+            var FG_DEACTIVATION = MDCRippleFoundation.cssClasses.FG_DEACTIVATION;
+            var _a = this.activationState_, hasDeactivationUXRun = _a.hasDeactivationUXRun, isActivated = _a.isActivated;
+            var activationHasEnded = hasDeactivationUXRun || !isActivated;
+            if (activationHasEnded && this.activationAnimationHasEnded_) {
+                this.rmBoundedActivationClasses_();
+                this.adapter.addClass(FG_DEACTIVATION);
+                this.fgDeactivationRemovalTimer_ = setTimeout(function () {
+                    _this.adapter.removeClass(FG_DEACTIVATION);
+                }, numbers$1.FG_DEACTIVATION_MS);
+            }
+        };
+        MDCRippleFoundation.prototype.rmBoundedActivationClasses_ = function () {
+            var FG_ACTIVATION = MDCRippleFoundation.cssClasses.FG_ACTIVATION;
+            this.adapter.removeClass(FG_ACTIVATION);
+            this.activationAnimationHasEnded_ = false;
+            this.adapter.computeBoundingRect();
+        };
+        MDCRippleFoundation.prototype.resetActivationState_ = function () {
+            var _this = this;
+            this.previousActivationEvent_ = this.activationState_.activationEvent;
+            this.activationState_ = this.defaultActivationState_();
+            // Touch devices may fire additional events for the same interaction within a short time.
+            // Store the previous event until it's safe to assume that subsequent events are for new interactions.
+            setTimeout(function () { return _this.previousActivationEvent_ = undefined; }, MDCRippleFoundation.numbers.TAP_DELAY_MS);
+        };
+        MDCRippleFoundation.prototype.deactivate_ = function () {
+            var _this = this;
+            var activationState = this.activationState_;
+            // This can happen in scenarios such as when you have a keyup event that blurs the element.
+            if (!activationState.isActivated) {
+                return;
+            }
+            var state = __assign({}, activationState);
+            if (activationState.isProgrammatic) {
+                requestAnimationFrame(function () { return _this.animateDeactivation_(state); });
+                this.resetActivationState_();
+            }
+            else {
+                this.deregisterDeactivationHandlers_();
+                requestAnimationFrame(function () {
+                    _this.activationState_.hasDeactivationUXRun = true;
+                    _this.animateDeactivation_(state);
+                    _this.resetActivationState_();
+                });
+            }
+        };
+        MDCRippleFoundation.prototype.animateDeactivation_ = function (_a) {
+            var wasActivatedByPointer = _a.wasActivatedByPointer, wasElementMadeActive = _a.wasElementMadeActive;
+            if (wasActivatedByPointer || wasElementMadeActive) {
+                this.runDeactivationUXLogicIfReady_();
+            }
+        };
+        MDCRippleFoundation.prototype.layoutInternal_ = function () {
+            var _this = this;
+            this.frame_ = this.adapter.computeBoundingRect();
+            var maxDim = Math.max(this.frame_.height, this.frame_.width);
+            // Surface diameter is treated differently for unbounded vs. bounded ripples.
+            // Unbounded ripple diameter is calculated smaller since the surface is expected to already be padded appropriately
+            // to extend the hitbox, and the ripple is expected to meet the edges of the padded hitbox (which is typically
+            // square). Bounded ripples, on the other hand, are fully expected to expand beyond the surface's longest diameter
+            // (calculated based on the diagonal plus a constant padding), and are clipped at the surface's border via
+            // `overflow: hidden`.
+            var getBoundedRadius = function () {
+                var hypotenuse = Math.sqrt(Math.pow(_this.frame_.width, 2) + Math.pow(_this.frame_.height, 2));
+                return hypotenuse + MDCRippleFoundation.numbers.PADDING;
+            };
+            this.maxRadius_ = this.adapter.isUnbounded() ? maxDim : getBoundedRadius();
+            // Ripple is sized as a fraction of the largest dimension of the surface, then scales up using a CSS scale transform
+            var initialSize = Math.floor(maxDim * MDCRippleFoundation.numbers.INITIAL_ORIGIN_SCALE);
+            // Unbounded ripple size should always be even number to equally center align.
+            if (this.adapter.isUnbounded() && initialSize % 2 !== 0) {
+                this.initialSize_ = initialSize - 1;
+            }
+            else {
+                this.initialSize_ = initialSize;
+            }
+            this.fgScale_ = "" + this.maxRadius_ / this.initialSize_;
+            this.updateLayoutCssVars_();
+        };
+        MDCRippleFoundation.prototype.updateLayoutCssVars_ = function () {
+            var _a = MDCRippleFoundation.strings, VAR_FG_SIZE = _a.VAR_FG_SIZE, VAR_LEFT = _a.VAR_LEFT, VAR_TOP = _a.VAR_TOP, VAR_FG_SCALE = _a.VAR_FG_SCALE;
+            this.adapter.updateCssVariable(VAR_FG_SIZE, this.initialSize_ + "px");
+            this.adapter.updateCssVariable(VAR_FG_SCALE, this.fgScale_);
+            if (this.adapter.isUnbounded()) {
+                this.unboundedCoords_ = {
+                    left: Math.round((this.frame_.width / 2) - (this.initialSize_ / 2)),
+                    top: Math.round((this.frame_.height / 2) - (this.initialSize_ / 2)),
+                };
+                this.adapter.updateCssVariable(VAR_LEFT, this.unboundedCoords_.left + "px");
+                this.adapter.updateCssVariable(VAR_TOP, this.unboundedCoords_.top + "px");
+            }
+        };
+        return MDCRippleFoundation;
+    }(MDCFoundation));
+
+    /**
      * @license
      * Copyright 2018 Google Inc.
      *
@@ -169,5 +1525,9982 @@ var wt=["touchstart","pointerdown","mousedown","keydown"],$t=["touchend","pointe
      * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
      * THE SOFTWARE.
      */
-var ke={ARROW_LEFT_KEY:"ArrowLeft",ARROW_RIGHT_KEY:"ArrowRight",END_KEY:"End",ENTER_KEY:"Enter",HOME_KEY:"Home",SPACE_KEY:"Space",TAB_ACTIVATED_EVENT:"MDCTabBar:activated",TAB_SCROLLER_SELECTOR:".mdc-tab-scroller",TAB_SELECTOR:".mdc-tab"},Ae={ARROW_LEFT_KEYCODE:37,ARROW_RIGHT_KEYCODE:39,END_KEYCODE:35,ENTER_KEYCODE:13,EXTRA_SCROLL_AMOUNT:20,HOME_KEYCODE:36,SPACE_KEYCODE:32},Se=new Set;Se.add(ke.ARROW_LEFT_KEY),Se.add(ke.ARROW_RIGHT_KEY),Se.add(ke.END_KEY),Se.add(ke.HOME_KEY),Se.add(ke.ENTER_KEY),Se.add(ke.SPACE_KEY);var xe=new Map;xe.set(Ae.ARROW_LEFT_KEYCODE,ke.ARROW_LEFT_KEY),xe.set(Ae.ARROW_RIGHT_KEYCODE,ke.ARROW_RIGHT_KEY),xe.set(Ae.END_KEYCODE,ke.END_KEY),xe.set(Ae.HOME_KEYCODE,ke.HOME_KEY),xe.set(Ae.ENTER_KEYCODE,ke.ENTER_KEY),xe.set(Ae.SPACE_KEYCODE,ke.SPACE_KEY);var Te=function(t){function e(n){var i=t.call(this,ft(ft({},e.defaultAdapter),n))||this;return i.useAutomaticActivation_=!1,i}return dt(e,t),Object.defineProperty(e,"strings",{get:function(){return ke},enumerable:!1,configurable:!0}),Object.defineProperty(e,"numbers",{get:function(){return Ae},enumerable:!1,configurable:!0}),Object.defineProperty(e,"defaultAdapter",{get:function(){return{scrollTo:function(){},incrementScroll:function(){},getScrollPosition:function(){return 0},getScrollContentWidth:function(){return 0},getOffsetWidth:function(){return 0},isRTL:function(){return!1},setActiveTab:function(){},activateTabAtIndex:function(){},deactivateTabAtIndex:function(){},focusTabAtIndex:function(){},getTabIndicatorClientRectAtIndex:function(){return{top:0,right:0,bottom:0,left:0,width:0,height:0}},getTabDimensionsAtIndex:function(){return{rootLeft:0,rootRight:0,contentLeft:0,contentRight:0}},getPreviousActiveTabIndex:function(){return-1},getFocusedTabIndex:function(){return-1},getIndexOfTabById:function(){return-1},getTabListLength:function(){return 0},notifyTabActivated:function(){}}},enumerable:!1,configurable:!0}),e.prototype.setUseAutomaticActivation=function(t){this.useAutomaticActivation_=t},e.prototype.activateTab=function(t){var e,n=this.adapter.getPreviousActiveTabIndex();this.indexIsInRange_(t)&&t!==n&&(-1!==n&&(this.adapter.deactivateTabAtIndex(n),e=this.adapter.getTabIndicatorClientRectAtIndex(n)),this.adapter.activateTabAtIndex(t,e),this.scrollIntoView(t),this.adapter.notifyTabActivated(t))},e.prototype.handleKeyDown=function(t){var e=this.getKeyFromEvent_(t);if(void 0!==e)if(this.isActivationKey_(e)||t.preventDefault(),this.useAutomaticActivation_){if(this.isActivationKey_(e))return;var n=this.determineTargetFromKey_(this.adapter.getPreviousActiveTabIndex(),e);this.adapter.setActiveTab(n),this.scrollIntoView(n)}else{var i=this.adapter.getFocusedTabIndex();if(this.isActivationKey_(e))this.adapter.setActiveTab(i);else{n=this.determineTargetFromKey_(i,e);this.adapter.focusTabAtIndex(n),this.scrollIntoView(n)}}},e.prototype.handleTabInteraction=function(t){this.adapter.setActiveTab(this.adapter.getIndexOfTabById(t.detail.tabId))},e.prototype.scrollIntoView=function(t){if(this.indexIsInRange_(t))return 0===t?this.adapter.scrollTo(0):t===this.adapter.getTabListLength()-1?this.adapter.scrollTo(this.adapter.getScrollContentWidth()):this.isRTL_()?this.scrollIntoViewRTL_(t):void this.scrollIntoView_(t)},e.prototype.determineTargetFromKey_=function(t,e){var n=this.isRTL_(),i=this.adapter.getTabListLength()-1,a=t;return e===ke.END_KEY?a=i:e===ke.ARROW_LEFT_KEY&&!n||e===ke.ARROW_RIGHT_KEY&&n?a-=1:e===ke.ARROW_RIGHT_KEY&&!n||e===ke.ARROW_LEFT_KEY&&n?a+=1:a=0,a<0?a=i:a>i&&(a=0),a},e.prototype.calculateScrollIncrement_=function(t,e,n,i){var a=this.adapter.getTabDimensionsAtIndex(e),s=a.contentLeft-n-i,o=a.contentRight-n-Ae.EXTRA_SCROLL_AMOUNT,l=s+Ae.EXTRA_SCROLL_AMOUNT;return e<t?Math.min(o,0):Math.max(l,0)},e.prototype.calculateScrollIncrementRTL_=function(t,e,n,i,a){var s=this.adapter.getTabDimensionsAtIndex(e),o=a-s.contentLeft-n,l=a-s.contentRight-n-i+Ae.EXTRA_SCROLL_AMOUNT,c=o-Ae.EXTRA_SCROLL_AMOUNT;return e>t?Math.max(l,0):Math.min(c,0)},e.prototype.findAdjacentTabIndexClosestToEdge_=function(t,e,n,i){var a=e.rootLeft-n,s=e.rootRight-n-i,o=a+s;return a<0||o<0?t-1:s>0||o>0?t+1:-1},e.prototype.findAdjacentTabIndexClosestToEdgeRTL_=function(t,e,n,i,a){var s=a-e.rootLeft-i-n,o=a-e.rootRight-n,l=s+o;return s>0||l>0?t+1:o<0||l<0?t-1:-1},e.prototype.getKeyFromEvent_=function(t){return Se.has(t.key)?t.key:xe.get(t.keyCode)},e.prototype.isActivationKey_=function(t){return t===ke.SPACE_KEY||t===ke.ENTER_KEY},e.prototype.indexIsInRange_=function(t){return t>=0&&t<this.adapter.getTabListLength()},e.prototype.isRTL_=function(){return this.adapter.isRTL()},e.prototype.scrollIntoView_=function(t){var e=this.adapter.getScrollPosition(),n=this.adapter.getOffsetWidth(),i=this.adapter.getTabDimensionsAtIndex(t),a=this.findAdjacentTabIndexClosestToEdge_(t,i,e,n);if(this.indexIsInRange_(a)){var s=this.calculateScrollIncrement_(t,a,e,n);this.adapter.incrementScroll(s)}},e.prototype.scrollIntoViewRTL_=function(t){var e=this.adapter.getScrollPosition(),n=this.adapter.getOffsetWidth(),i=this.adapter.getTabDimensionsAtIndex(t),a=this.adapter.getScrollContentWidth(),s=this.findAdjacentTabIndexClosestToEdgeRTL_(t,i,e,n,a);if(this.indexIsInRange_(s)){var o=this.calculateScrollIncrementRTL_(t,s,e,n,a);this.adapter.incrementScroll(o)}},e}(pt);function Oe(t){let n,i,o,c,u,d,f,b,_,y,w,C,A,S;const x=t[23].default,T=l(x,t,t[22],null);let O=[{class:c=Mt({[t[6]]:!0,"mdc-tab-scroller__scroll-content":!0})},{style:u=Object.entries(t[14]).map(Ee).join(" ")},Ht(t[16],"scrollContent$")],E={};for(let t=0;t<O.length;t+=1)E=e(E,O[t]);let I=[{class:f=Mt({[t[4]]:!0,"mdc-tab-scroller__scroll-area":!0,...t[12]})},{style:b=Object.entries(t[13]).map(Ie).join(" ")},Ht(t[16],"scrollArea$")],R={};for(let t=0;t<I.length;t+=1)R=e(R,I[t]);let L=[{class:y=Mt({[t[1]]:!0,"mdc-tab-scroller":!0,"mdc-tab-scroller--align-start":"start"===t[2],"mdc-tab-scroller--align-end":"end"===t[2],"mdc-tab-scroller--align-center":"center"===t[2],...t[11]})},Nt(t[16],["scrollArea$","scrollContent$"])],D={};for(let t=0;t<L.length;t+=1)D=e(D,L[t]);return{c(){n=g("div"),i=g("div"),o=g("div"),T&&T.c(),k(o,E),k(i,R),k(n,D)},m(e,a){h(e,n,a),m(n,i),m(i,o),T&&T.m(o,null),t[24](o),t[26](i),t[32](n),C=!0,A||(S=[p(d=Bt.call(null,o,t[5])),$(o,"transitionend",t[25]),p(_=Bt.call(null,i,t[3])),$(i,"wheel",t[27],{passive:!0}),$(i,"touchstart",t[28],{passive:!0}),$(i,"pointerdown",t[29]),$(i,"mousedown",t[30]),$(i,"keydown",t[31]),p(w=Bt.call(null,n,t[0])),p(t[15].call(null,n))],A=!0)},p(t,e){T&&T.p&&4194304&e[0]&&r(T,x,t,t[22],e,null,null),k(o,E=nt(O,[(!C||64&e[0]&&c!==(c=Mt({[t[6]]:!0,"mdc-tab-scroller__scroll-content":!0})))&&{class:c},(!C||16384&e[0]&&u!==(u=Object.entries(t[14]).map(Ee).join(" ")))&&{style:u},65536&e[0]&&Ht(t[16],"scrollContent$")])),d&&s(d.update)&&32&e[0]&&d.update.call(null,t[5]),k(i,R=nt(I,[(!C||4112&e[0]&&f!==(f=Mt({[t[4]]:!0,"mdc-tab-scroller__scroll-area":!0,...t[12]})))&&{class:f},(!C||8192&e[0]&&b!==(b=Object.entries(t[13]).map(Ie).join(" ")))&&{style:b},65536&e[0]&&Ht(t[16],"scrollArea$")])),_&&s(_.update)&&8&e[0]&&_.update.call(null,t[3]),k(n,D=nt(L,[(!C||2054&e[0]&&y!==(y=Mt({[t[1]]:!0,"mdc-tab-scroller":!0,"mdc-tab-scroller--align-start":"start"===t[2],"mdc-tab-scroller--align-end":"end"===t[2],"mdc-tab-scroller--align-center":"center"===t[2],...t[11]})))&&{class:y},65536&e[0]&&Nt(t[16],["scrollArea$","scrollContent$"])])),w&&s(w.update)&&1&e[0]&&w.update.call(null,t[0])},i(t){C||(Q(T,t),C=!0)},o(t){tt(T,t),C=!1},d(e){e&&v(n),T&&T.d(e),t[24](null),t[26](null),t[32](null),A=!1,a(S)}}}const Ee=([t,e])=>`${t}: ${e};`,Ie=([t,e])=>`${t}: ${e};`;function Re(t,n,i){const a=["use","class","align","scrollArea$use","scrollArea$class","scrollContent$use","scrollContent$class","getScrollPosition","getScrollContentWidth","incrementScroll","scrollTo","getElement"];let s=d(n,a),{$$slots:o={},$$scope:l}=n;const{matches:c}=bt,r=Pt(L());let f,p,m,h,{use:v=[]}=n,{class:b=""}=n,{align:g=null}=n,{scrollArea$use:_=[]}=n,{scrollArea$class:y=""}=n,{scrollContent$use:w=[]}=n,{scrollContent$class:$=""}=n,C={},k={},A={},S={};function x(t){C[t]||i(11,C[t]=!0,C)}function T(t){t in C&&!C[t]||i(11,C[t]=!1,C)}function O(t){k[t]||i(12,k[t]=!0,k)}function E(t,e){A[t]!=e&&(""===e||null==e?(delete A[t],i(13,A)):i(13,A[t]=e,A))}function I(t,e){S[t]!=e&&(""===e||null==e?(delete S[t],i(14,S)):i(14,S[t]=e,S))}function R(t){return t in S?S[t]:getComputedStyle(h).getPropertyValue(t)}D((()=>(i(8,p=new Ce({eventTargetMatchesSelector:(t,e)=>c(t,e),addClass:x,removeClass:T,addScrollAreaClass:O,setScrollAreaStyleProperty:E,setScrollContentStyleProperty:I,getScrollContentStyleValue:R,setScrollAreaScrollLeft:t=>i(9,m.scrollLeft=t,m),getScrollAreaScrollLeft:()=>m.scrollLeft,getScrollContentOffsetWidth:()=>h.offsetWidth,getScrollAreaOffsetWidth:()=>m.offsetWidth,computeScrollAreaClientRect:()=>m.getBoundingClientRect(),computeScrollContentClientRect:()=>h.getBoundingClientRect(),computeHorizontalScrollbarHeight:()=>function(t,e){if(void 0===e&&(e=!0),e&&void 0!==ve)return ve;var n=t.createElement("div");n.classList.add(be.SCROLL_TEST),t.body.appendChild(n);var i=n.offsetHeight-n.clientHeight;return t.body.removeChild(n),e&&(ve=i),i}(document)})),p.init(),()=>{p.destroy()})));return t.$$set=t=>{n=e(e({},n),u(t)),i(16,s=d(n,a)),"use"in t&&i(0,v=t.use),"class"in t&&i(1,b=t.class),"align"in t&&i(2,g=t.align),"scrollArea$use"in t&&i(3,_=t.scrollArea$use),"scrollArea$class"in t&&i(4,y=t.scrollArea$class),"scrollContent$use"in t&&i(5,w=t.scrollContent$use),"scrollContent$class"in t&&i(6,$=t.scrollContent$class),"$$scope"in t&&i(22,l=t.$$scope)},[v,b,g,_,y,w,$,f,p,m,h,C,k,A,S,r,s,function(){return p.getScrollPosition()},function(){return h.offsetWidth},function(t){p.incrementScroll(t)},function(t){p.scrollTo(t)},function(){return f},l,o,function(t){H[t?"unshift":"push"]((()=>{h=t,i(10,h)}))},t=>p&&p.handleTransitionEnd(t),function(t){H[t?"unshift":"push"]((()=>{m=t,i(9,m)}))},()=>p&&p.handleInteraction(),()=>p&&p.handleInteraction(),()=>p&&p.handleInteraction(),()=>p&&p.handleInteraction(),()=>p&&p.handleInteraction(),function(t){H[t?"unshift":"push"]((()=>{f=t,i(7,f)}))}]}class Le extends rt{constructor(t){super(),ct(this,t,Re,Oe,o,{use:0,class:1,align:2,scrollArea$use:3,scrollArea$class:4,scrollContent$use:5,scrollContent$class:6,getScrollPosition:17,getScrollContentWidth:18,incrementScroll:19,scrollTo:20,getElement:21},[-1,-1])}get getScrollPosition(){return this.$$.ctx[17]}get getScrollContentWidth(){return this.$$.ctx[18]}get incrementScroll(){return this.$$.ctx[19]}get scrollTo(){return this.$$.ctx[20]}get getElement(){return this.$$.ctx[21]}}function De(t,e,n){const i=t.slice();return i[32]=e[n],i[34]=n,i}const Pe=t=>({tab:4&t[0]}),Me=t=>({tab:t[32]});function je(t,e){let n,i;const a=e[20].default,s=l(a,e,e[27],Me);return{key:t,first:null,c(){n=w(),s&&s.c(),this.first=n},m(t,e){h(t,n,e),s&&s.m(t,e),i=!0},p(t,n){e=t,s&&s.p&&134217732&n[0]&&r(s,a,e,e[27],n,Pe,Me)},i(t){i||(Q(s,t),i=!0)},o(t){tt(s,t),i=!1},d(t){t&&v(n),s&&s.d(t)}}}function Ne(t){let e,n,i=[],a=new Map,s=t[2];const o=t=>t[3](t[32]);for(let e=0;e<s.length;e+=1){let n=De(t,s,e),l=o(n);a.set(l,i[e]=je(l,n))}return{c(){for(let t=0;t<i.length;t+=1)i[t].c();e=w()},m(t,a){for(let e=0;e<i.length;e+=1)i[e].m(t,a);h(t,e,a),n=!0},p(t,n){134217740&n[0]&&(s=t[2],X(),i=function(t,e,n,i,a,s,o,l,c,r,u,d){let f=t.length,p=s.length,m=f;const h={};for(;m--;)h[t[m].key]=m;const v=[],b=new Map,g=new Map;for(m=p;m--;){const t=d(a,s,m),l=n(t);let c=o.get(l);c?i&&c.p(t,e):(c=r(l,t),c.c()),b.set(l,v[m]=c),l in h&&g.set(l,Math.abs(m-h[l]))}const _=new Set,y=new Set;function w(t){Q(t,1),t.m(l,u),o.set(t.key,t),u=t.first,p--}for(;f&&p;){const e=v[p-1],n=t[f-1],i=e.key,a=n.key;e===n?(u=e.first,f--,p--):b.has(a)?!o.has(i)||_.has(i)?w(e):y.has(a)?f--:g.get(i)>g.get(a)?(y.add(i),w(e)):(_.add(a),f--):(c(n,o),f--)}for(;f--;){const e=t[f];b.has(e.key)||c(e,o)}for(;p;)w(v[p-1]);return v}(i,n,o,1,t,s,a,e.parentNode,et,je,e,De),Z())},i(t){if(!n){for(let t=0;t<s.length;t+=1)Q(i[t]);n=!0}},o(t){for(let t=0;t<i.length;t+=1)tt(i[t]);n=!1},d(t){for(let e=0;e<i.length;e+=1)i[e].d(t);t&&v(e)}}}function He(t){let n,i,o,l,c,r,u;const d=[Ht(t[10],"tabScroller$")];let f={$$slots:{default:[Ne]},$$scope:{ctx:t}};for(let t=0;t<d.length;t+=1)f=e(f,d[t]);i=new Le({props:f}),t[21](i);let m=[{class:o=Mt({[t[1]]:!0,"mdc-tab-bar":!0})},{role:"tablist"},Nt(t[10],["tabScroller$"])],b={};for(let t=0;t<m.length;t+=1)b=e(b,m[t]);return{c(){n=g("div"),at(i.$$.fragment),k(n,b)},m(e,a){h(e,n,a),st(i,n,null),t[22](n),c=!0,r||(u=[p(l=Bt.call(null,n,t[0])),p(t[7].call(null,n)),$(n,"SMUI:tab:mount",t[23]),$(n,"SMUI:tab:unmount",t[24]),$(n,"keydown",t[25]),$(n,"MDCTab:interacted",t[26])],r=!0)},p(t,e){const a=1024&e[0]?nt(d,[it(Ht(t[10],"tabScroller$"))]):{};134217732&e[0]&&(a.$$scope={dirty:e,ctx:t}),i.$set(a),k(n,b=nt(m,[(!c||2&e[0]&&o!==(o=Mt({[t[1]]:!0,"mdc-tab-bar":!0})))&&{class:o},{role:"tablist"},1024&e[0]&&Nt(t[10],["tabScroller$"])])),l&&s(l.update)&&1&e[0]&&l.update.call(null,t[0])},i(t){c||(Q(i.$$.fragment,t),c=!0)},o(t){tt(i.$$.fragment,t),c=!1},d(e){e&&v(n),t[21](null),ot(i),t[22](null),r=!1,a(u)}}}function Be(t,n,i){const a=["use","class","tabs","key","focusOnActivate","focusOnProgrammatic","useAutomaticActivation","active","scrollIntoView","getElement"];let s=d(n,a),{$$slots:o={},$$scope:l}=n;const c=Pt(L());let r,f,p,{use:m=[]}=n,{class:h=""}=n,{tabs:v=[]}=n,{key:b=(t=>t)}=n,{focusOnActivate:g=!0}=n,{focusOnProgrammatic:_=!1}=n,{useAutomaticActivation:y=!0}=n,{active:w=null}=n,$=v.indexOf(w),C={},k=new WeakMap,A=!1;function S(t){const e=t.detail;!function(t,e){t instanceof Object?(k.set(t,e),i(19,k)):(i(18,C[t]=e,C),i(18,C))}(e.tabId,e)}function x(t){const e=t.detail;var n;(n=e.tabId)instanceof Object?(k.delete(n),i(19,k)):(delete C[n],i(18,C))}function T(t){return t instanceof Object?k.get(t):C[t]}function O(){return r}M("SMUI:tab:focusOnActivate",g),M("SMUI:tab:initialActive",w),D((()=>(i(4,f=new Te({scrollTo:t=>p.scrollTo(t),incrementScroll:t=>p.incrementScroll(t),getScrollPosition:()=>p.getScrollPosition(),getScrollContentWidth:()=>p.getScrollContentWidth(),getOffsetWidth:()=>O().offsetWidth,isRTL:()=>"rtl"===getComputedStyle(O()).getPropertyValue("direction"),setActiveTab:t=>{i(11,w=v[t]),i(17,$=t),f.activateTab(t)},activateTabAtIndex:(t,e)=>T(v[t]).activate(e,A),deactivateTabAtIndex:t=>T(v[t]).deactivate(),focusTabAtIndex:t=>T(v[t]).focus(),getTabIndicatorClientRectAtIndex:t=>T(v[t]).computeIndicatorClientRect(),getTabDimensionsAtIndex:t=>T(v[t]).computeDimensions(),getPreviousActiveTabIndex:()=>{for(let t=0;t<v.length;t++)if(T(v[t]).active)return t;return-1},getFocusedTabIndex:()=>{const t=v.map((t=>T(t).element)),e=document.activeElement;return t.indexOf(e)},getIndexOfTabById:t=>v.indexOf(t),getTabListLength:()=>v.length,notifyTabActivated:t=>jt(O(),"MDCTabBar:activated",{index:t})})),f.init(),()=>{f.destroy()})));return t.$$set=t=>{n=e(e({},n),u(t)),i(10,s=d(n,a)),"use"in t&&i(0,m=t.use),"class"in t&&i(1,h=t.class),"tabs"in t&&i(2,v=t.tabs),"key"in t&&i(3,b=t.key),"focusOnActivate"in t&&i(12,g=t.focusOnActivate),"focusOnProgrammatic"in t&&i(13,_=t.focusOnProgrammatic),"useAutomaticActivation"in t&&i(14,y=t.useAutomaticActivation),"active"in t&&i(11,w=t.active),"$$scope"in t&&i(27,l=t.$$scope)},t.$$.update=()=>{if(141332&t.$$.dirty[0]&&w!==v[$]&&(i(17,$=v.indexOf(w)),f&&(A=!_,f.activateTab($),A=!1)),917508&t.$$.dirty[0]&&v.length){const t=v[0]instanceof Object?k.get(v[0]):C[v[0]];t&&t.forceAccessible(-1===$)}16400&t.$$.dirty[0]&&f&&f.setUseAutomaticActivation(y)},[m,h,v,b,f,r,p,c,S,x,s,w,g,_,y,function(t){f.scrollIntoView(t)},O,$,C,k,o,function(t){H[t?"unshift":"push"]((()=>{p=t,i(6,p)}))},function(t){H[t?"unshift":"push"]((()=>{r=t,i(5,r)}))},t=>S(t),t=>x(t),t=>f&&f.handleKeyDown(t),t=>f&&f.handleTabInteraction(t),l]}class Fe extends rt{constructor(t){super(),ct(this,t,Be,He,o,{use:0,class:1,tabs:2,key:3,focusOnActivate:12,focusOnProgrammatic:13,useAutomaticActivation:14,active:11,scrollIntoView:15,getElement:16},[-1,-1])}get scrollIntoView(){return this.$$.ctx[15]}get getElement(){return this.$$.ctx[16]}}function ze(t){let e,n,i;return{c(){e=g("div"),n=_("..."),C(e,"id",i="smoke_"+t[2]),C(e,"class","smoke svelte-6mxcwp")},m(t,i){h(t,e,i),m(e,n)},p(t,n){4&n&&i!==(i="smoke_"+t[2])&&C(e,"id",i)},d(t){t&&v(e)}}}function Ve(t){let e,n,i,a,s,o,c,u,d,f,p,b,w,$,k=t[1]&&ze(t);const S=t[5].default,T=l(S,t,t[4],null);return{c(){k&&k.c(),e=y(),n=g("div"),i=g("div"),a=_(t[0]),s=y(),o=g("span"),c=_("[X]"),f=y(),p=g("p"),p.textContent="Press ESC to close window.",b=y(),T&&T.c(),C(o,"id",u="btn_close_"+t[2]),C(o,"class","btn_close svelte-6mxcwp"),C(i,"id",d="popup_bar_"+t[2]),C(i,"class","popup_bar svelte-6mxcwp"),x(p,"font-size","0.75em"),x(p,"font-weight","bold"),x(p,"color","darkgreen"),x(p,"padding-left","4px"),C(n,"id",w="popup_"+t[2]),C(n,"class","popup svelte-6mxcwp")},m(t,l){k&&k.m(t,l),h(t,e,l),h(t,n,l),m(n,i),m(i,a),m(i,s),m(i,o),m(o,c),m(n,f),m(n,p),m(n,b),T&&T.m(n,null),$=!0},p(t,[s]){t[1]?k?k.p(t,s):(k=ze(t),k.c(),k.m(e.parentNode,e)):k&&(k.d(1),k=null),(!$||1&s)&&A(a,t[0]),(!$||4&s&&u!==(u="btn_close_"+t[2]))&&C(o,"id",u),(!$||4&s&&d!==(d="popup_bar_"+t[2]))&&C(i,"id",d),T&&T.p&&16&s&&r(T,S,t,t[4],s,null,null),(!$||4&s&&w!==(w="popup_"+t[2]))&&C(n,"id",w)},i(t){$||(Q(T,t),$=!0)},o(t){tt(T,t),$=!1},d(t){k&&k.d(t),t&&v(e),t&&v(n),T&&T.d(t)}}}function We(t,e){let n=document.getElementById("blg-window-full-text");if(n){n._blg_app_resized=!0;let a=n.getBoundingClientRect();var i=document.getElementById(`popup_${t}`);if(i){let t=i.getBoundingClientRect(),s=Math.floor(t.bottom-a.top)-e;n.style.height=s+"px"}}}function Ke(t,e,n){let{$$slots:i={},$$scope:a}=e,{title:s}=e,{scale_size_array:o}=e,{use_smoke:l=!0}=e,{index:c=0}=e;var r={x:0,y:0};let u=o;function d(){window.removeEventListener("mousemove",p,!0)}function f(t){var e=document.getElementById(`popup_${c}`);r.x=t.clientX-e.offsetLeft,r.y=t.clientY-e.offsetTop,window.addEventListener("mousemove",p,!0)}function p(t){var e=document.getElementById(`popup_${c}`);e.style.position="absolute";var n=t.clientY-r.y,i=t.clientX-r.x;e.style.top=n+"px",e.style.left=i+"px"}function m(t){if(t){var e=document.getElementById(`smoke_${c}`);e&&(e&&(e.style.width=window.outerWidth+100+"px"),e&&(e.style.height=window.outerHeight+100+"px"),e&&null!=t&&1==t&&(e.style.display="block"))}}return D((()=>{document.getElementById(`popup_${c}`);var t=document.getElementById(`popup_bar_${c}`),e=document.getElementById(`btn_close_${c}`),n=document.getElementById(`smoke_${c}`);t.addEventListener("mousedown",f,!1),window.addEventListener("mouseup",d,!1),window.onkeydown=t=>{27==t.keyCode&&(document.getElementById(`btn_close_${c}`),document.getElementById(`popup_${c}`).style.display="none",n&&(n.style.display="none"))},e.onclick=t=>{document.getElementById(`popup_${c}`).style.display="none",n&&(n.style.display="none")},window.addEventListener("resize",(t=>{m(l)})),window.start_floating_window=t=>{!function(t){m(l);var e=document.getElementById(`popup_${t}`);"block"!==e.style.display&&(e.style.top="4px",e.style.left="4px",e.style.width=window.innerWidth*u[t].w-24+"px",e.style.height=window.innerHeight*u[t].h-24+"px",e.style.display="block",setTimeout((()=>{We(t,4)}),40));setTimeout((()=>{We(t,4)}),20)}(t)}})),t.$$set=t=>{"title"in t&&n(0,s=t.title),"scale_size_array"in t&&n(3,o=t.scale_size_array),"use_smoke"in t&&n(1,l=t.use_smoke),"index"in t&&n(2,c=t.index),"$$scope"in t&&n(4,a=t.$$scope)},[s,l,c,o,a,i]}class Ue extends rt{constructor(t){super(),ct(this,t,Ke,Ve,o,{title:0,scale_size_array:3,use_smoke:1,index:2})}}const Ye="contacts",qe="manifest";var Ge=t=>{alert(t),console.log(new Error("stack"))};function Je(t){return t.indexOf(":5")>0&&(t=t.replace("5111","6111")),t}var Xe="interplanetary-contact/contact/";async function Ze(t,e,n,i){let a=e.cid,s=location.host;s=Je(s);let o=location.protocol,l=`${Xe}get-asset/${i}`,c={btype:n=!!n,user_cid:a,cid:t},r=await postData(`${o}//${s}/${l}`,c);if(!r)return[!1,r];if("OK"===r.status){let t=r[i];if("string"!=typeof t)return t;{let n=await window.user_decryption(e,i);if(void 0!==n)try{t=await n(t)}catch(t){}if(t)try{return JSON.parse(t)}catch(e){return[!1,t]}}}}async function Qe(t,e,n){return await Ze(t,e,n,Ye)}async function tn(t,e,n){return await Ze(t,e,n,qe)}async function en(t,e,n,i){let a=e.cid,s=location.host;s=Je(s),"string"!=typeof i&&(i=JSON.stringify(i));let o=await window.user_encryption(e,t),l=i;void 0!==o&&(l=await o(i));let c=location.protocol,r=`${Xe}put-asset/${t}`,u={cid:a,business:n,contents:l},d=await postData(`${c}//${s}/${r}`,u);return"OK"===d.status&&d.update_cid}async function nn(t,e,n){return await en(qe,t,e,n)}async function an(t,e,n,i){let a=location.host;a=Je(a);let s=location.protocol,o=`${Xe}get-contact-page/${n}`,l={cid:i,business:e},c=await postData(`${s}//${a}/${o}`,l);if(c){let e=c.contact,i=window.user_decryption(t,n);if(void 0!==i)try{e=await i(e)}catch(t){}if(e){if("string"!=typeof e)return e;{let t=JSON.parse(e);try{return t}catch(t){}}}}return!1}let sn=["name","DOB","place_of_origin","cool_public_info","business","public_key","signer_public_key","biometric"];async function on(t,e){let n=Object.assign({},t);for(let t of sn)if(void 0===n[t]){if("public_key"===t&&e){delete n.public_key;continue}if("signer_public_key"===t&&e){delete n.signer_public_key;continue}if("biometric"===t&&e){delete n.biometric;continue}return void Ge("undefined field "+t)}let i=location.host;i=Je(i);let a=location.protocol,s=`${Xe}get/user-cid`,o=n,l=await postData(`${a}//${i}/${s}`,o);if("OK"===l.status){return l.cid}return!1}async function ln(t){if(void 0===t)return!1;let e=`${Xe}get/json-cid/${t}`,n=await fetchEndPoint(e,"");if("OK"===n.status){let t=n.json_str;if("string"!=typeof t)return t;try{return displayable=JSON.parse(t),displayable}catch(t){}}return!1}async function cn(t,e){let n=t.user_info;for(let t of sn)if(void 0===n[t]){if("public_key"===t&&!e){let e=get_user_public_wrapper_key(`${n.name}-${n.DOB}`);if(e){n[t]=e;continue}}if("signer_public_key"===t&&!e){let e=get_user_public_signer_key(`${n.name}-${n.DOB}`);if(e){n[t]=e;continue}}return void Ge("undefined field "+t)}e&&delete n.public_key;let i=location.host;i=Je(i);let a=location.protocol,s=`${Xe}dir`,o=n;o.cid=t.cid;let l=await postData(`${a}//${i}/${s}`,o);if("OK"===l.status){let t=l.data;try{return t=JSON.parse(t),t}catch(t){}}return!1}async function rn(t,e,n,i,a){let s=n.user_info,o=Object.assign({},e);for(let t of sn)if("public_key"===t&&a)delete e.public_key;else if("signer_public_key"===t&&a)delete e.signer_public_key;else if("biometric"===t&&a)delete e.biometric;else if(void 0===o[t])return void Ge("undefined field "+t);let l=Object.assign({},i),c=n.cid;if(l.user_cid=c,a)l.public_key=s.public_key,l.signer_public_key=s.signer_public_key,delete o.public_key,delete o.signer_public_key;else{void 0===l.when&&(l.when=Date.now()),void 0===l.date&&(l.date=new Date(i.date).toISOString()),void 0===l.name&&(l.name=s.name),l.public_key=s.public_key,l.nonce=i.nonce;let t=await window.gen_cipher_key();if(void 0===t||!t)return Ge("could not get key "),void alert("no cipher key");{l.message=JSON.stringify(i);let e=await window.user_encryption(n,"message"),a=l.message;if(void 0!==e){let n=t;a=await e(a,n,l.nonce)}l.message=a,l.wrapped_key=await window.key_wrapper(t,o.public_key),l.signature=await window.key_signer(l.wrapped_key,n.signer_priv_key),delete l.subject,delete l.readers}l.version=1.2}let r=location.host;r=Je(r);let u=location.protocol,d=`${Xe}${t}`,f={receiver:o,message:l},p=await postData(`${u}//${r}/${d}`,f);if("OK"===p.status){return p.message_cid}return!1}async function un(t,e,n){return await rn("send/introduction",t,e,n,!0)}async function dn(t,e){let n=[];try{for await(let i of async function*(t,e){let n=e.priv_key;for(let e of t){if(e.version&&e.version>1){let t=e.wrapped_key;try{let i=e.signature;if(i){if(!i)continue;let n=e.user_cid,a=contact_from_cid(n).signer_public_key;if(!await window.verifier(t,i,a))continue}let a=await window.decipher_message(e.message,t,n,e.nonce);if(!1===a)continue;e.message=JSON.parse(a)}catch(t){}}yield e}}(t,e))try{let t=!1;t="string"==typeof i.message?JSON.parse(i.message):i.message,i.f_cid&&(t.f_cid=i.f_cid),n.push(t)}catch(t){}}catch(t){console.log("caught",t)}return n}async function fn(t,e,n,i,a){let s=t.cid;if(n&&(s=t.clear_cid),void 0===s)return!1;let o=location.host;o=Je(o);let l=location.protocol,c=`${Xe}get-spool`,r={cid:s,spool:e,business:t.user_info.business,offset:i,count:a},u=await postData(`${l}//${o}/${c}`,r);if("OK"===u.status){let e=u.data,i=u.cid_list;try{return Array.isArray(e)?e=e.map(((t,e)=>{if("string"==typeof t)try{let n=JSON.parse(t);return i&&(n.f_cid=i[e]),n}catch(e){return t}})):"string"==typeof e&&(e=JSON.parse(e)),n||(e=await dn(e,t)),e}catch(t){}}return!1}async function pn(t,e,n,i){return await async function(t,e,n,i){return await fn(t,e,!1,n,i)}(t,e,n,i)}async function mn(t){let e=`${Xe}get/template-cid/${t}`,n=await fetchEndPoint(e,"");if("OK"===n.status){let t=n.template;if("string"!=typeof t)return t;try{return t=JSON.parse(t),t}catch(t){}}return!1}const hn=1e6;async function vn(t,e){let n=location.host;n=Je(n);let i=location.protocol,a=`${Xe}put/blob`,s=e.length,o={name:t,tstamp:Date.now(),offset:0,chunk:"",end:!1};for(let t=0;t<s;t+=hn){let l=e.substr(t,hn);o.chunk=l,o.offset=t,t+hn>s&&(o.end=!0);let c=await postData(`${i}//${n}/${a}`,o);if("OK"===c.status&&c.end_of_data){return c.cid}}return!1}async function bn(t){let e=location.host;e=Je(e);let n=location.protocol,i=`${Xe}get/blob`,a={cid:t},s=await postData(`${n}//${e}/${i}`,a);if("OK"===s.status){return s.data}return!1}function gn(t){let e=t.custom_contact_forms,n=[],i={};if(Array.isArray(e))for(let t of e){delete t.html;let e=t.cid;void 0===t.preference&&(t.preference=1),n.push(t.cid),i[e]=t}else{i=e;for(let t in e){let i=e[t];delete i.html,i.cid=t,n.push(t)}}t.custom_contact_forms=i,t.sorted_cids=n.sort(((t,e)=>i[t].preference-i[e].preference))}class _n{constructor(t,e){this.id=t,this.access_method="innerHTML",this.message_value="",this.message_field=e,this.match_list=!1}add_matches(t,e){this.match_list=e,t&&(this.access_method=t.substr(t.lastIndexOf("-")+1),this.access_method=this.access_method.replace("}}",""))}subst(t){return t=function(t,e,n){for(let i of n)t=t.replace(i[0],e);return t}(t,this.id,this.match_list)}extract_value(){let t=document.getElementById(this.id),e="";return e="value"===this.access_method?t.value:t.innerHTML,e}set_el_html(t){let e=document.getElementById(this.id);e&&(e.innerHTML=t)}}function yn(t,e){return new _n(t,e)}function wn(t,e){return t.split(e).join("")}function $n(t,e){return new Promise(((n,i)=>{if(t){for(let e=0;e<t.length;e++)if("file"===t[e].kind){let i=t[e].getAsFile(),s=i.name;var a=new FileReader;a.onload=async t=>{let e=t.target.result;n([s,e])},a.readAsDataURL(i);break}}else if(e)for(let t=0;t<e.length;t++){let i=e[t].getAsFile(),s=i.name;a.onload=t=>{let e=t.target.result;n([s,e])},a.readAsDataURL(i);break}else i(!1)}))}function Cn(t,e,n){const i=t.slice();return i[20]=e[n],i}function kn(e){let n,i,a;return{c(){n=g("button"),n.textContent="Add Contact",C(n,"class","svelte-c0eljx")},m(t,s){h(t,n,s),i||(a=$(n,"click",e[12]),i=!0)},p:t,d(t){t&&v(n),i=!1,a()}}}function An(t){let e,n=t[8],i=[];for(let e=0;e<n.length;e+=1)i[e]=xn(Cn(t,n,e));return{c(){for(let t=0;t<i.length;t+=1)i[t].c();e=w()},m(t,n){for(let e=0;e<i.length;e+=1)i[e].m(t,n);h(t,e,n)},p(t,a){if(8448&a){let s;for(n=t[8],s=0;s<n.length;s+=1){const o=Cn(t,n,s);i[s]?i[s].p(o,a):(i[s]=xn(o),i[s].c(),i[s].m(e.parentNode,e))}for(;s<i.length;s+=1)i[s].d(1);i.length=n.length}},d(t){b(i,t),t&&v(e)}}}function Sn(t){let e,n;return{c(){e=g("div"),n=_(t[9]),x(e,"display","inline-block"),x(e,"color","darkgreen")},m(t,i){h(t,e,i),m(e,n)},p(t,e){512&e&&A(n,t[9])},d(t){t&&v(e)}}}function xn(t){let e,n,i,a,s=t[20]+"";function o(){return t[17](t[20])}return{c(){e=g("span"),n=_(s),C(e,"class","attachment-click svelte-c0eljx")},m(t,s){h(t,e,s),m(e,n),i||(a=$(e,"click",o),i=!0)},p(e,i){t=e,256&i&&s!==(s=t[20]+"")&&A(n,s)},d(t){t&&v(e),i=!1,a()}}}function Tn(e){let n,i,s,o,l,c,r,u,d,f,p,b,w,k,T,O,I,R,L,D,P,M,j,N,H,B,F,z,V,W,K,U,Y,q,G,J,X,Z,Q,tt,et,nt,it,at,st=e[5]?"business":"person",ot=!e[7]&&kn(e);function lt(t,e){return"none"===t[9]?Sn:An}let ct=lt(e),rt=ct(e);return{c(){n=g("div"),i=g("div"),s=g("span"),o=_(e[4]),l=y(),c=g("span"),c.textContent="From:",r=y(),u=g("h4"),d=_(e[1]),f=y(),p=g("span"),b=_(e[2]),w=y(),k=g("div"),T=g("div"),O=_(e[1]),I=_(" is a "),R=_(st),L=y(),ot&&ot.c(),D=y(),P=g("button"),M=_("Reply"),N=y(),H=g("div"),B=g("span"),B.textContent="CC:",F=_(e[10]),z=y(),V=g("div"),W=g("span"),W.textContent="subject",K=_("  "),Y=y(),q=g("div"),G=g("span"),G.textContent="Attachments:",J=y(),rt.c(),X=y(),Z=g("div"),Z.innerHTML='<span class="useful-label svelte-c0eljx" style="font-size: small;">Message:</span>',Q=y(),tt=g("div"),et=y(),nt=g("input"),C(s,"class","cool-label svelte-c0eljx"),x(s,"background-color","darkgreen"),C(c,"class","cool-label svelte-c0eljx"),x(c,"background-color","limegreen"),C(u,"class","blg-item-title svelte-c0eljx"),x(u,"background-color","inherit"),C(p,"class","show-cid svelte-c0eljx"),C(T,"class","little-info svelte-c0eljx"),P.disabled=j=!e[7],C(P,"class","svelte-c0eljx"),C(k,"class","buttons svelte-c0eljx"),C(B,"class","cool-label svelte-c0eljx"),x(B,"background-color","navy"),C(W,"class","cool-label svelte-c0eljx"),x(W,"background-color","navy"),U=new E(null),x(i,"padding","6px"),C(G,"class","useful-label svelte-c0eljx"),x(q,"border-bottom","slategrey solid 1px"),x(q,"margin-bottom","4px"),x(q,"background-color","snow"),C(Z,"class","message-header svelte-c0eljx"),C(tt,"id","blg-window-full-text"),C(tt,"class","full-display svelte-c0eljx"),C(nt,"type","hidden"),C(nt,"id","pub-key"),C(n,"class","blg-el-wrapper-full svelte-c0eljx")},m(t,a){h(t,n,a),m(n,i),m(i,s),m(s,o),m(i,l),m(i,c),m(i,r),m(i,u),m(u,d),m(i,f),m(i,p),m(p,b),m(i,w),m(i,k),m(k,T),m(T,O),m(T,I),m(T,R),m(k,L),ot&&ot.m(k,null),m(k,D),m(k,P),m(P,M),m(i,N),m(i,H),m(H,B),m(H,F),m(i,z),m(i,V),m(V,W),m(V,K),U.m(e[3],V),m(n,Y),m(n,q),m(q,G),m(q,J),rt.m(q,null),m(n,X),m(n,Z),m(n,Q),m(n,tt),tt.innerHTML=e[6],m(n,et),m(n,nt),S(nt,e[0]),it||(at=[$(P,"click",e[11]),$(nt,"input",e[18])],it=!0)},p(t,[e]){16&e&&A(o,t[4]),2&e&&A(d,t[1]),4&e&&A(b,t[2]),2&e&&A(O,t[1]),32&e&&st!==(st=t[5]?"business":"person")&&A(R,st),t[7]?ot&&(ot.d(1),ot=null):ot?ot.p(t,e):(ot=kn(t),ot.c(),ot.m(k,D)),128&e&&j!==(j=!t[7])&&(P.disabled=j),1024&e&&A(F,t[10]),8&e&&U.p(t[3]),ct===(ct=lt(t))&&rt?rt.p(t,e):(rt.d(1),rt=ct(t),rt&&(rt.c(),rt.m(q,null))),64&e&&(tt.innerHTML=t[6]),1&e&&S(nt,t[0])},i:t,o:t,d(t){t&&v(n),ot&&ot.d(),rt.d(),it=!1,a(at)}}}function On(t,e,n){let{name:i}=e,{user_cid:a}=e,{subject:s}=e,{date:o}=e,{readers:l}=e,{business:c}=e,{public_key:r}=e,{signer_public_key:u}=e,{nonce:d}=e,{message:f}=e,{is_in_contacts:p}=e,{attachments:m}=e;const h=P();let v="",b="";async function g(t){let e=await bn(t);generic_downloader(e)}return t.$$set=t=>{"name"in t&&n(1,i=t.name),"user_cid"in t&&n(2,a=t.user_cid),"subject"in t&&n(3,s=t.subject),"date"in t&&n(4,o=t.date),"readers"in t&&n(14,l=t.readers),"business"in t&&n(5,c=t.business),"public_key"in t&&n(0,r=t.public_key),"signer_public_key"in t&&n(15,u=t.signer_public_key),"nonce"in t&&n(16,d=t.nonce),"message"in t&&n(6,f=t.message),"is_in_contacts"in t&&n(7,p=t.is_in_contacts),"attachments"in t&&n(8,m=t.attachments)},t.$$.update=()=>{768&t.$$.dirty&&(void 0!==m?(Array.isArray(m)&&(m.length?n(9,v=m.join(",")):n(9,v="none")),n(9,v=wn(v,"&nbsp;")),n(9,v=wn(v,"\n")),n(9,v=wn(v,"\t")),n(9,v=wn(v," "))):n(9,v="none")),17152&t.$$.dirty&&(void 0!==l?(Array.isArray(m)&&(l.length?n(10,b=m.join(",")):n(10,b="none")),n(10,b=wn(v,"&nbsp;")),n(10,b=wn(v,"\n")),n(10,b=wn(v,"\t")),n(10,b=wn(v," "))):n(10,b="none"))},[r,i,a,s,o,c,f,p,m,v,b,function(){h("message",{cmd:"reply",cid:a})},function(){h("message",{cmd:"new-contact",cid:a,signer_public_key:u})},g,l,u,d,t=>g(t),function(){r=this.value,n(0,r)}]}class En extends rt{constructor(t){super(),ct(this,t,On,Tn,o,{name:1,user_cid:2,subject:3,date:4,readers:14,business:5,public_key:0,signer_public_key:15,nonce:16,message:6,is_in_contacts:7,attachments:8})}}function In(t,e,n){const i=t.slice();return i[55]=e[n],i[9]=n,i}function Rn(t,e,n){const i=t.slice();return i[57]=e[n],i[10]=n,i}function Ln(t){let e,n,i=t[57].info+"";return{c(){e=g("option"),n=_(i),e.__value=t[10],e.value=e.__value},m(t,i){h(t,e,i),m(e,n)},p(t,e){256&e[0]&&i!==(i=t[57].info+"")&&A(n,i)},d(t){t&&v(e)}}}function Dn(t){let e,n,i,a,s,o,l,c,r;return{c(){e=g("div"),n=g("span"),n.textContent="Previous Message:",i=y(),a=g("span"),a.textContent="include",s=g("input"),o=y(),l=g("div"),C(n,"class","large-text-label svelte-y6z0fo"),C(a,"class","small-text-label svelte-y6z0fo"),C(s,"type","checkbox"),C(l,"id","blg-window-full-text-previous"),C(l,"class","full-display svelte-y6z0fo"),C(e,"class","tool-holder svelte-y6z0fo")},m(u,d){h(u,e,d),m(e,n),m(e,i),m(e,a),m(e,s),s.checked=t[14],m(e,o),m(e,l),l.innerHTML=t[20],c||(r=$(s,"change",t[40]),c=!0)},p(t,e){16384&e[0]&&(s.checked=t[14]),1048576&e[0]&&(l.innerHTML=t[20])},d(t){t&&v(e),c=!1,r()}}}function Pn(e){let n,i,a;return{c(){n=g("button"),n.textContent="begin introduction",C(n,"class","medium_button svelte-y6z0fo")},m(t,s){h(t,n,s),i||(a=$(n,"click",e[22]),i=!0)},p:t,d(t){t&&v(n),i=!1,a()}}}function Mn(e){let n,i,a;return{c(){n=g("button"),n.textContent="begin composition",C(n,"class","medium_button svelte-y6z0fo")},m(t,s){h(t,n,s),i||(a=$(n,"click",e[23]),i=!0)},p:t,d(t){t&&v(n),i=!1,a()}}}function jn(t){let e,n,i=t[55].name+"";return{c(){e=g("option"),n=_(i),e.__value=t[9],e.value=e.__value},m(t,i){h(t,e,i),m(e,n)},p(t,e){128&e[0]&&i!==(i=t[55].name+"")&&A(n,i)},d(t){t&&v(e)}}}function Nn(t){let e;return{c(){e=g("span"),e.textContent="Message was sent",C(e,"class","message-sent svelte-y6z0fo")},m(t,n){h(t,e,n)},d(t){t&&v(e)}}}function Hn(e){let n,i,a;return{c(){n=g("button"),n.textContent="(^)",x(n,"float","right"),C(n,"class","svelte-y6z0fo")},m(t,s){h(t,n,s),i||(a=$(n,"click",e[21]),i=!0)},p:t,d(t){t&&v(n),i=!1,a()}}}function Bn(e){let n,i,a;return{c(){n=g("button"),n.textContent="(▼)",x(n,"float","right"),C(n,"class","svelte-y6z0fo")},m(t,s){h(t,n,s),i||(a=$(n,"click",e[21]),i=!0)},p:t,d(t){t&&v(n),i=!1,a()}}}function Fn(t){let e,n,i,a;return{c(){e=g("div"),n=g("span"),n.textContent="public wrapper key:",i=y(),a=_(t[3]),x(n,"font-weight","bold"),x(n,"color","black"),C(e,"class","hide-key svelte-y6z0fo"),x(e,"background-color","whitesmoke"),x(e,"font-weight","600"),x(e,"font-size","smaller")},m(t,s){h(t,e,s),m(e,n),m(e,i),m(e,a)},p(t,e){8&e[0]&&A(a,t[3])},d(t){t&&v(e)}}}function zn(t){let e,n,i,a;return{c(){e=g("div"),n=g("span"),n.textContent="public wrapper key:",i=y(),a=_(t[3]),x(n,"font-weight","bold"),x(n,"color","black"),C(e,"class","viz-key svelte-y6z0fo"),x(e,"background-color","whitesmoke"),x(e,"font-weight","600"),x(e,"font-size","smaller")},m(t,s){h(t,e,s),m(e,n),m(e,i),m(e,a)},p(t,e){8&e[0]&&A(a,t[3])},d(t){t&&v(e)}}}function Vn(e){let n,i,s,o,l,c,r,u,d,f,p,w,k,S,O,E,I,R,L,D,P,M,j,N,H,B,F,z,V,K,U,Y,q,G,J,X,Z,Q,tt,et,nt,it,at,st,ot,lt,ct,rt,ut,dt,ft,pt,mt,ht,vt,bt,gt,_t,yt,wt,$t,Ct,kt,At,St=e[8],xt=[];for(let t=0;t<St.length;t+=1)xt[t]=Ln(Rn(e,St,t));let Tt=e[4]&&Dn(e);function Ot(t,e){return!1!==t[6]?Mn:Pn}let Et=Ot(e),It=Et(e),Rt=e[7],Lt=[];for(let t=0;t<Rt.length;t+=1)Lt[t]=jn(In(e,Rt,t));let Dt=e[13]&&Nn();function Pt(t,e){return t[12]?Hn:Bn}let Mt=Pt(e),jt=Mt(e);function Nt(t,e){return t[12]?zn:Fn}let Ht=Nt(e),Bt=Ht(e);return{c(){n=g("div"),i=g("div"),s=g("span"),o=_(e[16]),l=y(),c=g("span"),c.textContent="Sending a message to:",r=y(),u=g("span"),d=_(e[0]),f=_(","),p=y(),w=g("div"),k=g("span"),S=_("Who "),O=_(e[18]),E=_(" and "),I=_(e[19]),R=_("."),L=y(),D=g("div"),P=_(e[0]),M=_(" comes from "),j=_(e[1]),N=_(' and wants you to know that: "'),H=_(e[2]),B=_('"'),F=y(),z=g("div"),V=g("div"),K=_("You are requesting a response through contact form: "),U=g("span"),Y=_(e[15]),q=_("\n\t\t\tCustom contact form choices:\n\t\t\t"),G=g("select");for(let t=0;t<xt.length;t+=1)xt[t].c();J=y(),X=g("br"),Z=y(),Q=g("span"),tt=_(e[11]),et=y(),Tt&&Tt.c(),nt=y(),it=g("div"),at=g("span"),at.textContent="Compose message here:",st=y(),It.c(),ot=y(),lt=g("span"),lt.textContent="Drop attachment here (📎)",ct=y(),rt=g("span"),rt.textContent="CC",ut=y(),dt=g("select");for(let t=0;t<Lt.length;t+=1)Lt[t].c();ft=y(),Dt&&Dt.c(),pt=y(),mt=g("div"),ht=y(),vt=g("div"),bt=y(),gt=g("div"),_t=g("span"),_t.textContent="contact cid:",yt=y(),wt=_(e[5]),$t=y(),jt.c(),Ct=y(),Bt.c(),C(s,"class","cool-label svelte-y6z0fo"),x(s,"background-color","yellowgreen"),C(c,"class","message_indicator svelte-y6z0fo"),C(u,"class","name svelte-y6z0fo"),C(k,"class","about_name svelte-y6z0fo"),C(D,"class","cool-stuff svelte-y6z0fo"),C(w,"class","tool-holder svelte-y6z0fo"),x(U,"font-weight","bold"),C(V,"class","subline svelte-y6z0fo"),void 0===e[10]&&W((()=>e[39].call(G))),x(Q,"font-size","65%"),C(z,"class","tool-holder svelte-y6z0fo"),x(i,"padding","6px"),C(at,"class","large-text-label svelte-y6z0fo"),C(lt,"class","add-attachemnt svelte-y6z0fo"),void 0===e[9]&&W((()=>e[41].call(dt))),C(it,"class","tool-holder svelte-y6z0fo"),C(mt,"id","blg-window-full-text-outgo"),C(mt,"class","full-display-bottom svelte-y6z0fo"),C(vt,"id","blg-window-full-text-outgo-script"),C(vt,"class","is-nothing svelte-y6z0fo"),x(_t,"font-weight","bold"),x(_t,"color","black"),x(gt,"background-color","whitesmoke"),x(gt,"font-weight","600"),x(gt,"font-size","smaller"),C(n,"class","blg-el-wrapper-full svelte-y6z0fo")},m(t,a){h(t,n,a),m(n,i),m(i,s),m(s,o),m(i,l),m(i,c),m(i,r),m(i,u),m(u,d),m(u,f),m(i,p),m(i,w),m(w,k),m(k,S),m(k,O),m(k,E),m(k,I),m(k,R),m(w,L),m(w,D),m(D,P),m(D,M),m(D,j),m(D,N),m(D,H),m(D,B),m(i,F),m(i,z),m(z,V),m(V,K),m(V,U),m(U,Y),m(z,q),m(z,G);for(let t=0;t<xt.length;t+=1)xt[t].m(G,null);T(G,e[10]),m(z,J),m(z,X),m(z,Z),m(z,Q),m(Q,tt),m(n,et),Tt&&Tt.m(n,null),m(n,nt),m(n,it),m(it,at),m(it,st),It.m(it,null),m(it,ot),m(it,lt),m(it,ct),m(it,rt),m(it,ut),m(it,dt);for(let t=0;t<Lt.length;t+=1)Lt[t].m(dt,null);T(dt,e[9]),m(it,ft),Dt&&Dt.m(it,null),m(n,pt),m(n,mt),mt.innerHTML=e[17],m(n,ht),m(n,vt),m(n,bt),m(n,gt),m(gt,_t),m(gt,yt),m(gt,wt),m(gt,$t),jt.m(gt,null),m(n,Ct),Bt.m(n,null),kt||(At=[$(G,"change",e[39]),$(lt,"drop",e[24]),$(lt,"dragover",Wn),$(dt,"change",e[41])],kt=!0)},p(t,e){if(65536&e[0]&&A(o,t[16]),1&e[0]&&A(d,t[0]),262144&e[0]&&A(O,t[18]),524288&e[0]&&A(I,t[19]),1&e[0]&&A(P,t[0]),2&e[0]&&A(j,t[1]),4&e[0]&&A(H,t[2]),32768&e[0]&&A(Y,t[15]),256&e[0]){let n;for(St=t[8],n=0;n<St.length;n+=1){const i=Rn(t,St,n);xt[n]?xt[n].p(i,e):(xt[n]=Ln(i),xt[n].c(),xt[n].m(G,null))}for(;n<xt.length;n+=1)xt[n].d(1);xt.length=St.length}if(1024&e[0]&&T(G,t[10]),2048&e[0]&&A(tt,t[11]),t[4]?Tt?Tt.p(t,e):(Tt=Dn(t),Tt.c(),Tt.m(n,nt)):Tt&&(Tt.d(1),Tt=null),Et===(Et=Ot(t))&&It?It.p(t,e):(It.d(1),It=Et(t),It&&(It.c(),It.m(it,ot))),128&e[0]){let n;for(Rt=t[7],n=0;n<Rt.length;n+=1){const i=In(t,Rt,n);Lt[n]?Lt[n].p(i,e):(Lt[n]=jn(i),Lt[n].c(),Lt[n].m(dt,null))}for(;n<Lt.length;n+=1)Lt[n].d(1);Lt.length=Rt.length}512&e[0]&&T(dt,t[9]),t[13]?Dt||(Dt=Nn(),Dt.c(),Dt.m(it,null)):Dt&&(Dt.d(1),Dt=null),131072&e[0]&&(mt.innerHTML=t[17]),32&e[0]&&A(wt,t[5]),Mt===(Mt=Pt(t))&&jt?jt.p(t,e):(jt.d(1),jt=Mt(t),jt&&(jt.c(),jt.m(gt,null))),Ht===(Ht=Nt(t))&&Bt?Bt.p(t,e):(Bt.d(1),Bt=Ht(t),Bt&&(Bt.c(),Bt.m(n,null)))},i:t,o:t,d(t){t&&v(n),b(xt,t),Tt&&Tt.d(),It.d(),b(Lt,t),Dt&&Dt.d(),jt.d(),Bt.d(),kt=!1,a(At)}}}function Wn(t){t.preventDefault()}function Kn(t,e,n){let{name:i}=e,{DOB:a}=e,{place_of_origin:s}=e,{cool_public_info:o}=e,{business:l}=e,{public_key:c}=e,{signer_public_key:r}=e,{answer_message:u}=e,{biometric:d}=e,{cid:f}=e,{reply_to:p}=e,{active_identity:m}=e,{from_contact:h=!1}=e,{contact_form_list:v}=e,{cc_list:b=[]}=e,g="default",_=!1,y=!1,w=!1,$=!1,C=!1,k=b.length>0?0:-1,A=-1,S=[],x=[],T=[],E=!1,I="introduction",R={name:i,DOB:a,place_of_origin:s,cool_public_info:o,business:l,public_key:c,signer_public_key:r,biometric:d},L=u,P=0,M="default",j=[{cid:"default",info:"default "}],N={"{{contact-top}}":yn("promail-mes-ed-contact",""),"{{id-to-":yn("promail-recipient","name"),"{{id-cid-":yn("promail-recipient","user_cid"),"{{id-date-":yn("promail-date","date"),"{{id-cc-":yn("promail-readers","readers"),"{{id-business-":yn("promail-business","business"),"{{id-subject-":yn("promail-subject"),"{{id-message-":yn("promail-message"),"{{id-sender_key-":yn("promail-sender_key","public_key"),"{{id-sender_signer_key-":yn("promail-sender_signer_key","signer_public_key"),"{{id-wrapped_key-":yn("promail-wrapped_key","wrapped_key"),"{{id-attachment-":yn("promail-attachments","attachments")},H={"{{to}}":i,"{{DOB}}":a,"{{date}}":(new Date).toISOString(),"{{place_of_origin}}":s,"{{cool_public_info}}":o,"{{business}}":l?"business":"profile","{{public_key}}":JSON.stringify(c),"{{signer_public_key}}":JSON.stringify(r),"{{cid}}":JSON.stringify(m.cid),"{{from}}":m.user_info?m.user_info.name:"","{{clear_cid}}":JSON.stringify(m.clear_cid)};function B(t,e){console.log(Object.keys(e));for(let n in H){let i=e[n];if(void 0!==i){let e=i.length,a=H[n];for(let i=0;i<e;i++)t=t.replace(n,a)}}return t=function(t,e,n){for(let i in e){let a=i.lastIndexOf("-")+1;if(a>0)if(i.indexOf("-")+1===a){let a=n[i];a&&(a.add_matches(!1,e[i]),t=a.subst(t))}else{let s=n[i.substr(0,a)];s&&(s.add_matches(i,e[i]),t=s.subst(t))}}return t}(t,e,N)}function F(t){let e={name:m.user_info.name,user_cid:m.cid,subject:N["{{id-subject-"].extract_value(),date:Date.now(),readers:N["{{id-cc-"].extract_value(),business:l,message:N["{{id-message-"].extract_value(),attachments:T,reply_with:g,public_key:m.user_info.public_key,signer_public_key:!1,nonce:gen_nonce()};$&&(e.signer_public_key=m.user_info.signer_public_key);let n=e;return L&&(n.message+="<br><br><br>=====================================================<br>",n.message+=q),n}let z=!1,V=!1,W="",K="",U="",Y="";let q="";async function G(t){let e=await ln(t);return!!e&&(n(37,E=e.clear_cid),E)}async function J(t){switch(I){case"introduction":{let e=m;if(e){let i=await un(R,e,t);i&&(void 0===e.introductions&&(e.introductions=[]),e.introductions.push(i),update_identity(e),n(13,C=!0))}break}default:{let e=m;if(e){let i=await G(f);n(38,R.clear_cid=i,R);let a=await async function(t,e,n){return await rn("send/message",t,e,n,!1)}(R,e,t);a&&(void 0===e.messages&&(e.messages=[]),e.messages.push(a),update_identity(e),n(13,C=!0))}break}}}return D((()=>{void 0!==window._app_set_default_message_sender&&window._app_set_default_message_sender(N,H,F,J)})),t.$$set=t=>{"name"in t&&n(0,i=t.name),"DOB"in t&&n(25,a=t.DOB),"place_of_origin"in t&&n(1,s=t.place_of_origin),"cool_public_info"in t&&n(2,o=t.cool_public_info),"business"in t&&n(26,l=t.business),"public_key"in t&&n(3,c=t.public_key),"signer_public_key"in t&&n(27,r=t.signer_public_key),"answer_message"in t&&n(4,u=t.answer_message),"biometric"in t&&n(28,d=t.biometric),"cid"in t&&n(5,f=t.cid),"reply_to"in t&&n(29,p=t.reply_to),"active_identity"in t&&n(30,m=t.active_identity),"from_contact"in t&&n(31,h=t.from_contact),"contact_form_list"in t&&n(32,v=t.contact_form_list),"cc_list"in t&&n(33,b=t.cc_list)},t.$$.update=()=>{if(8&t.$$.dirty[1]&&(I=$?"introduction":"message"),2&t.$$.dirty[1]&&n(8,j=[{cid:"default",info:"default "}].concat(v)),1280&t.$$.dirty[0]&&P>=0&&(n(11,g=j[P].cid),n(15,M=j[P].info)),128&t.$$.dirty[0]|4&t.$$.dirty[1]&&(0===b.length?n(7,x=[{name:"no cc"}]):(n(7,x=[{name:"no cc"}]),n(7,x=x.concat(b)))),512&t.$$.dirty[0]|52&t.$$.dirty[1])if(k>0){let t=b[k-1];t?(n(35,A=t.cid),S.push(A),N["{{id-cc-"].set_el_html(S.join(","))):(n(36,S=[]),N["{{id-cc-"].set_el_html(""))}else n(36,S=[]),N["{{id-cc-"].set_el_html("");536870984&t.$$.dirty[0]|1&t.$$.dirty[1]&&(void 0===p||h?(n(6,_=c||!1),y="default"):(y=p.reply_with,n(6,_=p.public_key),"string"==typeof c&&"string"==typeof _&&c!==_&&n(6,_=!1))),32&t.$$.dirty[0]&&!1!==f&&G(f),64&t.$$.dirty[1]&&n(38,R.clear_cid=E,R),1073741824&t.$$.dirty[0]&&m&&m.cid,1577058319&t.$$.dirty[0]|128&t.$$.dirty[1]&&m&&i&&(n(38,R={name:i,DOB:a,place_of_origin:s,cool_public_info:o,business:l,public_key:c,signer_public_key:r,biometric:d}),async function(t){z=!1,t.public_key&&t.signer_public_key&&(z=await on(t,!1)),V=await on(t,!0)}(R)),1174405135&t.$$.dirty[0]&&m&&(H={"{{to}}":i,"{{DOB}}":a,"{{date}}":(new Date).toISOString(),"{{place_of_origin}}":s,"{{cool_public_info}}":o,"{{business}}":l?"business":"profile","{{public_key}}":JSON.stringify(c),"{{cid}}":JSON.stringify(m.cid),"{{from}}":m.user_info?m.user_info.name:"","{{clear_cid}}":JSON.stringify(m.clear_cid)}),67108864&t.$$.dirty[0]&&n(18,U=l?" is a business":" is a person"),8&t.$$.dirty[0]&&n(19,Y=!1!==c?" is someone I know":" is a new introduction"),536870928&t.$$.dirty[0]&&n(20,q=u?JSON.stringify(p,null,4):"")},n(16,W=(new Date).toISOString()),[i,s,o,c,u,f,_,x,j,k,P,g,w,C,L,M,W,K,U,Y,q,function(){n(12,w=!w),console.log(w)},async function(){n(34,$=!0),n(13,C=!1),n(36,S=[]),n(9,k=0);let t=await an(m,l,"default",V);if(t){let e=void 0===t.html?t.txt_full:t.html;n(17,K=B(e,t.var_map));let i=t.script;i&&(i=decodeURIComponent(i),i=i.replace("{{when}}",Date.now()),addscript(i,"blg-window-full-text-outgo-script",!0)),console.log(t.var_map)}},async function(){n(34,$=!1),n(13,C=!1),n(36,S=[]),n(9,k=0);let t=!1;if(t=y&&"default"!==y?await an(m,l,"cid",y):await an(m,l,"default",z),!t&&z&&(t=await an(m,l,"default",z)),t){let e=void 0===t.html?t.txt_full:t.html;n(17,K=B(e,t.var_map));let i=t.script;i&&(i=decodeURIComponent(i),i=i.replace("{{when}}",Date.now()),addscript(i,"blg-window-full-text-outgo-script",!0))}},async function(t){t.preventDefault();try{let e=!!t.dataTransfer.files&&t.dataTransfer.files,n=!!t.dataTransfer.items&&t.dataTransfer.items,[i,a]=await $n(n,e),s=await vn(i,a);T.push(s),N["{{id-attachment-"].set_el_html(T.join(","))}catch(t){}},a,l,r,d,p,m,h,v,b,$,A,S,E,R,function(){P=O(this),n(10,P)},function(){L=this.checked,n(14,L)},function(){k=O(this),n(9,k)}]}class Un extends rt{constructor(t){super(),ct(this,t,Kn,Vn,o,{name:0,DOB:25,place_of_origin:1,cool_public_info:2,business:26,public_key:3,signer_public_key:27,answer_message:4,biometric:28,cid:5,reply_to:29,active_identity:30,from_contact:31,contact_form_list:32,cc_list:33},[-1,-1])}}function Yn(t,e,n){const i=t.slice();return i[11]=e[n],i[0]=n,i}function qn(e){let n,i,a=e[11].name+"";return{c(){n=g("option"),i=_(a),n.__value=e[0],n.value=n.__value},m(t,e){h(t,n,e),m(n,i)},p:t,d(t){t&&v(n)}}}function Gn(e){let n,i,s,o,l,c,r,u,d,f,p,w,k,S,O,E,I,R=e[2],L=[];for(let t=0;t<R.length;t+=1)L[t]=qn(Yn(e,R,t));return{c(){n=g("div"),i=g("div"),s=g("button"),s.textContent="delete",o=y(),l=g("button"),l.textContent="move to",c=y(),r=g("select");for(let t=0;t<L.length;t+=1)L[t].c();u=y(),d=g("div"),f=g("button"),f.textContent="view",p=y(),w=g("button"),w.textContent="view",k=y(),S=g("div"),O=_(e[1]),x(s,"background-color","darkgreen"),C(s,"class","svelte-108hr7f"),x(l,"background-color","yellowgreen"),C(l,"class","svelte-108hr7f"),x(r,"text-align","center"),void 0===e[0]&&W((()=>e[9].call(r))),x(i,"padding","6px"),x(f,"background-color","darkgreen"),C(f,"class","svelte-108hr7f"),x(w,"background-color","yellowgreen"),C(w,"class","svelte-108hr7f"),x(S,"display","inline-block"),x(d,"padding","6px"),C(n,"class","blg-el-wrapper-full svelte-108hr7f")},m(t,a){h(t,n,a),m(n,i),m(i,s),m(i,o),m(i,l),m(i,c),m(i,r);for(let t=0;t<L.length;t+=1)L[t].m(r,null);T(r,e[0]),m(n,u),m(n,d),m(d,f),m(d,p),m(d,w),m(d,k),m(d,S),m(S,O),E||(I=[$(s,"click",e[3]),$(l,"click",e[4]),$(r,"change",e[9]),$(f,"click",e[5]),$(w,"click",e[6])],E=!0)},p(t,[e]){if(4&e){let n;for(R=t[2],n=0;n<R.length;n+=1){const i=Yn(t,R,n);L[n]?L[n].p(i,e):(L[n]=qn(i),L[n].c(),L[n].m(r,null))}for(;n<L.length;n+=1)L[n].d(1);L.length=R.length}1&e&&T(r,t[0]),2&e&&A(O,t[1])},i:t,o:t,d(t){t&&v(n),b(L,t),E=!1,a(I)}}}function Jn(t,e,n){let{active_identity:i}=e,{message_edit_type:a}=e;const s=P();let o=0,l=[{name:"don't move"},{name:"read"},{name:"events"},{name:"friends"},{name:"work"},{name:"accounts"},{name:"bills"},{name:"official"}],c="don't move";return t.$$set=t=>{"active_identity"in t&&n(7,i=t.active_identity),"message_edit_type"in t&&n(8,a=t.message_edit_type)},t.$$.update=()=>{1&t.$$.dirty&&n(1,c=l[o].name)},[o,c,l,async function(){s("message",{cmd:"move-messages",category:"deleted"})},async function(){if(o<=0)return;let t=l[o].name;s("message",{cmd:"move-messages",category:t})},async function(){s("message",{cmd:"view-processed-messages",category:"deleted"})},async function(){if(o<=0)return;let t=l[o].name;s("message",{cmd:"view-processed-messages",category:t})},i,a,function(){o=O(this),n(0,o)}]}class Xn extends rt{constructor(t){super(),ct(this,t,Jn,Gn,o,{active_identity:7,message_edit_type:8})}}function Zn(t,e,n){const i=t.slice();return i[187]=e[n],i[20]=n,i}function Qn(t,e,n){const i=t.slice();return i[185]=e[n],i[18]=n,i}function ti(t,e,n){const i=t.slice();return i[181]=e[n],i[58]=n,i}function ei(t,e,n){const i=t.slice();return i[181]=e[n],i[57]=n,i}function ni(t,e,n){const i=t.slice();return i[181]=e[n],i[56]=n,i}function ii(t,e,n){const i=t.slice();return i[179]=e[n],i[19]=n,i}function ai(t){let e,n,i,a=t[189]+"";return{c(){e=g("span"),n=_(a),C(e,"class",i=f(t[189]===t[13]?"active-tab":"plain-tab")+" svelte-avcb4w")},m(t,i){h(t,e,i),m(e,n)},p(t,s){8&s[6]&&a!==(a=t[189]+"")&&A(n,a),8192&s[0]|8&s[6]&&i!==(i=f(t[189]===t[13]?"active-tab":"plain-tab")+" svelte-avcb4w")&&C(e,"class",i)},d(t){t&&v(e)}}}function si(t){let e,n;return e=new he({props:{$$slots:{default:[ai]},$$scope:{ctx:t}}}),{c(){at(e.$$.fragment)},m(t,i){st(e,t,i),n=!0},p(t,n){const i={};8192&n[0]|24&n[6]&&(i.$$scope={dirty:n,ctx:t}),e.$set(i)},i(t){n||(Q(e.$$.fragment,t),n=!0)},o(t){tt(e.$$.fragment,t),n=!1},d(t){ot(e,t)}}}function oi(t){let e,n;return e=new fe({props:{tab:t[189],$$slots:{default:[si]},$$scope:{ctx:t}}}),{c(){at(e.$$.fragment)},m(t,i){st(e,t,i),n=!0},p(t,n){const i={};8&n[6]&&(i.tab=t[189]),8192&n[0]|24&n[6]&&(i.$$scope={dirty:n,ctx:t}),e.$set(i)},i(t){n||(Q(e.$$.fragment,t),n=!0)},o(t){tt(e.$$.fragment,t),n=!1},d(t){ot(e,t)}}}function li(e){let n;return{c(){n=g("div"),n.innerHTML='<blockquote class="svelte-avcb4w">This service is free. It is a way for you to set up messaging with other people.\n\t\tIt is like email, but it offers an alernative ways of running your message process.</blockquote> \n\t\t<blockquote class="svelte-avcb4w">For one, there is no email service associated with this way of handling messages. \n\t\tAll messages and interfaces for interacting with the processes are stored on the InterPlanetary File System.</blockquote> \n\t\t<blockquote class="svelte-avcb4w">Your contact pages is stored there. This tool makes the contact page and stores it for you. Then when someone wants to send \n\t\tyou a message, they access your contact page. The person who sends you a message will write a message on your page and click send.\n\t\tThe contact page you use will send a message service that is baked into the contact page.</blockquote> \n\t\t<blockquote class="svelte-avcb4w">This tool, makes and stores the kind of contact page you want to store. So, by selecting the type of contact page, you will also be selecting \n\t\thow you want to communicate. You also get to select your style of contact page. Maybe you want to have your picture on it, maybe not.\n\t\tDepending on the community of contact page makers, you may find different styles. Each style is part of a template. And, you select the template.</blockquote> \n\t\t<blockquote class="svelte-avcb4w"><span style="font-weight: bold;" class="svelte-avcb4w">How to get the word out about your page?</span> You are probably used to handing out a business card with your email on it.\n\t\tBut, instead of that, you can hand out the link to your contact page. The actual link that you receive when you sign up might be hard to read. \n\t\tBut, you can give out the contents of the fields that you entered in order to make your contact page.</blockquote> \n\t\t<blockquote class="svelte-avcb4w">The reason we have asked for information you might tell anyone is that we are asking for information you want to share. This information should identify you,\n\t\tbut not give away secrets. When someone sends a message, we can find your contact page by reprocessing the same information.</blockquote> \n\t\t<blockquote class="svelte-avcb4w">If you don&#39;t want to print you contact information on your business card, you can always just give out the hash code.\n\t\tBut, keep in mind, your contacts will have to type it.</blockquote> \n\t\t<blockquote class="svelte-avcb4w">Now, you can store contact information in your list of contacts. Each of these links will find the contact page.</blockquote> \n\t\t<blockquote class="svelte-avcb4w">Now about getting unsoliceted mail or blog feeds from organizations. For these you get a separate number. Messages being sent through a messaging service will use\n\t\tan API link to send messages to the agreed upon topic (the topic you tell the organization that they can bug you about.) You can use your topic dashbaord to \n\t\tselect the latest news from organization you care about.</blockquote> \n\t\t<blockquote class="svelte-avcb4w">Messages from contacts will show up in your mail stream (promail). Find links to that on your management dashboard (also generated by when you sign up.)\n\t\tTo help you find your information when you go back to your browser, the information you enter on signing up will be stored in your broswer&#39;s database (indexedDb).\n\t\tIf you switch browsers, you can always enter your information again, and click &quot;restore&quot;. You will also find an option to remove your information from your browser.</blockquote>',C(n,"class","team_message svelte-avcb4w")},m(t,e){h(t,n,e)},p:t,d(t){t&&v(n)}}}function ci(t){let e,n,i,s,o,l,c,r,u,d,p,w,k,A,O,E,I,R,L,D,P,M,j,N,H,B,F,z,V,K,U,Y,q,G,J,X,Z,Q,tt,et,nt,it,at,st,ot,lt,ct,rt,ut,dt,ft,pt,mt,ht,vt,bt,gt,_t,yt,wt,$t,Ct,kt,At,St,xt,Tt,Ot,Et,It,Rt,Lt,Dt,Pt,Mt,jt,Nt,Ht,Bt,Ft,zt,Vt=t[17],Wt=[];for(let e=0;e<Vt.length;e+=1)Wt[e]=hi(Zn(t,Vt,e));function Kt(t,e){return t[40]?bi:vi}let Ut=Kt(t),Yt=Ut(t);function qt(t,e){return!1!==t[23]?yi:t[34]?_i:gi}let Gt=qt(t),Jt=Gt(t);return{c(){e=g("div"),n=g("blockquote"),n.textContent="The manifest is your list of custom contact forms. \n\t\t\tWhen you send a message to someone, you may send them a link to one of your contact forms that will best handle \n\t\t\tthe way that your contact might respond to you. Use the tools here to manage your collection of contact forms.",i=y(),s=g("div"),o=g("div"),l=g("div"),c=g("div"),r=g("input"),u=y(),d=g("select");for(let t=0;t<Wt.length;t+=1)Wt[t].c();p=y(),w=g("div"),k=g("button"),k.textContent="directory",A=y(),O=g("button"),O.textContent="contacts file",E=y(),I=g("button"),I.textContent="manifest file",R=y(),L=g("button"),L.textContent="view contact form",D=y(),P=g("button"),P.textContent="view json from cid",M=y(),j=g("div"),N=g("div"),H=g("div"),H.textContent='Use the contact form explorer "Contact Template Management" to find IPFS Links to enter in the field below.',B=y(),F=g("label"),F.textContent="Manifest IPFS Link:",z=y(),V=g("input"),K=y(),U=g("div"),Y=g("button"),q=_("sync"),J=y(),X=g("button"),Yt.c(),tt=y(),et=g("button"),nt=_("delete"),at=y(),st=g("button"),ot=_("customize"),ct=y(),rt=g("div"),ut=g("div"),dt=g("label"),dt.textContent="Max Preference All Forms:",ft=y(),pt=g("input"),mt=y(),ht=g("label"),ht.textContent="Name:",vt=y(),bt=g("input"),gt=y(),_t=g("br"),yt=y(),wt=g("label"),wt.textContent="Selected Form Preference:",$t=y(),Ct=g("input"),kt=y(),At=g("div"),St=g("label"),St.textContent="Wrapped Key: ",xt=g("br"),Tt=y(),Ot=g("textarea"),Et=y(),It=g("label"),It.textContent="encrypted",Rt=y(),Lt=g("input"),Pt=y(),Jt.c(),Mt=y(),jt=g("div"),Nt=g("label"),Nt.textContent="CID For JSON File:",Ht=y(),Bt=g("input"),C(n,"class","svelte-avcb4w"),C(r,"placeholder","filter prefix"),C(r,"class","svelte-avcb4w"),C(d,"size",5),C(d,"class","svelte-avcb4w"),void 0===t[20]&&W((()=>t[117].call(d))),x(c,"display","inline"),x(c,"float","left"),C(c,"class","svelte-avcb4w"),C(k,"class","svelte-avcb4w"),C(O,"class","svelte-avcb4w"),C(I,"class","svelte-avcb4w"),C(L,"class","svelte-avcb4w"),C(P,"class","svelte-avcb4w"),C(w,"class","buttons svelte-avcb4w"),x(w,"display","inline"),x(w,"float","clear"),x(l,"display","block"),C(l,"class","svelte-avcb4w"),C(H,"class","manifest-contact-entry-instruct svelte-avcb4w"),C(F,"for","man_cid"),x(F,"display","inline"),C(F,"class","svelte-avcb4w"),C(V,"id","man_cid"),C(V,"placeholder","cid"),x(V,"display","inline"),C(V,"class","svelte-avcb4w"),x(N,"height","fit-content"),C(N,"class","svelte-avcb4w"),Y.disabled=G=!t[35],C(Y,"class","svelte-avcb4w"),C(X,"class",Z=f(t[40]?"man-default-selected":"man-default-not-selected")+" svelte-avcb4w"),X.disabled=Q=!t[35],et.disabled=it=!t[11],C(et,"class","svelte-avcb4w"),st.disabled=lt=!t[35]||!t[11],C(st,"class","svelte-avcb4w"),C(U,"class","buttons svelte-avcb4w"),C(j,"class","inner_div svelte-avcb4w"),x(j,"background-color","beige"),x(j,"border","solid 1px grey"),C(dt,"for","preference"),x(dt,"display","inline"),C(dt,"class","svelte-avcb4w"),C(pt,"id","preference"),C(pt,"placeholder","Preference Number"),x(pt,"display","inline"),pt.disabled=!0,C(pt,"class","svelte-avcb4w"),x(ut,"background-color","beige"),x(ut,"border-bottom","darkgreen 1px solid"),x(ut,"margin-bottom","4px"),C(ut,"class","svelte-avcb4w"),C(ht,"for","name"),x(ht,"display","inline"),C(ht,"class","svelte-avcb4w"),C(bt,"id","name"),C(bt,"placeholder","Name"),x(bt,"display","inline"),bt.disabled=t[39],C(bt,"class","svelte-avcb4w"),C(_t,"class","svelte-avcb4w"),C(wt,"for","man_sel_pref"),C(wt,"class","svelte-avcb4w"),C(Ct,"id","man_sel_pref"),C(Ct,"placeholder","1.0"),x(Ct,"display","inline"),C(Ct,"class","svelte-avcb4w"),C(St,"for","man_sel_pref"),C(St,"class","svelte-avcb4w"),C(xt,"class","svelte-avcb4w"),C(Ot,"id","man_contact_key"),x(Ot,"display","inline"),Ot.disabled=!0,C(Ot,"class","svelte-avcb4w"),C(It,"for","man_contact_enc"),C(It,"class","svelte-avcb4w"),C(Lt,"id","man_contact_enc"),C(Lt,"type","checkbox"),Lt.checked=Dt=!!t[41],x(Lt,"display","inline"),Lt.disabled=!0,C(Lt,"class","svelte-avcb4w"),C(At,"class","svelte-avcb4w"),C(rt,"class","inner_div svelte-avcb4w"),C(o,"class","manifester svelte-avcb4w"),C(s,"class","manifest-grid-container svelte-avcb4w"),C(Nt,"for","j_cid"),x(Nt,"display","inline"),C(Nt,"class","svelte-avcb4w"),C(Bt,"id","j_cid"),C(Bt,"placeholder","cid"),x(Bt,"display","inline"),C(Bt,"class","svelte-avcb4w"),x(jt,"height","fit-content"),C(jt,"class","svelte-avcb4w"),C(e,"class","svelte-avcb4w")},m(a,f){h(a,e,f),m(e,n),m(e,i),m(e,s),m(s,o),m(o,l),m(l,c),m(c,r),S(r,t[2]),m(c,u),m(c,d);for(let t=0;t<Wt.length;t+=1)Wt[t].m(d,null);T(d,t[20]),m(l,p),m(l,w),m(w,k),m(w,A),m(w,O),m(w,E),m(w,I),m(w,R),m(w,L),m(w,D),m(w,P),m(o,M),m(o,j),m(j,N),m(N,H),m(N,B),m(N,F),m(N,z),m(N,V),S(V,t[12]),m(j,K),m(j,U),m(U,Y),m(Y,q),m(U,J),m(U,X),Yt.m(X,null),m(U,tt),m(U,et),m(et,nt),m(U,at),m(U,st),m(st,ot),m(o,ct),m(o,rt),m(rt,ut),m(ut,dt),m(ut,ft),m(ut,pt),S(pt,t[37]),m(rt,mt),m(rt,ht),m(rt,vt),m(rt,bt),S(bt,t[35]),m(rt,gt),m(rt,_t),m(rt,yt),m(rt,wt),m(rt,$t),m(rt,Ct),S(Ct,t[38]),m(rt,kt),m(rt,At),m(At,St),m(At,xt),m(At,Tt),m(At,Ot),S(Ot,t[36]),m(At,Et),m(At,It),m(At,Rt),m(At,Lt),m(s,Pt),Jt.m(s,null),m(e,Mt),m(e,jt),m(jt,Nt),m(jt,Ht),m(jt,Bt),S(Bt,t[25]),Ft||(zt=[$(r,"input",t[116]),$(d,"change",t[117]),$(k,"click",t[78]),$(O,"click",t[79]),$(I,"click",t[80]),$(L,"click",t[82]),$(P,"click",t[81]),$(V,"input",t[118]),$(V,"paste",t[85]),$(Y,"click",t[83]),$(X,"click",t[84]),$(et,"click",t[87]),$(st,"click",t[86]),$(pt,"input",t[119]),$(bt,"input",t[120]),$(Ct,"input",t[121]),$(Ot,"input",t[122]),$(Bt,"input",t[123])],Ft=!0)},p(t,e){if(4&e[0]&&r.value!==t[2]&&S(r,t[2]),131072&e[0]){let n;for(Vt=t[17],n=0;n<Vt.length;n+=1){const i=Zn(t,Vt,n);Wt[n]?Wt[n].p(i,e):(Wt[n]=hi(i),Wt[n].c(),Wt[n].m(d,null))}for(;n<Wt.length;n+=1)Wt[n].d(1);Wt.length=Vt.length}1048576&e[0]&&T(d,t[20]),4096&e[0]&&V.value!==t[12]&&S(V,t[12]),16&e[1]&&G!==(G=!t[35])&&(Y.disabled=G),Ut!==(Ut=Kt(t))&&(Yt.d(1),Yt=Ut(t),Yt&&(Yt.c(),Yt.m(X,null))),512&e[1]&&Z!==(Z=f(t[40]?"man-default-selected":"man-default-not-selected")+" svelte-avcb4w")&&C(X,"class",Z),16&e[1]&&Q!==(Q=!t[35])&&(X.disabled=Q),2048&e[0]&&it!==(it=!t[11])&&(et.disabled=it),2048&e[0]|16&e[1]&&lt!==(lt=!t[35]||!t[11])&&(st.disabled=lt),64&e[1]&&pt.value!==t[37]&&S(pt,t[37]),256&e[1]&&(bt.disabled=t[39]),16&e[1]&&bt.value!==t[35]&&S(bt,t[35]),128&e[1]&&Ct.value!==t[38]&&S(Ct,t[38]),32&e[1]&&S(Ot,t[36]),1024&e[1]&&Dt!==(Dt=!!t[41])&&(Lt.checked=Dt),Gt===(Gt=qt(t))&&Jt?Jt.p(t,e):(Jt.d(1),Jt=Gt(t),Jt&&(Jt.c(),Jt.m(s,null))),33554432&e[0]&&Bt.value!==t[25]&&S(Bt,t[25])},d(t){t&&v(e),b(Wt,t),Yt.d(),Jt.d(),Ft=!1,a(zt)}}}function ri(t){let e,n,i,s,o,l,c,r,u,d,f,p,w,k,O,E,I,R,L,D,P,M,j,N,H,B,F,z,V,K,U,Y,q,G,J,X,Z,Q,tt,et,nt,it,at,st,ot,lt,ct,rt,ut,dt,ft,pt,mt,ht,vt,bt,gt,_t,yt,wt,$t=t[16],Ct=[];for(let e=0;e<$t.length;e+=1)Ct[e]=wi(Qn(t,$t,e));function kt(t,e){return t[30]?Ci:$i}let At=kt(t),St=At(t);function xt(t,e){return t[30]?Ai:ki}let Tt=xt(t),Ot=Tt(t);function Et(t,e){return t[30]?xi:Si}let It=Et(t),Rt=It(t);return{c(){e=g("div"),n=g("div"),i=g("input"),s=y(),o=g("select");for(let t=0;t<Ct.length;t+=1)Ct[t].c();l=y(),c=g("div"),r=g("button"),u=_("add"),d=y(),f=g("button"),p=_("update"),k=y(),O=g("button"),E=_("delete"),R=y(),L=g("div"),D=g("div"),P=g("button"),P.textContent="clear form",M=y(),j=g("div"),N=g("label"),N.textContent="Name:",H=y(),B=g("input"),F=y(),z=g("input"),V=y(),St.c(),K=y(),U=g("div"),Ot.c(),Y=y(),q=g("div"),Rt.c(),G=y(),J=g("div"),X=g("label"),X.textContent="Cool Public Info",Z=g("br"),Q=y(),tt=g("textarea"),et=y(),nt=g("div"),it=g("label"),it.textContent="CID: ",at=g("input"),st=y(),ot=g("label"),ot.textContent="PK",lt=y(),ct=g("input"),ut=y(),dt=g("div"),ft=g("span"),ft.textContent="Compose a new message for:",pt=y(),mt=_(t[4]),ht=y(),vt=g("br"),bt=g("br"),gt=y(),_t=g("button"),_t.textContent="compose",C(i,"placeholder","filter prefix"),C(i,"class","svelte-avcb4w"),C(o,"size",5),C(o,"class","svelte-avcb4w"),void 0===t[18]&&W((()=>t[107].call(o))),C(r,"class","classy-small svelte-avcb4w"),r.disabled=t[33],C(f,"class","classy-small svelte-avcb4w"),f.disabled=w=!t[4]||!t[14]||t[55],C(O,"class","classy-small svelte-avcb4w"),O.disabled=I=!t[14]||t[55],C(c,"class","buttons svelte-avcb4w"),C(n,"class","item svelte-avcb4w"),C(P,"class","long_button classy-small svelte-avcb4w"),C(D,"class","top-of-contact svelte-avcb4w"),C(N,"for","name"),x(N,"display","inline"),C(N,"class","svelte-avcb4w"),C(B,"id","name"),C(B,"placeholder","Name"),x(B,"display","inline"),C(B,"class","svelte-avcb4w"),C(z,"type","checkbox"),x(z,"display","inline"),C(z,"class","svelte-avcb4w"),C(j,"class","inner_div svelte-avcb4w"),C(U,"class","inner_div svelte-avcb4w"),C(q,"class","inner_div svelte-avcb4w"),C(X,"for","self-text"),C(X,"class","svelte-avcb4w"),C(Z,"class","svelte-avcb4w"),C(tt,"id","self-text"),C(tt,"placeholder","Copy info given to you by your new contact"),C(tt,"class","svelte-avcb4w"),C(J,"class","inner_div svelte-avcb4w"),C(it,"for","CID"),x(it,"display","inline"),x(it,"font-size","smaller"),C(it,"class","svelte-avcb4w"),C(at,"id","CID"),C(at,"placeholder","cid"),x(at,"display","inline"),x(at,"width","70%"),at.disabled=!0,C(at,"class","svelte-avcb4w"),C(ot,"for","PK"),x(ot,"display","inline"),x(ot,"font-size","smaller"),C(ot,"class","svelte-avcb4w"),C(ct,"id","PK"),C(ct,"type","checkbox"),x(ct,"display","inline"),ct.checked=rt=t[31]&&t[31].length>0,ct.disabled=!0,C(ct,"class","svelte-avcb4w"),C(nt,"class","inner_div svelte-avcb4w"),C(L,"class","item svelte-avcb4w"),x(L,"border-top","darkslategrey solid 2px"),C(ft,"class","top_instructions svelte-avcb4w"),C(vt,"class","svelte-avcb4w"),C(bt,"class","svelte-avcb4w"),C(_t,"class","long_button svelte-avcb4w"),C(dt,"class","item svelte-avcb4w"),x(dt,"border-top","darkslategrey solid 2px"),C(e,"class","items svelte-avcb4w")},m(a,v){h(a,e,v),m(e,n),m(n,i),S(i,t[1]),m(n,s),m(n,o);for(let t=0;t<Ct.length;t+=1)Ct[t].m(o,null);T(o,t[18]),m(n,l),m(n,c),m(c,r),m(r,u),m(c,d),m(c,f),m(f,p),m(c,k),m(c,O),m(O,E),m(e,R),m(e,L),m(L,D),m(D,P),m(L,M),m(L,j),m(j,N),m(j,H),m(j,B),S(B,t[4]),m(j,F),m(j,z),z.checked=t[30],m(j,V),St.m(j,null),m(L,K),m(L,U),Ot.m(U,null),m(L,Y),m(L,q),Rt.m(q,null),m(L,G),m(L,J),m(J,X),m(J,Z),m(J,Q),m(J,tt),S(tt,t[7]),m(L,et),m(L,nt),m(nt,it),m(nt,at),S(at,t[32]),m(nt,st),m(nt,ot),m(nt,lt),m(nt,ct),m(e,ut),m(e,dt),m(dt,ft),m(dt,pt),m(dt,mt),m(dt,ht),m(dt,vt),m(dt,bt),m(dt,gt),m(dt,_t),yt||(wt=[$(i,"input",t[106]),$(o,"change",t[107]),$(r,"click",t[73]),$(f,"click",t[74]),$(O,"click",t[75]),$(P,"click",t[71]),$(B,"input",t[108]),$(z,"change",t[109]),$(tt,"input",t[114]),$(at,"input",t[115]),$(_t,"click",t[65])],yt=!0)},p(t,e){if(2&e[0]&&i.value!==t[1]&&S(i,t[1]),65536&e[0]|1024&e[2]){let n;for($t=t[16],n=0;n<$t.length;n+=1){const i=Qn(t,$t,n);Ct[n]?Ct[n].p(i,e):(Ct[n]=wi(i),Ct[n].c(),Ct[n].m(o,null))}for(;n<Ct.length;n+=1)Ct[n].d(1);Ct.length=$t.length}262144&e[0]&&T(o,t[18]),4&e[1]&&(r.disabled=t[33]),16400&e[0]|16777216&e[1]&&w!==(w=!t[4]||!t[14]||t[55])&&(f.disabled=w),16384&e[0]|16777216&e[1]&&I!==(I=!t[14]||t[55])&&(O.disabled=I),16&e[0]&&B.value!==t[4]&&S(B,t[4]),1073741824&e[0]&&(z.checked=t[30]),At!==(At=kt(t))&&(St.d(1),St=At(t),St&&(St.c(),St.m(j,null))),Tt===(Tt=xt(t))&&Ot?Ot.p(t,e):(Ot.d(1),Ot=Tt(t),Ot&&(Ot.c(),Ot.m(U,null))),It===(It=Et(t))&&Rt?Rt.p(t,e):(Rt.d(1),Rt=It(t),Rt&&(Rt.c(),Rt.m(q,null))),128&e[0]&&S(tt,t[7]),2&e[1]&&at.value!==t[32]&&S(at,t[32]),1&e[1]&&rt!==(rt=t[31]&&t[31].length>0)&&(ct.checked=rt),16&e[0]&&A(mt,t[4])},d(t){t&&v(e),b(Ct,t),St.d(),Ot.d(),Rt.d(),yt=!1,a(wt)}}}function ui(t){let e,n,i,a,s,o,l,c,r,u,d,f,p,b,w,k,S,T,O=t[50].length&&Ti(t);return{c(){e=g("div"),n=g("span"),i=_(t[47]),a=y(),s=g("div"),o=g("div"),l=g("table"),c=g("thead"),r=g("tr"),u=g("th"),d=g("button"),d.textContent="Op",f=y(),p=g("th"),p.textContent="Date",b=g("th"),b.textContent="Sender",w=g("th"),w.textContent="Subject",k=y(),O&&O.c(),C(n,"class","processed-category svelte-avcb4w"),C(e,"class","svelte-avcb4w"),C(d,"class","header-button svelte-avcb4w"),C(u,"class","button-header svelte-avcb4w"),x(u,"width","5%"),x(p,"width","20%"),C(p,"class","svelte-avcb4w"),x(b,"width","30%"),C(b,"class","svelte-avcb4w"),x(w,"width","55%"),x(w,"text-align","left"),C(w,"class","svelte-avcb4w"),C(r,"class","svelte-avcb4w"),C(c,"class","svelte-avcb4w"),x(l,"width","100%"),C(l,"class","svelte-avcb4w"),C(o,"class","tableFixHead svelte-avcb4w"),C(s,"class","svelte-avcb4w")},m(v,g){h(v,e,g),m(e,n),m(n,i),h(v,a,g),h(v,s,g),m(s,o),m(o,l),m(l,c),m(c,r),m(r,u),m(u,d),m(u,f),m(r,p),m(r,b),m(r,w),m(l,k),O&&O.m(l,null),S||(T=$(d,"click",t[68]),S=!0)},p(t,e){65536&e[1]&&A(i,t[47]),t[50].length?O?O.p(t,e):(O=Ti(t),O.c(),O.m(l,null)):O&&(O.d(1),O=null)},d(t){t&&v(e),t&&v(a),t&&v(s),O&&O.d(),S=!1,T()}}}function di(t){let e,n,i,a,s,o,l,c,r,u,d,f,p,b,_,w,k=t[48].length&&Ei(t);return{c(){e=g("div"),e.textContent="Introduction Messages",n=y(),i=g("div"),a=g("div"),s=g("table"),o=g("thead"),l=g("tr"),c=g("th"),r=g("button"),r.textContent="Op",u=y(),d=g("th"),d.textContent="Date",f=g("th"),f.textContent="Sender",p=g("th"),p.textContent="Subject",b=y(),k&&k.c(),C(e,"class","svelte-avcb4w"),C(r,"class","header-button svelte-avcb4w"),C(c,"class","button-header svelte-avcb4w"),x(c,"width","5%"),x(d,"width","20%"),C(d,"class","svelte-avcb4w"),x(f,"width","30%"),C(f,"class","svelte-avcb4w"),x(p,"width","55%"),x(p,"text-align","left"),C(p,"class","svelte-avcb4w"),C(l,"class","svelte-avcb4w"),C(o,"class","svelte-avcb4w"),x(s,"width","100%"),C(s,"class","svelte-avcb4w"),C(a,"class","tableFixHead svelte-avcb4w"),C(i,"class","svelte-avcb4w")},m(v,g){h(v,e,g),h(v,n,g),h(v,i,g),m(i,a),m(a,s),m(s,o),m(o,l),m(l,c),m(c,r),m(c,u),m(l,d),m(l,f),m(l,p),m(s,b),k&&k.m(s,null),_||(w=$(r,"click",t[69]),_=!0)},p(t,e){t[48].length?k?k.p(t,e):(k=Ei(t),k.c(),k.m(s,null)):k&&(k.d(1),k=null)},d(t){t&&v(e),t&&v(n),t&&v(i),k&&k.d(),_=!1,w()}}}function fi(t){let e,n,i,a,s,o,l,c,r,u,d,f,p,b,_,w,k=t[49].length&&Ri(t);return{c(){e=g("div"),e.textContent="Your Message History",n=y(),i=g("div"),a=g("div"),s=g("table"),o=g("thead"),l=g("tr"),c=g("th"),r=g("button"),r.textContent="Op",u=y(),d=g("th"),d.textContent="Date",f=g("th"),f.textContent="Sender",p=g("th"),p.textContent="Subject",b=y(),k&&k.c(),C(e,"class","svelte-avcb4w"),C(r,"class","header-button svelte-avcb4w"),C(c,"class","button-header svelte-avcb4w"),x(c,"width","5%"),x(d,"width","20%"),C(d,"class","svelte-avcb4w"),x(f,"width","30%"),C(f,"class","svelte-avcb4w"),x(p,"width","55%"),x(p,"text-align","left"),C(p,"class","svelte-avcb4w"),C(l,"class","svelte-avcb4w"),C(o,"class","svelte-avcb4w"),x(s,"width","100%"),C(s,"class","svelte-avcb4w"),C(a,"class","tableFixHead svelte-avcb4w"),C(i,"class","svelte-avcb4w")},m(v,g){h(v,e,g),h(v,n,g),h(v,i,g),m(i,a),m(a,s),m(s,o),m(o,l),m(l,c),m(c,r),m(c,u),m(l,d),m(l,f),m(l,p),m(s,b),k&&k.m(s,null),_||(w=$(r,"click",t[67]),_=!0)},p(t,e){t[49].length?k?k.p(t,e):(k=Ri(t),k.c(),k.m(s,null)):k&&(k.d(1),k=null)},d(t){t&&v(e),t&&v(n),t&&v(i),k&&k.d(),_=!1,w()}}}function pi(t){let e,n,i,s,o,l,c,r,u,d,p,b,w,k,T,O,E,I,R,L,D,P,M,j,N,H,B,F,z,V,W,K,U,Y,q,G,J,X,Z,Q,tt,et,nt,it,at,st,ot,lt,ct,rt,ut,dt;function ft(t,e){return t[29]?Pi:Di}let pt=ft(t),mt=pt(t);function ht(t,e){return t[29]?ji:Mi}let vt=ht(t),bt=vt(t);function gt(t,e){return t[15]?Hi:Ni}let _t=gt(t),yt=_t(t),wt=t[15]&&Bi(t),$t=!t[15]&&Fi(t);return{c(){e=g("div"),n=g("div"),i=g("br"),s=y(),o=g("div"),o.textContent="Please enter Unique Information about yourself which you would be willing to share with anyone:",l=y(),c=g("br"),r=y(),u=g("div"),d=g("label"),d.textContent="Name:",p=y(),b=g("input"),w=y(),k=g("input"),T=g("span"),T.textContent="Business (if checked)",O=y(),E=g("div"),mt.c(),I=y(),R=g("div"),bt.c(),L=y(),D=g("div"),P=g("label"),P.textContent="Cool Public Info",M=g("br"),j=y(),N=g("textarea"),H=y(),B=g("div"),yt.c(),F=y(),z=g("div"),z.innerHTML='<blockquote class="svelte-avcb4w">Enter your information above. This information will be used to make an identifier for sending and receiving messages.\n\t\t\t\tWhen you click on the button, &quot;Create my contact profile&quot;, your information will go to a gateway server. The gateway server\n\t\t\t\twill use your information to make an ID, called a CID. This &quot;User&quot; tab, that you are looking at now, will store the CID for you as part of your identity.\n\t\t\t\tIt will also store other information that the server will create for you so that you may begin sending and receiving message between \n\t\t\t\tyou and your contacts.</blockquote> \n\t\t\t\t<blockquote class="svelte-avcb4w">Your identity will be a structure containing directory and file information and public and private keys.\n\t\t\t\t<b class="svelte-avcb4w">This web app uses the structure to store your private information locally in the browser database.</b>\n\t\t\t\tAnd, you will be able to download the idenity structure as a JSON obect at any time.\n\t\t\t\t<b class="svelte-avcb4w">This JSON structure information will never be sent from the browser by these pages.</b> It will be stored in the bowser database \n\t\t\t\tas long as you want.</blockquote> \n\t\t\t\t<blockquote class="svelte-avcb4w">Use the buttons on the right side of the page to create or delete and identity. And, use the <b class="svelte-avcb4w">Identity</b> buttons,\n\t\t\t\twith the <i class="svelte-avcb4w">down</i> triangle ▼ and the <i class="svelte-avcb4w">up</i> triangle ▲ to download your JSON to disk and to upload your identity, respectively.\n\t\t\t\tFor exampe, you may download your identity to a thumb drive for safe keeping. Or you may upload your identity into another\n\t\t\t\tbrowser or restore to a browser if it has been previously deleted.</blockquote> \n\t\t\t\t<blockquote class="svelte-avcb4w">The information you enter above should be unique. For example, I know that my name is shared by at least three other people on the planet,\n\t\t\t\tall of whom were born in the same year. But, they are from different towns or countries. So, I don&#39;t hesitate to enter my place of origin.\n\t\t\t\tAnd, I am willing to share my real place of origin with anyone.</blockquote> \n\t\t\t\t<blockquote class="svelte-avcb4w">Some of the public information that you enter, not including keys, may be used later in an API link only if you have interests for which you would be willing to receive unsolicited mail. \n\t\t\t\tYou may choose the groups or businesses that may publish to topics that you select. You may make selections at a later time. And, the process of managing\n\t\t\t\ttopics will be workable on topics pages separate from these message pages. Topic management will, hopefully, direct most \n\t\t\t\tadvertisement messaging away from your personal and business messaging.</blockquote> \n\t\t\t\t<blockquote class="svelte-avcb4w"><span style="color:blue;" class="svelte-avcb4w">Note:</span> no information will be sent to any organization as a result of signing up.\n\t\t\t\tAll information, excluding private keys, and your personalized assets such as your contact pages, public and encrypted,\n\t\t\t\twill be stored in the Interplanetary File System (IPFS). Most of the informaion kept in the IPFS will be encrypted, and will\n\t\t\t\tonly be accessibly by keys stored in your identity. (So, do download your idenity structure an keep it safe between sessions.)</blockquote>',V=y(),W=g("div"),K=g("div"),U=_("status: "),Y=g("span"),q=_(t[24]),J=y(),X=g("div"),wt&&wt.c(),Z=y(),$t&&$t.c(),Q=y(),tt=g("div"),et=g("div"),nt=g("button"),nt.textContent="∋ new",it=y(),at=g("button"),at.textContent="∌ remove",st=y(),ot=g("div"),lt=g("button"),lt.textContent="▼ identity",ct=y(),rt=g("button"),rt.textContent="▲ identity",C(i,"class","svelte-avcb4w"),C(o,"class","top_instructions svelte-avcb4w"),C(c,"class","svelte-avcb4w"),C(d,"for","name"),x(d,"display","inline"),C(d,"class","svelte-avcb4w"),C(b,"id","name"),C(b,"placeholder","Name"),x(b,"display","inline"),C(b,"class","svelte-avcb4w"),C(k,"type","checkbox"),x(k,"display","inline"),C(k,"class","svelte-avcb4w"),C(T,"class","svelte-avcb4w"),C(u,"class","inner_div svelte-avcb4w"),C(E,"class","inner_div svelte-avcb4w"),C(R,"class","inner_div svelte-avcb4w"),C(P,"for","self-text"),C(P,"class","svelte-avcb4w"),C(M,"class","svelte-avcb4w"),C(N,"id","self-text"),C(N,"placeholder","Something you would say to anyone about yourself"),C(N,"class","svelte-avcb4w"),C(D,"class","inner_div svelte-avcb4w"),C(B,"class","add-profile-div svelte-avcb4w"),x(B,"text-align","center"),C(z,"class","nice_message svelte-avcb4w"),C(n,"class","signerupper svelte-avcb4w"),C(Y,"class",G=f("OK"===t[24]?"good-status":"bad-status")+" svelte-avcb4w"),C(K,"class","signup-status svelte-avcb4w"),C(nt,"class","svelte-avcb4w"),C(at,"class","svelte-avcb4w"),C(et,"class","contact_controls svelte-avcb4w"),C(lt,"class","svelte-avcb4w"),C(rt,"class","svelte-avcb4w"),C(ot,"class","contact_controls svelte-avcb4w"),C(tt,"class","svelte-avcb4w"),C(X,"class","svelte-avcb4w"),C(W,"class","signerupper svelte-avcb4w"),C(e,"class","signup-grid-container svelte-avcb4w")},m(a,f){h(a,e,f),m(e,n),m(n,i),m(n,s),m(n,o),m(n,l),m(n,c),m(n,r),m(n,u),m(u,d),m(u,p),m(u,b),S(b,t[3]),m(u,w),m(u,k),k.checked=t[29],m(u,T),m(n,O),m(n,E),mt.m(E,null),m(n,I),m(n,R),bt.m(R,null),m(n,L),m(n,D),m(D,P),m(D,M),m(D,j),m(D,N),S(N,t[28]),m(n,H),m(n,B),yt.m(B,null),m(n,F),m(n,z),m(e,V),m(e,W),m(W,K),m(K,U),m(K,Y),m(Y,q),m(W,J),m(W,X),wt&&wt.m(X,null),m(X,Z),$t&&$t.m(X,null),m(X,Q),m(X,tt),m(tt,et),m(et,nt),m(et,it),m(et,at),m(tt,st),m(tt,ot),m(ot,lt),m(ot,ct),m(ot,rt),ut||(dt=[$(b,"input",t[97]),$(k,"change",t[98]),$(N,"input",t[103]),$(nt,"click",t[61]),$(at,"click",t[62]),$(lt,"click",t[77]),$(rt,"click",t[76])],ut=!0)},p(t,e){8&e[0]&&b.value!==t[3]&&S(b,t[3]),536870912&e[0]&&(k.checked=t[29]),pt===(pt=ft(t))&&mt?mt.p(t,e):(mt.d(1),mt=pt(t),mt&&(mt.c(),mt.m(E,null))),vt===(vt=ht(t))&&bt?bt.p(t,e):(bt.d(1),bt=vt(t),bt&&(bt.c(),bt.m(R,null))),268435456&e[0]&&S(N,t[28]),_t===(_t=gt(t))&&yt?yt.p(t,e):(yt.d(1),yt=_t(t),yt&&(yt.c(),yt.m(B,null))),16777216&e[0]&&A(q,t[24]),16777216&e[0]&&G!==(G=f("OK"===t[24]?"good-status":"bad-status")+" svelte-avcb4w")&&C(Y,"class",G),t[15]?wt?wt.p(t,e):(wt=Bi(t),wt.c(),wt.m(X,Z)):wt&&(wt.d(1),wt=null),t[15]?$t&&($t.d(1),$t=null):$t?$t.p(t,e):($t=Fi(t),$t.c(),$t.m(X,Q))},d(t){t&&v(e),mt.d(),bt.d(),yt.d(),wt&&wt.d(),$t&&$t.d(),ut=!1,a(dt)}}}function mi(t){let e,n,i;function a(t,e){return t[10].length>0?Vi:zi}let s=a(t),o=s(t);return{c(){e=g("div"),o.c(),n=y(),i=g("div"),i.innerHTML='Pro-mail is like e-mail. \n\t\t\t<br class="svelte-avcb4w"/>\n\t\t\tBut, where e-mail is complicated, Pro-mail is simpler.\n\t\t\t<br class="svelte-avcb4w"/>\n\t\t\tAnd, where Pro-mail is more complicated, it&#39;s more fun.\n\t\t\t<br class="svelte-avcb4w"/>\n\t\t\tNo just more fun.\n\t\t\t<br class="svelte-avcb4w"/>\n\t\t\tMore secure\n\t\t\t<br class="svelte-avcb4w"/>\n\t\t\tMore customizable.\n\t\t\t<br class="svelte-avcb4w"/>\n\t\t\tMore Manageable\n\t\t\t<br class="svelte-avcb4w"/>\n\t\t\tEasier to Filter and Maintain',C(i,"class","front-page-explain svelte-avcb4w"),C(e,"class","splash-if-you-will svelte-avcb4w"),x(e,"height","fit-content")},m(t,a){h(t,e,a),o.m(e,null),m(e,n),m(e,i)},p(t,i){s===(s=a(t))&&o?o.p(t,i):(o.d(1),o=s(t),o&&(o.c(),o.m(e,n)))},d(t){t&&v(e),o.d()}}}function hi(t){let e,n,i=t[187].info+"";return{c(){e=g("option"),n=_(i),e.__value=t[20],e.value=e.__value,C(e,"class","svelte-avcb4w")},m(t,i){h(t,e,i),m(e,n)},p(t,e){131072&e[0]&&i!==(i=t[187].info+"")&&A(n,i)},d(t){t&&v(e)}}}function vi(t){let e;return{c(){e=_("set default")},m(t,n){h(t,e,n)},d(t){t&&v(e)}}}function bi(t){let e;return{c(){e=_("default")},m(t,n){h(t,e,n)},d(t){t&&v(e)}}}function gi(e){let n;return{c(){n=g("div"),n.textContent="No form defined.",C(n,"class","manifester svelte-avcb4w")},m(t,e){h(t,n,e)},p:t,d(t){t&&v(n)}}}function _i(t){let e;return{c(){e=g("div"),C(e,"class","manifester svelte-avcb4w")},m(n,i){h(n,e,i),e.innerHTML=t[34]},p(t,n){8&n[1]&&(e.innerHTML=t[34])},d(t){t&&v(e)}}}function yi(t){let e;return{c(){e=g("div"),C(e,"class","manifester svelte-avcb4w")},m(n,i){h(n,e,i),e.innerHTML=t[23]},p(t,n){8388608&n[0]&&(e.innerHTML=t[23])},d(t){t&&v(e)}}}function wi(t){let e,n,i,a,s=t[185].name+"";return{c(){e=g("option"),n=_(s),e.__value=t[18],e.value=e.__value,C(e,"class","svelte-avcb4w")},m(s,o){h(s,e,o),m(e,n),i||(a=$(e,"click",t[72]),i=!0)},p(t,e){65536&e[0]&&s!==(s=t[185].name+"")&&A(n,s)},d(t){t&&v(e),i=!1,a()}}}function $i(t){let e;return{c(){e=g("span"),e.textContent="Person",C(e,"class","svelte-avcb4w")},m(t,n){h(t,e,n)},d(t){t&&v(e)}}}function Ci(t){let e;return{c(){e=g("span"),e.textContent="Business",C(e,"class","svelte-avcb4w")},m(t,n){h(t,e,n)},d(t){t&&v(e)}}}function ki(t){let e,n,i,a;return{c(){e=g("label"),e.textContent="DOB: ",n=g("input"),C(e,"for","DOB"),x(e,"display","inline"),C(e,"class","svelte-avcb4w"),C(n,"id","DOB"),C(n,"placeholder","Date of Birth"),x(n,"display","inline"),C(n,"class","svelte-avcb4w")},m(s,o){h(s,e,o),h(s,n,o),S(n,t[5]),i||(a=$(n,"input",t[111]),i=!0)},p(t,e){32&e[0]&&n.value!==t[5]&&S(n,t[5])},d(t){t&&v(e),t&&v(n),i=!1,a()}}}function Ai(t){let e,n,i,a;return{c(){e=g("label"),e.textContent="Year of Inception: ",n=g("input"),C(e,"for","DOB"),x(e,"display","inline"),C(e,"class","svelte-avcb4w"),C(n,"id","DOB"),C(n,"placeholder","Year of Inception"),x(n,"display","inline"),C(n,"class","svelte-avcb4w")},m(s,o){h(s,e,o),h(s,n,o),S(n,t[5]),i||(a=$(n,"input",t[110]),i=!0)},p(t,e){32&e[0]&&n.value!==t[5]&&S(n,t[5])},d(t){t&&v(e),t&&v(n),i=!1,a()}}}function Si(t){let e,n,i,a;return{c(){e=g("label"),e.textContent="Place of Origin: ",n=g("input"),C(e,"for","POO"),x(e,"display","inline"),C(e,"class","svelte-avcb4w"),C(n,"id","POO"),C(n,"placeholder","Place of Origin"),x(n,"display","inline"),C(n,"class","svelte-avcb4w")},m(s,o){h(s,e,o),h(s,n,o),S(n,t[6]),i||(a=$(n,"input",t[113]),i=!0)},p(t,e){64&e[0]&&n.value!==t[6]&&S(n,t[6])},d(t){t&&v(e),t&&v(n),i=!1,a()}}}function xi(t){let e,n,i,a;return{c(){e=g("label"),e.textContent="Main Office: ",n=g("input"),C(e,"for","POO"),x(e,"display","inline"),C(e,"class","svelte-avcb4w"),C(n,"id","POO"),C(n,"placeholder","Main Office"),x(n,"display","inline"),C(n,"class","svelte-avcb4w")},m(s,o){h(s,e,o),h(s,n,o),S(n,t[6]),i||(a=$(n,"input",t[112]),i=!0)},p(t,e){64&e[0]&&n.value!==t[6]&&S(n,t[6])},d(t){t&&v(e),t&&v(n),i=!1,a()}}}function Ti(t){let e,n=t[50],i=[];for(let e=0;e<n.length;e+=1)i[e]=Oi(ti(t,n,e));return{c(){for(let t=0;t<i.length;t+=1)i[t].c();e=w()},m(t,n){for(let e=0;e<i.length;e+=1)i[e].m(t,n);h(t,e,n)},p(t,a){if(524288&a[1]|272&a[2]){let s;for(n=t[50],s=0;s<n.length;s+=1){const o=ti(t,n,s);i[s]?i[s].p(o,a):(i[s]=Oi(o),i[s].c(),i[s].m(e.parentNode,e))}for(;s<i.length;s+=1)i[s].d(1);i.length=n.length}},d(t){b(i,t),t&&v(e)}}}function Oi(t){let e,n,i,s,o,l,c,r,u,d,f,p,b,w,k=t[181].date+"",S=t[181].name+"",T=t[181].subject+"";return{c(){e=g("tr"),n=g("td"),i=g("input"),s=y(),o=g("td"),l=_(k),c=y(),r=g("td"),u=_(S),d=y(),f=g("td"),p=y(),C(i,"id","doop-m_category_"+t[58]),C(i,"type","checkbox"),C(i,"class","svelte-avcb4w"),C(n,"class","op-select svelte-avcb4w"),x(n,"width","5%"),x(n,"text-align","center"),C(o,"class","date svelte-avcb4w"),x(o,"width","20%"),x(o,"text-align","center"),C(r,"class","sender svelte-avcb4w"),x(r,"width","30%"),C(f,"class","subject svelte-avcb4w"),x(f,"width","60%"),C(e,"id","m_category_"+t[58]),C(e,"class","element-poster svelte-avcb4w")},m(a,v){h(a,e,v),m(e,n),m(n,i),m(e,s),m(e,o),m(o,l),m(e,c),m(e,r),m(r,u),m(e,d),m(e,f),f.innerHTML=T,m(e,p),b||(w=[$(i,"click",t[66]),$(e,"click",t[70]),$(e,"mouseover",ta)],b=!0)},p(t,e){524288&e[1]&&k!==(k=t[181].date+"")&&A(l,k),524288&e[1]&&S!==(S=t[181].name+"")&&A(u,S),524288&e[1]&&T!==(T=t[181].subject+"")&&(f.innerHTML=T)},d(t){t&&v(e),b=!1,a(w)}}}function Ei(t){let e,n=t[48],i=[];for(let e=0;e<n.length;e+=1)i[e]=Ii(ei(t,n,e));return{c(){for(let t=0;t<i.length;t+=1)i[t].c();e=w()},m(t,n){for(let e=0;e<i.length;e+=1)i[e].m(t,n);h(t,e,n)},p(t,a){if(131072&a[1]|272&a[2]){let s;for(n=t[48],s=0;s<n.length;s+=1){const o=ei(t,n,s);i[s]?i[s].p(o,a):(i[s]=Ii(o),i[s].c(),i[s].m(e.parentNode,e))}for(;s<i.length;s+=1)i[s].d(1);i.length=n.length}},d(t){b(i,t),t&&v(e)}}}function Ii(t){let e,n,i,s,o,l,c,r,u,d,f,p,b,w,k=t[181].date+"",S=t[181].name+"",T=t[181].subject+"";return{c(){e=g("tr"),n=g("td"),i=g("input"),s=y(),o=g("td"),l=_(k),c=y(),r=g("td"),u=_(S),d=y(),f=g("td"),p=y(),C(i,"id","doop-m_intro_"+t[57]),C(i,"type","checkbox"),C(i,"class","svelte-avcb4w"),C(n,"class","op-select svelte-avcb4w"),x(n,"width","5%"),x(n,"text-align","center"),C(o,"class","date svelte-avcb4w"),x(o,"width","20%"),x(o,"text-align","center"),C(r,"class","sender svelte-avcb4w"),x(r,"width","30%"),C(f,"class","subject svelte-avcb4w"),x(f,"width","60%"),C(e,"id","m_intro_"+t[57]),C(e,"class","element-poster svelte-avcb4w")},m(a,v){h(a,e,v),m(e,n),m(n,i),m(e,s),m(e,o),m(o,l),m(e,c),m(e,r),m(r,u),m(e,d),m(e,f),f.innerHTML=T,m(e,p),b||(w=[$(i,"click",t[66]),$(e,"click",t[70]),$(e,"mouseover",ta)],b=!0)},p(t,e){131072&e[1]&&k!==(k=t[181].date+"")&&A(l,k),131072&e[1]&&S!==(S=t[181].name+"")&&A(u,S),131072&e[1]&&T!==(T=t[181].subject+"")&&(f.innerHTML=T)},d(t){t&&v(e),b=!1,a(w)}}}function Ri(t){let e,n=t[49],i=[];for(let e=0;e<n.length;e+=1)i[e]=Li(ni(t,n,e));return{c(){for(let t=0;t<i.length;t+=1)i[t].c();e=w()},m(t,n){for(let e=0;e<i.length;e+=1)i[e].m(t,n);h(t,e,n)},p(t,a){if(262144&a[1]|272&a[2]){let s;for(n=t[49],s=0;s<n.length;s+=1){const o=ni(t,n,s);i[s]?i[s].p(o,a):(i[s]=Li(o),i[s].c(),i[s].m(e.parentNode,e))}for(;s<i.length;s+=1)i[s].d(1);i.length=n.length}},d(t){b(i,t),t&&v(e)}}}function Li(t){let e,n,i,s,o,l,c,r,u,d,f,p,b,w,k=t[181].date+"",S=t[181].name+"",T=t[181].subject+"";return{c(){e=g("tr"),n=g("td"),i=g("input"),s=y(),o=g("td"),l=_(k),c=y(),r=g("td"),u=_(S),d=y(),f=g("td"),p=y(),C(i,"id","doop-m_contact_"+t[56]),C(i,"type","checkbox"),C(i,"class","svelte-avcb4w"),C(n,"class","op-select svelte-avcb4w"),x(n,"width","5%"),x(n,"text-align","center"),C(o,"class","date svelte-avcb4w"),x(o,"width","20%"),x(o,"text-align","center"),C(r,"class","sender svelte-avcb4w"),x(r,"width","30%"),C(f,"class","subject svelte-avcb4w"),x(f,"width","55%"),C(e,"id","m_contact_"+t[56]),C(e,"class","element-poster svelte-avcb4w")},m(a,v){h(a,e,v),m(e,n),m(n,i),m(e,s),m(e,o),m(o,l),m(e,c),m(e,r),m(r,u),m(e,d),m(e,f),f.innerHTML=T,m(e,p),b||(w=[$(i,"click",t[66]),$(e,"click",t[70]),$(e,"mouseover",ta)],b=!0)},p(t,e){262144&e[1]&&k!==(k=t[181].date+"")&&A(l,k),262144&e[1]&&S!==(S=t[181].name+"")&&A(u,S),262144&e[1]&&T!==(T=t[181].subject+"")&&(f.innerHTML=T)},d(t){t&&v(e),b=!1,a(w)}}}function Di(t){let e,n,i,a;return{c(){e=g("label"),e.textContent="DOB: ",n=g("input"),C(e,"for","DOB"),x(e,"display","inline"),C(e,"class","svelte-avcb4w"),C(n,"id","DOB"),C(n,"placeholder","Date of Birth"),x(n,"display","inline"),C(n,"class","svelte-avcb4w")},m(s,o){h(s,e,o),h(s,n,o),S(n,t[26]),i||(a=$(n,"input",t[100]),i=!0)},p(t,e){67108864&e[0]&&n.value!==t[26]&&S(n,t[26])},d(t){t&&v(e),t&&v(n),i=!1,a()}}}function Pi(t){let e,n,i,a;return{c(){e=g("label"),e.textContent="Year of Inception: ",n=g("input"),C(e,"for","DOB"),x(e,"display","inline"),C(e,"class","svelte-avcb4w"),C(n,"id","DOB"),C(n,"placeholder","Year of Inception"),x(n,"display","inline"),C(n,"class","svelte-avcb4w")},m(s,o){h(s,e,o),h(s,n,o),S(n,t[26]),i||(a=$(n,"input",t[99]),i=!0)},p(t,e){67108864&e[0]&&n.value!==t[26]&&S(n,t[26])},d(t){t&&v(e),t&&v(n),i=!1,a()}}}function Mi(t){let e,n,i,a;return{c(){e=g("label"),e.textContent="Place of Origin: ",n=g("input"),C(e,"for","POO"),x(e,"display","inline"),C(e,"class","svelte-avcb4w"),C(n,"id","POO"),C(n,"placeholder","Place of Origin"),x(n,"display","inline"),C(n,"class","svelte-avcb4w")},m(s,o){h(s,e,o),h(s,n,o),S(n,t[27]),i||(a=$(n,"input",t[102]),i=!0)},p(t,e){134217728&e[0]&&n.value!==t[27]&&S(n,t[27])},d(t){t&&v(e),t&&v(n),i=!1,a()}}}function ji(t){let e,n,i,a;return{c(){e=g("label"),e.textContent="Main Office: ",n=g("input"),C(e,"for","POO"),x(e,"display","inline"),C(e,"class","svelte-avcb4w"),C(n,"id","POO"),C(n,"placeholder","Main Office"),x(n,"display","inline"),C(n,"class","svelte-avcb4w")},m(s,o){h(s,e,o),h(s,n,o),S(n,t[27]),i||(a=$(n,"input",t[101]),i=!0)},p(t,e){134217728&e[0]&&n.value!==t[27]&&S(n,t[27])},d(t){t&&v(e),t&&v(n),i=!1,a()}}}function Ni(t){let e,n,i,a,s,o;return{c(){e=g("div"),n=g("span"),n.textContent="Your custom id number:",i=y(),a=g("span"),s=_(t[0]),C(n,"class","cid-grabber-label svelte-avcb4w"),C(a,"class","cid-grabber svelte-avcb4w"),C(e,"style",o=t[45]?"background-color:rgba(245,255,250,0.9)":"background-color:rgba(250,250,250,0.3)"),C(e,"class","svelte-avcb4w")},m(t,o){h(t,e,o),m(e,n),m(e,i),m(e,a),m(a,s)},p(t,n){1&n[0]&&A(s,t[0]),16384&n[1]&&o!==(o=t[45]?"background-color:rgba(245,255,250,0.9)":"background-color:rgba(250,250,250,0.3)")&&C(e,"style",o)},d(t){t&&v(e)}}}function Hi(t){let e,n,i,a,s,o;return{c(){e=g("div"),n=g("button"),i=_("Create my contact profile."),C(n,"class","long_button svelte-avcb4w"),n.disabled=t[53],C(e,"style",a=t[45]?"background-color:rgba(245,255,250,0.9)":"background-color:rgba(250,250,250,0.3)"),C(e,"class","svelte-avcb4w")},m(a,l){h(a,e,l),m(e,n),m(n,i),s||(o=$(n,"click",t[60]),s=!0)},p(t,i){4194304&i[1]&&(n.disabled=t[53]),16384&i[1]&&a!==(a=t[45]?"background-color:rgba(245,255,250,0.9)":"background-color:rgba(250,250,250,0.3)")&&C(e,"style",a)},d(t){t&&v(e),s=!1,o()}}}function Bi(t){let e,n,i,s,o;return{c(){e=g("div"),n=g("img"),n.src!==(i=Ji)&&C(n,"src",i),C(n,"alt",t[22]),C(n,"class","svelte-avcb4w"),C(e,"class","picture-drop svelte-avcb4w")},m(i,a){h(i,e,a),m(e,n),t[104](n),s||(o=[$(e,"drop",t[64]),$(e,"dragover",Qi)],s=!0)},p(t,e){4194304&e[0]&&C(n,"alt",t[22])},d(n){n&&v(e),t[104](null),s=!1,a(o)}}}function Fi(t){let e,n,i,s,o;return{c(){e=g("div"),n=g("img"),n.src!==(i=t[21])&&C(n,"src",i),C(n,"alt",Xi),C(n,"class","svelte-avcb4w"),C(e,"class","picture-drop svelte-avcb4w")},m(i,a){h(i,e,a),m(e,n),t[105](n),s||(o=[$(e,"drop",t[63]),$(e,"dragover",Qi)],s=!0)},p(t,e){2097152&e[0]&&n.src!==(i=t[21])&&C(n,"src",i)},d(n){n&&v(e),t[105](null),s=!1,a(o)}}}function zi(e){let n;return{c(){n=g("div"),n.innerHTML='Please join us in using this way of sending messages.\n\t\t\t<div class="svelte-avcb4w">Click on the <span class="svelte-avcb4w">User</span> tab.</div>',C(n,"class","splash-if-you-will svelte-avcb4w")},m(t,e){h(t,n,e)},p:t,d(t){t&&v(n)}}}function Vi(t){let e,n,i,s,o,l,c,r,u,d,f,p=(t[8]?t[8].name:"being created")+"",y=t[10],w=[];for(let e=0;e<y.length;e+=1)w[e]=Wi(ii(t,y,e));return{c(){e=g("div"),n=_("The current user is "),i=g("span"),s=_(p),o=_(".\n\t\t\t"),l=g("br"),c=_("\n\t\t\tNot you? Select from the list below or Add yourself with the User tab.\n\t\t\t"),r=g("div"),u=g("select");for(let t=0;t<w.length;t+=1)w[t].c();C(i,"class","svelte-avcb4w"),C(l,"class","svelte-avcb4w"),C(u,"size",10),x(u,"text-align","center"),C(u,"class","svelte-avcb4w"),void 0===t[19]&&W((()=>t[96].call(u))),C(r,"class","user-options svelte-avcb4w"),x(r,"text-align","center"),x(e,"height","fit-content"),C(e,"class","svelte-avcb4w")},m(a,p){h(a,e,p),m(e,n),m(e,i),m(i,s),m(e,o),m(e,l),m(e,c),m(e,r),m(r,u);for(let t=0;t<w.length;t+=1)w[t].m(u,null);T(u,t[19]),d||(f=[$(u,"change",t[96]),$(u,"click",t[88])],d=!0)},p(t,e){if(256&e[0]&&p!==(p=(t[8]?t[8].name:"being created")+"")&&A(s,p),1024&e[0]){let n;for(y=t[10],n=0;n<y.length;n+=1){const i=ii(t,y,n);w[n]?w[n].p(i,e):(w[n]=Wi(i),w[n].c(),w[n].m(u,null))}for(;n<w.length;n+=1)w[n].d(1);w.length=y.length}524288&e[0]&&T(u,t[19])},d(t){t&&v(e),b(w,t),d=!1,a(f)}}}function Wi(t){let e,n,i=t[179].name+"";return{c(){e=g("option"),n=_(i),e.__value=t[19],e.value=e.__value,C(e,"class","svelte-avcb4w")},m(t,i){h(t,e,i),m(e,n)},p(t,e){1024&e[0]&&i!==(i=t[179].name+"")&&A(n,i)},d(t){t&&v(e)}}}function Ki(t){let n,i;const a=[t[51]];let s={};for(let t=0;t<a.length;t+=1)s=e(s,a[t]);return n=new En({props:s}),n.$on("message",t[59]),{c(){at(n.$$.fragment)},m(t,e){st(n,t,e),i=!0},p(t,e){const i=1048576&e[1]?nt(a,[it(t[51])]):{};n.$set(i)},i(t){i||(Q(n.$$.fragment,t),i=!0)},o(t){tt(n.$$.fragment,t),i=!1},d(t){ot(n,t)}}}function Ui(t){let e,n;return e=new Ue({props:{title:t[14].name,scale_size_array:t[54],index:1,use_smoke:!1,$$slots:{default:[Yi]},$$scope:{ctx:t}}}),{c(){at(e.$$.fragment)},m(t,i){st(e,t,i),n=!0},p(t,n){const i={};16384&n[0]&&(i.title=t[14].name),8388608&n[1]&&(i.scale_size_array=t[54]),147968&n[0]|1083392&n[1]|16&n[6]&&(i.$$scope={dirty:n,ctx:t}),e.$set(i)},i(t){n||(Q(e.$$.fragment,t),n=!0)},o(t){tt(e.$$.fragment,t),n=!1},d(t){ot(e,t)}}}function Yi(t){let n,i;const a=[t[14],{reply_to:t[51]},{from_contact:t[42]},{active_identity:t[9]},{cc_list:t[46]},{contact_form_list:t[17]}];let s={};for(let t=0;t<a.length;t+=1)s=e(s,a[t]);return n=new Un({props:s}),{c(){at(n.$$.fragment)},m(t,e){st(n,t,e),i=!0},p(t,e){const i=147968&e[0]|1083392&e[1]?nt(a,[16384&e[0]&&it(t[14]),1048576&e[1]&&{reply_to:t[51]},2048&e[1]&&{from_contact:t[42]},512&e[0]&&{active_identity:t[9]},32768&e[1]&&{cc_list:t[46]},131072&e[0]&&{contact_form_list:t[17]}]):{};n.$set(i)},i(t){i||(Q(n.$$.fragment,t),i=!0)},o(t){tt(n.$$.fragment,t),i=!1},d(t){ot(n,t)}}}function qi(t){let e,n;return e=new Xn({props:{message_edit_type:"Message Ops",active_identity:t[9]}}),e.$on("message",t[59]),{c(){at(e.$$.fragment)},m(t,i){st(e,t,i),n=!0},p(t,n){const i={};512&n[0]&&(i.active_identity=t[9]),e.$set(i)},i(t){n||(Q(e.$$.fragment,t),n=!0)},o(t){tt(e.$$.fragment,t),n=!1},d(t){ot(e,t)}}}function Gi(t){let e,n,i,a,s,o,l,c,r,u,d,f;function p(e){t[95](e)}let b={tabs:["Identify","User","Messages","Introductions","Processed","Contacts","Manifest","About Us"],$$slots:{default:[oi,({tab:t})=>({189:t}),({tab:t})=>[0,0,0,0,0,0,t?8:0]]},$$scope:{ctx:t}};function _(t,e){return"Identify"===t[13]?mi:"User"===t[13]?pi:"Messages"===t[13]?fi:"Introductions"===t[13]?di:"Processed"===t[13]?ui:"Contacts"===t[13]?ri:"Manifest"===t[13]?ci:"About Us"===t[13]?li:void 0}void 0!==t[13]&&(b.active=t[13]),n=new Fe({props:b}),H.push((()=>function(t,e,n){const i=t.$$.props[e];void 0!==i&&(t.$$.bound[i]=n,n(t.$$.ctx[i]))}(n,"active",p)));let w=_(t),$=w&&w(t);c=new Ue({props:{title:t[51].name,scale_size_array:t[54],index:0,use_smoke:!1,$$slots:{default:[Ki]},$$scope:{ctx:t}}});let k=void 0!==t[14]&&Ui(t);return d=new Ue({props:{title:t[52],scale_size_array:t[54],index:2,use_smoke:!1,$$slots:{default:[qi]},$$scope:{ctx:t}}}),{c(){e=g("div"),at(n.$$.fragment),a=y(),s=g("br"),o=y(),$&&$.c(),l=y(),at(c.$$.fragment),r=y(),k&&k.c(),u=y(),at(d.$$.fragment),C(s,"class","svelte-avcb4w"),C(e,"class","svelte-avcb4w")},m(t,i){h(t,e,i),st(n,e,null),m(e,a),m(e,s),m(e,o),$&&$.m(e,null),h(t,l,i),st(c,t,i),h(t,r,i),k&&k.m(t,i),h(t,u,i),st(d,t,i),f=!0},p(t,a){const s={};var o;8192&a[0]|24&a[6]&&(s.$$scope={dirty:a,ctx:t}),!i&&8192&a[0]&&(i=!0,s.active=t[13],o=()=>i=!1,F.push(o)),n.$set(s),w===(w=_(t))&&$?$.p(t,a):($&&$.d(1),$=w&&w(t),$&&($.c(),$.m(e,null)));const l={};1048576&a[1]&&(l.title=t[51].name),8388608&a[1]&&(l.scale_size_array=t[54]),1048576&a[1]|16&a[6]&&(l.$$scope={dirty:a,ctx:t}),c.$set(l),void 0!==t[14]?k?(k.p(t,a),16384&a[0]&&Q(k,1)):(k=Ui(t),k.c(),Q(k,1),k.m(u.parentNode,u)):k&&(X(),tt(k,1,1,(()=>{k=null})),Z());const r={};2097152&a[1]&&(r.title=t[52]),8388608&a[1]&&(r.scale_size_array=t[54]),512&a[0]|16&a[6]&&(r.$$scope={dirty:a,ctx:t}),d.$set(r)},i(t){f||(Q(n.$$.fragment,t),Q(c.$$.fragment,t),Q(k),Q(d.$$.fragment,t),f=!0)},o(t){tt(n.$$.fragment,t),tt(c.$$.fragment,t),tt(k),tt(d.$$.fragment,t),f=!1},d(t){t&&v(e),ot(n),$&&$.d(),t&&v(l),ot(c,t),t&&v(r),k&&k.d(t),t&&v(u),ot(d,t)}}}let Ji="",Xi="Drop a picture here";function Zi(){let t=3e3,e=1e3,n=Math.max(200,window.innerWidth);n=Math.min(t,n);let i,a,s=Math.max(600,window.innerHeight);s=Math.min(e,s);i=.96-.75,a=(e-s)/400;let o=a*i+.75;return i=.76,a=(t-n)/2800,{w:a*i+.2,h:o}}function Qi(t){t.preventDefault()}function ta(){}function ea(t,e){let n=0,i=!1;do{let e=`${t}${n}`;i=document.getElementById(e),i&&(i.checked=!1),n++}while(i)}function na(t){let e="";for(let n in t){e+=`<li>\n\t\t\t\t\t${n} : ${JSON.stringify(t[n])}\n\t\t\t\t\t</li>`}return`<ul style="margin-left:4px">\n\t\t\t\t${e}\n\t\t\t</ul>`}function ia(t,e){if(!Array.isArray(e)){return e[t]}for(let n of e)if(n.file===t)return n;return!1}function aa(t,e,n){let i,a,s,o,l="",c="Drop binary biometric file here",r="",u=!1,d="OK",f=0,p=100,m="",h="",v=0,b=0,g=0,_=0,y=!1,w="",$="",C="",k="",A=!1,S="",x="",T="",E="",I="",R=!1,L="testesttesttest",P="testesttesttest",M="testesttesttest",j=!1,N=(new Date).toUTCString(),B=!1,F=!1,z=[!1],V=[!1],W=0,K=!1,U=!1,Y=[!1],q={},G=0,J="",X="",Z="",Q="",tt=1,et=1,nt=!0,it=!1,at=!1,st=!1,ot="Identify",lt=ot,ct=!1,rt=(new Date).toLocaleString(),ut=[],dt="read",ft="messages",pt="Use Op to Select",mt={business:{link:"latest-contact",from_cid:"QmTfD2LyTy8WGgdUkKE1Z1vAfb6HwNgmZA5kMaFAiy4fuz"},profile:{link:"latest-contact",from_cid:"QmTfD2LyTy8WGgdUkKE1Z1vAfb6HwNgmZA5kMaFAiy4fuz"}},ht=mt.profile,vt=[{name:"Hans Solo",DOB:"1000",place_of_origin:"alpha centauri",cool_public_info:"He is a Master Jedi",business:!1,public_key:"testesttesttest",signer_public_key:"ha ha ha ha ha ha ha ",cid:"4504385938",answer_message:"",biometric:"53535"}],bt={},gt=vt[0],_t=[{name:"Darth Vadar",user_cid:"869968609",subject:"Hans Solo is Mean",date:rt,readers:"luke,martha,chewy",business:!1,public_key:!1,message:"this is a message 4",reply_with:"default"}],yt=[{name:"Hans Solo",user_cid:"4504385938",subject:"Darth Vadier Attacks",date:rt,readers:"joe,jane,harry",business:!1,public_key:!1,message:"this is a message 1"}],wt=[],$t={name:"Admin",subject:"Hello From copious.world",date:N,readers:"you",business:!1,public_key:!1},Ct="",kt=[],At=!1;function St(){n(0,r=""),n(23,u=!1),n(24,d="OK"),f=0,p=100,n(21,l=""),n(1,m=""),n(2,h=""),n(18,v=0),n(56,b=0),n(57,g=0),n(58,_=0),n(4,x=""),n(5,T=""),n(6,E=""),n(7,I=""),n(30,R=!1),n(31,L="testesttesttest"),P="testesttesttest",n(32,M="testesttesttest"),n(33,j=!1),N=(new Date).toUTCString(),n(11,K=!1),n(34,U=!1),n(90,Y=[!1]),n(91,q={}),n(20,G=0),n(35,J=""),n(12,X=""),n(36,Z=""),Q="",n(37,tt=1),n(38,et=1),n(41,at=!1),n(45,ct=!1),rt=(new Date).toLocaleString(),n(93,vt=[{name:"Hans Solo",DOB:"1000",place_of_origin:"alpha centauri",cool_public_info:"He is a Master Jedi",business:!1,public_key:"testesttesttest",signer_public_key:"ha ha ha ha ha ha ha ",cid:"4504385938",answer_message:"",biometric:"53535"}]),bt={},n(48,_t=[{name:"Darth Vadar",user_cid:"869968609",subject:"Hans Solo is Mean",date:rt,readers:"luke,martha,chewy",business:!1,public_key:!1,message:"this is a message 4",reply_with:"default"}]),n(49,yt=[{name:"Hans Solo",user_cid:"4504385938",subject:"Darth Vadier Attacks",date:rt,readers:"joe,jane,harry",business:!1,public_key:!1,message:"this is a message 1"}]),n(50,wt=[]),n(51,$t={name:"Admin",subject:"Hello From copious.world",date:N,readers:"you",business:!1,public_key:!1}),async function(){await Dt("profile"),await Dt("business")}()}class xt{constructor(){this.empty_identity={name:"",DOB:"",place_of_origin:"",cool_public_info:"",business:!1,public_key:!1,signer_public_key:!1,biometric:!1},this.data=this.empty_identity}set(t,e,n,i,a,s,o,l){let c={name:t,DOB:e,place_of_origin:n,cool_public_info:i,business:void 0!==a&&a,public_key:s,signer_public_key:o,biometric:l};this.data=c}copy(t){let e={};for(let n in this.empty_identity)e[n]=t[n];this.data=e}match(t){let e=!0;return e=e&&this.data.name===t.name,e=e&&this.data.DOB===t.DOB,e=e&&this.data.place_of_origin===t.place_of_origin,e=e&&this.data.cool_public_info===t.cool_public_info,e=e&&this.data.business===t.business,e}extend_contact(t,e){this.data[t]=e}get_field(t){return this.data[t]}identity(){return Object.assign(this.empty_identity,this.data)}clear_identity(){return{name:this.data.name,DOB:this.data.DOB,place_of_origin:this.data.place_of_origin,cool_public_info:this.data.cool_public_info,business:this.data.business}}}let Tt=new xt,Ot=-1,Et=!1,It=!1,Rt={w:.4,h:.8},Lt=[];async function Dt(t){let e=mt[t];if(!e.from_cid){let n=e.link,i=await async function(t,e){let n=`${Xe}get/template-cid-from-name/${e}/${t}`,i=await fetchEndPoint(n,"");if("OK"===i.status)return i.cid;return!1}(n,t);e.from_cid=i}}Lt.push(Rt),Lt.push(Rt),Lt.push({w:.45,h:.3}),Rt=Zi(),Lt[0]=Rt,Lt[1]=Rt,D((async()=>{window.addEventListener("resize",(t=>{let e=Zi();Rt.h=e.h,Rt.w=e.w,n(54,Lt[0]=Rt,Lt),n(54,Lt[1]=Rt,Lt)})),await startup(),await Ht()}));let Pt=["name","DOB","place_of_origin","cool_public_info","biometric"],Mt={DOB:"Year of inception",place_of_origin:"Main Office"},jt=!1;async function Nt(t){if(n(0,r=t.cid),t.clear_cid,await fix_keys(t),await async function(t){if(t&&t.files&&t.files.contacts){let e=t.files.contacts.cid,i=await Qe(e,t),a=[];if(Array.isArray(i))a=i.filter((t=>"object"==typeof t&&"string"!=typeof t&&!1!==t));else for(let t in i)"string"==typeof t&&a.push(i[t]);0===a.length?n(93,vt=[Tt.identity()]):n(93,vt=a),function(t){if(Array.isArray(t)){bt={};for(let e of t)e&&"string"!=typeof e&&(bt[e.cid]=e)}else bt=Object.assign(bt,t);window.set_contact_map(bt)}(i)}}(t),async function(t){if(t){let e=await async function(t,e,n){return[await fn(t,!0,!1,e,n),await fn(t,!0,!0,e,n)]}(t,f,p);n(49,yt=e[0]),n(48,_t=e[1]),!1===yt&&n(49,yt=[]),!1===_t&&n(48,_t=[]),await zt(yt,!1);let i=await zt(_t,!0);n(48,_t=_t.filter((t=>i.indexOf(t)<0)))}}(t),async function(t){if(t&&t.files&&t.files.manifest){let e=t.files.manifest.cid;n(91,q=await tn(e,t)),void 0===q.clear_cid&&n(91,q.clear_cid=t.clear_cid,q);let i=[];if(Array.isArray(q.custom_contact_forms))i=q.custom_contact_forms;else for(let t in q.custom_contact_forms){let e=q.custom_contact_forms[t];e.cid=t,i.push(e)}n(90,Y=i)}}(t),t.profile_image){let e=t.profile_image;n(21,l=await bn(e))}}async function Ht(){try{let t=await window.get_known_users();n(10,z=t[0]),n(89,V=t[1])}catch(t){}}function Bt(t,e){let n=!1;if(t&&0===t.id.length)do{t=t.parentNode}while(t&&0===t.id.length);if(t&&0!==t.id.length){let i=t.id.split("_");if(i[0]===e)if("contact"===i[1]){let t=parseInt(i[2]);At=yt,n=yt[t]}else if("intro"===i[1]){let t=parseInt(i[2]);At=_t,n=_t[t]}else if("category"===i[1]){let t=parseInt(i[2]);At=wt,n=wt[t]}}return n}function Ft(t,e){if(Array.isArray(yt))for(let n of yt)n.user_cid===t&&(n.is_in_contacts=e);if(Array.isArray(yt))for(let n of _t)n.user_cid===t&&(n.is_in_contacts=e)}async function zt(t,e){let n=[];if(Array.isArray(t))for(let i of t){let t=void 0!==bt[i.user_cid];if(i.is_in_contacts=t,t&&e){let t=bt[i.user_cid];if(await Vt(t,i))if(t.public_key&&t.signer_public_key){let e=Jt(t);e&&await qt(i,e)}else Xt(i.user_cid,i.signer_public_key,t.must_send_keys,i),n.push(i)}else e&&i.response_acceptance&&(Xt(i.user_cid,i.signer_public_key,!1,i),n.push(i))}return n}async function Vt(t,e){if(void 0===t.must_send_keys)return!1;if(t.received_keys){if(t.must_send_keys&&t.public_key&&t.signer_public_key)return!0}else{if(t.public_key&&t.signer_public_key)return t.received_keys=!0,await Zt(),!1;let n=e.user_cid;if(n){if(!F.introductions)return!0;if(F.introductions.indexOf(n)>=0)return!0}}return!1}async function Wt(t){let e=await async function(t){let e=location.host;e=Je(e);let n=location.protocol,i=`${Xe}get/user-info`,a={cid:t},s=await postData(`${n}//${e}/${i}`,a);if("OK"===s.status)return s.user_info;return!1}(t);return e||alert("get_contact_info: user does not exist"),e}function Kt(t){n(4,x=t?t.name:""),n(5,T=t?t.DOB:""),n(6,E=t?t.place_of_origin:""),n(7,I=t?t.cool_public_info:""),n(30,R=t?t.business:""),n(31,L=t?t.public_key:""),P=t?t.signer_public_key:"",t&&t.answer_message,n(32,M=t?t.cid:"")}let Ut=0,Yt=!1;async function qt(t,e){if(!e)return;let n=F;if(n){let i=Object.assign({},t);i.user_cid=n.cid,i.public_key=n.user_info.public_key,i.signer_public_key=n.user_info.signer_public_key,i.date=Date.now(),i.business=A,i.response_acceptance=!0,i.attachments=[t.user_cid];let a=await un(e.clear_identity(),n,i);a&&(e.extend_contact("must_send_keys",!1),await Gt(),void 0===n.introductions&&(n.introductions=[]),n.introductions.push(a),update_identity(n))}}async function Gt(){let t=F;if(t){let e=await async function(t,e,n){return await en(Ye,t,e,n)}(t,A,bt);t.files.contacts.cid=e,await update_identity(t),await Ht()}}function Jt(t){if(t.cid){let e=new xt;return e.copy(t),e}return!1}async function Xt(t,e,i,a){let s=await Wt(t);if(s){let o=a.attachments[0],l=F.cid,c=new xt;c.copy(s);let r=function(t){for(let e in bt){let n=bt[e];if(t.match(n))return e}return!1}(c);if(!1!==r&&delete bt[r],c.extend_contact("cid",t),c.extend_contact("answer_message",""),c.extend_contact("signer_public_key",e),c.extend_contact("received_keys",!0),o&&o!==l)return void await async function(t,e){let n=F;if(n){let i=Object.assign({},t);i.user_cid=n.cid,i.public_key=n.user_info.public_key,i.signer_public_key=n.user_info.signer_public_key,i.date=Date.now(),i.business=A,i.response_acceptance=!0,i.attachments=[],i.subject="You received a spurious introduction.",i.message=`Someone faking my identity sent you a message pretending to be me. Watch out for this user cid: ${t.user_cid}`,await un(e.clear_identity(),n,i)}}(a,c);let u=c.identity(),d=vt;return vt[0]===Tt.identity()?d[0]=u:vt.push(u),n(93,vt=d),n(18,v=vt.length-1),bt[t]=u,Ft(t,!1),i&&(await qt(a,c),c.extend_contact("must_send_keys",!1)),await Gt(),!0}return!1}async function Zt(){n(14,gt.name=x,gt),n(14,gt.DOB=T,gt),n(14,gt.place_of_origin=E,gt),n(14,gt.cool_public_info=I,gt),n(14,gt.business=R,gt),n(14,gt.public_key=L,gt),n(14,gt.c_signer_public_key=P,gt);let t=gt.cid;delete bt[t],Ft(t,!1),t=await on(gt,void 0!==P&&P),n(14,gt.cid=t,gt),bt[t]=user_data,Ft(t,!0),await Gt()}return t.$$.update=()=>{2&t.$$.dirty[0]|1&t.$$.dirty[3]&&n(16,i=m?vt.filter((t=>`${t.name}`.toLowerCase().startsWith(m.toLowerCase()))):vt),327680&t.$$.dirty[0]&&n(14,gt=v>=0?i[v]:Tt.identity()),16384&t.$$.dirty[0]&&Kt(gt),524288&t.$$.dirty[0]|134217728&t.$$.dirty[2]&&n(9,F=V[W]),512&t.$$.dirty[0]|1&t.$$.dirty[3]&&F&&n(46,ut=vt.filter((t=>t.cid!==F.cid))),525312&t.$$.dirty[0]&&n(8,B=z[W]),512&t.$$.dirty[0]&&n(45,ct=!!F&&F.stored_externally),256&t.$$.dirty[0]&&B&&window.set_user_title(B.name),256&t.$$.dirty[0]&&void 0!==B&&B&&(n(3,w=B.name),n(26,$=B.DOB),n(27,C=B.place_of_origin),n(28,k=B.cool_public_info),n(29,A=B.business)),524800&t.$$.dirty[0]|2&t.$$.dirty[3]&&(Ot!==W&&(n(94,Ot=W),St()),F&&Nt(F)),4&t.$$.dirty[0]|268435456&t.$$.dirty[2]&&n(17,a=h?Y.filter((t=>`${t.name}`.toLowerCase().startsWith(h.toLowerCase()))):Y),1185792&t.$$.dirty[0]|536870912&t.$$.dirty[2]&&(n(11,K=a[G]),void 0!==K&&K&&(n(34,U=K.html),n(35,J=K.info),n(37,tt=q.max_preference),n(38,et=K.preference),n(12,X=K.cid),n(40,it=X===q.default_contact_form))),240&t.$$.dirty[0]&&n(33,j=!x||0==x.length||!T||0==T.length||!E||0==E.length||0==I.length),8192&t.$$.dirty[0]|1073741824&t.$$.dirty[2]&&(lt!==ot&&(kt=[],At=!1,"Introductions"==ot?dt="intros":"Messages"==ot&&(dt="messages")),n(92,lt=ot)),557313&t.$$.dirty[0]&&(n(15,It=!1===W||B&&void 0===B.biometric),"string"==typeof r&&0===r.length&&n(15,It=!0),n(53,Et=!It),console.log(r))},[r,m,h,w,x,T,E,I,B,F,z,K,X,ot,gt,It,i,a,v,W,G,l,c,u,d,y,$,C,k,A,R,L,M,j,U,J,Z,tt,et,nt,it,at,st,s,o,ct,ut,pt,_t,yt,wt,$t,Ct,Et,Lt,Yt,b,g,_,async function(t){switch(t.detail.cmd){case"new-contact":{let e=t.detail.signer_public_key,i=await Xt(t.detail.cid,e,!0,$t);n(51,$t.is_in_contacts=i,$t);break}case"reply":n(14,gt.answer_message=!0,gt),n(42,st=!1),start_floating_window(1);case"view-processed-messages":dt=t.detail.category,n(47,pt=dt),ft=dt,n(50,wt=await async function(t,e){if(t){let n=f||0,i=p||100;return await pn(t,e,n,i)}}(F,dt));break;case"move-messages":{if(!F)return;let e=t.detail.category;if(e===ft&&"intros"!==dt&&"messages"!==dt)return;let i=F.cid;"Introductions"===ot&&(i=F.clear_cid);let a=F.cid,s=F.user_info.business,o=!1;"messages"!==dt&&"intros"!==dt&&(o=dt),await async function(t,e,n,i,a,s,o){let l=location.host;l=Je(l);let c=location.protocol,r=`${Xe}message-list-op/${n}`,u={user_cid:t,dst_cid:e,param:i,business:a,message_list:s.join(",")};o&&(u.source_category=o);let d=await postData(`${c}//${l}/${r}`,u);if("OK"===d.status)return d.template_cid;return!1}(i,a,"move",e,s,kt,o),0==function(t,e){let i=[];if("Messages"==ot){if(i=yt,t!==i)return!1}else if("Introductions"==ot){if(i=_t,t!==i)return!1}else if(i=wt,t!==i)return!1;let a=i.filter((t=>{let n=t.f_cid;return!(n&&e.indexOf(n)>=0)}));"Messages"===ot?(n(49,yt=a),ea("doop-m_contact_",a.length)):"Introductions"===ot?(n(48,_t=a),ea("doop-m_intro_",a.length)):(n(50,wt=a),ea("doop-m_category_",a.length))}(At,kt)&&console.log("no message removed");break}default:console.log("message cmd not handled")}},async function(){let t=new xt;t.set(w,$,C,k,A,!1,!1,S),ht=mt[A?"business":"profile"],t.extend_contact("form_link",ht),t.extend_contact("answer_message","");let e=t.identity();if(n(24,d="OK"),function(t,e){jt=!1;for(let n of e){let e=t[n];if(jt=n,void 0===e||0===e.length)return!1}return!0}(e,Pt)){await gen_public_key(e);try{n(45,ct=await async function(t){let e=Object.assign(t);for(let t of sn)if(void 0===e[t]){if("public_key"===t){let t=get_user_public_wrapper_key(`${e.name}-${e.DOB}`);if(t){e.public_key=t;continue}}if("signer_public_key"===t){let t=get_user_public_signer_key(`${e.name}-${e.DOB}`);if(t){e.signer_public_key=t;continue}}return void Ge("undefined field "+t)}void 0!==e.cid&&delete e.cid;let n=location.host;n=Je(n);let i=location.protocol,a=`${Xe}add/profile`,s=e,o=await postData(`${i}//${n}/${a}`,s);if("OK"===o.status){let e=o.data;return"string"==typeof e.dir_data&&(e.dir_data=JSON.parse(e.dir_data)),t.cid=e.id,await finalize_user_identity(t,e),!0}return!1}(e))}catch(t){}await Ht(),n(19,W=z.length-1)}else n(24,d=function(t,e,n){let i=jt;if(n){let t=e[i];t&&(i=t)}return`Missing field: ${i},  when ${t}`}("creating contact page",Mt,A))},function(){n(3,w=""),n(26,$=""),n(27,C=""),n(28,k=""),S="",n(29,A=!1),n(8,B=!1),n(9,F=!1),n(19,W=!1)},async function(){let t=F;const e=z.indexOf(B);e>=0&&(n(10,z=[...z.slice(0,e),...z.slice(e+1)]),n(19,W=Math.min(W,z.length-1)),await unstore_user(t))},async function(t){t.preventDefault();try{let e=!!t.dataTransfer.files&&t.dataTransfer.files,i=!!t.dataTransfer.items&&t.dataTransfer.items,[a,s]=await $n(i,e);a="images/contact";let o=F;if(o){n(21,l=s);let t=await vn(a,s);t&&(o.profile_image=t,await update_identity(o))}}catch(t){console.log(t)}},async function(t){t.preventDefault();try{let e=!!t.dataTransfer.files&&t.dataTransfer.files,i=!!t.dataTransfer.items&&t.dataTransfer.items,[a,s]=await $n(i,e);S=s,n(22,c="Biometric has been dropped.")}catch(t){console.log(t)}},function(){n(42,st=!0),n(14,gt.answer_message=!1,gt),n(46,ut=ut.filter((t=>t.cid!==gt.cid))),start_floating_window(1)},function(t){t.stopPropagation();let e=t.target,n=Bt(e,"doop-m");if(n)if(e.checked)kt.push(n.f_cid);else{const t=kt.indexOf(n.f_cid);kt=[...kt.slice(0,t),...kt.slice(t+1)]}console.log(kt)},function(t){n(52,Ct="Message Ops"),start_floating_window(2)},function(t){n(52,Ct="Processed Message Ops"),start_floating_window(2)},function(t){n(52,Ct="Introduction Ops"),start_floating_window(2)},function(t){if(t){let e=Bt(t.target,"m");if(e){n(51,$t=e);let t=function(t){if(void 0===t)return!1;for(let e of vt)if(e.name==t.name&&t.user_cid===e.cid)return e;return!1}($t);t&&(t.answer_message=`&lt;subject ${$t.subject}&gt;<br>`+$t.message),start_floating_window(0)}}},function(){Ut=v,n(18,v=-1),Kt(!1),n(55,Yt=!0)},function(t){v<0?(n(18,v=Ut),n(55,Yt=!1)):n(55,Yt=!1)},async function(){let t=new xt;t.set(x,T,E,I,R,L,P,""),t.extend_contact("cid",""),t.extend_contact("answer_message",""),t.extend_contact("received_keys",!1),t.extend_contact("must_send_keys",!0);let e=t.clear_identity(),i=await on(e,!0);void 0===bt[i]&&(e.cid=i,t.extend_contact("cid",i),vt[0]===Tt.identity()?n(93,vt[0]=e,vt):vt.push(e),n(18,v=vt.length-1),bt[i]=e,Ft(i,!0),await Gt())},Zt,async function(){if(v<0)return;const t=vt.indexOf(gt);n(93,vt=[...vt.slice(0,t),...vt.slice(t+1)]),n(18,v=Math.min(v,i.length-2));let e=gt.cid;delete bt[e],Ft(e,!1),await Gt()},async function(){await upload_identity(),await Ht(),n(19,W=z.length-1)},async function(){if(F){let t=F.user_info;await download_identity(t,!1)}},async function(){if(B){let t=F,e=await cn(t,!1),i="";for(let t of e){i+=`<li>\n\t\t\t\t\t${na(t)}\n\t\t\t\t\t</li>`}n(23,u=`<ul style="margin-left:12px">\n\t\t\t\t${i}\n\t\t\t</ul>`)}},async function(){if(B){let t=F;if("object"!=typeof t.files&&(t.files={}),void 0===t.files.contacts||"object"!=typeof t.files.contacts){let e=await cn(t,!1);t.files.contacts=ia("contacts",e)}if(t){let e=t.files.contacts.cid,i=await Qe(e,t);n(23,u=JSON.stringify(i,null,4)),n(23,u=`\n<pre>\n\t<code>\n${u}\n\t</code>\n</pre>\n`)}}},async function(){if(B){let t=F;if("object"!=typeof t.files&&(t.files={}),void 0===t.files.manifest||"object"!=typeof t.files.manifest){let e=await cn(t,!1);t.files.manifest=ia("manifest",e)}if(t){let e=t.files.manifest.cid,i=A,a=await tn(e,t,i);n(23,u=JSON.stringify(a,!1,4)),n(23,u=`\n<pre>\n\t<code>\n${u}\n\t</code>\n</pre>\n`)}}},async function(){if(y&&y.length){let t=await ln(y);t?(n(23,u=JSON.stringify(t,!1,4)),n(23,u=`\n<pre>\n\t<code>\n${u}\n\t</code>\n</pre>`)):n(23,u="\n<pre>\n\t<code>\nCan't Fetch\n\t</code>\n</pre>")}},async function(){let t=X;if(t){let e=await mn(t);e&&(n(23,u=!1),e.cid=t,n(11,K.html=wn(e.txt_full,"\n"),K))}},async function(){n(91,q.custom_contact_forms=Y,q);let t=F;if(t){t.cid,gn(q);let e=await nn(t,A,q);t.files.manifest.cid=e,await update_identity(t)}},async function(){n(91,q.custom_contact_forms=Y,q),n(91,q.default_contact_form=X,q);let t=F;if(t){t.cid,gn(q);let e=await nn(t,A,q);t.files.manifest.cid=e,await update_identity(t)}},async function(t){let e=t.clipboardData.getData("text/plain"),i={info:"",cid:e,wrapped_key:"",html:""},a=await mn(e);a&&(a.cid=e,i.info=a.title,i.html=a.txt_full,n(39,nt=!0),a.var_map,n(90,Y=Y.concat(i)),n(20,G=Y.length-1))},async function(){n(11,K.info=J,K),n(11,K.cid=X,K),n(11,K.wrapped_key=Z,K),n(11,K.html=Q,K);let t=F;if(t){t.cid,gn(q);let e=await nn(t,A,q);t.files.manifest.cid=e,await update_identity(t)}},async function(){const t=Y.indexOf(K);n(90,Y=[...Y.slice(0,t),...Y.slice(t+1)]),n(20,G=Math.min(G,a.length-2)),n(91,q.custom_contact_forms=Y,q);let e=F;if(e){e.cid,gn(q);let t=await nn(e,A,q);e.files.manifest.cid=t,await update_identity(e)}},function(t){n(13,ot="User")},V,Y,q,lt,vt,Ot,function(t){ot=t,n(13,ot)},function(){W=O(this),n(19,W)},function(){w=this.value,n(3,w),n(8,B),n(10,z),n(19,W)},function(){A=this.checked,n(29,A),n(8,B),n(10,z),n(19,W)},function(){$=this.value,n(26,$),n(8,B),n(10,z),n(19,W)},function(){$=this.value,n(26,$),n(8,B),n(10,z),n(19,W)},function(){C=this.value,n(27,C),n(8,B),n(10,z),n(19,W)},function(){C=this.value,n(27,C),n(8,B),n(10,z),n(19,W)},function(){k=this.value,n(28,k),n(8,B),n(10,z),n(19,W)},function(t){H[t?"unshift":"push"]((()=>{o=t,n(44,o)}))},function(t){H[t?"unshift":"push"]((()=>{s=t,n(43,s)}))},function(){m=this.value,n(1,m)},function(){v=O(this),n(18,v)},function(){x=this.value,n(4,x)},function(){R=this.checked,n(30,R)},function(){T=this.value,n(5,T)},function(){T=this.value,n(5,T)},function(){E=this.value,n(6,E)},function(){E=this.value,n(6,E)},function(){I=this.value,n(7,I)},function(){M=this.value,n(32,M)},function(){h=this.value,n(2,h)},function(){G=O(this),n(20,G)},function(){X=this.value,n(12,X),n(17,a),n(20,G),n(11,K),n(91,q),n(2,h),n(90,Y)},function(){tt=this.value,n(37,tt),n(17,a),n(20,G),n(11,K),n(91,q),n(12,X),n(2,h),n(90,Y)},function(){J=this.value,n(35,J),n(17,a),n(20,G),n(11,K),n(91,q),n(12,X),n(2,h),n(90,Y)},function(){et=this.value,n(38,et),n(17,a),n(20,G),n(11,K),n(91,q),n(12,X),n(2,h),n(90,Y)},function(){Z=this.value,n(36,Z)},function(){y=this.value,n(25,y)}]}return new class extends rt{constructor(t){super(),ct(this,t,aa,Gi,o,{},[-1,-1,-1,-1,-1,-1,-1])}}({target:document.getElementById("app-main"),props:{name:"My Blog With Grid"}})}();
+    var cssClasses$2 = {
+        ACTIVE: 'mdc-tab-indicator--active',
+        FADE: 'mdc-tab-indicator--fade',
+        NO_TRANSITION: 'mdc-tab-indicator--no-transition',
+    };
+    var strings$3 = {
+        CONTENT_SELECTOR: '.mdc-tab-indicator__content',
+    };
+
+    /**
+     * @license
+     * Copyright 2018 Google Inc.
+     *
+     * Permission is hereby granted, free of charge, to any person obtaining a copy
+     * of this software and associated documentation files (the "Software"), to deal
+     * in the Software without restriction, including without limitation the rights
+     * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+     * copies of the Software, and to permit persons to whom the Software is
+     * furnished to do so, subject to the following conditions:
+     *
+     * The above copyright notice and this permission notice shall be included in
+     * all copies or substantial portions of the Software.
+     *
+     * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+     * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+     * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+     * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+     * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+     * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+     * THE SOFTWARE.
+     */
+    var MDCTabIndicatorFoundation = /** @class */ (function (_super) {
+        __extends(MDCTabIndicatorFoundation, _super);
+        function MDCTabIndicatorFoundation(adapter) {
+            return _super.call(this, __assign(__assign({}, MDCTabIndicatorFoundation.defaultAdapter), adapter)) || this;
+        }
+        Object.defineProperty(MDCTabIndicatorFoundation, "cssClasses", {
+            get: function () {
+                return cssClasses$2;
+            },
+            enumerable: false,
+            configurable: true
+        });
+        Object.defineProperty(MDCTabIndicatorFoundation, "strings", {
+            get: function () {
+                return strings$3;
+            },
+            enumerable: false,
+            configurable: true
+        });
+        Object.defineProperty(MDCTabIndicatorFoundation, "defaultAdapter", {
+            get: function () {
+                // tslint:disable:object-literal-sort-keys Methods should be in the same order as the adapter interface.
+                return {
+                    addClass: function () { return undefined; },
+                    removeClass: function () { return undefined; },
+                    computeContentClientRect: function () { return ({ top: 0, right: 0, bottom: 0, left: 0, width: 0, height: 0 }); },
+                    setContentStyleProperty: function () { return undefined; },
+                };
+                // tslint:enable:object-literal-sort-keys
+            },
+            enumerable: false,
+            configurable: true
+        });
+        MDCTabIndicatorFoundation.prototype.computeContentClientRect = function () {
+            return this.adapter.computeContentClientRect();
+        };
+        return MDCTabIndicatorFoundation;
+    }(MDCFoundation));
+
+    /**
+     * @license
+     * Copyright 2018 Google Inc.
+     *
+     * Permission is hereby granted, free of charge, to any person obtaining a copy
+     * of this software and associated documentation files (the "Software"), to deal
+     * in the Software without restriction, including without limitation the rights
+     * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+     * copies of the Software, and to permit persons to whom the Software is
+     * furnished to do so, subject to the following conditions:
+     *
+     * The above copyright notice and this permission notice shall be included in
+     * all copies or substantial portions of the Software.
+     *
+     * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+     * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+     * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+     * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+     * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+     * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+     * THE SOFTWARE.
+     */
+    /* istanbul ignore next: subclass is not a branch statement */
+    var MDCFadingTabIndicatorFoundation = /** @class */ (function (_super) {
+        __extends(MDCFadingTabIndicatorFoundation, _super);
+        function MDCFadingTabIndicatorFoundation() {
+            return _super !== null && _super.apply(this, arguments) || this;
+        }
+        MDCFadingTabIndicatorFoundation.prototype.activate = function () {
+            this.adapter.addClass(MDCTabIndicatorFoundation.cssClasses.ACTIVE);
+        };
+        MDCFadingTabIndicatorFoundation.prototype.deactivate = function () {
+            this.adapter.removeClass(MDCTabIndicatorFoundation.cssClasses.ACTIVE);
+        };
+        return MDCFadingTabIndicatorFoundation;
+    }(MDCTabIndicatorFoundation));
+
+    /**
+     * @license
+     * Copyright 2018 Google Inc.
+     *
+     * Permission is hereby granted, free of charge, to any person obtaining a copy
+     * of this software and associated documentation files (the "Software"), to deal
+     * in the Software without restriction, including without limitation the rights
+     * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+     * copies of the Software, and to permit persons to whom the Software is
+     * furnished to do so, subject to the following conditions:
+     *
+     * The above copyright notice and this permission notice shall be included in
+     * all copies or substantial portions of the Software.
+     *
+     * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+     * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+     * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+     * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+     * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+     * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+     * THE SOFTWARE.
+     */
+    /* istanbul ignore next: subclass is not a branch statement */
+    var MDCSlidingTabIndicatorFoundation = /** @class */ (function (_super) {
+        __extends(MDCSlidingTabIndicatorFoundation, _super);
+        function MDCSlidingTabIndicatorFoundation() {
+            return _super !== null && _super.apply(this, arguments) || this;
+        }
+        MDCSlidingTabIndicatorFoundation.prototype.activate = function (previousIndicatorClientRect) {
+            // Early exit if no indicator is present to handle cases where an indicator
+            // may be activated without a prior indicator state
+            if (!previousIndicatorClientRect) {
+                this.adapter.addClass(MDCTabIndicatorFoundation.cssClasses.ACTIVE);
+                return;
+            }
+            // This animation uses the FLIP approach. You can read more about it at the link below:
+            // https://aerotwist.com/blog/flip-your-animations/
+            // Calculate the dimensions based on the dimensions of the previous indicator
+            var currentClientRect = this.computeContentClientRect();
+            var widthDelta = previousIndicatorClientRect.width / currentClientRect.width;
+            var xPosition = previousIndicatorClientRect.left - currentClientRect.left;
+            this.adapter.addClass(MDCTabIndicatorFoundation.cssClasses.NO_TRANSITION);
+            this.adapter.setContentStyleProperty('transform', "translateX(" + xPosition + "px) scaleX(" + widthDelta + ")");
+            // Force repaint before updating classes and transform to ensure the transform properly takes effect
+            this.computeContentClientRect();
+            this.adapter.removeClass(MDCTabIndicatorFoundation.cssClasses.NO_TRANSITION);
+            this.adapter.addClass(MDCTabIndicatorFoundation.cssClasses.ACTIVE);
+            this.adapter.setContentStyleProperty('transform', '');
+        };
+        MDCSlidingTabIndicatorFoundation.prototype.deactivate = function () {
+            this.adapter.removeClass(MDCTabIndicatorFoundation.cssClasses.ACTIVE);
+        };
+        return MDCSlidingTabIndicatorFoundation;
+    }(MDCTabIndicatorFoundation));
+
+    /**
+     * @license
+     * Copyright 2018 Google Inc.
+     *
+     * Permission is hereby granted, free of charge, to any person obtaining a copy
+     * of this software and associated documentation files (the "Software"), to deal
+     * in the Software without restriction, including without limitation the rights
+     * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+     * copies of the Software, and to permit persons to whom the Software is
+     * furnished to do so, subject to the following conditions:
+     *
+     * The above copyright notice and this permission notice shall be included in
+     * all copies or substantial portions of the Software.
+     *
+     * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+     * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+     * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+     * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+     * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+     * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+     * THE SOFTWARE.
+     */
+    var cssClasses$1 = {
+        ACTIVE: 'mdc-tab--active',
+    };
+    var strings$2 = {
+        ARIA_SELECTED: 'aria-selected',
+        CONTENT_SELECTOR: '.mdc-tab__content',
+        INTERACTED_EVENT: 'MDCTab:interacted',
+        RIPPLE_SELECTOR: '.mdc-tab__ripple',
+        TABINDEX: 'tabIndex',
+        TAB_INDICATOR_SELECTOR: '.mdc-tab-indicator',
+    };
+
+    /**
+     * @license
+     * Copyright 2018 Google Inc.
+     *
+     * Permission is hereby granted, free of charge, to any person obtaining a copy
+     * of this software and associated documentation files (the "Software"), to deal
+     * in the Software without restriction, including without limitation the rights
+     * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+     * copies of the Software, and to permit persons to whom the Software is
+     * furnished to do so, subject to the following conditions:
+     *
+     * The above copyright notice and this permission notice shall be included in
+     * all copies or substantial portions of the Software.
+     *
+     * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+     * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+     * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+     * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+     * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+     * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+     * THE SOFTWARE.
+     */
+    var MDCTabFoundation = /** @class */ (function (_super) {
+        __extends(MDCTabFoundation, _super);
+        function MDCTabFoundation(adapter) {
+            var _this = _super.call(this, __assign(__assign({}, MDCTabFoundation.defaultAdapter), adapter)) || this;
+            _this.focusOnActivate_ = true;
+            return _this;
+        }
+        Object.defineProperty(MDCTabFoundation, "cssClasses", {
+            get: function () {
+                return cssClasses$1;
+            },
+            enumerable: false,
+            configurable: true
+        });
+        Object.defineProperty(MDCTabFoundation, "strings", {
+            get: function () {
+                return strings$2;
+            },
+            enumerable: false,
+            configurable: true
+        });
+        Object.defineProperty(MDCTabFoundation, "defaultAdapter", {
+            get: function () {
+                // tslint:disable:object-literal-sort-keys Methods should be in the same order as the adapter interface.
+                return {
+                    addClass: function () { return undefined; },
+                    removeClass: function () { return undefined; },
+                    hasClass: function () { return false; },
+                    setAttr: function () { return undefined; },
+                    activateIndicator: function () { return undefined; },
+                    deactivateIndicator: function () { return undefined; },
+                    notifyInteracted: function () { return undefined; },
+                    getOffsetLeft: function () { return 0; },
+                    getOffsetWidth: function () { return 0; },
+                    getContentOffsetLeft: function () { return 0; },
+                    getContentOffsetWidth: function () { return 0; },
+                    focus: function () { return undefined; },
+                };
+                // tslint:enable:object-literal-sort-keys
+            },
+            enumerable: false,
+            configurable: true
+        });
+        MDCTabFoundation.prototype.handleClick = function () {
+            // It's up to the parent component to keep track of the active Tab and
+            // ensure we don't activate a Tab that's already active.
+            this.adapter.notifyInteracted();
+        };
+        MDCTabFoundation.prototype.isActive = function () {
+            return this.adapter.hasClass(cssClasses$1.ACTIVE);
+        };
+        /**
+         * Sets whether the tab should focus itself when activated
+         */
+        MDCTabFoundation.prototype.setFocusOnActivate = function (focusOnActivate) {
+            this.focusOnActivate_ = focusOnActivate;
+        };
+        /**
+         * Activates the Tab
+         */
+        MDCTabFoundation.prototype.activate = function (previousIndicatorClientRect) {
+            this.adapter.addClass(cssClasses$1.ACTIVE);
+            this.adapter.setAttr(strings$2.ARIA_SELECTED, 'true');
+            this.adapter.setAttr(strings$2.TABINDEX, '0');
+            this.adapter.activateIndicator(previousIndicatorClientRect);
+            if (this.focusOnActivate_) {
+                this.adapter.focus();
+            }
+        };
+        /**
+         * Deactivates the Tab
+         */
+        MDCTabFoundation.prototype.deactivate = function () {
+            // Early exit
+            if (!this.isActive()) {
+                return;
+            }
+            this.adapter.removeClass(cssClasses$1.ACTIVE);
+            this.adapter.setAttr(strings$2.ARIA_SELECTED, 'false');
+            this.adapter.setAttr(strings$2.TABINDEX, '-1');
+            this.adapter.deactivateIndicator();
+        };
+        /**
+         * Returns the dimensions of the Tab
+         */
+        MDCTabFoundation.prototype.computeDimensions = function () {
+            var rootWidth = this.adapter.getOffsetWidth();
+            var rootLeft = this.adapter.getOffsetLeft();
+            var contentWidth = this.adapter.getContentOffsetWidth();
+            var contentLeft = this.adapter.getContentOffsetLeft();
+            return {
+                contentLeft: rootLeft + contentLeft,
+                contentRight: rootLeft + contentLeft + contentWidth,
+                rootLeft: rootLeft,
+                rootRight: rootLeft + rootWidth,
+            };
+        };
+        return MDCTabFoundation;
+    }(MDCFoundation));
+
+    // Match modifiers on DOM events.
+    const oldModifierRegex = /^[a-z]+(?::(?:preventDefault|stopPropagation|passive|nonpassive|capture|once|self))+$/;
+    // Match modifiers on other events.
+    const newModifierRegex = /^[^$]+(?:\$(?:preventDefault|stopPropagation|passive|nonpassive|capture|once|self))+$/;
+
+    function forwardEventsBuilder(component) {
+      // This is our pseudo $on function. It is defined on component mount.
+      let $on;
+      // This is a list of events bound before mount.
+      let events = [];
+      // This is the original component $on function.
+      const componentOn = component.$on;
+
+      // And we override the $on function to forward all bound events.
+      component.$on = (fullEventType, ...args) => {
+        let eventType = fullEventType;
+        let destructor = () => {};
+        if ($on) {
+          // The event was bound programmatically.
+          destructor = $on(eventType);
+        } else {
+          // The event was bound before mount by Svelte.
+          events.push(eventType);
+        }
+        const oldModifierMatch = eventType.match(oldModifierRegex);
+        const newModifierMatch = eventType.match(newModifierRegex);
+        const modifierMatch = oldModifierMatch || newModifierMatch;
+
+        if (oldModifierMatch && console) {
+          console.warn(
+            'Event modifiers in SMUI now use "$" instead of ":", so that all events can be bound with modifiers. Please update your event binding: ',
+            eventType
+          );
+        }
+
+        if (modifierMatch) {
+          // Remove modifiers from the real event.
+          const parts = eventType.split(oldModifierMatch ? ':' : '$');
+          eventType = parts[0];
+        }
+
+        // Call the original $on function.
+        const componentDestructor = componentOn.call(component, eventType, ...args);
+
+        return (...args) => {
+          destructor();
+          return componentDestructor(...args);
+        };
+      };
+
+      function forward(e) {
+        // Internally bubble the event up from Svelte components.
+        bubble(component, e);
+      }
+
+      return (node) => {
+        const destructors = [];
+
+        // This function is responsible for forwarding all bound events.
+        $on = (fullEventType) => {
+          let eventType = fullEventType;
+          let handler = forward;
+          // DOM addEventListener options argument.
+          let options = false;
+          const oldModifierMatch = eventType.match(oldModifierRegex);
+          const newModifierMatch = eventType.match(newModifierRegex);
+          const modifierMatch = oldModifierMatch || newModifierMatch;
+          if (modifierMatch) {
+            // Parse the event modifiers.
+            // Supported modifiers:
+            // - preventDefault
+            // - stopPropagation
+            // - passive
+            // - nonpassive
+            // - capture
+            // - once
+            const parts = eventType.split(oldModifierMatch ? ':' : '$');
+            eventType = parts[0];
+            options = Object.fromEntries(parts.slice(1).map((mod) => [mod, true]));
+            if (options.nonpassive) {
+              options.passive = false;
+              delete options.nonpassive;
+            }
+            if (options.preventDefault) {
+              handler = prevent_default(handler);
+              delete options.preventDefault;
+            }
+            if (options.stopPropagation) {
+              handler = stop_propagation(handler);
+              delete options.stopPropagation;
+            }
+          }
+
+          const off = listen(node, eventType, handler, options);
+          const destructor = () => {
+            off();
+            const idx = destructors.indexOf(destructor);
+            if (idx > -1) {
+              destructors.splice(idx, 1);
+            }
+          };
+
+          destructors.push(destructor);
+          return destructor;
+        };
+
+        for (let i = 0; i < events.length; i++) {
+          // Listen to all the events added before mount.
+          $on(events[i]);
+        }
+
+        return {
+          destroy: () => {
+            // Remove all event listeners.
+            for (let i = 0; i < destructors.length; i++) {
+              destructors[i]();
+            }
+          },
+        };
+      };
+    }
+
+    function classMap(classObj) {
+      return Object.entries(classObj)
+        .filter(([name, value]) => name !== '' && value)
+        .map(([name]) => name)
+        .join(' ');
+    }
+
+    function dispatch(
+      element,
+      eventType,
+      detail = {},
+      eventInit = { bubbles: true }
+    ) {
+      if (typeof Event !== 'undefined' && element) {
+        const event = new Event(eventType, eventInit);
+        event.detail = detail;
+        const el = 'getElement' in element ? element.getElement() : element;
+        el.dispatchEvent(event);
+        return event;
+      }
+    }
+
+    function exclude(obj, keys) {
+      let names = Object.getOwnPropertyNames(obj);
+      const newObj = {};
+
+      for (let i = 0; i < names.length; i++) {
+        const name = names[i];
+        const cashIndex = name.indexOf('$');
+        if (
+          cashIndex !== -1 &&
+          keys.indexOf(name.substring(0, cashIndex + 1)) !== -1
+        ) {
+          continue;
+        }
+        if (keys.indexOf(name) !== -1) {
+          continue;
+        }
+        newObj[name] = obj[name];
+      }
+
+      return newObj;
+    }
+
+    function prefixFilter(obj, prefix) {
+      let names = Object.getOwnPropertyNames(obj);
+      const newObj = {};
+
+      for (let i = 0; i < names.length; i++) {
+        const name = names[i];
+        if (name.substring(0, prefix.length) === prefix) {
+          newObj[name.substring(prefix.length)] = obj[name];
+        }
+      }
+
+      return newObj;
+    }
+
+    function useActions(node, actions) {
+      let objects = [];
+
+      if (actions) {
+        for (let i = 0; i < actions.length; i++) {
+          const isArray = Array.isArray(actions[i]);
+          const action = isArray ? actions[i][0] : actions[i];
+          if (isArray && actions[i].length > 1) {
+            objects.push(action(node, actions[i][1]));
+          } else {
+            objects.push(action(node));
+          }
+        }
+      }
+
+      return {
+        update(actions) {
+          if (((actions && actions.length) || 0) != objects.length) {
+            throw new Error('You must not change the length of an actions array.');
+          }
+
+          if (actions) {
+            for (let i = 0; i < actions.length; i++) {
+              if (objects[i] && 'update' in objects[i]) {
+                const isArray = Array.isArray(actions[i]);
+                if (isArray && actions[i].length > 1) {
+                  objects[i].update(actions[i][1]);
+                } else {
+                  objects[i].update();
+                }
+              }
+            }
+          }
+        },
+
+        destroy() {
+          for (let i = 0; i < objects.length; i++) {
+            if (objects[i] && 'destroy' in objects[i]) {
+              objects[i].destroy();
+            }
+          }
+        },
+      };
+    }
+
+    const { applyPassive } = events;
+    const { matches } = ponyfill;
+
+    function Ripple(
+      node,
+      {
+        ripple = true,
+        surface = false,
+        unbounded = false,
+        disabled = false,
+        color = null,
+        active = null,
+        eventTarget = null,
+        activeTarget = null,
+        addClass = (className) => node.classList.add(className),
+        removeClass = (className) => node.classList.remove(className),
+        addStyle = (name, value) => node.style.setProperty(name, value),
+        initPromise = Promise.resolve(),
+      } = {}
+    ) {
+      let instance;
+      let addLayoutListener = getContext('SMUI:addLayoutListener');
+      let removeLayoutListener;
+      let oldActive = active;
+      let oldEventTarget = eventTarget;
+      let oldActiveTarget = activeTarget;
+
+      function handleProps() {
+        if (surface) {
+          addClass('mdc-ripple-surface');
+          if (color === 'primary') {
+            addClass('smui-ripple-surface--primary');
+            removeClass('smui-ripple-surface--secondary');
+          } else if (color === 'secondary') {
+            removeClass('smui-ripple-surface--primary');
+            addClass('smui-ripple-surface--secondary');
+          } else {
+            removeClass('smui-ripple-surface--primary');
+            removeClass('smui-ripple-surface--secondary');
+          }
+        }
+
+        // Handle activation first.
+        if (instance && oldActive !== active) {
+          oldActive = active;
+          if (active) {
+            instance.activate();
+          } else if (active === false) {
+            instance.deactivate();
+          }
+        }
+
+        // Then create/destroy an instance.
+        if (ripple && !instance) {
+          instance = new MDCRippleFoundation({
+            addClass,
+            browserSupportsCssVars: () => supportsCssVariables(window),
+            computeBoundingRect: () => node.getBoundingClientRect(),
+            containsEventTarget: (target) => node.contains(target),
+            deregisterDocumentInteractionHandler: (evtType, handler) =>
+              document.documentElement.removeEventListener(
+                evtType,
+                handler,
+                applyPassive()
+              ),
+            deregisterInteractionHandler: (evtType, handler) =>
+              (eventTarget || node).removeEventListener(
+                evtType,
+                handler,
+                applyPassive()
+              ),
+            deregisterResizeHandler: (handler) =>
+              window.removeEventListener('resize', handler),
+            getWindowPageOffset: () => ({
+              x: window.pageXOffset,
+              y: window.pageYOffset,
+            }),
+            isSurfaceActive: () =>
+              active == null ? matches(activeTarget || node, ':active') : active,
+            isSurfaceDisabled: () => !!disabled,
+            isUnbounded: () => !!unbounded,
+            registerDocumentInteractionHandler: (evtType, handler) =>
+              document.documentElement.addEventListener(
+                evtType,
+                handler,
+                applyPassive()
+              ),
+            registerInteractionHandler: (evtType, handler) =>
+              (eventTarget || node).addEventListener(
+                evtType,
+                handler,
+                applyPassive()
+              ),
+            registerResizeHandler: (handler) =>
+              window.addEventListener('resize', handler),
+            removeClass,
+            updateCssVariable: addStyle,
+          });
+
+          initPromise.then(() => {
+            instance.init();
+            instance.setUnbounded(unbounded);
+          });
+        } else if (instance && !ripple) {
+          initPromise.then(() => {
+            instance.destroy();
+            instance = null;
+          });
+        }
+
+        // Now handle event/active targets
+        if (
+          instance &&
+          (oldEventTarget !== eventTarget || oldActiveTarget !== activeTarget)
+        ) {
+          oldEventTarget = eventTarget;
+          oldActiveTarget = activeTarget;
+
+          instance.destroy();
+          requestAnimationFrame(() => {
+            if (instance) {
+              instance.init();
+              instance.setUnbounded(unbounded);
+            }
+          });
+        }
+
+        if (!ripple && unbounded) {
+          addClass('mdc-ripple-upgraded--unbounded');
+        }
+      }
+
+      handleProps();
+
+      if (addLayoutListener) {
+        removeLayoutListener = addLayoutListener(layout);
+      }
+
+      function layout() {
+        if (instance) {
+          instance.layout();
+        }
+      }
+
+      return {
+        update(props) {
+          ({
+            ripple,
+            surface,
+            unbounded,
+            disabled,
+            color,
+            active,
+            eventTarget,
+            activeTarget,
+            addClass,
+            removeClass,
+            addStyle,
+            initPromise,
+          } = {
+            ripple: true,
+            surface: false,
+            unbounded: false,
+            disabled: false,
+            color: null,
+            active: null,
+            eventTarget: null,
+            activeTarget: null,
+            addClass: (className) => node.classList.add(className),
+            removeClass: (className) => node.classList.remove(className),
+            addStyle: (name, value) => node.style.setProperty(name, value),
+            initPromise: Promise.resolve(),
+            ...props,
+          });
+          handleProps();
+        },
+
+        destroy() {
+          if (instance) {
+            instance.destroy();
+            instance = null;
+            removeClass('mdc-ripple-surface');
+            removeClass('smui-ripple-surface--primary');
+            removeClass('smui-ripple-surface--secondary');
+          }
+
+          if (removeLayoutListener) {
+            removeLayoutListener();
+          }
+        },
+      };
+    }
+
+    /* node_modules/@smui/common/A.svelte generated by Svelte v3.37.0 */
+    const file$7 = "node_modules/@smui/common/A.svelte";
+
+    function create_fragment$7(ctx) {
+    	let a;
+    	let useActions_action;
+    	let current;
+    	let mounted;
+    	let dispose;
+    	const default_slot_template = /*#slots*/ ctx[7].default;
+    	const default_slot = create_slot(default_slot_template, ctx, /*$$scope*/ ctx[6], null);
+    	let a_levels = [{ href: /*href*/ ctx[0] }, /*$$restProps*/ ctx[4]];
+    	let a_data = {};
+
+    	for (let i = 0; i < a_levels.length; i += 1) {
+    		a_data = assign(a_data, a_levels[i]);
+    	}
+
+    	const block = {
+    		c: function create() {
+    			a = element("a");
+    			if (default_slot) default_slot.c();
+    			set_attributes(a, a_data);
+    			add_location(a, file$7, 0, 0, 0);
+    		},
+    		l: function claim(nodes) {
+    			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, a, anchor);
+
+    			if (default_slot) {
+    				default_slot.m(a, null);
+    			}
+
+    			/*a_binding*/ ctx[8](a);
+    			current = true;
+
+    			if (!mounted) {
+    				dispose = [
+    					action_destroyer(useActions_action = useActions.call(null, a, /*use*/ ctx[1])),
+    					action_destroyer(/*forwardEvents*/ ctx[3].call(null, a))
+    				];
+
+    				mounted = true;
+    			}
+    		},
+    		p: function update(ctx, [dirty]) {
+    			if (default_slot) {
+    				if (default_slot.p && dirty & /*$$scope*/ 64) {
+    					update_slot(default_slot, default_slot_template, ctx, /*$$scope*/ ctx[6], dirty, null, null);
+    				}
+    			}
+
+    			set_attributes(a, a_data = get_spread_update(a_levels, [
+    				(!current || dirty & /*href*/ 1) && { href: /*href*/ ctx[0] },
+    				dirty & /*$$restProps*/ 16 && /*$$restProps*/ ctx[4]
+    			]));
+
+    			if (useActions_action && is_function(useActions_action.update) && dirty & /*use*/ 2) useActions_action.update.call(null, /*use*/ ctx[1]);
+    		},
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(default_slot, local);
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			transition_out(default_slot, local);
+    			current = false;
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(a);
+    			if (default_slot) default_slot.d(detaching);
+    			/*a_binding*/ ctx[8](null);
+    			mounted = false;
+    			run_all(dispose);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_fragment$7.name,
+    		type: "component",
+    		source: "",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    function instance$3($$self, $$props, $$invalidate) {
+    	const omit_props_names = ["href","use","getElement"];
+    	let $$restProps = compute_rest_props($$props, omit_props_names);
+    	let { $$slots: slots = {}, $$scope } = $$props;
+    	validate_slots("A", slots, ['default']);
+    	let { href = "javascript:void(0);" } = $$props;
+    	let { use = [] } = $$props;
+    	const forwardEvents = forwardEventsBuilder(get_current_component());
+    	let element = null;
+
+    	function getElement() {
+    		return element;
+    	}
+
+    	function a_binding($$value) {
+    		binding_callbacks[$$value ? "unshift" : "push"](() => {
+    			element = $$value;
+    			$$invalidate(2, element);
+    		});
+    	}
+
+    	$$self.$$set = $$new_props => {
+    		$$props = assign(assign({}, $$props), exclude_internal_props($$new_props));
+    		$$invalidate(4, $$restProps = compute_rest_props($$props, omit_props_names));
+    		if ("href" in $$new_props) $$invalidate(0, href = $$new_props.href);
+    		if ("use" in $$new_props) $$invalidate(1, use = $$new_props.use);
+    		if ("$$scope" in $$new_props) $$invalidate(6, $$scope = $$new_props.$$scope);
+    	};
+
+    	$$self.$capture_state = () => ({
+    		get_current_component,
+    		forwardEventsBuilder,
+    		useActions,
+    		href,
+    		use,
+    		forwardEvents,
+    		element,
+    		getElement
+    	});
+
+    	$$self.$inject_state = $$new_props => {
+    		if ("href" in $$props) $$invalidate(0, href = $$new_props.href);
+    		if ("use" in $$props) $$invalidate(1, use = $$new_props.use);
+    		if ("element" in $$props) $$invalidate(2, element = $$new_props.element);
+    	};
+
+    	if ($$props && "$$inject" in $$props) {
+    		$$self.$inject_state($$props.$$inject);
+    	}
+
+    	return [
+    		href,
+    		use,
+    		element,
+    		forwardEvents,
+    		$$restProps,
+    		getElement,
+    		$$scope,
+    		slots,
+    		a_binding
+    	];
+    }
+
+    class A extends SvelteComponentDev {
+    	constructor(options) {
+    		super(options);
+    		init(this, options, instance$3, create_fragment$7, safe_not_equal, { href: 0, use: 1, getElement: 5 });
+
+    		dispatch_dev("SvelteRegisterComponent", {
+    			component: this,
+    			tagName: "A",
+    			options,
+    			id: create_fragment$7.name
+    		});
+    	}
+
+    	get href() {
+    		throw new Error("<A>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set href(value) {
+    		throw new Error("<A>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get use() {
+    		throw new Error("<A>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set use(value) {
+    		throw new Error("<A>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get getElement() {
+    		return this.$$.ctx[5];
+    	}
+
+    	set getElement(value) {
+    		throw new Error("<A>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+    }
+
+    /* node_modules/@smui/common/Button.svelte generated by Svelte v3.37.0 */
+    const file$6 = "node_modules/@smui/common/Button.svelte";
+
+    function create_fragment$6(ctx) {
+    	let button;
+    	let useActions_action;
+    	let current;
+    	let mounted;
+    	let dispose;
+    	const default_slot_template = /*#slots*/ ctx[6].default;
+    	const default_slot = create_slot(default_slot_template, ctx, /*$$scope*/ ctx[5], null);
+    	let button_levels = [/*$$restProps*/ ctx[3]];
+    	let button_data = {};
+
+    	for (let i = 0; i < button_levels.length; i += 1) {
+    		button_data = assign(button_data, button_levels[i]);
+    	}
+
+    	const block = {
+    		c: function create() {
+    			button = element("button");
+    			if (default_slot) default_slot.c();
+    			set_attributes(button, button_data);
+    			add_location(button, file$6, 0, 0, 0);
+    		},
+    		l: function claim(nodes) {
+    			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, button, anchor);
+
+    			if (default_slot) {
+    				default_slot.m(button, null);
+    			}
+
+    			/*button_binding*/ ctx[7](button);
+    			current = true;
+
+    			if (!mounted) {
+    				dispose = [
+    					action_destroyer(useActions_action = useActions.call(null, button, /*use*/ ctx[0])),
+    					action_destroyer(/*forwardEvents*/ ctx[2].call(null, button))
+    				];
+
+    				mounted = true;
+    			}
+    		},
+    		p: function update(ctx, [dirty]) {
+    			if (default_slot) {
+    				if (default_slot.p && dirty & /*$$scope*/ 32) {
+    					update_slot(default_slot, default_slot_template, ctx, /*$$scope*/ ctx[5], dirty, null, null);
+    				}
+    			}
+
+    			set_attributes(button, button_data = get_spread_update(button_levels, [dirty & /*$$restProps*/ 8 && /*$$restProps*/ ctx[3]]));
+    			if (useActions_action && is_function(useActions_action.update) && dirty & /*use*/ 1) useActions_action.update.call(null, /*use*/ ctx[0]);
+    		},
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(default_slot, local);
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			transition_out(default_slot, local);
+    			current = false;
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(button);
+    			if (default_slot) default_slot.d(detaching);
+    			/*button_binding*/ ctx[7](null);
+    			mounted = false;
+    			run_all(dispose);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_fragment$6.name,
+    		type: "component",
+    		source: "",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    function instance$2($$self, $$props, $$invalidate) {
+    	const omit_props_names = ["use","getElement"];
+    	let $$restProps = compute_rest_props($$props, omit_props_names);
+    	let { $$slots: slots = {}, $$scope } = $$props;
+    	validate_slots("Button", slots, ['default']);
+    	let { use = [] } = $$props;
+    	const forwardEvents = forwardEventsBuilder(get_current_component());
+    	let element = null;
+
+    	function getElement() {
+    		return element;
+    	}
+
+    	function button_binding($$value) {
+    		binding_callbacks[$$value ? "unshift" : "push"](() => {
+    			element = $$value;
+    			$$invalidate(1, element);
+    		});
+    	}
+
+    	$$self.$$set = $$new_props => {
+    		$$props = assign(assign({}, $$props), exclude_internal_props($$new_props));
+    		$$invalidate(3, $$restProps = compute_rest_props($$props, omit_props_names));
+    		if ("use" in $$new_props) $$invalidate(0, use = $$new_props.use);
+    		if ("$$scope" in $$new_props) $$invalidate(5, $$scope = $$new_props.$$scope);
+    	};
+
+    	$$self.$capture_state = () => ({
+    		get_current_component,
+    		forwardEventsBuilder,
+    		useActions,
+    		use,
+    		forwardEvents,
+    		element,
+    		getElement
+    	});
+
+    	$$self.$inject_state = $$new_props => {
+    		if ("use" in $$props) $$invalidate(0, use = $$new_props.use);
+    		if ("element" in $$props) $$invalidate(1, element = $$new_props.element);
+    	};
+
+    	if ($$props && "$$inject" in $$props) {
+    		$$self.$inject_state($$props.$$inject);
+    	}
+
+    	return [
+    		use,
+    		element,
+    		forwardEvents,
+    		$$restProps,
+    		getElement,
+    		$$scope,
+    		slots,
+    		button_binding
+    	];
+    }
+
+    class Button extends SvelteComponentDev {
+    	constructor(options) {
+    		super(options);
+    		init(this, options, instance$2, create_fragment$6, safe_not_equal, { use: 0, getElement: 4 });
+
+    		dispatch_dev("SvelteRegisterComponent", {
+    			component: this,
+    			tagName: "Button",
+    			options,
+    			id: create_fragment$6.name
+    		});
+    	}
+
+    	get use() {
+    		throw new Error("<Button>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set use(value) {
+    		throw new Error("<Button>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get getElement() {
+    		return this.$$.ctx[4];
+    	}
+
+    	set getElement(value) {
+    		throw new Error("<Button>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+    }
+
+    /* node_modules/@smui/tab-indicator/TabIndicator.svelte generated by Svelte v3.37.0 */
+
+    const file$5 = "node_modules/@smui/tab-indicator/TabIndicator.svelte";
+
+    function create_fragment$5(ctx) {
+    	let span1;
+    	let span0;
+    	let span0_class_value;
+    	let span0_style_value;
+    	let span0_aria_hidden_value;
+    	let useActions_action;
+    	let span1_class_value;
+    	let useActions_action_1;
+    	let current;
+    	let mounted;
+    	let dispose;
+    	const default_slot_template = /*#slots*/ ctx[21].default;
+    	const default_slot = create_slot(default_slot_template, ctx, /*$$scope*/ ctx[20], null);
+
+    	let span0_levels = [
+    		{
+    			class: span0_class_value = classMap({
+    				[/*content$class*/ ctx[6]]: true,
+    				"mdc-tab-indicator__content": true,
+    				"mdc-tab-indicator__content--underline": /*type*/ ctx[3] === "underline",
+    				"mdc-tab-indicator__content--icon": /*type*/ ctx[3] === "icon"
+    			})
+    		},
+    		{
+    			style: span0_style_value = Object.entries(/*contentStyles*/ ctx[10]).map(func$2).join(" ")
+    		},
+    		{
+    			"aria-hidden": span0_aria_hidden_value = /*type*/ ctx[3] === "icon" ? "true" : null
+    		},
+    		prefixFilter(/*$$restProps*/ ctx[12], "content$")
+    	];
+
+    	let span0_data = {};
+
+    	for (let i = 0; i < span0_levels.length; i += 1) {
+    		span0_data = assign(span0_data, span0_levels[i]);
+    	}
+
+    	let span1_levels = [
+    		{
+    			class: span1_class_value = classMap({
+    				[/*className*/ ctx[2]]: true,
+    				"mdc-tab-indicator": true,
+    				"mdc-tab-indicator--active": /*active*/ ctx[0],
+    				"mdc-tab-indicator--fade": /*transition*/ ctx[4] === "fade",
+    				.../*internalClasses*/ ctx[9]
+    			})
+    		},
+    		exclude(/*$$restProps*/ ctx[12], ["content$"])
+    	];
+
+    	let span1_data = {};
+
+    	for (let i = 0; i < span1_levels.length; i += 1) {
+    		span1_data = assign(span1_data, span1_levels[i]);
+    	}
+
+    	const block = {
+    		c: function create() {
+    			span1 = element("span");
+    			span0 = element("span");
+    			if (default_slot) default_slot.c();
+    			set_attributes(span0, span0_data);
+    			add_location(span0, file$5, 13, 2, 316);
+    			set_attributes(span1, span1_data);
+    			add_location(span1, file$5, 0, 0, 0);
+    		},
+    		l: function claim(nodes) {
+    			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, span1, anchor);
+    			append_dev(span1, span0);
+
+    			if (default_slot) {
+    				default_slot.m(span0, null);
+    			}
+
+    			/*span0_binding*/ ctx[22](span0);
+    			/*span1_binding*/ ctx[23](span1);
+    			current = true;
+
+    			if (!mounted) {
+    				dispose = [
+    					action_destroyer(useActions_action = useActions.call(null, span0, /*content$use*/ ctx[5])),
+    					action_destroyer(useActions_action_1 = useActions.call(null, span1, /*use*/ ctx[1])),
+    					action_destroyer(/*forwardEvents*/ ctx[11].call(null, span1))
+    				];
+
+    				mounted = true;
+    			}
+    		},
+    		p: function update(ctx, [dirty]) {
+    			if (default_slot) {
+    				if (default_slot.p && dirty & /*$$scope*/ 1048576) {
+    					update_slot(default_slot, default_slot_template, ctx, /*$$scope*/ ctx[20], dirty, null, null);
+    				}
+    			}
+
+    			set_attributes(span0, span0_data = get_spread_update(span0_levels, [
+    				(!current || dirty & /*content$class, type*/ 72 && span0_class_value !== (span0_class_value = classMap({
+    					[/*content$class*/ ctx[6]]: true,
+    					"mdc-tab-indicator__content": true,
+    					"mdc-tab-indicator__content--underline": /*type*/ ctx[3] === "underline",
+    					"mdc-tab-indicator__content--icon": /*type*/ ctx[3] === "icon"
+    				}))) && { class: span0_class_value },
+    				(!current || dirty & /*contentStyles*/ 1024 && span0_style_value !== (span0_style_value = Object.entries(/*contentStyles*/ ctx[10]).map(func$2).join(" "))) && { style: span0_style_value },
+    				(!current || dirty & /*type*/ 8 && span0_aria_hidden_value !== (span0_aria_hidden_value = /*type*/ ctx[3] === "icon" ? "true" : null)) && { "aria-hidden": span0_aria_hidden_value },
+    				dirty & /*$$restProps*/ 4096 && prefixFilter(/*$$restProps*/ ctx[12], "content$")
+    			]));
+
+    			if (useActions_action && is_function(useActions_action.update) && dirty & /*content$use*/ 32) useActions_action.update.call(null, /*content$use*/ ctx[5]);
+
+    			set_attributes(span1, span1_data = get_spread_update(span1_levels, [
+    				(!current || dirty & /*className, active, transition, internalClasses*/ 533 && span1_class_value !== (span1_class_value = classMap({
+    					[/*className*/ ctx[2]]: true,
+    					"mdc-tab-indicator": true,
+    					"mdc-tab-indicator--active": /*active*/ ctx[0],
+    					"mdc-tab-indicator--fade": /*transition*/ ctx[4] === "fade",
+    					.../*internalClasses*/ ctx[9]
+    				}))) && { class: span1_class_value },
+    				dirty & /*$$restProps*/ 4096 && exclude(/*$$restProps*/ ctx[12], ["content$"])
+    			]));
+
+    			if (useActions_action_1 && is_function(useActions_action_1.update) && dirty & /*use*/ 2) useActions_action_1.update.call(null, /*use*/ ctx[1]);
+    		},
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(default_slot, local);
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			transition_out(default_slot, local);
+    			current = false;
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(span1);
+    			if (default_slot) default_slot.d(detaching);
+    			/*span0_binding*/ ctx[22](null);
+    			/*span1_binding*/ ctx[23](null);
+    			mounted = false;
+    			run_all(dispose);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_fragment$5.name,
+    		type: "component",
+    		source: "",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    const func$2 = ([name, value]) => `${name}: ${value};`;
+
+    function instance_1$3($$self, $$props, $$invalidate) {
+    	const omit_props_names = [
+    		"use","class","active","type","transition","content$use","content$class","activate","deactivate","computeContentClientRect","getElement"
+    	];
+
+    	let $$restProps = compute_rest_props($$props, omit_props_names);
+    	let { $$slots: slots = {}, $$scope } = $$props;
+    	validate_slots("TabIndicator", slots, ['default']);
+    	const forwardEvents = forwardEventsBuilder(get_current_component());
+    	let { use = [] } = $$props;
+    	let { class: className = "" } = $$props;
+    	let { active = false } = $$props;
+    	let { type = "underline" } = $$props;
+    	let { transition = "slide" } = $$props;
+    	let { content$use = [] } = $$props;
+    	let { content$class = "" } = $$props;
+    	let element;
+    	let instance;
+    	let content;
+    	let internalClasses = {};
+    	let contentStyles = {};
+    	let changeSets = [];
+    	let oldTransition = transition;
+
+    	onMount(() => {
+    		$$invalidate(17, instance = getInstance());
+    		instance.init();
+
+    		return () => {
+    			instance.destroy();
+    		};
+    	});
+
+    	function getInstance() {
+    		const Foundation = ({
+    			fade: MDCFadingTabIndicatorFoundation,
+    			slide: MDCSlidingTabIndicatorFoundation
+    		})[transition] || MDCSlidingTabIndicatorFoundation;
+
+    		return Foundation
+    		? new Foundation({
+    					addClass: (...props) => doChange(() => addClass(...props)),
+    					removeClass: (...props) => doChange(() => removeClass(...props)),
+    					computeContentClientRect,
+    					setContentStyleProperty: (...props) => doChange(() => addContentStyle(...props))
+    				})
+    		: undefined;
+    	}
+
+    	function doChange(fn) {
+    		if (changeSets.length) {
+    			changeSets[changeSets.length - 1].push(fn);
+    		} else {
+    			fn();
+    		}
+    	}
+
+    	function addClass(className) {
+    		if (!internalClasses[className]) {
+    			$$invalidate(9, internalClasses[className] = true, internalClasses);
+    		}
+    	}
+
+    	function removeClass(className) {
+    		if (!(className in internalClasses) || internalClasses[className]) {
+    			$$invalidate(9, internalClasses[className] = false, internalClasses);
+    		}
+    	}
+
+    	function addContentStyle(name, value) {
+    		if (contentStyles[name] != value) {
+    			if (value === "" || value == null) {
+    				delete contentStyles[name];
+    				((($$invalidate(10, contentStyles), $$invalidate(19, oldTransition)), $$invalidate(4, transition)), $$invalidate(17, instance));
+    			} else {
+    				$$invalidate(10, contentStyles[name] = value, contentStyles);
+    			}
+    		}
+    	}
+
+    	function activate(previousIndicatorClientRect) {
+    		$$invalidate(0, active = true);
+    		instance.activate(previousIndicatorClientRect);
+    	}
+
+    	function deactivate() {
+    		$$invalidate(0, active = false);
+    		instance.deactivate();
+    	}
+
+    	function computeContentClientRect() {
+    		changeSets.push([]);
+    		$$invalidate(18, changeSets);
+    		return content.getBoundingClientRect();
+    	}
+
+    	function getElement() {
+    		return element;
+    	}
+
+    	function span0_binding($$value) {
+    		binding_callbacks[$$value ? "unshift" : "push"](() => {
+    			content = $$value;
+    			$$invalidate(8, content);
+    		});
+    	}
+
+    	function span1_binding($$value) {
+    		binding_callbacks[$$value ? "unshift" : "push"](() => {
+    			element = $$value;
+    			$$invalidate(7, element);
+    		});
+    	}
+
+    	$$self.$$set = $$new_props => {
+    		$$props = assign(assign({}, $$props), exclude_internal_props($$new_props));
+    		$$invalidate(12, $$restProps = compute_rest_props($$props, omit_props_names));
+    		if ("use" in $$new_props) $$invalidate(1, use = $$new_props.use);
+    		if ("class" in $$new_props) $$invalidate(2, className = $$new_props.class);
+    		if ("active" in $$new_props) $$invalidate(0, active = $$new_props.active);
+    		if ("type" in $$new_props) $$invalidate(3, type = $$new_props.type);
+    		if ("transition" in $$new_props) $$invalidate(4, transition = $$new_props.transition);
+    		if ("content$use" in $$new_props) $$invalidate(5, content$use = $$new_props.content$use);
+    		if ("content$class" in $$new_props) $$invalidate(6, content$class = $$new_props.content$class);
+    		if ("$$scope" in $$new_props) $$invalidate(20, $$scope = $$new_props.$$scope);
+    	};
+
+    	$$self.$capture_state = () => ({
+    		MDCFadingTabIndicatorFoundation,
+    		MDCSlidingTabIndicatorFoundation,
+    		onMount,
+    		get_current_component,
+    		forwardEventsBuilder,
+    		classMap,
+    		exclude,
+    		prefixFilter,
+    		useActions,
+    		forwardEvents,
+    		use,
+    		className,
+    		active,
+    		type,
+    		transition,
+    		content$use,
+    		content$class,
+    		element,
+    		instance,
+    		content,
+    		internalClasses,
+    		contentStyles,
+    		changeSets,
+    		oldTransition,
+    		getInstance,
+    		doChange,
+    		addClass,
+    		removeClass,
+    		addContentStyle,
+    		activate,
+    		deactivate,
+    		computeContentClientRect,
+    		getElement
+    	});
+
+    	$$self.$inject_state = $$new_props => {
+    		if ("use" in $$props) $$invalidate(1, use = $$new_props.use);
+    		if ("className" in $$props) $$invalidate(2, className = $$new_props.className);
+    		if ("active" in $$props) $$invalidate(0, active = $$new_props.active);
+    		if ("type" in $$props) $$invalidate(3, type = $$new_props.type);
+    		if ("transition" in $$props) $$invalidate(4, transition = $$new_props.transition);
+    		if ("content$use" in $$props) $$invalidate(5, content$use = $$new_props.content$use);
+    		if ("content$class" in $$props) $$invalidate(6, content$class = $$new_props.content$class);
+    		if ("element" in $$props) $$invalidate(7, element = $$new_props.element);
+    		if ("instance" in $$props) $$invalidate(17, instance = $$new_props.instance);
+    		if ("content" in $$props) $$invalidate(8, content = $$new_props.content);
+    		if ("internalClasses" in $$props) $$invalidate(9, internalClasses = $$new_props.internalClasses);
+    		if ("contentStyles" in $$props) $$invalidate(10, contentStyles = $$new_props.contentStyles);
+    		if ("changeSets" in $$props) $$invalidate(18, changeSets = $$new_props.changeSets);
+    		if ("oldTransition" in $$props) $$invalidate(19, oldTransition = $$new_props.oldTransition);
+    	};
+
+    	if ($$props && "$$inject" in $$props) {
+    		$$self.$inject_state($$props.$$inject);
+    	}
+
+    	$$self.$$.update = () => {
+    		if ($$self.$$.dirty & /*oldTransition, transition, instance*/ 655376) {
+    			if (oldTransition !== transition) {
+    				$$invalidate(19, oldTransition = transition);
+    				instance && instance.destroy();
+    				$$invalidate(9, internalClasses = {});
+    				$$invalidate(10, contentStyles = {});
+    				$$invalidate(17, instance = getInstance());
+    				instance.init();
+    			}
+    		}
+
+    		if ($$self.$$.dirty & /*changeSets*/ 262144) {
+    			// Use sets of changes for DOM updates, to facilitate animations.
+    			if (changeSets.length) {
+    				requestAnimationFrame(() => {
+    					const changeSet = changeSets.shift();
+    					$$invalidate(18, changeSets);
+
+    					for (const fn of changeSet) {
+    						fn();
+    					}
+    				});
+    			}
+    		}
+    	};
+
+    	return [
+    		active,
+    		use,
+    		className,
+    		type,
+    		transition,
+    		content$use,
+    		content$class,
+    		element,
+    		content,
+    		internalClasses,
+    		contentStyles,
+    		forwardEvents,
+    		$$restProps,
+    		activate,
+    		deactivate,
+    		computeContentClientRect,
+    		getElement,
+    		instance,
+    		changeSets,
+    		oldTransition,
+    		$$scope,
+    		slots,
+    		span0_binding,
+    		span1_binding
+    	];
+    }
+
+    class TabIndicator extends SvelteComponentDev {
+    	constructor(options) {
+    		super(options);
+
+    		init(this, options, instance_1$3, create_fragment$5, safe_not_equal, {
+    			use: 1,
+    			class: 2,
+    			active: 0,
+    			type: 3,
+    			transition: 4,
+    			content$use: 5,
+    			content$class: 6,
+    			activate: 13,
+    			deactivate: 14,
+    			computeContentClientRect: 15,
+    			getElement: 16
+    		});
+
+    		dispatch_dev("SvelteRegisterComponent", {
+    			component: this,
+    			tagName: "TabIndicator",
+    			options,
+    			id: create_fragment$5.name
+    		});
+    	}
+
+    	get use() {
+    		throw new Error("<TabIndicator>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set use(value) {
+    		throw new Error("<TabIndicator>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get class() {
+    		throw new Error("<TabIndicator>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set class(value) {
+    		throw new Error("<TabIndicator>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get active() {
+    		throw new Error("<TabIndicator>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set active(value) {
+    		throw new Error("<TabIndicator>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get type() {
+    		throw new Error("<TabIndicator>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set type(value) {
+    		throw new Error("<TabIndicator>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get transition() {
+    		throw new Error("<TabIndicator>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set transition(value) {
+    		throw new Error("<TabIndicator>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get content$use() {
+    		throw new Error("<TabIndicator>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set content$use(value) {
+    		throw new Error("<TabIndicator>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get content$class() {
+    		throw new Error("<TabIndicator>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set content$class(value) {
+    		throw new Error("<TabIndicator>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get activate() {
+    		return this.$$.ctx[13];
+    	}
+
+    	set activate(value) {
+    		throw new Error("<TabIndicator>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get deactivate() {
+    		return this.$$.ctx[14];
+    	}
+
+    	set deactivate(value) {
+    		throw new Error("<TabIndicator>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get computeContentClientRect() {
+    		return this.$$.ctx[15];
+    	}
+
+    	set computeContentClientRect(value) {
+    		throw new Error("<TabIndicator>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get getElement() {
+    		return this.$$.ctx[16];
+    	}
+
+    	set getElement(value) {
+    		throw new Error("<TabIndicator>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+    }
+
+    /* node_modules/@smui/tab/Tab.svelte generated by Svelte v3.37.0 */
+
+    const { Error: Error_1 } = globals;
+    const file$4 = "node_modules/@smui/tab/Tab.svelte";
+    const get_tab_indicator_slot_changes_1 = dirty => ({});
+    const get_tab_indicator_slot_context_1 = ctx => ({});
+    const get_tab_indicator_slot_changes = dirty => ({});
+    const get_tab_indicator_slot_context = ctx => ({});
+
+    // (48:4) {#if indicatorSpanOnlyContent}
+    function create_if_block_1$1(ctx) {
+    	let tabindicator;
+    	let current;
+
+    	const tabindicator_spread_levels = [
+    		{ active: /*active*/ ctx[18] },
+    		prefixFilter(/*$$restProps*/ ctx[24], "tabIndicator$")
+    	];
+
+    	let tabindicator_props = {
+    		$$slots: { default: [create_default_slot_2$1] },
+    		$$scope: { ctx }
+    	};
+
+    	for (let i = 0; i < tabindicator_spread_levels.length; i += 1) {
+    		tabindicator_props = assign(tabindicator_props, tabindicator_spread_levels[i]);
+    	}
+
+    	tabindicator = new TabIndicator({
+    			props: tabindicator_props,
+    			$$inline: true
+    		});
+
+    	/*tabindicator_binding*/ ctx[31](tabindicator);
+
+    	const block = {
+    		c: function create() {
+    			create_component(tabindicator.$$.fragment);
+    		},
+    		m: function mount(target, anchor) {
+    			mount_component(tabindicator, target, anchor);
+    			current = true;
+    		},
+    		p: function update(ctx, dirty) {
+    			const tabindicator_changes = (dirty[0] & /*active, $$restProps*/ 17039360)
+    			? get_spread_update(tabindicator_spread_levels, [
+    					dirty[0] & /*active*/ 262144 && { active: /*active*/ ctx[18] },
+    					dirty[0] & /*$$restProps*/ 16777216 && get_spread_object(prefixFilter(/*$$restProps*/ ctx[24], "tabIndicator$"))
+    				])
+    			: {};
+
+    			if (dirty[1] & /*$$scope*/ 16) {
+    				tabindicator_changes.$$scope = { dirty, ctx };
+    			}
+
+    			tabindicator.$set(tabindicator_changes);
+    		},
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(tabindicator.$$.fragment, local);
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			transition_out(tabindicator.$$.fragment, local);
+    			current = false;
+    		},
+    		d: function destroy(detaching) {
+    			/*tabindicator_binding*/ ctx[31](null);
+    			destroy_component(tabindicator, detaching);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block_1$1.name,
+    		type: "if",
+    		source: "(48:4) {#if indicatorSpanOnlyContent}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (49:6) <TabIndicator         bind:this={tabIndicator}         {active}         {...prefixFilter($$restProps, 'tabIndicator$')}         >
+    function create_default_slot_2$1(ctx) {
+    	let current;
+    	const tab_indicator_slot_template = /*#slots*/ ctx[30]["tab-indicator"];
+    	const tab_indicator_slot = create_slot(tab_indicator_slot_template, ctx, /*$$scope*/ ctx[35], get_tab_indicator_slot_context);
+
+    	const block = {
+    		c: function create() {
+    			if (tab_indicator_slot) tab_indicator_slot.c();
+    		},
+    		m: function mount(target, anchor) {
+    			if (tab_indicator_slot) {
+    				tab_indicator_slot.m(target, anchor);
+    			}
+
+    			current = true;
+    		},
+    		p: function update(ctx, dirty) {
+    			if (tab_indicator_slot) {
+    				if (tab_indicator_slot.p && dirty[1] & /*$$scope*/ 16) {
+    					update_slot(tab_indicator_slot, tab_indicator_slot_template, ctx, /*$$scope*/ ctx[35], dirty, get_tab_indicator_slot_changes, get_tab_indicator_slot_context);
+    				}
+    			}
+    		},
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(tab_indicator_slot, local);
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			transition_out(tab_indicator_slot, local);
+    			current = false;
+    		},
+    		d: function destroy(detaching) {
+    			if (tab_indicator_slot) tab_indicator_slot.d(detaching);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_default_slot_2$1.name,
+    		type: "slot",
+    		source: "(49:6) <TabIndicator         bind:this={tabIndicator}         {active}         {...prefixFilter($$restProps, 'tabIndicator$')}         >",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (57:2) {#if !indicatorSpanOnlyContent}
+    function create_if_block$1(ctx) {
+    	let tabindicator;
+    	let current;
+
+    	const tabindicator_spread_levels = [
+    		{ active: /*active*/ ctx[18] },
+    		prefixFilter(/*$$restProps*/ ctx[24], "tabIndicator$")
+    	];
+
+    	let tabindicator_props = {
+    		$$slots: { default: [create_default_slot_1$1] },
+    		$$scope: { ctx }
+    	};
+
+    	for (let i = 0; i < tabindicator_spread_levels.length; i += 1) {
+    		tabindicator_props = assign(tabindicator_props, tabindicator_spread_levels[i]);
+    	}
+
+    	tabindicator = new TabIndicator({
+    			props: tabindicator_props,
+    			$$inline: true
+    		});
+
+    	/*tabindicator_binding_1*/ ctx[33](tabindicator);
+
+    	const block = {
+    		c: function create() {
+    			create_component(tabindicator.$$.fragment);
+    		},
+    		m: function mount(target, anchor) {
+    			mount_component(tabindicator, target, anchor);
+    			current = true;
+    		},
+    		p: function update(ctx, dirty) {
+    			const tabindicator_changes = (dirty[0] & /*active, $$restProps*/ 17039360)
+    			? get_spread_update(tabindicator_spread_levels, [
+    					dirty[0] & /*active*/ 262144 && { active: /*active*/ ctx[18] },
+    					dirty[0] & /*$$restProps*/ 16777216 && get_spread_object(prefixFilter(/*$$restProps*/ ctx[24], "tabIndicator$"))
+    				])
+    			: {};
+
+    			if (dirty[1] & /*$$scope*/ 16) {
+    				tabindicator_changes.$$scope = { dirty, ctx };
+    			}
+
+    			tabindicator.$set(tabindicator_changes);
+    		},
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(tabindicator.$$.fragment, local);
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			transition_out(tabindicator.$$.fragment, local);
+    			current = false;
+    		},
+    		d: function destroy(detaching) {
+    			/*tabindicator_binding_1*/ ctx[33](null);
+    			destroy_component(tabindicator, detaching);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block$1.name,
+    		type: "if",
+    		source: "(57:2) {#if !indicatorSpanOnlyContent}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (58:4) <TabIndicator       bind:this={tabIndicator}       {active}       {...prefixFilter($$restProps, 'tabIndicator$')}       >
+    function create_default_slot_1$1(ctx) {
+    	let current;
+    	const tab_indicator_slot_template = /*#slots*/ ctx[30]["tab-indicator"];
+    	const tab_indicator_slot = create_slot(tab_indicator_slot_template, ctx, /*$$scope*/ ctx[35], get_tab_indicator_slot_context_1);
+
+    	const block = {
+    		c: function create() {
+    			if (tab_indicator_slot) tab_indicator_slot.c();
+    		},
+    		m: function mount(target, anchor) {
+    			if (tab_indicator_slot) {
+    				tab_indicator_slot.m(target, anchor);
+    			}
+
+    			current = true;
+    		},
+    		p: function update(ctx, dirty) {
+    			if (tab_indicator_slot) {
+    				if (tab_indicator_slot.p && dirty[1] & /*$$scope*/ 16) {
+    					update_slot(tab_indicator_slot, tab_indicator_slot_template, ctx, /*$$scope*/ ctx[35], dirty, get_tab_indicator_slot_changes_1, get_tab_indicator_slot_context_1);
+    				}
+    			}
+    		},
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(tab_indicator_slot, local);
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			transition_out(tab_indicator_slot, local);
+    			current = false;
+    		},
+    		d: function destroy(detaching) {
+    			if (tab_indicator_slot) tab_indicator_slot.d(detaching);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_default_slot_1$1.name,
+    		type: "slot",
+    		source: "(58:4) <TabIndicator       bind:this={tabIndicator}       {active}       {...prefixFilter($$restProps, 'tabIndicator$')}       >",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (1:0) <svelte:component   this={component}   bind:this={element}   use={[     [       Ripple,       {         ripple,         unbounded: false,         addClass,         removeClass,         addStyle,       },     ],     forwardEvents,     ...use,   ]}   class={classMap({     [className]: true,     'mdc-tab': true,     'mdc-tab--active': active,     'mdc-tab--stacked': stacked,     'mdc-tab--min-width': minWidth,     ...internalClasses,   })}   style={Object.entries(internalStyles)     .map(([name, value]) => `${name}: ${value};`)     .concat([style])     .join(' ')}   role="tab"   aria-selected={active ? 'true' : 'false'}   tabindex={active || forceAccessible ? '0' : '-1'}   {href}   on:click={instance && instance.handleClick()}   {...internalAttrs}   {...exclude($$restProps, ['content$', 'tabIndicator$'])} >
+    function create_default_slot$2(ctx) {
+    	let span0;
+    	let t0;
+    	let span0_class_value;
+    	let useActions_action;
+    	let t1;
+    	let t2;
+    	let span1;
+    	let current;
+    	let mounted;
+    	let dispose;
+    	const default_slot_template = /*#slots*/ ctx[30].default;
+    	const default_slot = create_slot(default_slot_template, ctx, /*$$scope*/ ctx[35], null);
+    	let if_block0 = /*indicatorSpanOnlyContent*/ ctx[6] && create_if_block_1$1(ctx);
+
+    	let span0_levels = [
+    		{
+    			class: span0_class_value = classMap({
+    				[/*content$class*/ ctx[9]]: true,
+    				"mdc-tab__content": true
+    			})
+    		},
+    		prefixFilter(/*$$restProps*/ ctx[24], "content$")
+    	];
+
+    	let span0_data = {};
+
+    	for (let i = 0; i < span0_levels.length; i += 1) {
+    		span0_data = assign(span0_data, span0_levels[i]);
+    	}
+
+    	let if_block1 = !/*indicatorSpanOnlyContent*/ ctx[6] && create_if_block$1(ctx);
+
+    	const block = {
+    		c: function create() {
+    			span0 = element("span");
+    			if (default_slot) default_slot.c();
+    			t0 = space();
+    			if (if_block0) if_block0.c();
+    			t1 = space();
+    			if (if_block1) if_block1.c();
+    			t2 = space();
+    			span1 = element("span");
+    			set_attributes(span0, span0_data);
+    			add_location(span0, file$4, 37, 2, 818);
+    			attr_dev(span1, "class", "mdc-tab__ripple");
+    			add_location(span1, file$4, 64, 2, 1497);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, span0, anchor);
+
+    			if (default_slot) {
+    				default_slot.m(span0, null);
+    			}
+
+    			append_dev(span0, t0);
+    			if (if_block0) if_block0.m(span0, null);
+    			/*span0_binding*/ ctx[32](span0);
+    			insert_dev(target, t1, anchor);
+    			if (if_block1) if_block1.m(target, anchor);
+    			insert_dev(target, t2, anchor);
+    			insert_dev(target, span1, anchor);
+    			current = true;
+
+    			if (!mounted) {
+    				dispose = action_destroyer(useActions_action = useActions.call(null, span0, /*content$use*/ ctx[8]));
+    				mounted = true;
+    			}
+    		},
+    		p: function update(ctx, dirty) {
+    			if (default_slot) {
+    				if (default_slot.p && dirty[1] & /*$$scope*/ 16) {
+    					update_slot(default_slot, default_slot_template, ctx, /*$$scope*/ ctx[35], dirty, null, null);
+    				}
+    			}
+
+    			if (/*indicatorSpanOnlyContent*/ ctx[6]) {
+    				if (if_block0) {
+    					if_block0.p(ctx, dirty);
+
+    					if (dirty[0] & /*indicatorSpanOnlyContent*/ 64) {
+    						transition_in(if_block0, 1);
+    					}
+    				} else {
+    					if_block0 = create_if_block_1$1(ctx);
+    					if_block0.c();
+    					transition_in(if_block0, 1);
+    					if_block0.m(span0, null);
+    				}
+    			} else if (if_block0) {
+    				group_outros();
+
+    				transition_out(if_block0, 1, 1, () => {
+    					if_block0 = null;
+    				});
+
+    				check_outros();
+    			}
+
+    			set_attributes(span0, span0_data = get_spread_update(span0_levels, [
+    				(!current || dirty[0] & /*content$class*/ 512 && span0_class_value !== (span0_class_value = classMap({
+    					[/*content$class*/ ctx[9]]: true,
+    					"mdc-tab__content": true
+    				}))) && { class: span0_class_value },
+    				dirty[0] & /*$$restProps*/ 16777216 && prefixFilter(/*$$restProps*/ ctx[24], "content$")
+    			]));
+
+    			if (useActions_action && is_function(useActions_action.update) && dirty[0] & /*content$use*/ 256) useActions_action.update.call(null, /*content$use*/ ctx[8]);
+
+    			if (!/*indicatorSpanOnlyContent*/ ctx[6]) {
+    				if (if_block1) {
+    					if_block1.p(ctx, dirty);
+
+    					if (dirty[0] & /*indicatorSpanOnlyContent*/ 64) {
+    						transition_in(if_block1, 1);
+    					}
+    				} else {
+    					if_block1 = create_if_block$1(ctx);
+    					if_block1.c();
+    					transition_in(if_block1, 1);
+    					if_block1.m(t2.parentNode, t2);
+    				}
+    			} else if (if_block1) {
+    				group_outros();
+
+    				transition_out(if_block1, 1, 1, () => {
+    					if_block1 = null;
+    				});
+
+    				check_outros();
+    			}
+    		},
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(default_slot, local);
+    			transition_in(if_block0);
+    			transition_in(if_block1);
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			transition_out(default_slot, local);
+    			transition_out(if_block0);
+    			transition_out(if_block1);
+    			current = false;
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(span0);
+    			if (default_slot) default_slot.d(detaching);
+    			if (if_block0) if_block0.d();
+    			/*span0_binding*/ ctx[32](null);
+    			if (detaching) detach_dev(t1);
+    			if (if_block1) if_block1.d(detaching);
+    			if (detaching) detach_dev(t2);
+    			if (detaching) detach_dev(span1);
+    			mounted = false;
+    			dispose();
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_default_slot$2.name,
+    		type: "slot",
+    		source: "(1:0) <svelte:component   this={component}   bind:this={element}   use={[     [       Ripple,       {         ripple,         unbounded: false,         addClass,         removeClass,         addStyle,       },     ],     forwardEvents,     ...use,   ]}   class={classMap({     [className]: true,     'mdc-tab': true,     'mdc-tab--active': active,     'mdc-tab--stacked': stacked,     'mdc-tab--min-width': minWidth,     ...internalClasses,   })}   style={Object.entries(internalStyles)     .map(([name, value]) => `${name}: ${value};`)     .concat([style])     .join(' ')}   role=\\\"tab\\\"   aria-selected={active ? 'true' : 'false'}   tabindex={active || forceAccessible ? '0' : '-1'}   {href}   on:click={instance && instance.handleClick()}   {...internalAttrs}   {...exclude($$restProps, ['content$', 'tabIndicator$'])} >",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    function create_fragment$4(ctx) {
+    	let switch_instance;
+    	let switch_instance_anchor;
+    	let current;
+
+    	const switch_instance_spread_levels = [
+    		{
+    			use: [
+    				[
+    					Ripple,
+    					{
+    						ripple: /*ripple*/ ctx[3],
+    						unbounded: false,
+    						addClass: /*addClass*/ ctx[21],
+    						removeClass: /*removeClass*/ ctx[22],
+    						addStyle: /*addStyle*/ ctx[23]
+    					}
+    				],
+    				/*forwardEvents*/ ctx[20],
+    				.../*use*/ ctx[0]
+    			]
+    		},
+    		{
+    			class: classMap({
+    				[/*className*/ ctx[1]]: true,
+    				"mdc-tab": true,
+    				"mdc-tab--active": /*active*/ ctx[18],
+    				"mdc-tab--stacked": /*stacked*/ ctx[4],
+    				"mdc-tab--min-width": /*minWidth*/ ctx[5],
+    				.../*internalClasses*/ ctx[15]
+    			})
+    		},
+    		{
+    			style: Object.entries(/*internalStyles*/ ctx[16]).map(func$1).concat([/*style*/ ctx[2]]).join(" ")
+    		},
+    		{ role: "tab" },
+    		{
+    			"aria-selected": /*active*/ ctx[18] ? "true" : "false"
+    		},
+    		{
+    			tabindex: /*active*/ ctx[18] || /*forceAccessible*/ ctx[19]
+    			? "0"
+    			: "-1"
+    		},
+    		{ href: /*href*/ ctx[7] },
+    		/*internalAttrs*/ ctx[17],
+    		exclude(/*$$restProps*/ ctx[24], ["content$", "tabIndicator$"])
+    	];
+
+    	var switch_value = /*component*/ ctx[10];
+
+    	function switch_props(ctx) {
+    		let switch_instance_props = {
+    			$$slots: { default: [create_default_slot$2] },
+    			$$scope: { ctx }
+    		};
+
+    		for (let i = 0; i < switch_instance_spread_levels.length; i += 1) {
+    			switch_instance_props = assign(switch_instance_props, switch_instance_spread_levels[i]);
+    		}
+
+    		return {
+    			props: switch_instance_props,
+    			$$inline: true
+    		};
+    	}
+
+    	if (switch_value) {
+    		switch_instance = new switch_value(switch_props(ctx));
+    		/*switch_instance_binding*/ ctx[34](switch_instance);
+
+    		switch_instance.$on("click", function () {
+    			if (is_function(/*instance*/ ctx[11] && /*instance*/ ctx[11].handleClick())) (/*instance*/ ctx[11] && /*instance*/ ctx[11].handleClick()).apply(this, arguments);
+    		});
+    	}
+
+    	const block = {
+    		c: function create() {
+    			if (switch_instance) create_component(switch_instance.$$.fragment);
+    			switch_instance_anchor = empty();
+    		},
+    		l: function claim(nodes) {
+    			throw new Error_1("options.hydrate only works if the component was compiled with the `hydratable: true` option");
+    		},
+    		m: function mount(target, anchor) {
+    			if (switch_instance) {
+    				mount_component(switch_instance, target, anchor);
+    			}
+
+    			insert_dev(target, switch_instance_anchor, anchor);
+    			current = true;
+    		},
+    		p: function update(new_ctx, dirty) {
+    			ctx = new_ctx;
+
+    			const switch_instance_changes = (dirty[0] & /*ripple, addClass, removeClass, addStyle, forwardEvents, use, className, active, stacked, minWidth, internalClasses, internalStyles, style, forceAccessible, href, internalAttrs, $$restProps*/ 33521855)
+    			? get_spread_update(switch_instance_spread_levels, [
+    					dirty[0] & /*ripple, addClass, removeClass, addStyle, forwardEvents, use*/ 15728649 && {
+    						use: [
+    							[
+    								Ripple,
+    								{
+    									ripple: /*ripple*/ ctx[3],
+    									unbounded: false,
+    									addClass: /*addClass*/ ctx[21],
+    									removeClass: /*removeClass*/ ctx[22],
+    									addStyle: /*addStyle*/ ctx[23]
+    								}
+    							],
+    							/*forwardEvents*/ ctx[20],
+    							.../*use*/ ctx[0]
+    						]
+    					},
+    					dirty[0] & /*className, active, stacked, minWidth, internalClasses*/ 294962 && {
+    						class: classMap({
+    							[/*className*/ ctx[1]]: true,
+    							"mdc-tab": true,
+    							"mdc-tab--active": /*active*/ ctx[18],
+    							"mdc-tab--stacked": /*stacked*/ ctx[4],
+    							"mdc-tab--min-width": /*minWidth*/ ctx[5],
+    							.../*internalClasses*/ ctx[15]
+    						})
+    					},
+    					dirty[0] & /*internalStyles, style*/ 65540 && {
+    						style: Object.entries(/*internalStyles*/ ctx[16]).map(func$1).concat([/*style*/ ctx[2]]).join(" ")
+    					},
+    					switch_instance_spread_levels[3],
+    					dirty[0] & /*active*/ 262144 && {
+    						"aria-selected": /*active*/ ctx[18] ? "true" : "false"
+    					},
+    					dirty[0] & /*active, forceAccessible*/ 786432 && {
+    						tabindex: /*active*/ ctx[18] || /*forceAccessible*/ ctx[19]
+    						? "0"
+    						: "-1"
+    					},
+    					dirty[0] & /*href*/ 128 && { href: /*href*/ ctx[7] },
+    					dirty[0] & /*internalAttrs*/ 131072 && get_spread_object(/*internalAttrs*/ ctx[17]),
+    					dirty[0] & /*$$restProps*/ 16777216 && get_spread_object(exclude(/*$$restProps*/ ctx[24], ["content$", "tabIndicator$"]))
+    				])
+    			: {};
+
+    			if (dirty[0] & /*active, $$restProps, tabIndicator, indicatorSpanOnlyContent, content$class, content, content$use*/ 17064768 | dirty[1] & /*$$scope*/ 16) {
+    				switch_instance_changes.$$scope = { dirty, ctx };
+    			}
+
+    			if (switch_value !== (switch_value = /*component*/ ctx[10])) {
+    				if (switch_instance) {
+    					group_outros();
+    					const old_component = switch_instance;
+
+    					transition_out(old_component.$$.fragment, 1, 0, () => {
+    						destroy_component(old_component, 1);
+    					});
+
+    					check_outros();
+    				}
+
+    				if (switch_value) {
+    					switch_instance = new switch_value(switch_props(ctx));
+    					/*switch_instance_binding*/ ctx[34](switch_instance);
+
+    					switch_instance.$on("click", function () {
+    						if (is_function(/*instance*/ ctx[11] && /*instance*/ ctx[11].handleClick())) (/*instance*/ ctx[11] && /*instance*/ ctx[11].handleClick()).apply(this, arguments);
+    					});
+
+    					create_component(switch_instance.$$.fragment);
+    					transition_in(switch_instance.$$.fragment, 1);
+    					mount_component(switch_instance, switch_instance_anchor.parentNode, switch_instance_anchor);
+    				} else {
+    					switch_instance = null;
+    				}
+    			} else if (switch_value) {
+    				switch_instance.$set(switch_instance_changes);
+    			}
+    		},
+    		i: function intro(local) {
+    			if (current) return;
+    			if (switch_instance) transition_in(switch_instance.$$.fragment, local);
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			if (switch_instance) transition_out(switch_instance.$$.fragment, local);
+    			current = false;
+    		},
+    		d: function destroy(detaching) {
+    			/*switch_instance_binding*/ ctx[34](null);
+    			if (detaching) detach_dev(switch_instance_anchor);
+    			if (switch_instance) destroy_component(switch_instance, detaching);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_fragment$4.name,
+    		type: "component",
+    		source: "",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    const func$1 = ([name, value]) => `${name}: ${value};`;
+
+    function instance_1$2($$self, $$props, $$invalidate) {
+    	const omit_props_names = [
+    		"use","class","style","tab","ripple","stacked","minWidth","indicatorSpanOnlyContent","href","content$use","content$class","component","activate","deactivate","focus","getElement"
+    	];
+
+    	let $$restProps = compute_rest_props($$props, omit_props_names);
+    	let { $$slots: slots = {}, $$scope } = $$props;
+    	validate_slots("Tab", slots, ['default','tab-indicator']);
+    	const forwardEvents = forwardEventsBuilder(get_current_component());
+    	let { use = [] } = $$props;
+    	let { class: className = "" } = $$props;
+    	let { style = "" } = $$props;
+    	let { tab: tabId } = $$props;
+    	let { ripple = true } = $$props;
+    	let { stacked = false } = $$props;
+    	let { minWidth = false } = $$props;
+    	let { indicatorSpanOnlyContent = false } = $$props;
+    	let { href = null } = $$props;
+    	let { content$use = [] } = $$props;
+    	let { content$class = "" } = $$props;
+    	let element;
+    	let instance;
+    	let content;
+    	let tabIndicator;
+    	let internalClasses = {};
+    	let internalStyles = {};
+    	let internalAttrs = {};
+    	let focusOnActivate = getContext("SMUI:tab:focusOnActivate");
+    	let active = tabId === getContext("SMUI:tab:initialActive");
+    	let forceAccessible = false;
+    	let { component = href == null ? Button : A } = $$props;
+    	setContext("SMUI:label:context", "tab");
+    	setContext("SMUI:icon:context", "tab");
+
+    	if (!tabId) {
+    		throw new Error("The tab property is required! It should be passed down from the TabBar to the Tab.");
+    	}
+
+    	onMount(() => {
+    		$$invalidate(11, instance = new MDCTabFoundation({
+    				setAttr: addAttr,
+    				addClass,
+    				removeClass,
+    				hasClass,
+    				activateIndicator: previousIndicatorClientRect => tabIndicator.activate(previousIndicatorClientRect),
+    				deactivateIndicator: () => tabIndicator.deactivate(),
+    				notifyInteracted: () => dispatch(getElement(), "MDCTab:interacted", { tabId }),
+    				getOffsetLeft: () => getElement().offsetLeft,
+    				getOffsetWidth: () => getElement().offsetWidth,
+    				getContentOffsetLeft: () => content.offsetLeft,
+    				getContentOffsetWidth: () => content.offsetWidth,
+    				focus
+    			}));
+
+    		const accessor = {
+    			tabId,
+    			get element() {
+    				return getElement();
+    			},
+    			get active() {
+    				return active;
+    			},
+    			forceAccessible(accessible) {
+    				$$invalidate(19, forceAccessible = accessible);
+    			},
+    			computeIndicatorClientRect: () => tabIndicator.computeContentClientRect(),
+    			computeDimensions: () => instance.computeDimensions(),
+    			focus,
+    			activate,
+    			deactivate
+    		};
+
+    		dispatch(getElement(), "SMUI:tab:mount", accessor);
+    		instance.init();
+
+    		return () => {
+    			dispatch(getElement(), "SMUI:tab:unmount", accessor);
+    			instance.destroy();
+    		};
+    	});
+
+    	function hasClass(className) {
+    		return className in internalClasses
+    		? internalClasses[className]
+    		: getElement().classList.contains(className);
+    	}
+
+    	function addClass(className) {
+    		if (!internalClasses[className]) {
+    			$$invalidate(15, internalClasses[className] = true, internalClasses);
+    		}
+    	}
+
+    	function removeClass(className) {
+    		if (!(className in internalClasses) || internalClasses[className]) {
+    			$$invalidate(15, internalClasses[className] = false, internalClasses);
+    		}
+    	}
+
+    	function addStyle(name, value) {
+    		if (internalStyles[name] != value) {
+    			if (value === "" || value == null) {
+    				delete internalStyles[name];
+    				$$invalidate(16, internalStyles);
+    			} else {
+    				$$invalidate(16, internalStyles[name] = value, internalStyles);
+    			}
+    		}
+    	}
+
+    	function addAttr(name, value) {
+    		if (internalAttrs[name] !== value) {
+    			$$invalidate(17, internalAttrs[name] = value, internalAttrs);
+    		}
+    	}
+
+    	function activate(previousIndicatorClientRect, skipFocus) {
+    		$$invalidate(18, active = true);
+
+    		if (skipFocus) {
+    			instance.setFocusOnActivate(false);
+    		}
+
+    		instance.activate(previousIndicatorClientRect);
+
+    		if (skipFocus) {
+    			instance.setFocusOnActivate(focusOnActivate);
+    		}
+    	}
+
+    	function deactivate() {
+    		$$invalidate(18, active = false);
+    		instance.deactivate();
+    	}
+
+    	function focus() {
+    		getElement().focus();
+    	}
+
+    	function getElement() {
+    		return element.getElement();
+    	}
+
+    	function tabindicator_binding($$value) {
+    		binding_callbacks[$$value ? "unshift" : "push"](() => {
+    			tabIndicator = $$value;
+    			$$invalidate(14, tabIndicator);
+    		});
+    	}
+
+    	function span0_binding($$value) {
+    		binding_callbacks[$$value ? "unshift" : "push"](() => {
+    			content = $$value;
+    			$$invalidate(13, content);
+    		});
+    	}
+
+    	function tabindicator_binding_1($$value) {
+    		binding_callbacks[$$value ? "unshift" : "push"](() => {
+    			tabIndicator = $$value;
+    			$$invalidate(14, tabIndicator);
+    		});
+    	}
+
+    	function switch_instance_binding($$value) {
+    		binding_callbacks[$$value ? "unshift" : "push"](() => {
+    			element = $$value;
+    			$$invalidate(12, element);
+    		});
+    	}
+
+    	$$self.$$set = $$new_props => {
+    		$$props = assign(assign({}, $$props), exclude_internal_props($$new_props));
+    		$$invalidate(24, $$restProps = compute_rest_props($$props, omit_props_names));
+    		if ("use" in $$new_props) $$invalidate(0, use = $$new_props.use);
+    		if ("class" in $$new_props) $$invalidate(1, className = $$new_props.class);
+    		if ("style" in $$new_props) $$invalidate(2, style = $$new_props.style);
+    		if ("tab" in $$new_props) $$invalidate(25, tabId = $$new_props.tab);
+    		if ("ripple" in $$new_props) $$invalidate(3, ripple = $$new_props.ripple);
+    		if ("stacked" in $$new_props) $$invalidate(4, stacked = $$new_props.stacked);
+    		if ("minWidth" in $$new_props) $$invalidate(5, minWidth = $$new_props.minWidth);
+    		if ("indicatorSpanOnlyContent" in $$new_props) $$invalidate(6, indicatorSpanOnlyContent = $$new_props.indicatorSpanOnlyContent);
+    		if ("href" in $$new_props) $$invalidate(7, href = $$new_props.href);
+    		if ("content$use" in $$new_props) $$invalidate(8, content$use = $$new_props.content$use);
+    		if ("content$class" in $$new_props) $$invalidate(9, content$class = $$new_props.content$class);
+    		if ("component" in $$new_props) $$invalidate(10, component = $$new_props.component);
+    		if ("$$scope" in $$new_props) $$invalidate(35, $$scope = $$new_props.$$scope);
+    	};
+
+    	$$self.$capture_state = () => ({
+    		MDCTabFoundation,
+    		onMount,
+    		setContext,
+    		getContext,
+    		get_current_component,
+    		forwardEventsBuilder,
+    		classMap,
+    		exclude,
+    		prefixFilter,
+    		useActions,
+    		dispatch,
+    		Ripple,
+    		A,
+    		Button,
+    		TabIndicator,
+    		forwardEvents,
+    		use,
+    		className,
+    		style,
+    		tabId,
+    		ripple,
+    		stacked,
+    		minWidth,
+    		indicatorSpanOnlyContent,
+    		href,
+    		content$use,
+    		content$class,
+    		element,
+    		instance,
+    		content,
+    		tabIndicator,
+    		internalClasses,
+    		internalStyles,
+    		internalAttrs,
+    		focusOnActivate,
+    		active,
+    		forceAccessible,
+    		component,
+    		hasClass,
+    		addClass,
+    		removeClass,
+    		addStyle,
+    		addAttr,
+    		activate,
+    		deactivate,
+    		focus,
+    		getElement
+    	});
+
+    	$$self.$inject_state = $$new_props => {
+    		if ("use" in $$props) $$invalidate(0, use = $$new_props.use);
+    		if ("className" in $$props) $$invalidate(1, className = $$new_props.className);
+    		if ("style" in $$props) $$invalidate(2, style = $$new_props.style);
+    		if ("tabId" in $$props) $$invalidate(25, tabId = $$new_props.tabId);
+    		if ("ripple" in $$props) $$invalidate(3, ripple = $$new_props.ripple);
+    		if ("stacked" in $$props) $$invalidate(4, stacked = $$new_props.stacked);
+    		if ("minWidth" in $$props) $$invalidate(5, minWidth = $$new_props.minWidth);
+    		if ("indicatorSpanOnlyContent" in $$props) $$invalidate(6, indicatorSpanOnlyContent = $$new_props.indicatorSpanOnlyContent);
+    		if ("href" in $$props) $$invalidate(7, href = $$new_props.href);
+    		if ("content$use" in $$props) $$invalidate(8, content$use = $$new_props.content$use);
+    		if ("content$class" in $$props) $$invalidate(9, content$class = $$new_props.content$class);
+    		if ("element" in $$props) $$invalidate(12, element = $$new_props.element);
+    		if ("instance" in $$props) $$invalidate(11, instance = $$new_props.instance);
+    		if ("content" in $$props) $$invalidate(13, content = $$new_props.content);
+    		if ("tabIndicator" in $$props) $$invalidate(14, tabIndicator = $$new_props.tabIndicator);
+    		if ("internalClasses" in $$props) $$invalidate(15, internalClasses = $$new_props.internalClasses);
+    		if ("internalStyles" in $$props) $$invalidate(16, internalStyles = $$new_props.internalStyles);
+    		if ("internalAttrs" in $$props) $$invalidate(17, internalAttrs = $$new_props.internalAttrs);
+    		if ("focusOnActivate" in $$props) $$invalidate(36, focusOnActivate = $$new_props.focusOnActivate);
+    		if ("active" in $$props) $$invalidate(18, active = $$new_props.active);
+    		if ("forceAccessible" in $$props) $$invalidate(19, forceAccessible = $$new_props.forceAccessible);
+    		if ("component" in $$props) $$invalidate(10, component = $$new_props.component);
+    	};
+
+    	if ($$props && "$$inject" in $$props) {
+    		$$self.$inject_state($$props.$$inject);
+    	}
+
+    	$$self.$$.update = () => {
+    		if ($$self.$$.dirty[0] & /*instance*/ 2048) {
+    			if (instance) {
+    				instance.setFocusOnActivate(focusOnActivate);
+    			}
+    		}
+    	};
+
+    	return [
+    		use,
+    		className,
+    		style,
+    		ripple,
+    		stacked,
+    		minWidth,
+    		indicatorSpanOnlyContent,
+    		href,
+    		content$use,
+    		content$class,
+    		component,
+    		instance,
+    		element,
+    		content,
+    		tabIndicator,
+    		internalClasses,
+    		internalStyles,
+    		internalAttrs,
+    		active,
+    		forceAccessible,
+    		forwardEvents,
+    		addClass,
+    		removeClass,
+    		addStyle,
+    		$$restProps,
+    		tabId,
+    		activate,
+    		deactivate,
+    		focus,
+    		getElement,
+    		slots,
+    		tabindicator_binding,
+    		span0_binding,
+    		tabindicator_binding_1,
+    		switch_instance_binding,
+    		$$scope
+    	];
+    }
+
+    class Tab extends SvelteComponentDev {
+    	constructor(options) {
+    		super(options);
+
+    		init(
+    			this,
+    			options,
+    			instance_1$2,
+    			create_fragment$4,
+    			safe_not_equal,
+    			{
+    				use: 0,
+    				class: 1,
+    				style: 2,
+    				tab: 25,
+    				ripple: 3,
+    				stacked: 4,
+    				minWidth: 5,
+    				indicatorSpanOnlyContent: 6,
+    				href: 7,
+    				content$use: 8,
+    				content$class: 9,
+    				component: 10,
+    				activate: 26,
+    				deactivate: 27,
+    				focus: 28,
+    				getElement: 29
+    			},
+    			[-1, -1]
+    		);
+
+    		dispatch_dev("SvelteRegisterComponent", {
+    			component: this,
+    			tagName: "Tab",
+    			options,
+    			id: create_fragment$4.name
+    		});
+
+    		const { ctx } = this.$$;
+    		const props = options.props || {};
+
+    		if (/*tabId*/ ctx[25] === undefined && !("tab" in props)) {
+    			console.warn("<Tab> was created without expected prop 'tab'");
+    		}
+    	}
+
+    	get use() {
+    		throw new Error_1("<Tab>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set use(value) {
+    		throw new Error_1("<Tab>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get class() {
+    		throw new Error_1("<Tab>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set class(value) {
+    		throw new Error_1("<Tab>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get style() {
+    		throw new Error_1("<Tab>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set style(value) {
+    		throw new Error_1("<Tab>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get tab() {
+    		throw new Error_1("<Tab>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set tab(value) {
+    		throw new Error_1("<Tab>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get ripple() {
+    		throw new Error_1("<Tab>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set ripple(value) {
+    		throw new Error_1("<Tab>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get stacked() {
+    		throw new Error_1("<Tab>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set stacked(value) {
+    		throw new Error_1("<Tab>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get minWidth() {
+    		throw new Error_1("<Tab>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set minWidth(value) {
+    		throw new Error_1("<Tab>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get indicatorSpanOnlyContent() {
+    		throw new Error_1("<Tab>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set indicatorSpanOnlyContent(value) {
+    		throw new Error_1("<Tab>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get href() {
+    		throw new Error_1("<Tab>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set href(value) {
+    		throw new Error_1("<Tab>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get content$use() {
+    		throw new Error_1("<Tab>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set content$use(value) {
+    		throw new Error_1("<Tab>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get content$class() {
+    		throw new Error_1("<Tab>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set content$class(value) {
+    		throw new Error_1("<Tab>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get component() {
+    		throw new Error_1("<Tab>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set component(value) {
+    		throw new Error_1("<Tab>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get activate() {
+    		return this.$$.ctx[26];
+    	}
+
+    	set activate(value) {
+    		throw new Error_1("<Tab>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get deactivate() {
+    		return this.$$.ctx[27];
+    	}
+
+    	set deactivate(value) {
+    		throw new Error_1("<Tab>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get focus() {
+    		return this.$$.ctx[28];
+    	}
+
+    	set focus(value) {
+    		throw new Error_1("<Tab>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get getElement() {
+    		return this.$$.ctx[29];
+    	}
+
+    	set getElement(value) {
+    		throw new Error_1("<Tab>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+    }
+
+    /* node_modules/@smui/common/CommonLabel.svelte generated by Svelte v3.37.0 */
+    const file$3 = "node_modules/@smui/common/CommonLabel.svelte";
+
+    function create_fragment$3(ctx) {
+    	let span;
+    	let span_class_value;
+    	let useActions_action;
+    	let current;
+    	let mounted;
+    	let dispose;
+    	const default_slot_template = /*#slots*/ ctx[9].default;
+    	const default_slot = create_slot(default_slot_template, ctx, /*$$scope*/ ctx[8], null);
+
+    	let span_levels = [
+    		{
+    			class: span_class_value = classMap({
+    				[/*className*/ ctx[1]]: true,
+    				"mdc-button__label": /*context*/ ctx[4] === "button",
+    				"mdc-fab__label": /*context*/ ctx[4] === "fab",
+    				"mdc-tab__text-label": /*context*/ ctx[4] === "tab",
+    				"mdc-image-list__label": /*context*/ ctx[4] === "image-list",
+    				"mdc-snackbar__label": /*context*/ ctx[4] === "snackbar",
+    				"mdc-banner__text": /*context*/ ctx[4] === "banner",
+    				"mdc-segmented-button__label": /*context*/ ctx[4] === "segmented-button",
+    				"mdc-data-table__pagination-rows-per-page-label": /*context*/ ctx[4] === "data-table:pagination",
+    				"mdc-data-table__header-cell-label": /*context*/ ctx[4] === "data-table:sortable-header-cell"
+    			})
+    		},
+    		/*context*/ ctx[4] === "snackbar"
+    		? { "aria-atomic": "false" }
+    		: {},
+    		{ tabindex: /*tabindex*/ ctx[5] },
+    		/*$$restProps*/ ctx[6]
+    	];
+
+    	let span_data = {};
+
+    	for (let i = 0; i < span_levels.length; i += 1) {
+    		span_data = assign(span_data, span_levels[i]);
+    	}
+
+    	const block = {
+    		c: function create() {
+    			span = element("span");
+    			if (default_slot) default_slot.c();
+    			set_attributes(span, span_data);
+    			add_location(span, file$3, 0, 0, 0);
+    		},
+    		l: function claim(nodes) {
+    			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, span, anchor);
+
+    			if (default_slot) {
+    				default_slot.m(span, null);
+    			}
+
+    			/*span_binding*/ ctx[10](span);
+    			current = true;
+
+    			if (!mounted) {
+    				dispose = [
+    					action_destroyer(useActions_action = useActions.call(null, span, /*use*/ ctx[0])),
+    					action_destroyer(/*forwardEvents*/ ctx[3].call(null, span))
+    				];
+
+    				mounted = true;
+    			}
+    		},
+    		p: function update(ctx, [dirty]) {
+    			if (default_slot) {
+    				if (default_slot.p && dirty & /*$$scope*/ 256) {
+    					update_slot(default_slot, default_slot_template, ctx, /*$$scope*/ ctx[8], dirty, null, null);
+    				}
+    			}
+
+    			set_attributes(span, span_data = get_spread_update(span_levels, [
+    				(!current || dirty & /*className*/ 2 && span_class_value !== (span_class_value = classMap({
+    					[/*className*/ ctx[1]]: true,
+    					"mdc-button__label": /*context*/ ctx[4] === "button",
+    					"mdc-fab__label": /*context*/ ctx[4] === "fab",
+    					"mdc-tab__text-label": /*context*/ ctx[4] === "tab",
+    					"mdc-image-list__label": /*context*/ ctx[4] === "image-list",
+    					"mdc-snackbar__label": /*context*/ ctx[4] === "snackbar",
+    					"mdc-banner__text": /*context*/ ctx[4] === "banner",
+    					"mdc-segmented-button__label": /*context*/ ctx[4] === "segmented-button",
+    					"mdc-data-table__pagination-rows-per-page-label": /*context*/ ctx[4] === "data-table:pagination",
+    					"mdc-data-table__header-cell-label": /*context*/ ctx[4] === "data-table:sortable-header-cell"
+    				}))) && { class: span_class_value },
+    				/*context*/ ctx[4] === "snackbar"
+    				? { "aria-atomic": "false" }
+    				: {},
+    				{ tabindex: /*tabindex*/ ctx[5] },
+    				dirty & /*$$restProps*/ 64 && /*$$restProps*/ ctx[6]
+    			]));
+
+    			if (useActions_action && is_function(useActions_action.update) && dirty & /*use*/ 1) useActions_action.update.call(null, /*use*/ ctx[0]);
+    		},
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(default_slot, local);
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			transition_out(default_slot, local);
+    			current = false;
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(span);
+    			if (default_slot) default_slot.d(detaching);
+    			/*span_binding*/ ctx[10](null);
+    			mounted = false;
+    			run_all(dispose);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_fragment$3.name,
+    		type: "component",
+    		source: "",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    function instance$1($$self, $$props, $$invalidate) {
+    	const omit_props_names = ["use","class","getElement"];
+    	let $$restProps = compute_rest_props($$props, omit_props_names);
+    	let { $$slots: slots = {}, $$scope } = $$props;
+    	validate_slots("CommonLabel", slots, ['default']);
+    	const forwardEvents = forwardEventsBuilder(get_current_component());
+    	let { use = [] } = $$props;
+    	let { class: className = "" } = $$props;
+    	let element;
+    	const context = getContext("SMUI:label:context");
+    	const tabindex = getContext("SMUI:label:tabindex");
+
+    	function getElement() {
+    		return element;
+    	}
+
+    	function span_binding($$value) {
+    		binding_callbacks[$$value ? "unshift" : "push"](() => {
+    			element = $$value;
+    			$$invalidate(2, element);
+    		});
+    	}
+
+    	$$self.$$set = $$new_props => {
+    		$$props = assign(assign({}, $$props), exclude_internal_props($$new_props));
+    		$$invalidate(6, $$restProps = compute_rest_props($$props, omit_props_names));
+    		if ("use" in $$new_props) $$invalidate(0, use = $$new_props.use);
+    		if ("class" in $$new_props) $$invalidate(1, className = $$new_props.class);
+    		if ("$$scope" in $$new_props) $$invalidate(8, $$scope = $$new_props.$$scope);
+    	};
+
+    	$$self.$capture_state = () => ({
+    		getContext,
+    		get_current_component,
+    		forwardEventsBuilder,
+    		classMap,
+    		useActions,
+    		forwardEvents,
+    		use,
+    		className,
+    		element,
+    		context,
+    		tabindex,
+    		getElement
+    	});
+
+    	$$self.$inject_state = $$new_props => {
+    		if ("use" in $$props) $$invalidate(0, use = $$new_props.use);
+    		if ("className" in $$props) $$invalidate(1, className = $$new_props.className);
+    		if ("element" in $$props) $$invalidate(2, element = $$new_props.element);
+    	};
+
+    	if ($$props && "$$inject" in $$props) {
+    		$$self.$inject_state($$props.$$inject);
+    	}
+
+    	return [
+    		use,
+    		className,
+    		element,
+    		forwardEvents,
+    		context,
+    		tabindex,
+    		$$restProps,
+    		getElement,
+    		$$scope,
+    		slots,
+    		span_binding
+    	];
+    }
+
+    class CommonLabel extends SvelteComponentDev {
+    	constructor(options) {
+    		super(options);
+    		init(this, options, instance$1, create_fragment$3, safe_not_equal, { use: 0, class: 1, getElement: 7 });
+
+    		dispatch_dev("SvelteRegisterComponent", {
+    			component: this,
+    			tagName: "CommonLabel",
+    			options,
+    			id: create_fragment$3.name
+    		});
+    	}
+
+    	get use() {
+    		throw new Error("<CommonLabel>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set use(value) {
+    		throw new Error("<CommonLabel>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get class() {
+    		throw new Error("<CommonLabel>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set class(value) {
+    		throw new Error("<CommonLabel>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get getElement() {
+    		return this.$$.ctx[7];
+    	}
+
+    	set getElement(value) {
+    		throw new Error("<CommonLabel>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+    }
+
+    /**
+     * @license
+     * Copyright 2018 Google Inc.
+     *
+     * Permission is hereby granted, free of charge, to any person obtaining a copy
+     * of this software and associated documentation files (the "Software"), to deal
+     * in the Software without restriction, including without limitation the rights
+     * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+     * copies of the Software, and to permit persons to whom the Software is
+     * furnished to do so, subject to the following conditions:
+     *
+     * The above copyright notice and this permission notice shall be included in
+     * all copies or substantial portions of the Software.
+     *
+     * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+     * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+     * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+     * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+     * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+     * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+     * THE SOFTWARE.
+     */
+    var cssClasses = {
+        ANIMATING: 'mdc-tab-scroller--animating',
+        SCROLL_AREA_SCROLL: 'mdc-tab-scroller__scroll-area--scroll',
+        SCROLL_TEST: 'mdc-tab-scroller__test',
+    };
+    var strings$1 = {
+        AREA_SELECTOR: '.mdc-tab-scroller__scroll-area',
+        CONTENT_SELECTOR: '.mdc-tab-scroller__scroll-content',
+    };
+
+    /**
+     * @license
+     * Copyright 2018 Google Inc.
+     *
+     * Permission is hereby granted, free of charge, to any person obtaining a copy
+     * of this software and associated documentation files (the "Software"), to deal
+     * in the Software without restriction, including without limitation the rights
+     * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+     * copies of the Software, and to permit persons to whom the Software is
+     * furnished to do so, subject to the following conditions:
+     *
+     * The above copyright notice and this permission notice shall be included in
+     * all copies or substantial portions of the Software.
+     *
+     * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+     * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+     * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+     * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+     * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+     * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+     * THE SOFTWARE.
+     */
+    var MDCTabScrollerRTL = /** @class */ (function () {
+        function MDCTabScrollerRTL(adapter) {
+            this.adapter = adapter;
+        }
+        return MDCTabScrollerRTL;
+    }());
+
+    /**
+     * @license
+     * Copyright 2018 Google Inc.
+     *
+     * Permission is hereby granted, free of charge, to any person obtaining a copy
+     * of this software and associated documentation files (the "Software"), to deal
+     * in the Software without restriction, including without limitation the rights
+     * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+     * copies of the Software, and to permit persons to whom the Software is
+     * furnished to do so, subject to the following conditions:
+     *
+     * The above copyright notice and this permission notice shall be included in
+     * all copies or substantial portions of the Software.
+     *
+     * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+     * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+     * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+     * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+     * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+     * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+     * THE SOFTWARE.
+     */
+    var MDCTabScrollerRTLDefault = /** @class */ (function (_super) {
+        __extends(MDCTabScrollerRTLDefault, _super);
+        function MDCTabScrollerRTLDefault() {
+            return _super !== null && _super.apply(this, arguments) || this;
+        }
+        MDCTabScrollerRTLDefault.prototype.getScrollPositionRTL = function () {
+            var currentScrollLeft = this.adapter.getScrollAreaScrollLeft();
+            var right = this.calculateScrollEdges_().right;
+            // Scroll values on most browsers are ints instead of floats so we round
+            return Math.round(right - currentScrollLeft);
+        };
+        MDCTabScrollerRTLDefault.prototype.scrollToRTL = function (scrollX) {
+            var edges = this.calculateScrollEdges_();
+            var currentScrollLeft = this.adapter.getScrollAreaScrollLeft();
+            var clampedScrollLeft = this.clampScrollValue_(edges.right - scrollX);
+            return {
+                finalScrollPosition: clampedScrollLeft,
+                scrollDelta: clampedScrollLeft - currentScrollLeft,
+            };
+        };
+        MDCTabScrollerRTLDefault.prototype.incrementScrollRTL = function (scrollX) {
+            var currentScrollLeft = this.adapter.getScrollAreaScrollLeft();
+            var clampedScrollLeft = this.clampScrollValue_(currentScrollLeft - scrollX);
+            return {
+                finalScrollPosition: clampedScrollLeft,
+                scrollDelta: clampedScrollLeft - currentScrollLeft,
+            };
+        };
+        MDCTabScrollerRTLDefault.prototype.getAnimatingScrollPosition = function (scrollX) {
+            return scrollX;
+        };
+        MDCTabScrollerRTLDefault.prototype.calculateScrollEdges_ = function () {
+            var contentWidth = this.adapter.getScrollContentOffsetWidth();
+            var rootWidth = this.adapter.getScrollAreaOffsetWidth();
+            return {
+                left: 0,
+                right: contentWidth - rootWidth,
+            };
+        };
+        MDCTabScrollerRTLDefault.prototype.clampScrollValue_ = function (scrollX) {
+            var edges = this.calculateScrollEdges_();
+            return Math.min(Math.max(edges.left, scrollX), edges.right);
+        };
+        return MDCTabScrollerRTLDefault;
+    }(MDCTabScrollerRTL));
+
+    /**
+     * @license
+     * Copyright 2018 Google Inc.
+     *
+     * Permission is hereby granted, free of charge, to any person obtaining a copy
+     * of this software and associated documentation files (the "Software"), to deal
+     * in the Software without restriction, including without limitation the rights
+     * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+     * copies of the Software, and to permit persons to whom the Software is
+     * furnished to do so, subject to the following conditions:
+     *
+     * The above copyright notice and this permission notice shall be included in
+     * all copies or substantial portions of the Software.
+     *
+     * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+     * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+     * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+     * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+     * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+     * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+     * THE SOFTWARE.
+     */
+    var MDCTabScrollerRTLNegative = /** @class */ (function (_super) {
+        __extends(MDCTabScrollerRTLNegative, _super);
+        function MDCTabScrollerRTLNegative() {
+            return _super !== null && _super.apply(this, arguments) || this;
+        }
+        MDCTabScrollerRTLNegative.prototype.getScrollPositionRTL = function (translateX) {
+            var currentScrollLeft = this.adapter.getScrollAreaScrollLeft();
+            return Math.round(translateX - currentScrollLeft);
+        };
+        MDCTabScrollerRTLNegative.prototype.scrollToRTL = function (scrollX) {
+            var currentScrollLeft = this.adapter.getScrollAreaScrollLeft();
+            var clampedScrollLeft = this.clampScrollValue_(-scrollX);
+            return {
+                finalScrollPosition: clampedScrollLeft,
+                scrollDelta: clampedScrollLeft - currentScrollLeft,
+            };
+        };
+        MDCTabScrollerRTLNegative.prototype.incrementScrollRTL = function (scrollX) {
+            var currentScrollLeft = this.adapter.getScrollAreaScrollLeft();
+            var clampedScrollLeft = this.clampScrollValue_(currentScrollLeft - scrollX);
+            return {
+                finalScrollPosition: clampedScrollLeft,
+                scrollDelta: clampedScrollLeft - currentScrollLeft,
+            };
+        };
+        MDCTabScrollerRTLNegative.prototype.getAnimatingScrollPosition = function (scrollX, translateX) {
+            return scrollX - translateX;
+        };
+        MDCTabScrollerRTLNegative.prototype.calculateScrollEdges_ = function () {
+            var contentWidth = this.adapter.getScrollContentOffsetWidth();
+            var rootWidth = this.adapter.getScrollAreaOffsetWidth();
+            return {
+                left: rootWidth - contentWidth,
+                right: 0,
+            };
+        };
+        MDCTabScrollerRTLNegative.prototype.clampScrollValue_ = function (scrollX) {
+            var edges = this.calculateScrollEdges_();
+            return Math.max(Math.min(edges.right, scrollX), edges.left);
+        };
+        return MDCTabScrollerRTLNegative;
+    }(MDCTabScrollerRTL));
+
+    /**
+     * @license
+     * Copyright 2018 Google Inc.
+     *
+     * Permission is hereby granted, free of charge, to any person obtaining a copy
+     * of this software and associated documentation files (the "Software"), to deal
+     * in the Software without restriction, including without limitation the rights
+     * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+     * copies of the Software, and to permit persons to whom the Software is
+     * furnished to do so, subject to the following conditions:
+     *
+     * The above copyright notice and this permission notice shall be included in
+     * all copies or substantial portions of the Software.
+     *
+     * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+     * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+     * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+     * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+     * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+     * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+     * THE SOFTWARE.
+     */
+    var MDCTabScrollerRTLReverse = /** @class */ (function (_super) {
+        __extends(MDCTabScrollerRTLReverse, _super);
+        function MDCTabScrollerRTLReverse() {
+            return _super !== null && _super.apply(this, arguments) || this;
+        }
+        MDCTabScrollerRTLReverse.prototype.getScrollPositionRTL = function (translateX) {
+            var currentScrollLeft = this.adapter.getScrollAreaScrollLeft();
+            // Scroll values on most browsers are ints instead of floats so we round
+            return Math.round(currentScrollLeft - translateX);
+        };
+        MDCTabScrollerRTLReverse.prototype.scrollToRTL = function (scrollX) {
+            var currentScrollLeft = this.adapter.getScrollAreaScrollLeft();
+            var clampedScrollLeft = this.clampScrollValue_(scrollX);
+            return {
+                finalScrollPosition: clampedScrollLeft,
+                scrollDelta: currentScrollLeft - clampedScrollLeft,
+            };
+        };
+        MDCTabScrollerRTLReverse.prototype.incrementScrollRTL = function (scrollX) {
+            var currentScrollLeft = this.adapter.getScrollAreaScrollLeft();
+            var clampedScrollLeft = this.clampScrollValue_(currentScrollLeft + scrollX);
+            return {
+                finalScrollPosition: clampedScrollLeft,
+                scrollDelta: currentScrollLeft - clampedScrollLeft,
+            };
+        };
+        MDCTabScrollerRTLReverse.prototype.getAnimatingScrollPosition = function (scrollX, translateX) {
+            return scrollX + translateX;
+        };
+        MDCTabScrollerRTLReverse.prototype.calculateScrollEdges_ = function () {
+            var contentWidth = this.adapter.getScrollContentOffsetWidth();
+            var rootWidth = this.adapter.getScrollAreaOffsetWidth();
+            return {
+                left: contentWidth - rootWidth,
+                right: 0,
+            };
+        };
+        MDCTabScrollerRTLReverse.prototype.clampScrollValue_ = function (scrollX) {
+            var edges = this.calculateScrollEdges_();
+            return Math.min(Math.max(edges.right, scrollX), edges.left);
+        };
+        return MDCTabScrollerRTLReverse;
+    }(MDCTabScrollerRTL));
+
+    /**
+     * @license
+     * Copyright 2018 Google Inc.
+     *
+     * Permission is hereby granted, free of charge, to any person obtaining a copy
+     * of this software and associated documentation files (the "Software"), to deal
+     * in the Software without restriction, including without limitation the rights
+     * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+     * copies of the Software, and to permit persons to whom the Software is
+     * furnished to do so, subject to the following conditions:
+     *
+     * The above copyright notice and this permission notice shall be included in
+     * all copies or substantial portions of the Software.
+     *
+     * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+     * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+     * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+     * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+     * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+     * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+     * THE SOFTWARE.
+     */
+    var MDCTabScrollerFoundation = /** @class */ (function (_super) {
+        __extends(MDCTabScrollerFoundation, _super);
+        function MDCTabScrollerFoundation(adapter) {
+            var _this = _super.call(this, __assign(__assign({}, MDCTabScrollerFoundation.defaultAdapter), adapter)) || this;
+            /**
+             * Controls whether we should handle the transitionend and interaction events during the animation.
+             */
+            _this.isAnimating_ = false;
+            return _this;
+        }
+        Object.defineProperty(MDCTabScrollerFoundation, "cssClasses", {
+            get: function () {
+                return cssClasses;
+            },
+            enumerable: false,
+            configurable: true
+        });
+        Object.defineProperty(MDCTabScrollerFoundation, "strings", {
+            get: function () {
+                return strings$1;
+            },
+            enumerable: false,
+            configurable: true
+        });
+        Object.defineProperty(MDCTabScrollerFoundation, "defaultAdapter", {
+            get: function () {
+                // tslint:disable:object-literal-sort-keys Methods should be in the same order as the adapter interface.
+                return {
+                    eventTargetMatchesSelector: function () { return false; },
+                    addClass: function () { return undefined; },
+                    removeClass: function () { return undefined; },
+                    addScrollAreaClass: function () { return undefined; },
+                    setScrollAreaStyleProperty: function () { return undefined; },
+                    setScrollContentStyleProperty: function () { return undefined; },
+                    getScrollContentStyleValue: function () { return ''; },
+                    setScrollAreaScrollLeft: function () { return undefined; },
+                    getScrollAreaScrollLeft: function () { return 0; },
+                    getScrollContentOffsetWidth: function () { return 0; },
+                    getScrollAreaOffsetWidth: function () { return 0; },
+                    computeScrollAreaClientRect: function () { return ({ top: 0, right: 0, bottom: 0, left: 0, width: 0, height: 0 }); },
+                    computeScrollContentClientRect: function () { return ({ top: 0, right: 0, bottom: 0, left: 0, width: 0, height: 0 }); },
+                    computeHorizontalScrollbarHeight: function () { return 0; },
+                };
+                // tslint:enable:object-literal-sort-keys
+            },
+            enumerable: false,
+            configurable: true
+        });
+        MDCTabScrollerFoundation.prototype.init = function () {
+            // Compute horizontal scrollbar height on scroller with overflow initially hidden, then update overflow to scroll
+            // and immediately adjust bottom margin to avoid the scrollbar initially appearing before JS runs.
+            var horizontalScrollbarHeight = this.adapter.computeHorizontalScrollbarHeight();
+            this.adapter.setScrollAreaStyleProperty('margin-bottom', -horizontalScrollbarHeight + 'px');
+            this.adapter.addScrollAreaClass(MDCTabScrollerFoundation.cssClasses.SCROLL_AREA_SCROLL);
+        };
+        /**
+         * Computes the current visual scroll position
+         */
+        MDCTabScrollerFoundation.prototype.getScrollPosition = function () {
+            if (this.isRTL_()) {
+                return this.computeCurrentScrollPositionRTL_();
+            }
+            var currentTranslateX = this.calculateCurrentTranslateX_();
+            var scrollLeft = this.adapter.getScrollAreaScrollLeft();
+            return scrollLeft - currentTranslateX;
+        };
+        /**
+         * Handles interaction events that occur during transition
+         */
+        MDCTabScrollerFoundation.prototype.handleInteraction = function () {
+            // Early exit if we aren't animating
+            if (!this.isAnimating_) {
+                return;
+            }
+            // Prevent other event listeners from handling this event
+            this.stopScrollAnimation_();
+        };
+        /**
+         * Handles the transitionend event
+         */
+        MDCTabScrollerFoundation.prototype.handleTransitionEnd = function (evt) {
+            // Early exit if we aren't animating or the event was triggered by a different element.
+            var evtTarget = evt.target;
+            if (!this.isAnimating_ ||
+                !this.adapter.eventTargetMatchesSelector(evtTarget, MDCTabScrollerFoundation.strings.CONTENT_SELECTOR)) {
+                return;
+            }
+            this.isAnimating_ = false;
+            this.adapter.removeClass(MDCTabScrollerFoundation.cssClasses.ANIMATING);
+        };
+        /**
+         * Increment the scroll value by the scrollXIncrement using animation.
+         * @param scrollXIncrement The value by which to increment the scroll position
+         */
+        MDCTabScrollerFoundation.prototype.incrementScroll = function (scrollXIncrement) {
+            // Early exit for non-operational increment values
+            if (scrollXIncrement === 0) {
+                return;
+            }
+            this.animate_(this.getIncrementScrollOperation_(scrollXIncrement));
+        };
+        /**
+         * Increment the scroll value by the scrollXIncrement without animation.
+         * @param scrollXIncrement The value by which to increment the scroll position
+         */
+        MDCTabScrollerFoundation.prototype.incrementScrollImmediate = function (scrollXIncrement) {
+            // Early exit for non-operational increment values
+            if (scrollXIncrement === 0) {
+                return;
+            }
+            var operation = this.getIncrementScrollOperation_(scrollXIncrement);
+            if (operation.scrollDelta === 0) {
+                return;
+            }
+            this.stopScrollAnimation_();
+            this.adapter.setScrollAreaScrollLeft(operation.finalScrollPosition);
+        };
+        /**
+         * Scrolls to the given scrollX value
+         */
+        MDCTabScrollerFoundation.prototype.scrollTo = function (scrollX) {
+            if (this.isRTL_()) {
+                return this.scrollToRTL_(scrollX);
+            }
+            this.scrollTo_(scrollX);
+        };
+        /**
+         * @return Browser-specific {@link MDCTabScrollerRTL} instance.
+         */
+        MDCTabScrollerFoundation.prototype.getRTLScroller = function () {
+            if (!this.rtlScrollerInstance_) {
+                this.rtlScrollerInstance_ = this.rtlScrollerFactory_();
+            }
+            return this.rtlScrollerInstance_;
+        };
+        /**
+         * @return translateX value from a CSS matrix transform function string.
+         */
+        MDCTabScrollerFoundation.prototype.calculateCurrentTranslateX_ = function () {
+            var transformValue = this.adapter.getScrollContentStyleValue('transform');
+            // Early exit if no transform is present
+            if (transformValue === 'none') {
+                return 0;
+            }
+            // The transform value comes back as a matrix transformation in the form
+            // of `matrix(a, b, c, d, tx, ty)`. We only care about tx (translateX) so
+            // we're going to grab all the parenthesized values, strip out tx, and
+            // parse it.
+            var match = /\((.+?)\)/.exec(transformValue);
+            if (!match) {
+                return 0;
+            }
+            var matrixParams = match[1];
+            // tslint:disable-next-line:ban-ts-ignore "Unused vars" should be a linter warning, not a compiler error.
+            // @ts-ignore These unused variables should retain their semantic names for clarity.
+            var _a = __read(matrixParams.split(','), 6); _a[0]; _a[1]; _a[2]; _a[3]; var tx = _a[4]; _a[5];
+            return parseFloat(tx); // tslint:disable-line:ban
+        };
+        /**
+         * Calculates a safe scroll value that is > 0 and < the max scroll value
+         * @param scrollX The distance to scroll
+         */
+        MDCTabScrollerFoundation.prototype.clampScrollValue_ = function (scrollX) {
+            var edges = this.calculateScrollEdges_();
+            return Math.min(Math.max(edges.left, scrollX), edges.right);
+        };
+        MDCTabScrollerFoundation.prototype.computeCurrentScrollPositionRTL_ = function () {
+            var translateX = this.calculateCurrentTranslateX_();
+            return this.getRTLScroller().getScrollPositionRTL(translateX);
+        };
+        MDCTabScrollerFoundation.prototype.calculateScrollEdges_ = function () {
+            var contentWidth = this.adapter.getScrollContentOffsetWidth();
+            var rootWidth = this.adapter.getScrollAreaOffsetWidth();
+            return {
+                left: 0,
+                right: contentWidth - rootWidth,
+            };
+        };
+        /**
+         * Internal scroll method
+         * @param scrollX The new scroll position
+         */
+        MDCTabScrollerFoundation.prototype.scrollTo_ = function (scrollX) {
+            var currentScrollX = this.getScrollPosition();
+            var safeScrollX = this.clampScrollValue_(scrollX);
+            var scrollDelta = safeScrollX - currentScrollX;
+            this.animate_({
+                finalScrollPosition: safeScrollX,
+                scrollDelta: scrollDelta,
+            });
+        };
+        /**
+         * Internal RTL scroll method
+         * @param scrollX The new scroll position
+         */
+        MDCTabScrollerFoundation.prototype.scrollToRTL_ = function (scrollX) {
+            var animation = this.getRTLScroller().scrollToRTL(scrollX);
+            this.animate_(animation);
+        };
+        /**
+         * Internal method to compute the increment scroll operation values.
+         * @param scrollX The desired scroll position increment
+         * @return MDCTabScrollerAnimation with the sanitized values for performing the scroll operation.
+         */
+        MDCTabScrollerFoundation.prototype.getIncrementScrollOperation_ = function (scrollX) {
+            if (this.isRTL_()) {
+                return this.getRTLScroller().incrementScrollRTL(scrollX);
+            }
+            var currentScrollX = this.getScrollPosition();
+            var targetScrollX = scrollX + currentScrollX;
+            var safeScrollX = this.clampScrollValue_(targetScrollX);
+            var scrollDelta = safeScrollX - currentScrollX;
+            return {
+                finalScrollPosition: safeScrollX,
+                scrollDelta: scrollDelta,
+            };
+        };
+        /**
+         * Animates the tab scrolling
+         * @param animation The animation to apply
+         */
+        MDCTabScrollerFoundation.prototype.animate_ = function (animation) {
+            var _this = this;
+            // Early exit if translateX is 0, which means there's no animation to perform
+            if (animation.scrollDelta === 0) {
+                return;
+            }
+            this.stopScrollAnimation_();
+            // This animation uses the FLIP approach.
+            // Read more here: https://aerotwist.com/blog/flip-your-animations/
+            this.adapter.setScrollAreaScrollLeft(animation.finalScrollPosition);
+            this.adapter.setScrollContentStyleProperty('transform', "translateX(" + animation.scrollDelta + "px)");
+            // Force repaint
+            this.adapter.computeScrollAreaClientRect();
+            requestAnimationFrame(function () {
+                _this.adapter.addClass(MDCTabScrollerFoundation.cssClasses.ANIMATING);
+                _this.adapter.setScrollContentStyleProperty('transform', 'none');
+            });
+            this.isAnimating_ = true;
+        };
+        /**
+         * Stops scroll animation
+         */
+        MDCTabScrollerFoundation.prototype.stopScrollAnimation_ = function () {
+            this.isAnimating_ = false;
+            var currentScrollPosition = this.getAnimatingScrollPosition_();
+            this.adapter.removeClass(MDCTabScrollerFoundation.cssClasses.ANIMATING);
+            this.adapter.setScrollContentStyleProperty('transform', 'translateX(0px)');
+            this.adapter.setScrollAreaScrollLeft(currentScrollPosition);
+        };
+        /**
+         * Gets the current scroll position during animation
+         */
+        MDCTabScrollerFoundation.prototype.getAnimatingScrollPosition_ = function () {
+            var currentTranslateX = this.calculateCurrentTranslateX_();
+            var scrollLeft = this.adapter.getScrollAreaScrollLeft();
+            if (this.isRTL_()) {
+                return this.getRTLScroller().getAnimatingScrollPosition(scrollLeft, currentTranslateX);
+            }
+            return scrollLeft - currentTranslateX;
+        };
+        /**
+         * Determines the RTL Scroller to use
+         */
+        MDCTabScrollerFoundation.prototype.rtlScrollerFactory_ = function () {
+            // Browsers have three different implementations of scrollLeft in RTL mode,
+            // dependent on the browser. The behavior is based off the max LTR
+            // scrollLeft value and 0.
+            //
+            // * Default scrolling in RTL *
+            //    - Left-most value: 0
+            //    - Right-most value: Max LTR scrollLeft value
+            //
+            // * Negative scrolling in RTL *
+            //    - Left-most value: Negated max LTR scrollLeft value
+            //    - Right-most value: 0
+            //
+            // * Reverse scrolling in RTL *
+            //    - Left-most value: Max LTR scrollLeft value
+            //    - Right-most value: 0
+            //
+            // We use those principles below to determine which RTL scrollLeft
+            // behavior is implemented in the current browser.
+            var initialScrollLeft = this.adapter.getScrollAreaScrollLeft();
+            this.adapter.setScrollAreaScrollLeft(initialScrollLeft - 1);
+            var newScrollLeft = this.adapter.getScrollAreaScrollLeft();
+            // If the newScrollLeft value is negative,then we know that the browser has
+            // implemented negative RTL scrolling, since all other implementations have
+            // only positive values.
+            if (newScrollLeft < 0) {
+                // Undo the scrollLeft test check
+                this.adapter.setScrollAreaScrollLeft(initialScrollLeft);
+                return new MDCTabScrollerRTLNegative(this.adapter);
+            }
+            var rootClientRect = this.adapter.computeScrollAreaClientRect();
+            var contentClientRect = this.adapter.computeScrollContentClientRect();
+            var rightEdgeDelta = Math.round(contentClientRect.right - rootClientRect.right);
+            // Undo the scrollLeft test check
+            this.adapter.setScrollAreaScrollLeft(initialScrollLeft);
+            // By calculating the clientRect of the root element and the clientRect of
+            // the content element, we can determine how much the scroll value changed
+            // when we performed the scrollLeft subtraction above.
+            if (rightEdgeDelta === newScrollLeft) {
+                return new MDCTabScrollerRTLReverse(this.adapter);
+            }
+            return new MDCTabScrollerRTLDefault(this.adapter);
+        };
+        MDCTabScrollerFoundation.prototype.isRTL_ = function () {
+            return this.adapter.getScrollContentStyleValue('direction') === 'rtl';
+        };
+        return MDCTabScrollerFoundation;
+    }(MDCFoundation));
+
+    /**
+     * @license
+     * Copyright 2018 Google Inc.
+     *
+     * Permission is hereby granted, free of charge, to any person obtaining a copy
+     * of this software and associated documentation files (the "Software"), to deal
+     * in the Software without restriction, including without limitation the rights
+     * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+     * copies of the Software, and to permit persons to whom the Software is
+     * furnished to do so, subject to the following conditions:
+     *
+     * The above copyright notice and this permission notice shall be included in
+     * all copies or substantial portions of the Software.
+     *
+     * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+     * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+     * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+     * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+     * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+     * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+     * THE SOFTWARE.
+     */
+    /**
+     * Stores result from computeHorizontalScrollbarHeight to avoid redundant processing.
+     */
+    var horizontalScrollbarHeight_;
+    /**
+     * Computes the height of browser-rendered horizontal scrollbars using a self-created test element.
+     * May return 0 (e.g. on OS X browsers under default configuration).
+     */
+    function computeHorizontalScrollbarHeight(documentObj, shouldCacheResult) {
+        if (shouldCacheResult === void 0) { shouldCacheResult = true; }
+        if (shouldCacheResult && typeof horizontalScrollbarHeight_ !== 'undefined') {
+            return horizontalScrollbarHeight_;
+        }
+        var el = documentObj.createElement('div');
+        el.classList.add(cssClasses.SCROLL_TEST);
+        documentObj.body.appendChild(el);
+        var horizontalScrollbarHeight = el.offsetHeight - el.clientHeight;
+        documentObj.body.removeChild(el);
+        if (shouldCacheResult) {
+            horizontalScrollbarHeight_ = horizontalScrollbarHeight;
+        }
+        return horizontalScrollbarHeight;
+    }
+
+    var util = /*#__PURE__*/Object.freeze({
+        __proto__: null,
+        computeHorizontalScrollbarHeight: computeHorizontalScrollbarHeight
+    });
+
+    /**
+     * @license
+     * Copyright 2018 Google Inc.
+     *
+     * Permission is hereby granted, free of charge, to any person obtaining a copy
+     * of this software and associated documentation files (the "Software"), to deal
+     * in the Software without restriction, including without limitation the rights
+     * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+     * copies of the Software, and to permit persons to whom the Software is
+     * furnished to do so, subject to the following conditions:
+     *
+     * The above copyright notice and this permission notice shall be included in
+     * all copies or substantial portions of the Software.
+     *
+     * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+     * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+     * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+     * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+     * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+     * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+     * THE SOFTWARE.
+     */
+    var strings = {
+        ARROW_LEFT_KEY: 'ArrowLeft',
+        ARROW_RIGHT_KEY: 'ArrowRight',
+        END_KEY: 'End',
+        ENTER_KEY: 'Enter',
+        HOME_KEY: 'Home',
+        SPACE_KEY: 'Space',
+        TAB_ACTIVATED_EVENT: 'MDCTabBar:activated',
+        TAB_SCROLLER_SELECTOR: '.mdc-tab-scroller',
+        TAB_SELECTOR: '.mdc-tab',
+    };
+    var numbers = {
+        ARROW_LEFT_KEYCODE: 37,
+        ARROW_RIGHT_KEYCODE: 39,
+        END_KEYCODE: 35,
+        ENTER_KEYCODE: 13,
+        EXTRA_SCROLL_AMOUNT: 20,
+        HOME_KEYCODE: 36,
+        SPACE_KEYCODE: 32,
+    };
+
+    /**
+     * @license
+     * Copyright 2018 Google Inc.
+     *
+     * Permission is hereby granted, free of charge, to any person obtaining a copy
+     * of this software and associated documentation files (the "Software"), to deal
+     * in the Software without restriction, including without limitation the rights
+     * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+     * copies of the Software, and to permit persons to whom the Software is
+     * furnished to do so, subject to the following conditions:
+     *
+     * The above copyright notice and this permission notice shall be included in
+     * all copies or substantial portions of the Software.
+     *
+     * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+     * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+     * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+     * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+     * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+     * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+     * THE SOFTWARE.
+     */
+    var ACCEPTABLE_KEYS = new Set();
+    // IE11 has no support for new Set with iterable so we need to initialize this by hand
+    ACCEPTABLE_KEYS.add(strings.ARROW_LEFT_KEY);
+    ACCEPTABLE_KEYS.add(strings.ARROW_RIGHT_KEY);
+    ACCEPTABLE_KEYS.add(strings.END_KEY);
+    ACCEPTABLE_KEYS.add(strings.HOME_KEY);
+    ACCEPTABLE_KEYS.add(strings.ENTER_KEY);
+    ACCEPTABLE_KEYS.add(strings.SPACE_KEY);
+    var KEYCODE_MAP = new Map();
+    // IE11 has no support for new Map with iterable so we need to initialize this by hand
+    KEYCODE_MAP.set(numbers.ARROW_LEFT_KEYCODE, strings.ARROW_LEFT_KEY);
+    KEYCODE_MAP.set(numbers.ARROW_RIGHT_KEYCODE, strings.ARROW_RIGHT_KEY);
+    KEYCODE_MAP.set(numbers.END_KEYCODE, strings.END_KEY);
+    KEYCODE_MAP.set(numbers.HOME_KEYCODE, strings.HOME_KEY);
+    KEYCODE_MAP.set(numbers.ENTER_KEYCODE, strings.ENTER_KEY);
+    KEYCODE_MAP.set(numbers.SPACE_KEYCODE, strings.SPACE_KEY);
+    var MDCTabBarFoundation = /** @class */ (function (_super) {
+        __extends(MDCTabBarFoundation, _super);
+        function MDCTabBarFoundation(adapter) {
+            var _this = _super.call(this, __assign(__assign({}, MDCTabBarFoundation.defaultAdapter), adapter)) || this;
+            _this.useAutomaticActivation_ = false;
+            return _this;
+        }
+        Object.defineProperty(MDCTabBarFoundation, "strings", {
+            get: function () {
+                return strings;
+            },
+            enumerable: false,
+            configurable: true
+        });
+        Object.defineProperty(MDCTabBarFoundation, "numbers", {
+            get: function () {
+                return numbers;
+            },
+            enumerable: false,
+            configurable: true
+        });
+        Object.defineProperty(MDCTabBarFoundation, "defaultAdapter", {
+            get: function () {
+                // tslint:disable:object-literal-sort-keys Methods should be in the same order as the adapter interface.
+                return {
+                    scrollTo: function () { return undefined; },
+                    incrementScroll: function () { return undefined; },
+                    getScrollPosition: function () { return 0; },
+                    getScrollContentWidth: function () { return 0; },
+                    getOffsetWidth: function () { return 0; },
+                    isRTL: function () { return false; },
+                    setActiveTab: function () { return undefined; },
+                    activateTabAtIndex: function () { return undefined; },
+                    deactivateTabAtIndex: function () { return undefined; },
+                    focusTabAtIndex: function () { return undefined; },
+                    getTabIndicatorClientRectAtIndex: function () { return ({ top: 0, right: 0, bottom: 0, left: 0, width: 0, height: 0 }); },
+                    getTabDimensionsAtIndex: function () { return ({ rootLeft: 0, rootRight: 0, contentLeft: 0, contentRight: 0 }); },
+                    getPreviousActiveTabIndex: function () { return -1; },
+                    getFocusedTabIndex: function () { return -1; },
+                    getIndexOfTabById: function () { return -1; },
+                    getTabListLength: function () { return 0; },
+                    notifyTabActivated: function () { return undefined; },
+                };
+                // tslint:enable:object-literal-sort-keys
+            },
+            enumerable: false,
+            configurable: true
+        });
+        /**
+         * Switches between automatic and manual activation modes.
+         * See https://www.w3.org/TR/wai-aria-practices/#tabpanel for examples.
+         */
+        MDCTabBarFoundation.prototype.setUseAutomaticActivation = function (useAutomaticActivation) {
+            this.useAutomaticActivation_ = useAutomaticActivation;
+        };
+        MDCTabBarFoundation.prototype.activateTab = function (index) {
+            var previousActiveIndex = this.adapter.getPreviousActiveTabIndex();
+            if (!this.indexIsInRange_(index) || index === previousActiveIndex) {
+                return;
+            }
+            var previousClientRect;
+            if (previousActiveIndex !== -1) {
+                this.adapter.deactivateTabAtIndex(previousActiveIndex);
+                previousClientRect =
+                    this.adapter.getTabIndicatorClientRectAtIndex(previousActiveIndex);
+            }
+            this.adapter.activateTabAtIndex(index, previousClientRect);
+            this.scrollIntoView(index);
+            this.adapter.notifyTabActivated(index);
+        };
+        MDCTabBarFoundation.prototype.handleKeyDown = function (evt) {
+            // Get the key from the event
+            var key = this.getKeyFromEvent_(evt);
+            // Early exit if the event key isn't one of the keyboard navigation keys
+            if (key === undefined) {
+                return;
+            }
+            // Prevent default behavior for movement keys, but not for activation keys, since :active is used to apply ripple
+            if (!this.isActivationKey_(key)) {
+                evt.preventDefault();
+            }
+            if (this.useAutomaticActivation_) {
+                if (this.isActivationKey_(key)) {
+                    return;
+                }
+                var index = this.determineTargetFromKey_(this.adapter.getPreviousActiveTabIndex(), key);
+                this.adapter.setActiveTab(index);
+                this.scrollIntoView(index);
+            }
+            else {
+                var focusedTabIndex = this.adapter.getFocusedTabIndex();
+                if (this.isActivationKey_(key)) {
+                    this.adapter.setActiveTab(focusedTabIndex);
+                }
+                else {
+                    var index = this.determineTargetFromKey_(focusedTabIndex, key);
+                    this.adapter.focusTabAtIndex(index);
+                    this.scrollIntoView(index);
+                }
+            }
+        };
+        /**
+         * Handles the MDCTab:interacted event
+         */
+        MDCTabBarFoundation.prototype.handleTabInteraction = function (evt) {
+            this.adapter.setActiveTab(this.adapter.getIndexOfTabById(evt.detail.tabId));
+        };
+        /**
+         * Scrolls the tab at the given index into view
+         * @param index The tab index to make visible
+         */
+        MDCTabBarFoundation.prototype.scrollIntoView = function (index) {
+            // Early exit if the index is out of range
+            if (!this.indexIsInRange_(index)) {
+                return;
+            }
+            // Always scroll to 0 if scrolling to the 0th index
+            if (index === 0) {
+                return this.adapter.scrollTo(0);
+            }
+            // Always scroll to the max value if scrolling to the Nth index
+            // MDCTabScroller.scrollTo() will never scroll past the max possible value
+            if (index === this.adapter.getTabListLength() - 1) {
+                return this.adapter.scrollTo(this.adapter.getScrollContentWidth());
+            }
+            if (this.isRTL_()) {
+                return this.scrollIntoViewRTL_(index);
+            }
+            this.scrollIntoView_(index);
+        };
+        /**
+         * Private method for determining the index of the destination tab based on what key was pressed
+         * @param origin The original index from which to determine the destination
+         * @param key The name of the key
+         */
+        MDCTabBarFoundation.prototype.determineTargetFromKey_ = function (origin, key) {
+            var isRTL = this.isRTL_();
+            var maxIndex = this.adapter.getTabListLength() - 1;
+            var shouldGoToEnd = key === strings.END_KEY;
+            var shouldDecrement = key === strings.ARROW_LEFT_KEY && !isRTL || key === strings.ARROW_RIGHT_KEY && isRTL;
+            var shouldIncrement = key === strings.ARROW_RIGHT_KEY && !isRTL || key === strings.ARROW_LEFT_KEY && isRTL;
+            var index = origin;
+            if (shouldGoToEnd) {
+                index = maxIndex;
+            }
+            else if (shouldDecrement) {
+                index -= 1;
+            }
+            else if (shouldIncrement) {
+                index += 1;
+            }
+            else {
+                index = 0;
+            }
+            if (index < 0) {
+                index = maxIndex;
+            }
+            else if (index > maxIndex) {
+                index = 0;
+            }
+            return index;
+        };
+        /**
+         * Calculates the scroll increment that will make the tab at the given index visible
+         * @param index The index of the tab
+         * @param nextIndex The index of the next tab
+         * @param scrollPosition The current scroll position
+         * @param barWidth The width of the Tab Bar
+         */
+        MDCTabBarFoundation.prototype.calculateScrollIncrement_ = function (index, nextIndex, scrollPosition, barWidth) {
+            var nextTabDimensions = this.adapter.getTabDimensionsAtIndex(nextIndex);
+            var relativeContentLeft = nextTabDimensions.contentLeft - scrollPosition - barWidth;
+            var relativeContentRight = nextTabDimensions.contentRight - scrollPosition;
+            var leftIncrement = relativeContentRight - numbers.EXTRA_SCROLL_AMOUNT;
+            var rightIncrement = relativeContentLeft + numbers.EXTRA_SCROLL_AMOUNT;
+            if (nextIndex < index) {
+                return Math.min(leftIncrement, 0);
+            }
+            return Math.max(rightIncrement, 0);
+        };
+        /**
+         * Calculates the scroll increment that will make the tab at the given index visible in RTL
+         * @param index The index of the tab
+         * @param nextIndex The index of the next tab
+         * @param scrollPosition The current scroll position
+         * @param barWidth The width of the Tab Bar
+         * @param scrollContentWidth The width of the scroll content
+         */
+        MDCTabBarFoundation.prototype.calculateScrollIncrementRTL_ = function (index, nextIndex, scrollPosition, barWidth, scrollContentWidth) {
+            var nextTabDimensions = this.adapter.getTabDimensionsAtIndex(nextIndex);
+            var relativeContentLeft = scrollContentWidth - nextTabDimensions.contentLeft - scrollPosition;
+            var relativeContentRight = scrollContentWidth - nextTabDimensions.contentRight - scrollPosition - barWidth;
+            var leftIncrement = relativeContentRight + numbers.EXTRA_SCROLL_AMOUNT;
+            var rightIncrement = relativeContentLeft - numbers.EXTRA_SCROLL_AMOUNT;
+            if (nextIndex > index) {
+                return Math.max(leftIncrement, 0);
+            }
+            return Math.min(rightIncrement, 0);
+        };
+        /**
+         * Determines the index of the adjacent tab closest to either edge of the Tab Bar
+         * @param index The index of the tab
+         * @param tabDimensions The dimensions of the tab
+         * @param scrollPosition The current scroll position
+         * @param barWidth The width of the tab bar
+         */
+        MDCTabBarFoundation.prototype.findAdjacentTabIndexClosestToEdge_ = function (index, tabDimensions, scrollPosition, barWidth) {
+            /**
+             * Tabs are laid out in the Tab Scroller like this:
+             *
+             *    Scroll Position
+             *    +---+
+             *    |   |   Bar Width
+             *    |   +-----------------------------------+
+             *    |   |                                   |
+             *    |   V                                   V
+             *    |   +-----------------------------------+
+             *    V   |             Tab Scroller          |
+             *    +------------+--------------+-------------------+
+             *    |    Tab     |      Tab     |        Tab        |
+             *    +------------+--------------+-------------------+
+             *        |                                   |
+             *        +-----------------------------------+
+             *
+             * To determine the next adjacent index, we look at the Tab root left and
+             * Tab root right, both relative to the scroll position. If the Tab root
+             * left is less than 0, then we know it's out of view to the left. If the
+             * Tab root right minus the bar width is greater than 0, we know the Tab is
+             * out of view to the right. From there, we either increment or decrement
+             * the index.
+             */
+            var relativeRootLeft = tabDimensions.rootLeft - scrollPosition;
+            var relativeRootRight = tabDimensions.rootRight - scrollPosition - barWidth;
+            var relativeRootDelta = relativeRootLeft + relativeRootRight;
+            var leftEdgeIsCloser = relativeRootLeft < 0 || relativeRootDelta < 0;
+            var rightEdgeIsCloser = relativeRootRight > 0 || relativeRootDelta > 0;
+            if (leftEdgeIsCloser) {
+                return index - 1;
+            }
+            if (rightEdgeIsCloser) {
+                return index + 1;
+            }
+            return -1;
+        };
+        /**
+         * Determines the index of the adjacent tab closest to either edge of the Tab Bar in RTL
+         * @param index The index of the tab
+         * @param tabDimensions The dimensions of the tab
+         * @param scrollPosition The current scroll position
+         * @param barWidth The width of the tab bar
+         * @param scrollContentWidth The width of the scroller content
+         */
+        MDCTabBarFoundation.prototype.findAdjacentTabIndexClosestToEdgeRTL_ = function (index, tabDimensions, scrollPosition, barWidth, scrollContentWidth) {
+            var rootLeft = scrollContentWidth - tabDimensions.rootLeft - barWidth - scrollPosition;
+            var rootRight = scrollContentWidth - tabDimensions.rootRight - scrollPosition;
+            var rootDelta = rootLeft + rootRight;
+            var leftEdgeIsCloser = rootLeft > 0 || rootDelta > 0;
+            var rightEdgeIsCloser = rootRight < 0 || rootDelta < 0;
+            if (leftEdgeIsCloser) {
+                return index + 1;
+            }
+            if (rightEdgeIsCloser) {
+                return index - 1;
+            }
+            return -1;
+        };
+        /**
+         * Returns the key associated with a keydown event
+         * @param evt The keydown event
+         */
+        MDCTabBarFoundation.prototype.getKeyFromEvent_ = function (evt) {
+            if (ACCEPTABLE_KEYS.has(evt.key)) {
+                return evt.key;
+            }
+            return KEYCODE_MAP.get(evt.keyCode);
+        };
+        MDCTabBarFoundation.prototype.isActivationKey_ = function (key) {
+            return key === strings.SPACE_KEY || key === strings.ENTER_KEY;
+        };
+        /**
+         * Returns whether a given index is inclusively between the ends
+         * @param index The index to test
+         */
+        MDCTabBarFoundation.prototype.indexIsInRange_ = function (index) {
+            return index >= 0 && index < this.adapter.getTabListLength();
+        };
+        /**
+         * Returns the view's RTL property
+         */
+        MDCTabBarFoundation.prototype.isRTL_ = function () {
+            return this.adapter.isRTL();
+        };
+        /**
+         * Scrolls the tab at the given index into view for left-to-right user agents.
+         * @param index The index of the tab to scroll into view
+         */
+        MDCTabBarFoundation.prototype.scrollIntoView_ = function (index) {
+            var scrollPosition = this.adapter.getScrollPosition();
+            var barWidth = this.adapter.getOffsetWidth();
+            var tabDimensions = this.adapter.getTabDimensionsAtIndex(index);
+            var nextIndex = this.findAdjacentTabIndexClosestToEdge_(index, tabDimensions, scrollPosition, barWidth);
+            if (!this.indexIsInRange_(nextIndex)) {
+                return;
+            }
+            var scrollIncrement = this.calculateScrollIncrement_(index, nextIndex, scrollPosition, barWidth);
+            this.adapter.incrementScroll(scrollIncrement);
+        };
+        /**
+         * Scrolls the tab at the given index into view in RTL
+         * @param index The tab index to make visible
+         */
+        MDCTabBarFoundation.prototype.scrollIntoViewRTL_ = function (index) {
+            var scrollPosition = this.adapter.getScrollPosition();
+            var barWidth = this.adapter.getOffsetWidth();
+            var tabDimensions = this.adapter.getTabDimensionsAtIndex(index);
+            var scrollWidth = this.adapter.getScrollContentWidth();
+            var nextIndex = this.findAdjacentTabIndexClosestToEdgeRTL_(index, tabDimensions, scrollPosition, barWidth, scrollWidth);
+            if (!this.indexIsInRange_(nextIndex)) {
+                return;
+            }
+            var scrollIncrement = this.calculateScrollIncrementRTL_(index, nextIndex, scrollPosition, barWidth, scrollWidth);
+            this.adapter.incrementScroll(scrollIncrement);
+        };
+        return MDCTabBarFoundation;
+    }(MDCFoundation));
+
+    /* node_modules/@smui/tab-scroller/TabScroller.svelte generated by Svelte v3.37.0 */
+
+    const file$2 = "node_modules/@smui/tab-scroller/TabScroller.svelte";
+
+    function create_fragment$2(ctx) {
+    	let div2;
+    	let div1;
+    	let div0;
+    	let div0_class_value;
+    	let div0_style_value;
+    	let useActions_action;
+    	let div1_class_value;
+    	let div1_style_value;
+    	let useActions_action_1;
+    	let div2_class_value;
+    	let useActions_action_2;
+    	let current;
+    	let mounted;
+    	let dispose;
+    	const default_slot_template = /*#slots*/ ctx[23].default;
+    	const default_slot = create_slot(default_slot_template, ctx, /*$$scope*/ ctx[22], null);
+
+    	let div0_levels = [
+    		{
+    			class: div0_class_value = classMap({
+    				[/*scrollContent$class*/ ctx[6]]: true,
+    				"mdc-tab-scroller__scroll-content": true
+    			})
+    		},
+    		{
+    			style: div0_style_value = Object.entries(/*scrollContentStyles*/ ctx[14]).map(func).join(" ")
+    		},
+    		prefixFilter(/*$$restProps*/ ctx[16], "scrollContent$")
+    	];
+
+    	let div0_data = {};
+
+    	for (let i = 0; i < div0_levels.length; i += 1) {
+    		div0_data = assign(div0_data, div0_levels[i]);
+    	}
+
+    	let div1_levels = [
+    		{
+    			class: div1_class_value = classMap({
+    				[/*scrollArea$class*/ ctx[4]]: true,
+    				"mdc-tab-scroller__scroll-area": true,
+    				.../*scrollAreaClasses*/ ctx[12]
+    			})
+    		},
+    		{
+    			style: div1_style_value = Object.entries(/*scrollAreaStyles*/ ctx[13]).map(func_1).join(" ")
+    		},
+    		prefixFilter(/*$$restProps*/ ctx[16], "scrollArea$")
+    	];
+
+    	let div1_data = {};
+
+    	for (let i = 0; i < div1_levels.length; i += 1) {
+    		div1_data = assign(div1_data, div1_levels[i]);
+    	}
+
+    	let div2_levels = [
+    		{
+    			class: div2_class_value = classMap({
+    				[/*className*/ ctx[1]]: true,
+    				"mdc-tab-scroller": true,
+    				"mdc-tab-scroller--align-start": /*align*/ ctx[2] === "start",
+    				"mdc-tab-scroller--align-end": /*align*/ ctx[2] === "end",
+    				"mdc-tab-scroller--align-center": /*align*/ ctx[2] === "center",
+    				.../*internalClasses*/ ctx[11]
+    			})
+    		},
+    		exclude(/*$$restProps*/ ctx[16], ["scrollArea$", "scrollContent$"])
+    	];
+
+    	let div2_data = {};
+
+    	for (let i = 0; i < div2_levels.length; i += 1) {
+    		div2_data = assign(div2_data, div2_levels[i]);
+    	}
+
+    	const block = {
+    		c: function create() {
+    			div2 = element("div");
+    			div1 = element("div");
+    			div0 = element("div");
+    			if (default_slot) default_slot.c();
+    			set_attributes(div0, div0_data);
+    			add_location(div0, file$2, 32, 4, 1108);
+    			set_attributes(div1, div1_data);
+    			add_location(div1, file$2, 14, 2, 406);
+    			set_attributes(div2, div2_data);
+    			add_location(div2, file$2, 0, 0, 0);
+    		},
+    		l: function claim(nodes) {
+    			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, div2, anchor);
+    			append_dev(div2, div1);
+    			append_dev(div1, div0);
+
+    			if (default_slot) {
+    				default_slot.m(div0, null);
+    			}
+
+    			/*div0_binding*/ ctx[24](div0);
+    			/*div1_binding*/ ctx[26](div1);
+    			/*div2_binding*/ ctx[32](div2);
+    			current = true;
+
+    			if (!mounted) {
+    				dispose = [
+    					action_destroyer(useActions_action = useActions.call(null, div0, /*scrollContent$use*/ ctx[5])),
+    					listen_dev(div0, "transitionend", /*transitionend_handler*/ ctx[25], false, false, false),
+    					action_destroyer(useActions_action_1 = useActions.call(null, div1, /*scrollArea$use*/ ctx[3])),
+    					listen_dev(div1, "wheel", /*wheel_handler*/ ctx[27], { passive: true }, false, false),
+    					listen_dev(div1, "touchstart", /*touchstart_handler*/ ctx[28], { passive: true }, false, false),
+    					listen_dev(div1, "pointerdown", /*pointerdown_handler*/ ctx[29], false, false, false),
+    					listen_dev(div1, "mousedown", /*mousedown_handler*/ ctx[30], false, false, false),
+    					listen_dev(div1, "keydown", /*keydown_handler*/ ctx[31], false, false, false),
+    					action_destroyer(useActions_action_2 = useActions.call(null, div2, /*use*/ ctx[0])),
+    					action_destroyer(/*forwardEvents*/ ctx[15].call(null, div2))
+    				];
+
+    				mounted = true;
+    			}
+    		},
+    		p: function update(ctx, dirty) {
+    			if (default_slot) {
+    				if (default_slot.p && dirty[0] & /*$$scope*/ 4194304) {
+    					update_slot(default_slot, default_slot_template, ctx, /*$$scope*/ ctx[22], dirty, null, null);
+    				}
+    			}
+
+    			set_attributes(div0, div0_data = get_spread_update(div0_levels, [
+    				(!current || dirty[0] & /*scrollContent$class*/ 64 && div0_class_value !== (div0_class_value = classMap({
+    					[/*scrollContent$class*/ ctx[6]]: true,
+    					"mdc-tab-scroller__scroll-content": true
+    				}))) && { class: div0_class_value },
+    				(!current || dirty[0] & /*scrollContentStyles*/ 16384 && div0_style_value !== (div0_style_value = Object.entries(/*scrollContentStyles*/ ctx[14]).map(func).join(" "))) && { style: div0_style_value },
+    				dirty[0] & /*$$restProps*/ 65536 && prefixFilter(/*$$restProps*/ ctx[16], "scrollContent$")
+    			]));
+
+    			if (useActions_action && is_function(useActions_action.update) && dirty[0] & /*scrollContent$use*/ 32) useActions_action.update.call(null, /*scrollContent$use*/ ctx[5]);
+
+    			set_attributes(div1, div1_data = get_spread_update(div1_levels, [
+    				(!current || dirty[0] & /*scrollArea$class, scrollAreaClasses*/ 4112 && div1_class_value !== (div1_class_value = classMap({
+    					[/*scrollArea$class*/ ctx[4]]: true,
+    					"mdc-tab-scroller__scroll-area": true,
+    					.../*scrollAreaClasses*/ ctx[12]
+    				}))) && { class: div1_class_value },
+    				(!current || dirty[0] & /*scrollAreaStyles*/ 8192 && div1_style_value !== (div1_style_value = Object.entries(/*scrollAreaStyles*/ ctx[13]).map(func_1).join(" "))) && { style: div1_style_value },
+    				dirty[0] & /*$$restProps*/ 65536 && prefixFilter(/*$$restProps*/ ctx[16], "scrollArea$")
+    			]));
+
+    			if (useActions_action_1 && is_function(useActions_action_1.update) && dirty[0] & /*scrollArea$use*/ 8) useActions_action_1.update.call(null, /*scrollArea$use*/ ctx[3]);
+
+    			set_attributes(div2, div2_data = get_spread_update(div2_levels, [
+    				(!current || dirty[0] & /*className, align, internalClasses*/ 2054 && div2_class_value !== (div2_class_value = classMap({
+    					[/*className*/ ctx[1]]: true,
+    					"mdc-tab-scroller": true,
+    					"mdc-tab-scroller--align-start": /*align*/ ctx[2] === "start",
+    					"mdc-tab-scroller--align-end": /*align*/ ctx[2] === "end",
+    					"mdc-tab-scroller--align-center": /*align*/ ctx[2] === "center",
+    					.../*internalClasses*/ ctx[11]
+    				}))) && { class: div2_class_value },
+    				dirty[0] & /*$$restProps*/ 65536 && exclude(/*$$restProps*/ ctx[16], ["scrollArea$", "scrollContent$"])
+    			]));
+
+    			if (useActions_action_2 && is_function(useActions_action_2.update) && dirty[0] & /*use*/ 1) useActions_action_2.update.call(null, /*use*/ ctx[0]);
+    		},
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(default_slot, local);
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			transition_out(default_slot, local);
+    			current = false;
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(div2);
+    			if (default_slot) default_slot.d(detaching);
+    			/*div0_binding*/ ctx[24](null);
+    			/*div1_binding*/ ctx[26](null);
+    			/*div2_binding*/ ctx[32](null);
+    			mounted = false;
+    			run_all(dispose);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_fragment$2.name,
+    		type: "component",
+    		source: "",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    const func = ([name, value]) => `${name}: ${value};`;
+    const func_1 = ([name, value]) => `${name}: ${value};`;
+
+    function instance_1$1($$self, $$props, $$invalidate) {
+    	const omit_props_names = [
+    		"use","class","align","scrollArea$use","scrollArea$class","scrollContent$use","scrollContent$class","getScrollPosition","getScrollContentWidth","incrementScroll","scrollTo","getElement"
+    	];
+
+    	let $$restProps = compute_rest_props($$props, omit_props_names);
+    	let { $$slots: slots = {}, $$scope } = $$props;
+    	validate_slots("TabScroller", slots, ['default']);
+    	const { matches } = ponyfill;
+    	const forwardEvents = forwardEventsBuilder(get_current_component());
+    	let { use = [] } = $$props;
+    	let { class: className = "" } = $$props;
+    	let { align = null } = $$props;
+    	let { scrollArea$use = [] } = $$props;
+    	let { scrollArea$class = "" } = $$props;
+    	let { scrollContent$use = [] } = $$props;
+    	let { scrollContent$class = "" } = $$props;
+    	let element;
+    	let instance;
+    	let scrollArea;
+    	let scrollContent;
+    	let internalClasses = {};
+    	let scrollAreaClasses = {};
+    	let scrollAreaStyles = {};
+    	let scrollContentStyles = {};
+
+    	onMount(() => {
+    		$$invalidate(8, instance = new MDCTabScrollerFoundation({
+    				eventTargetMatchesSelector: (evtTarget, selector) => matches(evtTarget, selector),
+    				addClass,
+    				removeClass,
+    				addScrollAreaClass,
+    				setScrollAreaStyleProperty: addScrollAreaStyle,
+    				setScrollContentStyleProperty: addScrollContentStyle,
+    				getScrollContentStyleValue: getScrollContentStyle,
+    				setScrollAreaScrollLeft: scrollX => $$invalidate(9, scrollArea.scrollLeft = scrollX, scrollArea),
+    				getScrollAreaScrollLeft: () => scrollArea.scrollLeft,
+    				getScrollContentOffsetWidth: () => scrollContent.offsetWidth,
+    				getScrollAreaOffsetWidth: () => scrollArea.offsetWidth,
+    				computeScrollAreaClientRect: () => scrollArea.getBoundingClientRect(),
+    				computeScrollContentClientRect: () => scrollContent.getBoundingClientRect(),
+    				computeHorizontalScrollbarHeight: () => computeHorizontalScrollbarHeight(document)
+    			}));
+
+    		instance.init();
+
+    		return () => {
+    			instance.destroy();
+    		};
+    	});
+
+    	function addClass(className) {
+    		if (!internalClasses[className]) {
+    			$$invalidate(11, internalClasses[className] = true, internalClasses);
+    		}
+    	}
+
+    	function removeClass(className) {
+    		if (!(className in internalClasses) || internalClasses[className]) {
+    			$$invalidate(11, internalClasses[className] = false, internalClasses);
+    		}
+    	}
+
+    	function addScrollAreaClass(className) {
+    		if (!scrollAreaClasses[className]) {
+    			$$invalidate(12, scrollAreaClasses[className] = true, scrollAreaClasses);
+    		}
+    	}
+
+    	function addScrollAreaStyle(name, value) {
+    		if (scrollAreaStyles[name] != value) {
+    			if (value === "" || value == null) {
+    				delete scrollAreaStyles[name];
+    				$$invalidate(13, scrollAreaStyles);
+    			} else {
+    				$$invalidate(13, scrollAreaStyles[name] = value, scrollAreaStyles);
+    			}
+    		}
+    	}
+
+    	function addScrollContentStyle(name, value) {
+    		if (scrollContentStyles[name] != value) {
+    			if (value === "" || value == null) {
+    				delete scrollContentStyles[name];
+    				$$invalidate(14, scrollContentStyles);
+    			} else {
+    				$$invalidate(14, scrollContentStyles[name] = value, scrollContentStyles);
+    			}
+    		}
+    	}
+
+    	function getScrollContentStyle(name) {
+    		return name in scrollContentStyles
+    		? scrollContentStyles[name]
+    		: getComputedStyle(scrollContent).getPropertyValue(name);
+    	}
+
+    	function getScrollPosition() {
+    		return instance.getScrollPosition();
+    	}
+
+    	function getScrollContentWidth() {
+    		return scrollContent.offsetWidth;
+    	}
+
+    	function incrementScroll(scrollXIncrement) {
+    		instance.incrementScroll(scrollXIncrement);
+    	}
+
+    	function scrollTo(scrollX) {
+    		instance.scrollTo(scrollX);
+    	}
+
+    	function getElement() {
+    		return element;
+    	}
+
+    	function div0_binding($$value) {
+    		binding_callbacks[$$value ? "unshift" : "push"](() => {
+    			scrollContent = $$value;
+    			$$invalidate(10, scrollContent);
+    		});
+    	}
+
+    	const transitionend_handler = event => instance && instance.handleTransitionEnd(event);
+
+    	function div1_binding($$value) {
+    		binding_callbacks[$$value ? "unshift" : "push"](() => {
+    			scrollArea = $$value;
+    			$$invalidate(9, scrollArea);
+    		});
+    	}
+
+    	const wheel_handler = () => instance && instance.handleInteraction();
+    	const touchstart_handler = () => instance && instance.handleInteraction();
+    	const pointerdown_handler = () => instance && instance.handleInteraction();
+    	const mousedown_handler = () => instance && instance.handleInteraction();
+    	const keydown_handler = () => instance && instance.handleInteraction();
+
+    	function div2_binding($$value) {
+    		binding_callbacks[$$value ? "unshift" : "push"](() => {
+    			element = $$value;
+    			$$invalidate(7, element);
+    		});
+    	}
+
+    	$$self.$$set = $$new_props => {
+    		$$props = assign(assign({}, $$props), exclude_internal_props($$new_props));
+    		$$invalidate(16, $$restProps = compute_rest_props($$props, omit_props_names));
+    		if ("use" in $$new_props) $$invalidate(0, use = $$new_props.use);
+    		if ("class" in $$new_props) $$invalidate(1, className = $$new_props.class);
+    		if ("align" in $$new_props) $$invalidate(2, align = $$new_props.align);
+    		if ("scrollArea$use" in $$new_props) $$invalidate(3, scrollArea$use = $$new_props.scrollArea$use);
+    		if ("scrollArea$class" in $$new_props) $$invalidate(4, scrollArea$class = $$new_props.scrollArea$class);
+    		if ("scrollContent$use" in $$new_props) $$invalidate(5, scrollContent$use = $$new_props.scrollContent$use);
+    		if ("scrollContent$class" in $$new_props) $$invalidate(6, scrollContent$class = $$new_props.scrollContent$class);
+    		if ("$$scope" in $$new_props) $$invalidate(22, $$scope = $$new_props.$$scope);
+    	};
+
+    	$$self.$capture_state = () => ({
+    		MDCTabScrollerFoundation,
+    		util,
+    		ponyfill,
+    		onMount,
+    		get_current_component,
+    		forwardEventsBuilder,
+    		classMap,
+    		exclude,
+    		prefixFilter,
+    		useActions,
+    		matches,
+    		forwardEvents,
+    		use,
+    		className,
+    		align,
+    		scrollArea$use,
+    		scrollArea$class,
+    		scrollContent$use,
+    		scrollContent$class,
+    		element,
+    		instance,
+    		scrollArea,
+    		scrollContent,
+    		internalClasses,
+    		scrollAreaClasses,
+    		scrollAreaStyles,
+    		scrollContentStyles,
+    		addClass,
+    		removeClass,
+    		addScrollAreaClass,
+    		addScrollAreaStyle,
+    		addScrollContentStyle,
+    		getScrollContentStyle,
+    		getScrollPosition,
+    		getScrollContentWidth,
+    		incrementScroll,
+    		scrollTo,
+    		getElement
+    	});
+
+    	$$self.$inject_state = $$new_props => {
+    		if ("use" in $$props) $$invalidate(0, use = $$new_props.use);
+    		if ("className" in $$props) $$invalidate(1, className = $$new_props.className);
+    		if ("align" in $$props) $$invalidate(2, align = $$new_props.align);
+    		if ("scrollArea$use" in $$props) $$invalidate(3, scrollArea$use = $$new_props.scrollArea$use);
+    		if ("scrollArea$class" in $$props) $$invalidate(4, scrollArea$class = $$new_props.scrollArea$class);
+    		if ("scrollContent$use" in $$props) $$invalidate(5, scrollContent$use = $$new_props.scrollContent$use);
+    		if ("scrollContent$class" in $$props) $$invalidate(6, scrollContent$class = $$new_props.scrollContent$class);
+    		if ("element" in $$props) $$invalidate(7, element = $$new_props.element);
+    		if ("instance" in $$props) $$invalidate(8, instance = $$new_props.instance);
+    		if ("scrollArea" in $$props) $$invalidate(9, scrollArea = $$new_props.scrollArea);
+    		if ("scrollContent" in $$props) $$invalidate(10, scrollContent = $$new_props.scrollContent);
+    		if ("internalClasses" in $$props) $$invalidate(11, internalClasses = $$new_props.internalClasses);
+    		if ("scrollAreaClasses" in $$props) $$invalidate(12, scrollAreaClasses = $$new_props.scrollAreaClasses);
+    		if ("scrollAreaStyles" in $$props) $$invalidate(13, scrollAreaStyles = $$new_props.scrollAreaStyles);
+    		if ("scrollContentStyles" in $$props) $$invalidate(14, scrollContentStyles = $$new_props.scrollContentStyles);
+    	};
+
+    	if ($$props && "$$inject" in $$props) {
+    		$$self.$inject_state($$props.$$inject);
+    	}
+
+    	return [
+    		use,
+    		className,
+    		align,
+    		scrollArea$use,
+    		scrollArea$class,
+    		scrollContent$use,
+    		scrollContent$class,
+    		element,
+    		instance,
+    		scrollArea,
+    		scrollContent,
+    		internalClasses,
+    		scrollAreaClasses,
+    		scrollAreaStyles,
+    		scrollContentStyles,
+    		forwardEvents,
+    		$$restProps,
+    		getScrollPosition,
+    		getScrollContentWidth,
+    		incrementScroll,
+    		scrollTo,
+    		getElement,
+    		$$scope,
+    		slots,
+    		div0_binding,
+    		transitionend_handler,
+    		div1_binding,
+    		wheel_handler,
+    		touchstart_handler,
+    		pointerdown_handler,
+    		mousedown_handler,
+    		keydown_handler,
+    		div2_binding
+    	];
+    }
+
+    class TabScroller extends SvelteComponentDev {
+    	constructor(options) {
+    		super(options);
+
+    		init(
+    			this,
+    			options,
+    			instance_1$1,
+    			create_fragment$2,
+    			safe_not_equal,
+    			{
+    				use: 0,
+    				class: 1,
+    				align: 2,
+    				scrollArea$use: 3,
+    				scrollArea$class: 4,
+    				scrollContent$use: 5,
+    				scrollContent$class: 6,
+    				getScrollPosition: 17,
+    				getScrollContentWidth: 18,
+    				incrementScroll: 19,
+    				scrollTo: 20,
+    				getElement: 21
+    			},
+    			[-1, -1]
+    		);
+
+    		dispatch_dev("SvelteRegisterComponent", {
+    			component: this,
+    			tagName: "TabScroller",
+    			options,
+    			id: create_fragment$2.name
+    		});
+    	}
+
+    	get use() {
+    		throw new Error("<TabScroller>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set use(value) {
+    		throw new Error("<TabScroller>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get class() {
+    		throw new Error("<TabScroller>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set class(value) {
+    		throw new Error("<TabScroller>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get align() {
+    		throw new Error("<TabScroller>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set align(value) {
+    		throw new Error("<TabScroller>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get scrollArea$use() {
+    		throw new Error("<TabScroller>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set scrollArea$use(value) {
+    		throw new Error("<TabScroller>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get scrollArea$class() {
+    		throw new Error("<TabScroller>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set scrollArea$class(value) {
+    		throw new Error("<TabScroller>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get scrollContent$use() {
+    		throw new Error("<TabScroller>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set scrollContent$use(value) {
+    		throw new Error("<TabScroller>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get scrollContent$class() {
+    		throw new Error("<TabScroller>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set scrollContent$class(value) {
+    		throw new Error("<TabScroller>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get getScrollPosition() {
+    		return this.$$.ctx[17];
+    	}
+
+    	set getScrollPosition(value) {
+    		throw new Error("<TabScroller>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get getScrollContentWidth() {
+    		return this.$$.ctx[18];
+    	}
+
+    	set getScrollContentWidth(value) {
+    		throw new Error("<TabScroller>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get incrementScroll() {
+    		return this.$$.ctx[19];
+    	}
+
+    	set incrementScroll(value) {
+    		throw new Error("<TabScroller>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get scrollTo() {
+    		return this.$$.ctx[20];
+    	}
+
+    	set scrollTo(value) {
+    		throw new Error("<TabScroller>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get getElement() {
+    		return this.$$.ctx[21];
+    	}
+
+    	set getElement(value) {
+    		throw new Error("<TabScroller>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+    }
+
+    /* node_modules/@smui/tab-bar/TabBar.svelte generated by Svelte v3.37.0 */
+    const file$1 = "node_modules/@smui/tab-bar/TabBar.svelte";
+
+    function get_each_context$1(ctx, list, i) {
+    	const child_ctx = ctx.slice();
+    	child_ctx[32] = list[i];
+    	child_ctx[34] = i;
+    	return child_ctx;
+    }
+
+    const get_default_slot_changes = dirty => ({ tab: dirty[0] & /*tabs*/ 4 });
+    const get_default_slot_context = ctx => ({ tab: /*tab*/ ctx[32] });
+
+    // (21:4) {#each tabs as tab, i (key(tab))}
+    function create_each_block$1(key_2, ctx) {
+    	let first;
+    	let current;
+    	const default_slot_template = /*#slots*/ ctx[20].default;
+    	const default_slot = create_slot(default_slot_template, ctx, /*$$scope*/ ctx[27], get_default_slot_context);
+
+    	const block = {
+    		key: key_2,
+    		first: null,
+    		c: function create() {
+    			first = empty();
+    			if (default_slot) default_slot.c();
+    			this.first = first;
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, first, anchor);
+
+    			if (default_slot) {
+    				default_slot.m(target, anchor);
+    			}
+
+    			current = true;
+    		},
+    		p: function update(new_ctx, dirty) {
+    			ctx = new_ctx;
+
+    			if (default_slot) {
+    				if (default_slot.p && dirty[0] & /*$$scope, tabs*/ 134217732) {
+    					update_slot(default_slot, default_slot_template, ctx, /*$$scope*/ ctx[27], dirty, get_default_slot_changes, get_default_slot_context);
+    				}
+    			}
+    		},
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(default_slot, local);
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			transition_out(default_slot, local);
+    			current = false;
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(first);
+    			if (default_slot) default_slot.d(detaching);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_each_block$1.name,
+    		type: "each",
+    		source: "(21:4) {#each tabs as tab, i (key(tab))}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (17:2) <TabScroller     bind:this={tabScroller}     {...prefixFilter($$restProps, 'tabScroller$')}   >
+    function create_default_slot$1(ctx) {
+    	let each_blocks = [];
+    	let each_1_lookup = new Map();
+    	let each_1_anchor;
+    	let current;
+    	let each_value = /*tabs*/ ctx[2];
+    	validate_each_argument(each_value);
+    	const get_key = ctx => /*key*/ ctx[3](/*tab*/ ctx[32]);
+    	validate_each_keys(ctx, each_value, get_each_context$1, get_key);
+
+    	for (let i = 0; i < each_value.length; i += 1) {
+    		let child_ctx = get_each_context$1(ctx, each_value, i);
+    		let key = get_key(child_ctx);
+    		each_1_lookup.set(key, each_blocks[i] = create_each_block$1(key, child_ctx));
+    	}
+
+    	const block = {
+    		c: function create() {
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].c();
+    			}
+
+    			each_1_anchor = empty();
+    		},
+    		m: function mount(target, anchor) {
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].m(target, anchor);
+    			}
+
+    			insert_dev(target, each_1_anchor, anchor);
+    			current = true;
+    		},
+    		p: function update(ctx, dirty) {
+    			if (dirty[0] & /*$$scope, tabs, key*/ 134217740) {
+    				each_value = /*tabs*/ ctx[2];
+    				validate_each_argument(each_value);
+    				group_outros();
+    				validate_each_keys(ctx, each_value, get_each_context$1, get_key);
+    				each_blocks = update_keyed_each(each_blocks, dirty, get_key, 1, ctx, each_value, each_1_lookup, each_1_anchor.parentNode, outro_and_destroy_block, create_each_block$1, each_1_anchor, get_each_context$1);
+    				check_outros();
+    			}
+    		},
+    		i: function intro(local) {
+    			if (current) return;
+
+    			for (let i = 0; i < each_value.length; i += 1) {
+    				transition_in(each_blocks[i]);
+    			}
+
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				transition_out(each_blocks[i]);
+    			}
+
+    			current = false;
+    		},
+    		d: function destroy(detaching) {
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].d(detaching);
+    			}
+
+    			if (detaching) detach_dev(each_1_anchor);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_default_slot$1.name,
+    		type: "slot",
+    		source: "(17:2) <TabScroller     bind:this={tabScroller}     {...prefixFilter($$restProps, 'tabScroller$')}   >",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    function create_fragment$1(ctx) {
+    	let div;
+    	let tabscroller;
+    	let div_class_value;
+    	let useActions_action;
+    	let current;
+    	let mounted;
+    	let dispose;
+    	const tabscroller_spread_levels = [prefixFilter(/*$$restProps*/ ctx[10], "tabScroller$")];
+
+    	let tabscroller_props = {
+    		$$slots: { default: [create_default_slot$1] },
+    		$$scope: { ctx }
+    	};
+
+    	for (let i = 0; i < tabscroller_spread_levels.length; i += 1) {
+    		tabscroller_props = assign(tabscroller_props, tabscroller_spread_levels[i]);
+    	}
+
+    	tabscroller = new TabScroller({ props: tabscroller_props, $$inline: true });
+    	/*tabscroller_binding*/ ctx[21](tabscroller);
+
+    	let div_levels = [
+    		{
+    			class: div_class_value = classMap({
+    				[/*className*/ ctx[1]]: true,
+    				"mdc-tab-bar": true
+    			})
+    		},
+    		{ role: "tablist" },
+    		exclude(/*$$restProps*/ ctx[10], ["tabScroller$"])
+    	];
+
+    	let div_data = {};
+
+    	for (let i = 0; i < div_levels.length; i += 1) {
+    		div_data = assign(div_data, div_levels[i]);
+    	}
+
+    	const block = {
+    		c: function create() {
+    			div = element("div");
+    			create_component(tabscroller.$$.fragment);
+    			set_attributes(div, div_data);
+    			add_location(div, file$1, 0, 0, 0);
+    		},
+    		l: function claim(nodes) {
+    			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, div, anchor);
+    			mount_component(tabscroller, div, null);
+    			/*div_binding*/ ctx[22](div);
+    			current = true;
+
+    			if (!mounted) {
+    				dispose = [
+    					action_destroyer(useActions_action = useActions.call(null, div, /*use*/ ctx[0])),
+    					action_destroyer(/*forwardEvents*/ ctx[7].call(null, div)),
+    					listen_dev(div, "SMUI:tab:mount", /*SMUI_tab_mount_handler*/ ctx[23], false, false, false),
+    					listen_dev(div, "SMUI:tab:unmount", /*SMUI_tab_unmount_handler*/ ctx[24], false, false, false),
+    					listen_dev(div, "keydown", /*keydown_handler*/ ctx[25], false, false, false),
+    					listen_dev(div, "MDCTab:interacted", /*MDCTab_interacted_handler*/ ctx[26], false, false, false)
+    				];
+
+    				mounted = true;
+    			}
+    		},
+    		p: function update(ctx, dirty) {
+    			const tabscroller_changes = (dirty[0] & /*$$restProps*/ 1024)
+    			? get_spread_update(tabscroller_spread_levels, [get_spread_object(prefixFilter(/*$$restProps*/ ctx[10], "tabScroller$"))])
+    			: {};
+
+    			if (dirty[0] & /*$$scope, tabs*/ 134217732) {
+    				tabscroller_changes.$$scope = { dirty, ctx };
+    			}
+
+    			tabscroller.$set(tabscroller_changes);
+
+    			set_attributes(div, div_data = get_spread_update(div_levels, [
+    				(!current || dirty[0] & /*className*/ 2 && div_class_value !== (div_class_value = classMap({
+    					[/*className*/ ctx[1]]: true,
+    					"mdc-tab-bar": true
+    				}))) && { class: div_class_value },
+    				{ role: "tablist" },
+    				dirty[0] & /*$$restProps*/ 1024 && exclude(/*$$restProps*/ ctx[10], ["tabScroller$"])
+    			]));
+
+    			if (useActions_action && is_function(useActions_action.update) && dirty[0] & /*use*/ 1) useActions_action.update.call(null, /*use*/ ctx[0]);
+    		},
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(tabscroller.$$.fragment, local);
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			transition_out(tabscroller.$$.fragment, local);
+    			current = false;
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(div);
+    			/*tabscroller_binding*/ ctx[21](null);
+    			destroy_component(tabscroller);
+    			/*div_binding*/ ctx[22](null);
+    			mounted = false;
+    			run_all(dispose);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_fragment$1.name,
+    		type: "component",
+    		source: "",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    function instance_1($$self, $$props, $$invalidate) {
+    	const omit_props_names = [
+    		"use","class","tabs","key","focusOnActivate","focusOnProgrammatic","useAutomaticActivation","active","scrollIntoView","getElement"
+    	];
+
+    	let $$restProps = compute_rest_props($$props, omit_props_names);
+    	let { $$slots: slots = {}, $$scope } = $$props;
+    	validate_slots("TabBar", slots, ['default']);
+    	const forwardEvents = forwardEventsBuilder(get_current_component());
+    	let { use = [] } = $$props;
+    	let { class: className = "" } = $$props;
+    	let { tabs = [] } = $$props;
+    	let { key = tab => tab } = $$props;
+    	let { focusOnActivate = true } = $$props;
+    	let { focusOnProgrammatic = false } = $$props;
+    	let { useAutomaticActivation = true } = $$props;
+    	let { active = null } = $$props;
+    	let element;
+    	let instance;
+    	let tabScroller;
+    	let activeIndex = tabs.indexOf(active);
+    	let tabAccessorMap = {};
+    	let tabAccessorWeakMap = new WeakMap();
+    	let skipFocus = false;
+    	setContext("SMUI:tab:focusOnActivate", focusOnActivate);
+    	setContext("SMUI:tab:initialActive", active);
+
+    	onMount(() => {
+    		$$invalidate(4, instance = new MDCTabBarFoundation({
+    				scrollTo: scrollX => tabScroller.scrollTo(scrollX),
+    				incrementScroll: scrollXIncrement => tabScroller.incrementScroll(scrollXIncrement),
+    				getScrollPosition: () => tabScroller.getScrollPosition(),
+    				getScrollContentWidth: () => tabScroller.getScrollContentWidth(),
+    				getOffsetWidth: () => getElement().offsetWidth,
+    				isRTL: () => getComputedStyle(getElement()).getPropertyValue("direction") === "rtl",
+    				setActiveTab: index => {
+    					$$invalidate(11, active = tabs[index]);
+    					$$invalidate(17, activeIndex = index);
+    					instance.activateTab(index);
+    				},
+    				activateTabAtIndex: (index, clientRect) => getAccessor(tabs[index]).activate(clientRect, skipFocus),
+    				deactivateTabAtIndex: index => getAccessor(tabs[index]).deactivate(),
+    				focusTabAtIndex: index => getAccessor(tabs[index]).focus(),
+    				getTabIndicatorClientRectAtIndex: index => getAccessor(tabs[index]).computeIndicatorClientRect(),
+    				getTabDimensionsAtIndex: index => getAccessor(tabs[index]).computeDimensions(),
+    				getPreviousActiveTabIndex: () => {
+    					for (let i = 0; i < tabs.length; i++) {
+    						if (getAccessor(tabs[i]).active) {
+    							return i;
+    						}
+    					}
+
+    					return -1;
+    				},
+    				getFocusedTabIndex: () => {
+    					const tabElements = tabs.map(tab => getAccessor(tab).element);
+    					const activeElement = document.activeElement;
+    					return tabElements.indexOf(activeElement);
+    				},
+    				getIndexOfTabById: id => tabs.indexOf(id),
+    				getTabListLength: () => tabs.length,
+    				notifyTabActivated: index => dispatch(getElement(), "MDCTabBar:activated", { index })
+    			}));
+
+    		instance.init();
+
+    		return () => {
+    			instance.destroy();
+    		};
+    	});
+
+    	function handleTabMount(event) {
+    		const accessor = event.detail;
+    		addAccessor(accessor.tabId, accessor);
+    	}
+
+    	function handleTabUnmount(event) {
+    		const accessor = event.detail;
+    		removeAccessor(accessor.tabId);
+    	}
+
+    	function getAccessor(tabId) {
+    		return tabId instanceof Object
+    		? tabAccessorWeakMap.get(tabId)
+    		: tabAccessorMap[tabId];
+    	}
+
+    	function addAccessor(tabId, accessor) {
+    		if (tabId instanceof Object) {
+    			tabAccessorWeakMap.set(tabId, accessor);
+    			$$invalidate(19, tabAccessorWeakMap);
+    		} else {
+    			$$invalidate(18, tabAccessorMap[tabId] = accessor, tabAccessorMap);
+    			$$invalidate(18, tabAccessorMap);
+    		}
+    	}
+
+    	function removeAccessor(tabId) {
+    		if (tabId instanceof Object) {
+    			tabAccessorWeakMap.delete(tabId);
+    			$$invalidate(19, tabAccessorWeakMap);
+    		} else {
+    			delete tabAccessorMap[tabId];
+    			$$invalidate(18, tabAccessorMap);
+    		}
+    	}
+
+    	function scrollIntoView(index) {
+    		instance.scrollIntoView(index);
+    	}
+
+    	function getElement() {
+    		return element;
+    	}
+
+    	function tabscroller_binding($$value) {
+    		binding_callbacks[$$value ? "unshift" : "push"](() => {
+    			tabScroller = $$value;
+    			$$invalidate(6, tabScroller);
+    		});
+    	}
+
+    	function div_binding($$value) {
+    		binding_callbacks[$$value ? "unshift" : "push"](() => {
+    			element = $$value;
+    			$$invalidate(5, element);
+    		});
+    	}
+
+    	const SMUI_tab_mount_handler = event => handleTabMount(event);
+    	const SMUI_tab_unmount_handler = event => handleTabUnmount(event);
+    	const keydown_handler = event => instance && instance.handleKeyDown(event);
+    	const MDCTab_interacted_handler = event => instance && instance.handleTabInteraction(event);
+
+    	$$self.$$set = $$new_props => {
+    		$$props = assign(assign({}, $$props), exclude_internal_props($$new_props));
+    		$$invalidate(10, $$restProps = compute_rest_props($$props, omit_props_names));
+    		if ("use" in $$new_props) $$invalidate(0, use = $$new_props.use);
+    		if ("class" in $$new_props) $$invalidate(1, className = $$new_props.class);
+    		if ("tabs" in $$new_props) $$invalidate(2, tabs = $$new_props.tabs);
+    		if ("key" in $$new_props) $$invalidate(3, key = $$new_props.key);
+    		if ("focusOnActivate" in $$new_props) $$invalidate(12, focusOnActivate = $$new_props.focusOnActivate);
+    		if ("focusOnProgrammatic" in $$new_props) $$invalidate(13, focusOnProgrammatic = $$new_props.focusOnProgrammatic);
+    		if ("useAutomaticActivation" in $$new_props) $$invalidate(14, useAutomaticActivation = $$new_props.useAutomaticActivation);
+    		if ("active" in $$new_props) $$invalidate(11, active = $$new_props.active);
+    		if ("$$scope" in $$new_props) $$invalidate(27, $$scope = $$new_props.$$scope);
+    	};
+
+    	$$self.$capture_state = () => ({
+    		MDCTabBarFoundation,
+    		onMount,
+    		setContext,
+    		get_current_component,
+    		forwardEventsBuilder,
+    		classMap,
+    		exclude,
+    		prefixFilter,
+    		useActions,
+    		dispatch,
+    		TabScroller,
+    		forwardEvents,
+    		use,
+    		className,
+    		tabs,
+    		key,
+    		focusOnActivate,
+    		focusOnProgrammatic,
+    		useAutomaticActivation,
+    		active,
+    		element,
+    		instance,
+    		tabScroller,
+    		activeIndex,
+    		tabAccessorMap,
+    		tabAccessorWeakMap,
+    		skipFocus,
+    		handleTabMount,
+    		handleTabUnmount,
+    		getAccessor,
+    		addAccessor,
+    		removeAccessor,
+    		scrollIntoView,
+    		getElement
+    	});
+
+    	$$self.$inject_state = $$new_props => {
+    		if ("use" in $$props) $$invalidate(0, use = $$new_props.use);
+    		if ("className" in $$props) $$invalidate(1, className = $$new_props.className);
+    		if ("tabs" in $$props) $$invalidate(2, tabs = $$new_props.tabs);
+    		if ("key" in $$props) $$invalidate(3, key = $$new_props.key);
+    		if ("focusOnActivate" in $$props) $$invalidate(12, focusOnActivate = $$new_props.focusOnActivate);
+    		if ("focusOnProgrammatic" in $$props) $$invalidate(13, focusOnProgrammatic = $$new_props.focusOnProgrammatic);
+    		if ("useAutomaticActivation" in $$props) $$invalidate(14, useAutomaticActivation = $$new_props.useAutomaticActivation);
+    		if ("active" in $$props) $$invalidate(11, active = $$new_props.active);
+    		if ("element" in $$props) $$invalidate(5, element = $$new_props.element);
+    		if ("instance" in $$props) $$invalidate(4, instance = $$new_props.instance);
+    		if ("tabScroller" in $$props) $$invalidate(6, tabScroller = $$new_props.tabScroller);
+    		if ("activeIndex" in $$props) $$invalidate(17, activeIndex = $$new_props.activeIndex);
+    		if ("tabAccessorMap" in $$props) $$invalidate(18, tabAccessorMap = $$new_props.tabAccessorMap);
+    		if ("tabAccessorWeakMap" in $$props) $$invalidate(19, tabAccessorWeakMap = $$new_props.tabAccessorWeakMap);
+    		if ("skipFocus" in $$props) skipFocus = $$new_props.skipFocus;
+    	};
+
+    	if ($$props && "$$inject" in $$props) {
+    		$$self.$inject_state($$props.$$inject);
+    	}
+
+    	$$self.$$.update = () => {
+    		if ($$self.$$.dirty[0] & /*active, tabs, activeIndex, instance, focusOnProgrammatic*/ 141332) {
+    			if (active !== tabs[activeIndex]) {
+    				$$invalidate(17, activeIndex = tabs.indexOf(active));
+
+    				if (instance) {
+    					skipFocus = !focusOnProgrammatic;
+    					instance.activateTab(activeIndex);
+    					skipFocus = false;
+    				}
+    			}
+    		}
+
+    		if ($$self.$$.dirty[0] & /*tabs, tabAccessorWeakMap, tabAccessorMap, activeIndex*/ 917508) {
+    			if (tabs.length) {
+    				// Manually get the accessor so it is reactive.
+    				const accessor = tabs[0] instanceof Object
+    				? tabAccessorWeakMap.get(tabs[0])
+    				: tabAccessorMap[tabs[0]];
+
+    				if (accessor) {
+    					accessor.forceAccessible(activeIndex === -1);
+    				}
+    			}
+    		}
+
+    		if ($$self.$$.dirty[0] & /*instance, useAutomaticActivation*/ 16400) {
+    			if (instance) {
+    				instance.setUseAutomaticActivation(useAutomaticActivation);
+    			}
+    		}
+    	};
+
+    	return [
+    		use,
+    		className,
+    		tabs,
+    		key,
+    		instance,
+    		element,
+    		tabScroller,
+    		forwardEvents,
+    		handleTabMount,
+    		handleTabUnmount,
+    		$$restProps,
+    		active,
+    		focusOnActivate,
+    		focusOnProgrammatic,
+    		useAutomaticActivation,
+    		scrollIntoView,
+    		getElement,
+    		activeIndex,
+    		tabAccessorMap,
+    		tabAccessorWeakMap,
+    		slots,
+    		tabscroller_binding,
+    		div_binding,
+    		SMUI_tab_mount_handler,
+    		SMUI_tab_unmount_handler,
+    		keydown_handler,
+    		MDCTab_interacted_handler,
+    		$$scope
+    	];
+    }
+
+    class TabBar extends SvelteComponentDev {
+    	constructor(options) {
+    		super(options);
+
+    		init(
+    			this,
+    			options,
+    			instance_1,
+    			create_fragment$1,
+    			safe_not_equal,
+    			{
+    				use: 0,
+    				class: 1,
+    				tabs: 2,
+    				key: 3,
+    				focusOnActivate: 12,
+    				focusOnProgrammatic: 13,
+    				useAutomaticActivation: 14,
+    				active: 11,
+    				scrollIntoView: 15,
+    				getElement: 16
+    			},
+    			[-1, -1]
+    		);
+
+    		dispatch_dev("SvelteRegisterComponent", {
+    			component: this,
+    			tagName: "TabBar",
+    			options,
+    			id: create_fragment$1.name
+    		});
+    	}
+
+    	get use() {
+    		throw new Error("<TabBar>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set use(value) {
+    		throw new Error("<TabBar>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get class() {
+    		throw new Error("<TabBar>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set class(value) {
+    		throw new Error("<TabBar>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get tabs() {
+    		throw new Error("<TabBar>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set tabs(value) {
+    		throw new Error("<TabBar>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get key() {
+    		throw new Error("<TabBar>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set key(value) {
+    		throw new Error("<TabBar>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get focusOnActivate() {
+    		throw new Error("<TabBar>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set focusOnActivate(value) {
+    		throw new Error("<TabBar>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get focusOnProgrammatic() {
+    		throw new Error("<TabBar>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set focusOnProgrammatic(value) {
+    		throw new Error("<TabBar>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get useAutomaticActivation() {
+    		throw new Error("<TabBar>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set useAutomaticActivation(value) {
+    		throw new Error("<TabBar>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get active() {
+    		throw new Error("<TabBar>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set active(value) {
+    		throw new Error("<TabBar>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get scrollIntoView() {
+    		return this.$$.ctx[15];
+    	}
+
+    	set scrollIntoView(value) {
+    		throw new Error("<TabBar>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get getElement() {
+    		return this.$$.ctx[16];
+    	}
+
+    	set getElement(value) {
+    		throw new Error("<TabBar>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+    }
+
+    // ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
+    const CONTACTS = 'contacts';
+    const MANIFEST  = 'manifest';
+    const TOPICS = 'topics';
+
+    const CURRENT_PRIVATE_MESSAGE_VERSION = 1.2;
+    const SIG_REQUIRED = false;
+
+
+    var alert_error = (msg) => {
+        alert(msg);
+        console.log(new Error("stack"));
+    };
+
+    function set_alert_error_handler(fn) {
+        if ( typeof fn === 'function' ) {
+            alert_error = fn;
+        }
+    }
+
+
+    // // https://www.copious.world/interplanetary-contact
+    var g_profile_port = '';   // 6111
+    function correct_server(srvr) {
+        if ( srvr.indexOf(':5') > 0 ) {
+            srvr = srvr.replace('5111','6111');   /// CHANGE ...        
+        }
+        return srvr
+    }
+
+    var g_stem_prefix = 'interplanetary-contact/contact/';   // by service...
+
+
+    // -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- --------
+    // ASSETS
+
+
+    async function fetch_asset(topics_cid,identity,btype,asset) {  // specifically from this user
+        //
+        let user_cid = identity.cid;
+        //
+        let srver = location.host;
+        srver = correct_server(srver);
+        //
+        let prot = location.protocol;  // prot for (prot)ocol
+
+        btype = btype ? true : false;
+        
+        let data_stem = `${g_stem_prefix}get-asset/${asset}`;
+        let sp = '//';
+        let post_data = {
+            "btype" : btype,
+            "user_cid" : user_cid,
+            "cid" : topics_cid
+        };
+        let search_result = await postData(`${prot}${sp}${srver}/${data_stem}`, post_data);
+        if ( search_result ) {
+            if ( search_result.status === "OK" ) {
+                let data = search_result[asset];
+                if ( typeof data === 'string' ) {
+                    let decryptor = await window.user_decryption(identity,asset);      // user user cid to get the decryptor...
+                    if ( decryptor !== undefined ) {
+                        try {
+                            data = await decryptor(data);        // decryption
+                        } catch (e) {
+                        }
+                    }
+                    if ( data ) {
+                        try {
+                            let data_obj = JSON.parse(data);
+                            return data_obj
+                        } catch (e) {
+                            return [false,data]
+                        }
+                    }    
+                } else {
+                    return data
+                }
+            }
+        } else {
+            return [false,search_result]
+        }
+    }
+
+
+    async function fetch_contacts(contacts_cid,identity,btype) {  // specifically from this user
+        return await fetch_asset(contacts_cid,identity,btype,CONTACTS)
+    }
+
+    async function fetch_manifest(manifest_cid,identity,btype) {  // specifically from this user
+        return await fetch_asset(manifest_cid,identity,btype,MANIFEST)
+    }
+
+    async function fetch_topics(topics_cid,identity,btype) {  // specifically from this user
+        return await fetch_asset(topics_cid,identity,btype,TOPICS)
+    }
+
+
+    // -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- --------
+    // ASSETS
+
+
+    async function update_asset_to_ipfs(asset,identity,is_business,contents) {
+        let user_cid = identity.cid;
+        let srver = location.host;
+        srver = correct_server(srver);
+        //
+        if ( typeof contents !== 'string' ) {
+            contents = JSON.stringify(contents);
+        }
+        let encryptor = await window.user_encryption(identity,asset);
+        let encoded_contents = contents;
+        if ( encryptor !== undefined ) {        // encryption
+            encoded_contents = await encryptor(contents);
+        }
+        //
+        let prot = location.protocol;  // prot for (prot)ocol
+        let data_stem = `${g_stem_prefix}put-asset/${asset}`;
+        let sp = '//';
+        let post_data = {
+            "cid" : user_cid,
+            "business" : is_business,
+            "contents" : encoded_contents
+        };
+        let result = await postData(`${prot}${sp}${srver}/${data_stem}`, post_data);
+        if ( result.status === "OK" ) {
+            return result.update_cid
+        }
+        return false
+    }
+
+
+    async function update_contacts_to_ipfs(identity,is_business,contents) {
+        return await update_asset_to_ipfs(CONTACTS,identity,is_business,contents)
+    }
+
+    async function update_manifest_to_ipfs(identity,is_business,contents) {
+        return await update_asset_to_ipfs(MANIFEST,identity,is_business,contents)
+    }
+
+    async function update_topics_to_ipfs(identity,is_business,contents) {
+        return await update_asset_to_ipfs(TOPICS,identity,is_business,contents)
+    }
+
+    // // contact page
+    // -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- --------
+
+    //
+    // fetch_contact_page
+    //
+    async function fetch_contact_page(identity,business,asset,contact_cid) {  // specifically from this user
+        let srver = location.host;
+        srver = correct_server(srver);
+        //
+        let prot = location.protocol;  // prot for (prot)ocol
+        let data_stem = `${g_stem_prefix}get-contact-page/${asset}`;     // asset as parameter
+        let sp = '//';
+
+        let post_data = {
+            "cid" : contact_cid,     //
+            "business" : business
+        };
+        let search_result = await postData(`${prot}${sp}${srver}/${data_stem}`, post_data);
+        if ( search_result ) {
+            let contact_form = search_result.contact;
+            let decryptor = window.user_decryption(identity,asset);
+            if ( decryptor !== undefined ) {
+                try {
+                    contact_form = await decryptor(contact_form);
+                } catch (e) {
+                }
+            }
+            if ( contact_form ) {
+                if ( typeof contact_form === "string" ) {
+                    let data_obj = JSON.parse(contact_form);
+                    try {
+                        return data_obj
+                    } catch (e) {
+                    }
+                } else {
+                    return contact_form
+                }
+            }
+        }
+        return false
+    }
+
+    // // 
+    // -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- --------
+
+    let g_user_fields = ["name", "DOB", "place_of_origin", "cool_public_info", "business", "public_key", "signer_public_key", "biometric"];
+    // not checking for "cid" for most cases...
+    async function add_profile(u_info) {
+        let user_info = Object.assign(u_info);
+        //
+        for ( let field of g_user_fields ) {
+            if ( user_info[field] === undefined ) {
+                if ( field ===  "public_key" ) {
+                    let p_key = get_user_public_wrapper_key(`${user_info.name}-${user_info.DOB}`);   // out of DB (index.html)
+                    if ( p_key ) {
+                        user_info.public_key = p_key;
+                        continue
+                    }
+                }
+                if ( field ===  "signer_public_key" ) {
+                    let p_key = get_user_public_signer_key(`${user_info.name}-${user_info.DOB}`);   // out of DB (index.html)
+                    if ( p_key ) {
+                        user_info.signer_public_key = p_key;
+                        continue
+                    }
+                }
+                alert_error("undefined field " + field);
+                return
+            }
+        }
+        if ( user_info.cid !== undefined ) {        // remove reference to a cid when adding a new profile...
+            delete user_info.cid;
+        }
+        let srver = location.host;
+        srver = correct_server(srver);
+        //
+        let prot = location.protocol;  // prot for (prot)ocol
+        let data_stem = `${g_stem_prefix}add/profile`;
+        let sp = '//';
+        let post_data = user_info;
+        let result = await postData(`${prot}${sp}${srver}/${data_stem}`, post_data);
+        if ( result.status === "OK" ) {
+            let ipfs_identity = result.data;
+            if ( typeof ipfs_identity.dir_data === 'string' ) {
+                ipfs_identity.dir_data = JSON.parse(ipfs_identity.dir_data);
+            }
+            // "id" : cid with key,
+            // "clear_id" : cid without key,
+            // "dir_data" : user directory structure
+            u_info.cid = ipfs_identity.id;
+            await finalize_user_identity(u_info,ipfs_identity);
+            return true
+        }
+        return false
+    }
+
+
+    async function fetch_contact_cid(someones_info,clear) {  // a user,, not the owner of the manifest, most likely a recipients
+        let user_info = Object.assign({},someones_info); 
+        for ( let field of g_user_fields ) {
+            if ( user_info[field] === undefined ) {
+                if ( (field === "public_key") && clear ) {
+                    delete user_info.public_key;
+                    continue;
+                }
+                if ( (field === "signer_public_key") && clear ) {
+                    delete user_info.signer_public_key;
+                    continue;
+                }
+                if ( (field === "biometric")  && clear ) {     // when wrapping a key use the recipients public wrapper key
+                    // delete public_key key from messages that are introductions, etc. (this is used for the clear user directory id)
+                    delete user_info.biometric;            
+                    continue
+                }
+                alert_error("undefined field " + field);
+                return
+            }
+        }
+        let srver = location.host;
+        srver = correct_server(srver);
+        //
+        let prot = location.protocol;  // prot for (prot)ocol
+        let data_stem = `${g_stem_prefix}get/user-cid`;
+        let sp = '//';
+        let post_data = user_info;
+        let result = await postData(`${prot}${sp}${srver}/${data_stem}`, post_data);
+        if ( result.status === "OK" ) {
+            let cid = result.cid;
+            return cid
+        }
+        return false
+    }
+
+    async function fetch_cid_json(jcid) {
+        if ( jcid === undefined ) return false
+        //
+        let data_stem = `${g_stem_prefix}get/json-cid/${jcid}`;
+        let result = await fetchEndPoint(data_stem,g_profile_port);
+        if ( result.status === "OK" ) {
+            let json_str = result.json_str;
+            if ( typeof json_str === "string" ) {
+                try {
+                    displayable = JSON.parse(json_str);
+                    return displayable
+                } catch (e) {}    
+            } else {
+                return json_str
+            }
+        }
+        return false
+    }
+
+
+
+
+    async function fetch_contact_info(cid) {  // a user,, not the owner of the manifest, most likely a recipients
+        let srver = location.host;
+        srver = correct_server(srver);
+        //
+        let prot = location.protocol;  // prot for (prot)ocol
+        let data_stem = `${g_stem_prefix}get/user-info`;
+        let sp = '//';
+        let post_data = {
+            "cid" : cid
+        };
+        let result = await postData(`${prot}${sp}${srver}/${data_stem}`, post_data);
+        if ( result.status === "OK" ) {
+            let user_info = result.user_info;
+            return user_info
+        }
+        return false
+    }
+
+
+
+
+    async function get_dir(identity,clear) {
+        //
+        let user_info = identity.user_info;
+        for ( let field of g_user_fields ) {
+            if ( user_info[field] === undefined ) {
+                if ( (field === "public_key")  && !(clear) ) {
+                    let p_key = get_user_public_wrapper_key(`${user_info.name}-${user_info.DOB}`);
+                    if ( p_key ) {
+                        user_info[field] = p_key;
+                        continue
+                    }
+                }
+                if ( (field === "signer_public_key")  && !(clear) ) {
+                    //continue
+                    let p_key = get_user_public_signer_key(`${user_info.name}-${user_info.DOB}`);
+                    if ( p_key ) {
+                       user_info[field] = p_key;
+                       continue
+                    }
+                }
+                alert_error("undefined field " + field);
+                return
+            }
+        }
+        //
+        if ( clear ) {
+            delete user_info.public_key; 
+        }
+        //
+        let srver = location.host;
+        srver = correct_server(srver);
+        //
+        let prot = location.protocol;  // prot for (prot)ocol
+        let data_stem = `${g_stem_prefix}dir`;
+        let sp = '//';
+        let post_data = user_info;
+        post_data.cid = identity.cid;
+        let result = await postData(`${prot}${sp}${srver}/${data_stem}`, post_data);
+        if ( result.status === "OK" ) {
+            let dir_tree = result.data;
+            try {
+                dir_tree = JSON.parse(dir_tree);
+                return dir_tree
+            } catch (e) {}
+        }
+        return false
+    }
+    async function send_kind_of_message(m_path,recipient_info,identity,message,clear) {
+        //
+        let user_info = identity.user_info;  // from sender == user_info
+        // assume that user info has been properly formed and ready to act as recipient
+        //
+        // make sure that 
+        let recipient = Object.assign({},recipient_info);
+        for ( let field of g_user_fields ) {
+            if ( (field === "public_key")  && clear ) {     // when wrapping a key use the recipients public wrapper key
+                // delete public_key key from messages that are introductions, etc. (this is used for the clear user directory id)
+                delete recipient_info.public_key;            
+                continue
+            }
+            if ( (field === "signer_public_key")  && clear ) {     // when wrapping a key use the recipients public wrapper key
+                // delete public_key key from messages that are introductions, etc. (this is used for the clear user directory id)
+                delete recipient_info.signer_public_key;            
+                continue
+            }
+            if ( (field === "biometric")  && clear ) {     // when wrapping a key use the recipients public wrapper key
+                // delete public_key key from messages that are introductions, etc. (this is used for the clear user directory id)
+                delete recipient_info.biometric;            
+                continue
+            }
+            if ( recipient[field] === undefined ) {
+                alert_error("undefined field " + field);
+                return
+            }
+        }
+
+        let sendable_message = Object.assign({},message);
+        //
+        let user_cid = identity.cid;
+        sendable_message.user_cid = user_cid;    // cid of from  (should have been set)
+                                                            // the recipient will wrap key with this (so refresh his memory)
+        if ( clear ) {
+            sendable_message.public_key = user_info.public_key;
+            sendable_message.signer_public_key = user_info.signer_public_key;  // send the signature key in the intro (just this once)
+            // the id of the clear directory ignores the key.
+            // the identity of established contact messages requires the public key (so it stays for not clear)
+            delete recipient.public_key;  // this has to do with the identiy and the directory where introductions go.
+            delete recipient.signer_public_key;  // and this. Clear identity does not use keys
+        } else  {
+            //
+            if ( sendable_message.when === undefined ) sendable_message.when = Date.now();
+            if ( sendable_message.date === undefined ) sendable_message.date = (new Date(message.date)).toISOString();
+            if ( sendable_message.name === undefined ) sendable_message.name = user_info.name;       // from
+
+            // should have been set in the interface ... but can still catch this here.
+            sendable_message.public_key = user_info.public_key;  // basically says we know the recipient (we have talked)
+            sendable_message.nonce = message.nonce;  // for AES CBC...
+            //
+            // CAN'T PROCEED WITHOUT A KEY
+            //
+            let key_to_wrap = await window.gen_cipher_key();  /// this will be an AES KEY, new each time.
+            if ( key_to_wrap === undefined || !(key_to_wrap) ) {
+                alert_error("could not get key ");
+                alert("no cipher key");
+                return
+            } else {
+                //
+                sendable_message.message = JSON.stringify(message);  // STRINGIFY
+                //
+                let encryptor = await window.user_encryption(identity,"message");  // encryptor may vary by user... assuming more than one in indexedDB
+                let encoded_contents = sendable_message.message; 
+                if ( encryptor !== undefined ) {
+                    let aes_key = key_to_wrap;                   // ENCRYPT
+                    encoded_contents = await encryptor(encoded_contents,aes_key,sendable_message.nonce);  // CBC starting with nonce...
+                }
+                sendable_message.message = encoded_contents;     // ENCODED
+                //
+                // WRAP the key just used with the public wrapper key of the recipient (got the key via introduction...)
+                sendable_message.wrapped_key = await window.key_wrapper(key_to_wrap,recipient.public_key);
+                // SIGN the wrapped key using the sender's private signer key (receiver should already have public signature...)
+                sendable_message.signature = await window.key_signer(sendable_message.wrapped_key,identity.signer_priv_key);
+                //
+                delete sendable_message.subject;
+                delete sendable_message.readers;
+            }
+
+            sendable_message.version = CURRENT_PRIVATE_MESSAGE_VERSION;
+        }
+        //
+        let srver = location.host;
+        srver = correct_server(srver);
+        //
+        let prot = location.protocol;  // prot for (prot)ocol
+        let data_stem = `${g_stem_prefix}${m_path}`;
+        let sp = '//';
+        let post_data = {
+            "receiver" : recipient,
+            "message" : sendable_message
+        };
+        let result = await postData(`${prot}${sp}${srver}/${data_stem}`, post_data);
+        if ( result.status === "OK" ) {
+            let m_cid = result.message_cid;
+            return m_cid
+        }
+        return false
+    }
+
+    /*
+    if ( !(introduction) && encrypting ) {
+        if ( encrypting ) {
+            message = {
+                "name" : active_identity.user_info.name,
+                "user_cid" : active_identity.cid
+            }
+            let [wrapped, aes_key] = get_wrapped_aes_key(public_key)  // recipient's public wrapper key
+            message.wrapped_key = wrapped
+            message.ctext = get_encipherd_message(JSON.stringify(message_object),aes_key)
+        }
+    }
+    */
+
+
+    async function send_message(recipient_info,identity,message) {
+        let m_path = 'send/message';
+        let result = await send_kind_of_message(m_path,recipient_info,identity,message,false);
+        return result
+    }
+
+
+    async function send_introduction(recipient_info,identity,message) {
+        let m_path = 'send/introduction';
+        let result = await send_kind_of_message(m_path,recipient_info,identity,message,true);
+        return result
+    }
+
+
+    async function send_topic(recipient_info,identity,message) {
+        let m_path = '/send/topic';
+        let result = await send_kind_of_message(m_path,recipient_info,identity,message,false);
+        return result
+    }
+
+
+    async function send_topic_offer(recipient_info,identity,message) {
+        let m_path = '/send/topic_offer';
+        let result = await send_kind_of_message(m_path,recipient_info,identity,message,true);
+        return result
+    }
+
+    // -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- --------
+
+    async function* message_decryptor(messages,identity) {
+        let priv_key = identity.priv_key;
+        for ( let message of messages ) {
+            if ( message.version && (message.version > 1.0) ) {
+                let wrapped_key = message.wrapped_key;
+                try {
+                    let signature = message.signature;
+                    if ( signature || SIG_REQUIRED ) {
+                        if ( !signature ) continue
+                        let user_cid = message.user_cid;
+                        let contact = contact_from_cid(user_cid);
+                        let signer_pub_key = contact.signer_public_key;
+                        //
+                        let ok = await window.verifier(wrapped_key,signature,signer_pub_key);
+                        if ( !(ok) ) continue
+                    }
+                    let clear_m = await window.decipher_message(message.message,wrapped_key,priv_key,message.nonce);
+                    if ( clear_m !== false ) {
+                        message.message = JSON.parse(clear_m);
+                    } else {
+                        continue
+                    }
+                } catch (e) {}
+            }
+            yield message;
+        }
+    }
+
+    async function clarify_message(messages,identity) {
+        let clear_messages = [];
+        try {
+            for await (let message of message_decryptor(messages,identity) ) {
+                try {
+                    let cmessage = false;
+                    if ( typeof message.message === "string" ) {
+                        cmessage = JSON.parse(message.message);
+                    } else {
+                        cmessage = message.message;
+                    }
+                    if ( message.f_cid ) {
+                        cmessage.f_cid =  message.f_cid;
+                    }
+                    clear_messages.push(cmessage);
+                } catch (e) {
+                    //clear_messages.push(message)
+                }
+            }
+        } catch (e) {
+            console.log('caught', e);
+        }
+        return(clear_messages)
+    }
+
+    // get_spool_files
+    //  ---- identity - sender's information...
+    //  ---- spool_select - the name of a spool, e.g. 'spool' 'deleted', 'read', 'events', etc.
+    //  ---- clear -- WHICH PATHWAY -- use either the 'clear' cid path (no keys, no encryption) or use the key based message pathway, cid
+    //  ---- offset -- offset into the dirctory list (paging)
+    //  ---- count -- max per page
+    //
+    async function get_spool_files(identity,spool_select,clear,offset,count) {
+        //
+        let cid = identity.cid;
+        if ( clear ) {
+            cid = identity.clear_cid;
+        }
+        if ( cid === undefined ) return false
+        //
+        let srver = location.host;
+        srver = correct_server(srver);
+        //
+        let prot = location.protocol;  // prot for (prot)ocol
+        let data_stem = `${g_stem_prefix}get-spool`;
+        let sp = '//';
+        let post_data = {
+            'cid' : cid,
+            'spool' : spool_select,  // false for introduction
+            'business' : identity.user_info.business,
+            'offset' : offset,
+            'count' : count
+        };
+        let result = await postData(`${prot}${sp}${srver}/${data_stem}`, post_data);
+        if ( result.status === "OK" ) {
+            let messages = result.data;
+            let cid_list = result.cid_list;
+            try {
+                if ( Array.isArray(messages) ) {
+                    messages = messages.map((msg,index) => {
+                        if ( typeof msg === "string" ) {
+                            try {
+                                let obj = JSON.parse(msg);
+                                if ( cid_list ) {
+                                    obj.f_cid = cid_list[index];
+                                }
+                                return obj
+                            } catch(e) {
+                                return msg
+                            }
+                        }
+                    });
+                } else if ( typeof messages === 'string' ) {
+                    messages = JSON.parse(messages);
+                }
+                if ( !clear ) {
+                    messages = await clarify_message(messages,identity);
+                }
+                return messages
+            } catch (e) {}
+        }
+        return false
+    }
+
+
+    async function get_special_files(identity,op_category,offset,count) {
+        //
+        return await get_spool_files(identity,op_category,false,offset,count)
+        //
+    }
+
+
+    async function get_message_files(identity,offset,count) {
+        // picks up both clear and encrypted messages...
+        //
+        // expected_messages -- decrypted messages from the key based identity
+        let expected_messages = await get_spool_files(identity,true,false,offset,count);
+        //
+        // solicitations -- message sent by those who don't have the receiver's public keys 
+        let solicitations = await get_spool_files(identity,true,true,offset,count);
+        //
+        return [expected_messages,solicitations]
+    }
+
+    async function get_topic_files(identity,offset,count) {
+        let expected_messages = await get_spool_files(identity,false,false,offset,count);
+        let solicitations = await get_spool_files(identity,false,true,offset,count);
+        return [expected_messages,solicitations]
+    }
+
+    async function get_categorized_message_files(identity,op_category,offset,count) {
+        let expected_messages = await get_special_files(identity,op_category,offset,count);
+        return expected_messages
+    }
+
+
+    // -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- --------
+    //
+    //  PUBLIC TEMPLATES AVAILABLE FROM DESIGNERS....
+    //
+
+
+    async function get_template_list(offset,count,category,btype) {
+        //
+        if ( category === undefined ) {
+            category = 'any';
+        }
+        //
+        let srver = location.host;
+        srver = correct_server(srver);
+        //
+        let prot = location.protocol;  // prot for (prot)ocol
+        let data_stem = `${g_stem_prefix}template-list/${category}`;
+        let sp = '//';
+        let post_data = {
+            'category' : category,
+            'business_types' : btype ? "business" : "profile",
+            'start' : offset,
+            'count' : count
+        };
+        let result = await postData(`${prot}${sp}${srver}/${data_stem}`, post_data);
+        if ( result.status === "OK" ) {
+            let t_list = result.templates;
+            try {
+                t_list = JSON.parse(t_list);
+                return t_list
+            } catch (e) {}
+        }
+        return false
+    }
+
+
+
+    async function get_contact_template(template_cid) {
+        //
+        let data_stem = `${g_stem_prefix}get/template-cid/${template_cid}`;
+        let result = await fetchEndPoint(data_stem,g_profile_port);
+        if ( result.status === "OK" ) {
+            let contact_template = result.template;
+            if ( typeof contact_template === "string" ) {
+                try {
+                    contact_template = JSON.parse(contact_template);
+                    return contact_template
+                } catch (e) {}    
+            } else {
+                return contact_template
+            }
+        }
+        return false
+    }
+
+
+    async function get_named_contact_template(template_name,biz) {
+        //
+        let biz_t = biz ? "business" : "profile";
+        let data_stem = `${g_stem_prefix}get/template-name/${biz_t}/${template_name}`;
+        let result = await fetchEndPoint(data_stem,g_profile_port);
+        if ( result.status === "OK" ) {
+            let contact_template = result.data;
+            try {
+                t_list = JSON.parse(contact_template);
+                return contact_template
+            } catch (e) {}
+        }
+        return false
+    }
+
+
+
+    async function get_named_contact_template_cid(template_name,biz) {
+        let data_stem = `${g_stem_prefix}get/template-cid-from-name/${biz}/${template_name}`;
+        let result = await fetchEndPoint(data_stem,g_profile_port);
+        if ( result.status === "OK" ) {
+            let cid = result.cid;
+            return cid
+        }
+        return false
+    }
+
+
+    async function put_contact_template(name,data) {
+        //
+        let srver = location.host;
+        srver = correct_server(srver);
+        //
+        if ( typeof data !== 'string' ) {
+            data = JSON.stringify(data);
+        }
+        //
+        let prot = location.protocol;  // prot for (prot)ocol
+        let data_stem = `${g_stem_prefix}put/template`;
+        let sp = '//';
+        let post_data = {
+            'name' : name,
+            'uri_encoded_json' : encodeURIComponent(data)
+        };
+        let result = await postData(`${prot}${sp}${srver}/${data_stem}`, post_data);
+        if ( result.status === "OK" ) {
+            let t_cid = result.template_cid;
+            return t_cid
+        }
+        return false
+    }
+
+    // -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- --------
+    //
+
+    async function message_list_ops(user_cid,dst_cid,op,param,biz_t,message_list,src_cat) {
+        //
+        let srver = location.host;
+        srver = correct_server(srver);
+        //
+        let prot = location.protocol;  // prot for (prot)ocol
+        let data_stem = `${g_stem_prefix}message-list-op/${op}`;
+        let sp = '//';
+        let post_data = {
+            'user_cid' : user_cid,
+            'dst_cid' : dst_cid,
+            'param' : param,
+            'business' : biz_t,
+            'message_list' : message_list.join(',')
+        };
+        if ( src_cat ) {
+            post_data.source_category = src_cat;
+        }
+        let result = await postData(`${prot}${sp}${srver}/${data_stem}`, post_data);
+        if ( result.status === "OK" ) {
+            let t_cid = result.template_cid;
+            return t_cid
+        }
+        return false
+    }
+
+
+    // -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- --------
+    //
+
+    const CHUNK_SIZE = 1000000;
+    // upload_data_file
+    async function upload_data_file(name,blob64) {
+        //
+        let srver = location.host;
+        srver = correct_server(srver);
+        //
+        let prot = location.protocol;  // prot for (prot)ocol
+        let data_stem = `${g_stem_prefix}put/blob`;
+        let sp = '//';
+        let len = blob64.length;
+        let post_data = {
+            "name" : name,
+            "tstamp" : Date.now(),
+            "offset" : 0,
+            "chunk" : "",
+            "end" : false
+        };
+        for ( let i = 0; i < len; i += CHUNK_SIZE ) {
+            let chunk = blob64.substr(i,CHUNK_SIZE);
+            post_data.chunk = chunk;
+            post_data.offset = i;
+            if ( (i + CHUNK_SIZE ) > len ) {
+                post_data.end = true;
+            }
+            let result = await postData(`${prot}${sp}${srver}/${data_stem}`, post_data);
+            if ( result.status === "OK" ) {
+                if ( result.end_of_data ) {
+                    let f_cid = result.cid;
+                    return f_cid    
+                }
+            }
+        }
+
+        return false
+        //
+    }
+
+
+
+
+    async function load_blob_as_url(blob_cid) {
+        let srver = location.host;
+        srver = correct_server(srver);
+        //
+        let prot = location.protocol;  // prot for (prot)ocol
+        let data_stem = `${g_stem_prefix}get/blob`;
+        let sp = '//';
+        let post_data = {
+            "cid" : blob_cid
+        };
+        let result = await postData(`${prot}${sp}${srver}/${data_stem}`, post_data);
+        if ( result.status === "OK" ) {
+            let data = result.data;
+            return data    
+        }
+        //
+        return false
+    }
+
+
+    // -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- --------
+    //
+
+
+    // dont_store_html
+    function dont_store_html(manifest_obj) {
+        //
+        let cc_forms = manifest_obj.custom_contact_forms;
+        //
+        let cids = [];
+        let cid_map = {};
+        if ( Array.isArray(cc_forms) ) {
+            for ( let entry of cc_forms ) {
+                delete entry.html;
+                let cid = entry.cid;
+                if ( entry.preference === undefined ) {
+                    entry.preference = 1.0;
+                }
+                cids.push(entry.cid);
+                cid_map[cid] = entry;
+            }
+        } else {
+            cid_map = cc_forms;
+            for ( let cid in cc_forms ) {
+                let entry = cc_forms[cid];
+                delete entry.html;
+                entry.cid = cid;
+                cids.push(cid);
+            }
+        }
+
+        manifest_obj.custom_contact_forms = cid_map;
+        manifest_obj.sorted_cids = cids.sort((a,b) => {
+            return(cid_map[a].preference - cid_map[b].preference)
+        });
+    }
+
+    var ipfs_profiles = /*#__PURE__*/Object.freeze({
+        __proto__: null,
+        set_alert_error_handler: set_alert_error_handler,
+        fetch_contacts: fetch_contacts,
+        fetch_manifest: fetch_manifest,
+        fetch_topics: fetch_topics,
+        update_contacts_to_ipfs: update_contacts_to_ipfs,
+        update_manifest_to_ipfs: update_manifest_to_ipfs,
+        update_topics_to_ipfs: update_topics_to_ipfs,
+        fetch_contact_page: fetch_contact_page,
+        add_profile: add_profile,
+        fetch_contact_cid: fetch_contact_cid,
+        fetch_cid_json: fetch_cid_json,
+        fetch_contact_info: fetch_contact_info,
+        get_dir: get_dir,
+        send_message: send_message,
+        send_introduction: send_introduction,
+        send_topic: send_topic,
+        send_topic_offer: send_topic_offer,
+        get_message_files: get_message_files,
+        get_topic_files: get_topic_files,
+        get_categorized_message_files: get_categorized_message_files,
+        get_template_list: get_template_list,
+        get_contact_template: get_contact_template,
+        get_named_contact_template: get_named_contact_template,
+        get_named_contact_template_cid: get_named_contact_template_cid,
+        put_contact_template: put_contact_template,
+        message_list_ops: message_list_ops,
+        upload_data_file: upload_data_file,
+        load_blob_as_url: load_blob_as_url,
+        dont_store_html: dont_store_html
+    });
+
+    function subst(str,value,match_list) {
+        for ( let mm of match_list ) {
+            str = str.replace(mm[0],value);
+        }
+        return str
+    }
+
+
+    class ContactVar {
+
+        constructor(id,mfield) {
+            this.id = id;
+            this.access_method = 'innerHTML';  // or innerHTML
+            this.message_value = '';
+            this.message_field = mfield;
+            this.match_list = false;
+        }
+
+        add_matches(op_key,matches) {
+            this.match_list = matches;
+            if ( op_key ) {
+                this.access_method = op_key.substr(op_key.lastIndexOf('-') + 1);
+                this.access_method = this.access_method.replace('}}','');    
+            } // else don't change the access method...
+        }
+
+        subst(str) {
+            str = subst(str,this.id,this.match_list);
+            return str
+        }
+
+        extract_value() {
+            let domel = document.getElementById(this.id);
+            let value = "";
+            if ( this.access_method === "value" ) {
+                value = domel.value;
+            } else {
+                value = domel.innerHTML;
+            }
+            return(value)
+        }
+
+        set_el_html(txt) {
+            let domel = document.getElementById(this.id);
+            if ( domel ) domel.innerHTML = txt;
+        }
+    }
+
+
+    function cvar_factory(id,mfield) {
+        let cvar = new ContactVar(id,mfield);
+        return cvar
+    }
+
+
+    var g_var_descr_regex  = new RegExp('{{([A-Za-z0-9\#\_\-]+)}}','g');
+    //
+    function unload_html_vars(html) {
+        const matches = html.matchAll(g_var_descr_regex);
+        let v_map = {};
+        for ( const match of matches ) {
+            if ( match ) {
+                let key = match[0];
+                if ( v_map[key] === undefined ) {
+                    v_map[key] = [];
+                }
+                v_map[key].push(match);
+            }
+        }
+        return v_map
+    }
+
+
+    // // 
+    function subst_vars_app_ids(html,html_vars,ccvars) {
+        for ( let ky in html_vars ) {
+            let hyph = ky.lastIndexOf('-') + 1;
+            if ( hyph > 0 ) {
+                let hyph1 = ky.indexOf('-') + 1;
+                if ( hyph1 === hyph ) {
+                    let cvar = ccvars[ky];
+                    if ( cvar ) {
+                        cvar.add_matches(false,html_vars[ky]);
+                        html = cvar.subst(html);
+                    }    
+                } else {
+                    let match_key = ky.substr(0,hyph);
+                    let cvar = ccvars[match_key];
+                    if ( cvar ) {
+                        cvar.add_matches(ky,html_vars[ky]);
+                        html = cvar.subst(html);
+                    }    
+                }
+            }
+        }
+        return html
+    }
+
+
+    function clear_char(str,char) {
+        let split_up = str.split(char);
+        let back_together = split_up.join('');
+        return back_together
+    }
+
+
+    	/*
+    	// FILE
+    	lastModified
+    	lastModifiedDate
+    	name
+    	size
+    	type --- mime/type
+    	......
+    	slice(start,end,contentType)
+    	stream
+    	text
+    	arrayBuffer	
+
+    	DataTransfer items
+    	kind  (string or file)
+    	type
+    	getAsFile
+    	getAsString
+
+    	*/
+
+    function drop(items,files) {
+        //
+        let p = new Promise((resolve,reject) => {
+            if ( items ) {
+                // Use DataTransferItemList interface to access the file(s)
+                for ( let i = 0; i < items.length; i++ ) {
+                    if ( items[i].kind === 'file' ) {
+                        let file = items[i].getAsFile();
+                        let fname = file.name;
+                        var reader = new FileReader();
+                            reader.onload = async (e) => {
+                                let blob64 = e.target.result;
+                                resolve([fname,blob64]);
+                            };
+                            reader.readAsDataURL(file);
+                        break
+                    }
+                }
+            } else if ( files ) {
+                // Use DataTransfer interface to access the file(s)
+                for ( let i = 0; i < files.length; i++ ) {
+                    let file = files[i].getAsFile();
+                    let fname = file.name;
+                    reader.onload = (e) => {
+                        let blob64 = e.target.result;
+                        resolve([fname,blob64]);
+                    };
+                    reader.readAsDataURL(file);
+                    break
+                }
+            } else {
+                reject(false);
+            }
+        });
+        return p
+    }
+
+
+    function check_empty(parameters) {
+        //
+        let b = parameters.some( el => {
+            if ( el === false ) return true
+            if ( (typeof el === "string")  && (el.length === 0) ) return true
+            if ( typeof el === "undefined" ) return true
+            return false
+        });
+        //
+        return b
+    }
+
+    var utils = /*#__PURE__*/Object.freeze({
+        __proto__: null,
+        cvar_factory: cvar_factory,
+        unload_html_vars: unload_html_vars,
+        subst_vars_app_ids: subst_vars_app_ids,
+        clear_char: clear_char,
+        drop: drop,
+        check_empty: check_empty
+    });
+
+    /* src/App.svelte generated by Svelte v3.37.0 */
+
+    const { Object: Object_1, console: console_1 } = globals;
+    const file = "src/App.svelte";
+
+    function get_each_context(ctx, list, i) {
+    	const child_ctx = ctx.slice();
+    	child_ctx[139] = list[i];
+    	child_ctx[6] = i;
+    	return child_ctx;
+    }
+
+    // (1624:2) <Label>
+    function create_default_slot_2(ctx) {
+    	let span;
+    	let t_value = /*tab*/ ctx[141] + "";
+    	let t;
+    	let span_class_value;
+
+    	const block = {
+    		c: function create() {
+    			span = element("span");
+    			t = text(t_value);
+
+    			attr_dev(span, "class", span_class_value = "" + (null_to_empty(/*tab*/ ctx[141] === /*active*/ ctx[4]
+    			? "active-tab"
+    			: "plain-tab") + " svelte-1b4dyig"));
+
+    			add_location(span, file, 1623, 9, 40690);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, span, anchor);
+    			append_dev(span, t);
+    		},
+    		p: function update(ctx, dirty) {
+    			if (dirty[4] & /*tab*/ 131072 && t_value !== (t_value = /*tab*/ ctx[141] + "")) set_data_dev(t, t_value);
+
+    			if (dirty[0] & /*active*/ 16 | dirty[4] & /*tab*/ 131072 && span_class_value !== (span_class_value = "" + (null_to_empty(/*tab*/ ctx[141] === /*active*/ ctx[4]
+    			? "active-tab"
+    			: "plain-tab") + " svelte-1b4dyig"))) {
+    				attr_dev(span, "class", span_class_value);
+    			}
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(span);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_default_slot_2.name,
+    		type: "slot",
+    		source: "(1624:2) <Label>",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (1623:3) <Tab {tab}>
+    function create_default_slot_1(ctx) {
+    	let label;
+    	let current;
+
+    	label = new CommonLabel({
+    			props: {
+    				$$slots: { default: [create_default_slot_2] },
+    				$$scope: { ctx }
+    			},
+    			$$inline: true
+    		});
+
+    	const block = {
+    		c: function create() {
+    			create_component(label.$$.fragment);
+    		},
+    		m: function mount(target, anchor) {
+    			mount_component(label, target, anchor);
+    			current = true;
+    		},
+    		p: function update(ctx, dirty) {
+    			const label_changes = {};
+
+    			if (dirty[0] & /*active*/ 16 | dirty[4] & /*$$scope, tab*/ 393216) {
+    				label_changes.$$scope = { dirty, ctx };
+    			}
+
+    			label.$set(label_changes);
+    		},
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(label.$$.fragment, local);
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			transition_out(label.$$.fragment, local);
+    			current = false;
+    		},
+    		d: function destroy(detaching) {
+    			destroy_component(label, detaching);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_default_slot_1.name,
+    		type: "slot",
+    		source: "(1623:3) <Tab {tab}>",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (1621:1) <TabBar tabs={['Identify', 'User', 'About Us']} let:tab bind:active>
+    function create_default_slot(ctx) {
+    	let tab;
+    	let current;
+
+    	tab = new Tab({
+    			props: {
+    				tab: /*tab*/ ctx[141],
+    				$$slots: { default: [create_default_slot_1] },
+    				$$scope: { ctx }
+    			},
+    			$$inline: true
+    		});
+
+    	const block = {
+    		c: function create() {
+    			create_component(tab.$$.fragment);
+    		},
+    		m: function mount(target, anchor) {
+    			mount_component(tab, target, anchor);
+    			current = true;
+    		},
+    		p: function update(ctx, dirty) {
+    			const tab_changes = {};
+    			if (dirty[4] & /*tab*/ 131072) tab_changes.tab = /*tab*/ ctx[141];
+
+    			if (dirty[0] & /*active*/ 16 | dirty[4] & /*$$scope, tab*/ 393216) {
+    				tab_changes.$$scope = { dirty, ctx };
+    			}
+
+    			tab.$set(tab_changes);
+    		},
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(tab.$$.fragment, local);
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			transition_out(tab.$$.fragment, local);
+    			current = false;
+    		},
+    		d: function destroy(detaching) {
+    			destroy_component(tab, detaching);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_default_slot.name,
+    		type: "slot",
+    		source: "(1621:1) <TabBar tabs={['Identify', 'User', 'About Us']} let:tab bind:active>",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (1781:36) 
+    function create_if_block_8(ctx) {
+    	let div;
+    	let blockquote0;
+    	let t1;
+    	let blockquote1;
+    	let t2;
+    	let b0;
+    	let t4;
+    	let blockquote2;
+    	let t5;
+    	let ol;
+    	let li0;
+    	let b1;
+    	let t7;
+    	let t8;
+    	let li1;
+    	let b2;
+    	let t10;
+    	let t11;
+    	let li2;
+    	let b3;
+    	let t13;
+    	let b4;
+    	let t15;
+    	let t16;
+    	let blockquote3;
+    	let t18;
+    	let blockquote4;
+    	let t20;
+    	let blockquote5;
+    	let span;
+    	let t22;
+    	let blockquote6;
+    	let t24;
+    	let blockquote7;
+
+    	const block = {
+    		c: function create() {
+    			div = element("div");
+    			blockquote0 = element("blockquote");
+    			blockquote0.textContent = "This service is free.";
+    			t1 = space();
+    			blockquote1 = element("blockquote");
+    			t2 = text("Use this service to create an identity, and then, use it to create and optionally maintain a personal frame page initially accessible at unique subdomain \n\t\tof ");
+    			b0 = element("b");
+    			b0.textContent = "of-this.world";
+    			t4 = space();
+    			blockquote2 = element("blockquote");
+    			t5 = text("That is three things made here:\n\t\t");
+    			ol = element("ol");
+    			li0 = element("li");
+    			b1 = element("b");
+    			b1.textContent = "Intergalactic Identity";
+    			t7 = text(" - with locally stored information");
+    			t8 = space();
+    			li1 = element("li");
+    			b2 = element("b");
+    			b2.textContent = "A web page";
+    			t10 = text(" - stored on peer 2 peer Web3 style storage free for you to use, access, edit, move, etc.");
+    			t11 = space();
+    			li2 = element("li");
+    			b3 = element("b");
+    			b3.textContent = "A subdomain";
+    			t13 = text(" - ");
+    			b4 = element("b");
+    			b4.textContent = "your name";
+    			t15 = text(".of-this.world");
+    			t16 = space();
+    			blockquote3 = element("blockquote");
+    			blockquote3.textContent = "The frame page makes your personal, human and private, web usage into one in which you command authorization in your relation to services.";
+    			t18 = space();
+    			blockquote4 = element("blockquote");
+    			blockquote4.textContent = "As the commander of services, you require the service to ask you for authorization.";
+    			t20 = space();
+    			blockquote5 = element("blockquote");
+    			span = element("span");
+    			span.textContent = "You require that businesses log into you. You don't have to log into them.";
+    			t22 = space();
+    			blockquote6 = element("blockquote");
+    			blockquote6.textContent = "The reason we have asked for information you might tell anyone is that we are asking for information you want to share. This information should identify you,\n\t\tbut not give away secrets. Given the informtion, programs provided by this page will make an identity for you. This will be your distributable identity.";
+    			t24 = space();
+    			blockquote7 = element("blockquote");
+    			blockquote7.textContent = "You may user your distributed identity in any website that will take one.";
+    			attr_dev(blockquote0, "class", "svelte-1b4dyig");
+    			add_location(blockquote0, file, 1782, 2, 48081);
+    			attr_dev(b0, "class", "svelte-1b4dyig");
+    			add_location(b0, file, 1787, 5, 48311);
+    			attr_dev(blockquote1, "class", "svelte-1b4dyig");
+    			add_location(blockquote1, file, 1785, 2, 48136);
+    			attr_dev(b1, "class", "svelte-1b4dyig");
+    			add_location(b1, file, 1792, 7, 48435);
+    			attr_dev(li0, "class", "svelte-1b4dyig");
+    			add_location(li0, file, 1792, 3, 48431);
+    			attr_dev(b2, "class", "svelte-1b4dyig");
+    			add_location(b2, file, 1793, 7, 48511);
+    			attr_dev(li1, "class", "svelte-1b4dyig");
+    			add_location(li1, file, 1793, 3, 48507);
+    			attr_dev(b3, "class", "svelte-1b4dyig");
+    			add_location(b3, file, 1794, 7, 48630);
+    			set_style(b4, "color", "darkseagreen");
+    			attr_dev(b4, "class", "svelte-1b4dyig");
+    			add_location(b4, file, 1794, 28, 48651);
+    			attr_dev(li2, "class", "svelte-1b4dyig");
+    			add_location(li2, file, 1794, 3, 48626);
+    			set_style(ol, "padding-left", "4%");
+    			attr_dev(ol, "class", "svelte-1b4dyig");
+    			add_location(ol, file, 1791, 2, 48399);
+    			attr_dev(blockquote2, "class", "svelte-1b4dyig");
+    			add_location(blockquote2, file, 1789, 2, 48350);
+    			attr_dev(blockquote3, "class", "svelte-1b4dyig");
+    			add_location(blockquote3, file, 1797, 2, 48740);
+    			attr_dev(blockquote4, "class", "svelte-1b4dyig");
+    			add_location(blockquote4, file, 1800, 2, 48912);
+    			set_style(span, "font-weight", "bold");
+    			attr_dev(span, "class", "svelte-1b4dyig");
+    			add_location(span, file, 1804, 2, 49044);
+    			attr_dev(blockquote5, "class", "svelte-1b4dyig");
+    			add_location(blockquote5, file, 1803, 2, 49029);
+    			attr_dev(blockquote6, "class", "svelte-1b4dyig");
+    			add_location(blockquote6, file, 1806, 2, 49178);
+    			attr_dev(blockquote7, "class", "svelte-1b4dyig");
+    			add_location(blockquote7, file, 1810, 2, 49524);
+    			attr_dev(div, "class", "team_message svelte-1b4dyig");
+    			add_location(div, file, 1781, 1, 48050);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, div, anchor);
+    			append_dev(div, blockquote0);
+    			append_dev(div, t1);
+    			append_dev(div, blockquote1);
+    			append_dev(blockquote1, t2);
+    			append_dev(blockquote1, b0);
+    			append_dev(div, t4);
+    			append_dev(div, blockquote2);
+    			append_dev(blockquote2, t5);
+    			append_dev(blockquote2, ol);
+    			append_dev(ol, li0);
+    			append_dev(li0, b1);
+    			append_dev(li0, t7);
+    			append_dev(ol, t8);
+    			append_dev(ol, li1);
+    			append_dev(li1, b2);
+    			append_dev(li1, t10);
+    			append_dev(ol, t11);
+    			append_dev(ol, li2);
+    			append_dev(li2, b3);
+    			append_dev(li2, t13);
+    			append_dev(li2, b4);
+    			append_dev(li2, t15);
+    			append_dev(div, t16);
+    			append_dev(div, blockquote3);
+    			append_dev(div, t18);
+    			append_dev(div, blockquote4);
+    			append_dev(div, t20);
+    			append_dev(div, blockquote5);
+    			append_dev(blockquote5, span);
+    			append_dev(div, t22);
+    			append_dev(div, blockquote6);
+    			append_dev(div, t24);
+    			append_dev(div, blockquote7);
+    		},
+    		p: noop,
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(div);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block_8.name,
+    		type: "if",
+    		source: "(1781:36) ",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (1662:33) 
+    function create_if_block_2(ctx) {
+    	let div17;
+    	let div10;
+    	let br0;
+    	let t0;
+    	let div0;
+    	let t2;
+    	let br1;
+    	let t3;
+    	let div1;
+    	let label0;
+    	let t5;
+    	let input0;
+    	let t6;
+    	let input1;
+    	let span0;
+    	let t8;
+    	let div2;
+    	let t9;
+    	let div3;
+    	let t10;
+    	let div4;
+    	let label1;
+    	let br2;
+    	let t12;
+    	let textarea;
+    	let t13;
+    	let div5;
+    	let t14;
+    	let div9;
+    	let blockquote0;
+    	let div6;
+    	let b0;
+    	let t16;
+    	let t17;
+    	let div7;
+    	let t18;
+    	let span1;
+    	let t20;
+    	let i0;
+    	let b1;
+    	let t22;
+    	let t23;
+    	let div8;
+    	let t25;
+    	let blockquote1;
+    	let t26;
+    	let b2;
+    	let t28;
+    	let t29;
+    	let blockquote3;
+    	let t30;
+    	let b3;
+    	let t32;
+    	let i1;
+    	let t34;
+    	let i2;
+    	let t36;
+    	let blockquote2;
+    	let t38;
+    	let blockquote5;
+    	let t39;
+    	let blockquote4;
+    	let t41;
+    	let blockquote6;
+    	let span2;
+    	let t43;
+    	let span3;
+    	let t45;
+    	let t46;
+    	let div16;
+    	let div11;
+    	let t47;
+    	let span4;
+    	let t48;
+    	let span4_class_value;
+    	let t49;
+    	let div15;
+    	let t50;
+    	let t51;
+    	let div14;
+    	let div12;
+    	let button0;
+    	let t53;
+    	let button1;
+    	let t55;
+    	let div13;
+    	let button2;
+    	let t57;
+    	let button3;
+    	let mounted;
+    	let dispose;
+
+    	function select_block_type_2(ctx, dirty) {
+    		if (/*business*/ ctx[13]) return create_if_block_7;
+    		return create_else_block_3;
+    	}
+
+    	let current_block_type = select_block_type_2(ctx);
+    	let if_block0 = current_block_type(ctx);
+
+    	function select_block_type_3(ctx, dirty) {
+    		if (/*business*/ ctx[13]) return create_if_block_6;
+    		return create_else_block_2;
+    	}
+
+    	let current_block_type_1 = select_block_type_3(ctx);
+    	let if_block1 = current_block_type_1(ctx);
+
+    	function select_block_type_4(ctx, dirty) {
+    		if (/*creation_to_do*/ ctx[5]) return create_if_block_5;
+    		return create_else_block_1;
+    	}
+
+    	let current_block_type_2 = select_block_type_4(ctx);
+    	let if_block2 = current_block_type_2(ctx);
+    	let if_block3 = /*creation_to_do*/ ctx[5] && create_if_block_4(ctx);
+    	let if_block4 = !/*creation_to_do*/ ctx[5] && create_if_block_3(ctx);
+
+    	const block = {
+    		c: function create() {
+    			div17 = element("div");
+    			div10 = element("div");
+    			br0 = element("br");
+    			t0 = space();
+    			div0 = element("div");
+    			div0.textContent = "Please enter Unique Information about yourself which you would be willing to share with anyone:";
+    			t2 = space();
+    			br1 = element("br");
+    			t3 = space();
+    			div1 = element("div");
+    			label0 = element("label");
+    			label0.textContent = "Name:";
+    			t5 = space();
+    			input0 = element("input");
+    			t6 = space();
+    			input1 = element("input");
+    			span0 = element("span");
+    			span0.textContent = "Business (if checked)";
+    			t8 = space();
+    			div2 = element("div");
+    			if_block0.c();
+    			t9 = space();
+    			div3 = element("div");
+    			if_block1.c();
+    			t10 = space();
+    			div4 = element("div");
+    			label1 = element("label");
+    			label1.textContent = "Cool Public Info";
+    			br2 = element("br");
+    			t12 = space();
+    			textarea = element("textarea");
+    			t13 = space();
+    			div5 = element("div");
+    			if_block2.c();
+    			t14 = space();
+    			div9 = element("div");
+    			blockquote0 = element("blockquote");
+    			div6 = element("div");
+    			b0 = element("b");
+    			b0.textContent = "Enter your information above";
+    			t16 = text(" This information will be used to make your Intergalactic identity.");
+    			t17 = space();
+    			div7 = element("div");
+    			t18 = text("When you click on the button, ");
+    			span1 = element("span");
+    			span1.textContent = "Create my Intergalactic Identity";
+    			t20 = text(", your information will be stored within \n\t\t\t\t\t\tyour browser under the domain of this page.\n\t\t\t\t\t\tThen, processes on this page will create your identitfier. At the top level, \n\t\t\t\t\t\tyou will have a ");
+    			i0 = element("i");
+    			b1 = element("b");
+    			b1.textContent = "base64 hash";
+    			t22 = text(" of an encryption of the data that you entered.");
+    			t23 = space();
+    			div8 = element("div");
+    			div8.textContent = "The hash will be associated with a JSON structure being stored in your browser within IndexedDB.\n\t\t\t\t\t\tWithin the local structure, you will have private and public keys.";
+    			t25 = space();
+    			blockquote1 = element("blockquote");
+    			t26 = text("You will be able to download the identity structure as a JSON obect at any time.\n\t\t\t\t");
+    			b2 = element("b");
+    			b2.textContent = "This JSON structure information will never be sent from the browser by these pages.";
+    			t28 = text(" It will be stored in the bowser database \n\t\t\t\tas long as you want.");
+    			t29 = space();
+    			blockquote3 = element("blockquote");
+    			t30 = text("Use the buttons on the right side of the page to create or delete an identity. And, use the ");
+    			b3 = element("b");
+    			b3.textContent = "Identity";
+    			t32 = text(" buttons,\n\t\t\t\twith the ");
+    			i1 = element("i");
+    			i1.textContent = "down";
+    			t34 = text(" triangle ▼ and the ");
+    			i2 = element("i");
+    			i2.textContent = "up";
+    			t36 = text(" triangle ▲ to download your JSON to disk and to upload your identity, respectively.\n\t\t\t\t\t");
+    			blockquote2 = element("blockquote");
+    			blockquote2.textContent = "For exampe, you may download your identity to a thumb drive for safe keeping. Or you may upload your identity into another\n\t\t\t\t\tbrowser or restore to a browser if it has been previously deleted.";
+    			t38 = space();
+    			blockquote5 = element("blockquote");
+    			t39 = text("The information you enter above should be unique. \n\t\t\t\t\t");
+    			blockquote4 = element("blockquote");
+    			blockquote4.textContent = "For example, I know that my name is shared by at least three other people on the planet,\n\t\t\t\t\tall of whom were born in the same year. But, they are from different towns or countries. So, I don't hesitate to enter my place of origin.\n\t\t\t\t\tFurthermore, I am willing to share my real place of origin with anyone.";
+    			t41 = space();
+    			blockquote6 = element("blockquote");
+    			span2 = element("span");
+    			span2.textContent = "Note:";
+    			t43 = text(" no information will be sent to any organization as a result of entering information here.\n\t\t\t\tAll information will be stored locally except for the public information needed to generate your personal frame page. \n\t\t\t\tA single page will be generated for your personal frame page at subdomain of the governing URL of this page. \n\t\t\t\tAgain, this information will be stored within the browser database on your device. \n\t\t\t\tYou will access your peronal frame page by your peronal URL (such as an ");
+    			span3 = element("span");
+    			span3.textContent = "of-this.world";
+    			t45 = text(" url.)\n\t\t\t\tThe database record will only be accessible from this URL.");
+    			t46 = space();
+    			div16 = element("div");
+    			div11 = element("div");
+    			t47 = text("status: ");
+    			span4 = element("span");
+    			t48 = text(/*signup_status*/ ctx[9]);
+    			t49 = space();
+    			div15 = element("div");
+    			if (if_block3) if_block3.c();
+    			t50 = space();
+    			if (if_block4) if_block4.c();
+    			t51 = space();
+    			div14 = element("div");
+    			div12 = element("div");
+    			button0 = element("button");
+    			button0.textContent = "∋ new";
+    			t53 = space();
+    			button1 = element("button");
+    			button1.textContent = "∌ remove";
+    			t55 = space();
+    			div13 = element("div");
+    			button2 = element("button");
+    			button2.textContent = "▼ identity";
+    			t57 = space();
+    			button3 = element("button");
+    			button3.textContent = "▲ identity";
+    			attr_dev(br0, "class", "svelte-1b4dyig");
+    			add_location(br0, file, 1664, 3, 42054);
+    			attr_dev(div0, "class", "top_instructions svelte-1b4dyig");
+    			add_location(div0, file, 1665, 3, 42062);
+    			attr_dev(br1, "class", "svelte-1b4dyig");
+    			add_location(br1, file, 1668, 3, 42207);
+    			attr_dev(label0, "for", "name");
+    			set_style(label0, "display", "inline");
+    			attr_dev(label0, "class", "svelte-1b4dyig");
+    			add_location(label0, file, 1670, 4, 42244);
+    			attr_dev(input0, "id", "name");
+    			attr_dev(input0, "placeholder", "Name");
+    			set_style(input0, "display", "inline");
+    			attr_dev(input0, "class", "svelte-1b4dyig");
+    			add_location(input0, file, 1672, 4, 42309);
+    			attr_dev(input1, "type", "checkbox");
+    			set_style(input1, "display", "inline");
+    			attr_dev(input1, "class", "svelte-1b4dyig");
+    			add_location(input1, file, 1673, 4, 42391);
+    			attr_dev(span0, "class", "svelte-1b4dyig");
+    			add_location(span0, file, 1673, 76, 42463);
+    			attr_dev(div1, "class", "inner_div svelte-1b4dyig");
+    			add_location(div1, file, 1669, 3, 42215);
+    			attr_dev(div2, "class", "inner_div svelte-1b4dyig");
+    			add_location(div2, file, 1675, 3, 42511);
+    			attr_dev(div3, "class", "inner_div svelte-1b4dyig");
+    			add_location(div3, file, 1682, 3, 42899);
+    			attr_dev(label1, "for", "self-text");
+    			attr_dev(label1, "class", "svelte-1b4dyig");
+    			add_location(label1, file, 1690, 3, 43342);
+    			attr_dev(br2, "class", "svelte-1b4dyig");
+    			add_location(br2, file, 1690, 50, 43389);
+    			attr_dev(textarea, "id", "self-text");
+    			attr_dev(textarea, "placeholder", "Something you would say to anyone about yourself");
+    			attr_dev(textarea, "class", "svelte-1b4dyig");
+    			add_location(textarea, file, 1691, 3, 43397);
+    			attr_dev(div4, "class", "inner_div svelte-1b4dyig");
+    			add_location(div4, file, 1689, 3, 43314);
+    			attr_dev(div5, "class", "add-profile-div svelte-1b4dyig");
+    			set_style(div5, "text-align", "center");
+    			add_location(div5, file, 1693, 3, 43531);
+    			attr_dev(b0, "class", "svelte-1b4dyig");
+    			add_location(b0, file, 1707, 6, 44228);
+    			attr_dev(div6, "class", "instructor svelte-1b4dyig");
+    			add_location(div6, file, 1706, 5, 44196);
+    			set_style(span1, "font-weight", "bolder");
+    			set_style(span1, "color", "navy");
+    			attr_dev(span1, "class", "svelte-1b4dyig");
+    			add_location(span1, file, 1710, 36, 44410);
+    			attr_dev(b1, "class", "svelte-1b4dyig");
+    			add_location(b1, file, 1713, 25, 44694);
+    			attr_dev(i0, "class", "svelte-1b4dyig");
+    			add_location(i0, file, 1713, 22, 44691);
+    			attr_dev(div7, "class", "instructor svelte-1b4dyig");
+    			add_location(div7, file, 1709, 5, 44348);
+    			attr_dev(div8, "class", "instructor svelte-1b4dyig");
+    			add_location(div8, file, 1715, 5, 44781);
+    			attr_dev(blockquote0, "class", "svelte-1b4dyig");
+    			add_location(blockquote0, file, 1705, 4, 44178);
+    			attr_dev(b2, "class", "svelte-1b4dyig");
+    			add_location(b2, file, 1722, 4, 45120);
+    			attr_dev(blockquote1, "class", "svelte-1b4dyig");
+    			add_location(blockquote1, file, 1720, 4, 45018);
+    			attr_dev(b3, "class", "svelte-1b4dyig");
+    			add_location(b3, file, 1726, 96, 45409);
+    			attr_dev(i1, "class", "svelte-1b4dyig");
+    			add_location(i1, file, 1727, 13, 45447);
+    			attr_dev(i2, "class", "svelte-1b4dyig");
+    			add_location(i2, file, 1727, 44, 45478);
+    			attr_dev(blockquote2, "class", "svelte-1b4dyig");
+    			add_location(blockquote2, file, 1728, 5, 45577);
+    			attr_dev(blockquote3, "class", "svelte-1b4dyig");
+    			add_location(blockquote3, file, 1725, 4, 45300);
+    			attr_dev(blockquote4, "class", "svelte-1b4dyig");
+    			add_location(blockquote4, file, 1735, 5, 45904);
+    			attr_dev(blockquote5, "class", "svelte-1b4dyig");
+    			add_location(blockquote5, file, 1733, 4, 45831);
+    			set_style(span2, "color", "blue");
+    			attr_dev(span2, "class", "svelte-1b4dyig");
+    			add_location(span2, file, 1742, 4, 46290);
+    			attr_dev(span3, "class", "svelte-1b4dyig");
+    			add_location(span3, file, 1746, 76, 46820);
+    			attr_dev(blockquote6, "class", "svelte-1b4dyig");
+    			add_location(blockquote6, file, 1741, 4, 46273);
+    			attr_dev(div9, "class", "nice_message svelte-1b4dyig");
+    			add_location(div9, file, 1704, 3, 44147);
+    			attr_dev(div10, "class", "signerupper svelte-1b4dyig");
+    			add_location(div10, file, 1663, 2, 42025);
+
+    			attr_dev(span4, "class", span4_class_value = "" + (null_to_empty(/*signup_status*/ ctx[9] === "OK"
+    			? "good-status"
+    			: "bad-status") + " svelte-1b4dyig"));
+
+    			add_location(span4, file, 1753, 12, 47024);
+    			attr_dev(div11, "class", "signup-status svelte-1b4dyig");
+    			add_location(div11, file, 1752, 3, 46984);
+    			attr_dev(button0, "class", "svelte-1b4dyig");
+    			add_location(button0, file, 1768, 6, 47648);
+    			attr_dev(button1, "class", "svelte-1b4dyig");
+    			add_location(button1, file, 1769, 6, 47710);
+    			attr_dev(div12, "class", "contact_controls svelte-1b4dyig");
+    			add_location(div12, file, 1767, 5, 47611);
+    			attr_dev(button2, "class", "svelte-1b4dyig");
+    			add_location(button2, file, 1772, 6, 47832);
+    			attr_dev(button3, "class", "svelte-1b4dyig");
+    			add_location(button3, file, 1773, 6, 47900);
+    			attr_dev(div13, "class", "contact_controls svelte-1b4dyig");
+    			add_location(div13, file, 1771, 5, 47795);
+    			attr_dev(div14, "class", "svelte-1b4dyig");
+    			add_location(div14, file, 1766, 4, 47600);
+    			attr_dev(div15, "class", "svelte-1b4dyig");
+    			add_location(div15, file, 1755, 3, 47128);
+    			attr_dev(div16, "class", "signerupper svelte-1b4dyig");
+    			add_location(div16, file, 1751, 2, 46955);
+    			attr_dev(div17, "class", "signup-grid-container svelte-1b4dyig");
+    			add_location(div17, file, 1662, 1, 41987);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, div17, anchor);
+    			append_dev(div17, div10);
+    			append_dev(div10, br0);
+    			append_dev(div10, t0);
+    			append_dev(div10, div0);
+    			append_dev(div10, t2);
+    			append_dev(div10, br1);
+    			append_dev(div10, t3);
+    			append_dev(div10, div1);
+    			append_dev(div1, label0);
+    			append_dev(div1, t5);
+    			append_dev(div1, input0);
+    			set_input_value(input0, /*name*/ ctx[1]);
+    			append_dev(div1, t6);
+    			append_dev(div1, input1);
+    			input1.checked = /*business*/ ctx[13];
+    			append_dev(div1, span0);
+    			append_dev(div10, t8);
+    			append_dev(div10, div2);
+    			if_block0.m(div2, null);
+    			append_dev(div10, t9);
+    			append_dev(div10, div3);
+    			if_block1.m(div3, null);
+    			append_dev(div10, t10);
+    			append_dev(div10, div4);
+    			append_dev(div4, label1);
+    			append_dev(div4, br2);
+    			append_dev(div4, t12);
+    			append_dev(div4, textarea);
+    			set_input_value(textarea, /*cool_public_info*/ ctx[12]);
+    			append_dev(div10, t13);
+    			append_dev(div10, div5);
+    			if_block2.m(div5, null);
+    			append_dev(div10, t14);
+    			append_dev(div10, div9);
+    			append_dev(div9, blockquote0);
+    			append_dev(blockquote0, div6);
+    			append_dev(div6, b0);
+    			append_dev(div6, t16);
+    			append_dev(blockquote0, t17);
+    			append_dev(blockquote0, div7);
+    			append_dev(div7, t18);
+    			append_dev(div7, span1);
+    			append_dev(div7, t20);
+    			append_dev(div7, i0);
+    			append_dev(i0, b1);
+    			append_dev(div7, t22);
+    			append_dev(blockquote0, t23);
+    			append_dev(blockquote0, div8);
+    			append_dev(div9, t25);
+    			append_dev(div9, blockquote1);
+    			append_dev(blockquote1, t26);
+    			append_dev(blockquote1, b2);
+    			append_dev(blockquote1, t28);
+    			append_dev(div9, t29);
+    			append_dev(div9, blockquote3);
+    			append_dev(blockquote3, t30);
+    			append_dev(blockquote3, b3);
+    			append_dev(blockquote3, t32);
+    			append_dev(blockquote3, i1);
+    			append_dev(blockquote3, t34);
+    			append_dev(blockquote3, i2);
+    			append_dev(blockquote3, t36);
+    			append_dev(blockquote3, blockquote2);
+    			append_dev(div9, t38);
+    			append_dev(div9, blockquote5);
+    			append_dev(blockquote5, t39);
+    			append_dev(blockquote5, blockquote4);
+    			append_dev(div9, t41);
+    			append_dev(div9, blockquote6);
+    			append_dev(blockquote6, span2);
+    			append_dev(blockquote6, t43);
+    			append_dev(blockquote6, span3);
+    			append_dev(blockquote6, t45);
+    			append_dev(div17, t46);
+    			append_dev(div17, div16);
+    			append_dev(div16, div11);
+    			append_dev(div11, t47);
+    			append_dev(div11, span4);
+    			append_dev(span4, t48);
+    			append_dev(div16, t49);
+    			append_dev(div16, div15);
+    			if (if_block3) if_block3.m(div15, null);
+    			append_dev(div15, t50);
+    			if (if_block4) if_block4.m(div15, null);
+    			append_dev(div15, t51);
+    			append_dev(div15, div14);
+    			append_dev(div14, div12);
+    			append_dev(div12, button0);
+    			append_dev(div12, t53);
+    			append_dev(div12, button1);
+    			append_dev(div14, t55);
+    			append_dev(div14, div13);
+    			append_dev(div13, button2);
+    			append_dev(div13, t57);
+    			append_dev(div13, button3);
+
+    			if (!mounted) {
+    				dispose = [
+    					listen_dev(input0, "input", /*input0_input_handler*/ ctx[50]),
+    					listen_dev(input1, "change", /*input1_change_handler*/ ctx[51]),
+    					listen_dev(textarea, "input", /*textarea_input_handler*/ ctx[56]),
+    					listen_dev(button0, "click", /*clear_identify_form*/ ctx[21], false, false, false),
+    					listen_dev(button1, "click", /*remove_identify_seen_in_form*/ ctx[22], false, false, false),
+    					listen_dev(button2, "click", /*app_download_identity*/ ctx[26], false, false, false),
+    					listen_dev(button3, "click", /*app_upload_identity*/ ctx[25], false, false, false)
+    				];
+
+    				mounted = true;
+    			}
+    		},
+    		p: function update(ctx, dirty) {
+    			if (dirty[0] & /*name*/ 2 && input0.value !== /*name*/ ctx[1]) {
+    				set_input_value(input0, /*name*/ ctx[1]);
+    			}
+
+    			if (dirty[0] & /*business*/ 8192) {
+    				input1.checked = /*business*/ ctx[13];
+    			}
+
+    			if (current_block_type === (current_block_type = select_block_type_2(ctx)) && if_block0) {
+    				if_block0.p(ctx, dirty);
+    			} else {
+    				if_block0.d(1);
+    				if_block0 = current_block_type(ctx);
+
+    				if (if_block0) {
+    					if_block0.c();
+    					if_block0.m(div2, null);
+    				}
+    			}
+
+    			if (current_block_type_1 === (current_block_type_1 = select_block_type_3(ctx)) && if_block1) {
+    				if_block1.p(ctx, dirty);
+    			} else {
+    				if_block1.d(1);
+    				if_block1 = current_block_type_1(ctx);
+
+    				if (if_block1) {
+    					if_block1.c();
+    					if_block1.m(div3, null);
+    				}
+    			}
+
+    			if (dirty[0] & /*cool_public_info*/ 4096) {
+    				set_input_value(textarea, /*cool_public_info*/ ctx[12]);
+    			}
+
+    			if (current_block_type_2 === (current_block_type_2 = select_block_type_4(ctx)) && if_block2) {
+    				if_block2.p(ctx, dirty);
+    			} else {
+    				if_block2.d(1);
+    				if_block2 = current_block_type_2(ctx);
+
+    				if (if_block2) {
+    					if_block2.c();
+    					if_block2.m(div5, null);
+    				}
+    			}
+
+    			if (dirty[0] & /*signup_status*/ 512) set_data_dev(t48, /*signup_status*/ ctx[9]);
+
+    			if (dirty[0] & /*signup_status*/ 512 && span4_class_value !== (span4_class_value = "" + (null_to_empty(/*signup_status*/ ctx[9] === "OK"
+    			? "good-status"
+    			: "bad-status") + " svelte-1b4dyig"))) {
+    				attr_dev(span4, "class", span4_class_value);
+    			}
+
+    			if (/*creation_to_do*/ ctx[5]) {
+    				if (if_block3) {
+    					if_block3.p(ctx, dirty);
+    				} else {
+    					if_block3 = create_if_block_4(ctx);
+    					if_block3.c();
+    					if_block3.m(div15, t50);
+    				}
+    			} else if (if_block3) {
+    				if_block3.d(1);
+    				if_block3 = null;
+    			}
+
+    			if (!/*creation_to_do*/ ctx[5]) {
+    				if (if_block4) {
+    					if_block4.p(ctx, dirty);
+    				} else {
+    					if_block4 = create_if_block_3(ctx);
+    					if_block4.c();
+    					if_block4.m(div15, t51);
+    				}
+    			} else if (if_block4) {
+    				if_block4.d(1);
+    				if_block4 = null;
+    			}
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(div17);
+    			if_block0.d();
+    			if_block1.d();
+    			if_block2.d();
+    			if (if_block3) if_block3.d();
+    			if (if_block4) if_block4.d();
+    			mounted = false;
+    			run_all(dispose);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block_2.name,
+    		type: "if",
+    		source: "(1662:33) ",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (1629:1) {#if (active === 'Identify')}
+    function create_if_block(ctx) {
+    	let div1;
+    	let t0;
+    	let div0;
+    	let t1;
+    	let br0;
+    	let t2;
+    	let br1;
+    	let t3;
+    	let br2;
+    	let t4;
+
+    	function select_block_type_1(ctx, dirty) {
+    		if (/*known_users*/ ctx[3].length > 0) return create_if_block_1;
+    		return create_else_block;
+    	}
+
+    	let current_block_type = select_block_type_1(ctx);
+    	let if_block = current_block_type(ctx);
+
+    	const block = {
+    		c: function create() {
+    			div1 = element("div");
+    			if_block.c();
+    			t0 = space();
+    			div0 = element("div");
+    			t1 = text("Make your identity to be kept within the browser. \n\t\t\t");
+    			br0 = element("br");
+    			t2 = text("\n\t\t\tGet an Intergalactic identity for use in messaging and running web sessions.\n\t\t\t");
+    			br1 = element("br");
+    			t3 = text("\n\t\t\tSet up your personal URL and frame page.\n\t\t\t");
+    			br2 = element("br");
+    			t4 = text("\n\t\t\tMake use of a browser extension to translate your URL into a Web3 style domain.");
+    			attr_dev(br0, "class", "svelte-1b4dyig");
+    			add_location(br0, file, 1653, 3, 41707);
+    			attr_dev(br1, "class", "svelte-1b4dyig");
+    			add_location(br1, file, 1655, 3, 41795);
+    			attr_dev(br2, "class", "svelte-1b4dyig");
+    			add_location(br2, file, 1657, 3, 41847);
+    			attr_dev(div0, "class", "front-page-explain svelte-1b4dyig");
+    			add_location(div0, file, 1651, 2, 41617);
+    			attr_dev(div1, "class", "splash-if-you-will svelte-1b4dyig");
+    			set_style(div1, "height", "fit-content");
+    			add_location(div1, file, 1629, 1, 40833);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, div1, anchor);
+    			if_block.m(div1, null);
+    			append_dev(div1, t0);
+    			append_dev(div1, div0);
+    			append_dev(div0, t1);
+    			append_dev(div0, br0);
+    			append_dev(div0, t2);
+    			append_dev(div0, br1);
+    			append_dev(div0, t3);
+    			append_dev(div0, br2);
+    			append_dev(div0, t4);
+    		},
+    		p: function update(ctx, dirty) {
+    			if (current_block_type === (current_block_type = select_block_type_1(ctx)) && if_block) {
+    				if_block.p(ctx, dirty);
+    			} else {
+    				if_block.d(1);
+    				if_block = current_block_type(ctx);
+
+    				if (if_block) {
+    					if_block.c();
+    					if_block.m(div1, t0);
+    				}
+    			}
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(div1);
+    			if_block.d();
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block.name,
+    		type: "if",
+    		source: "(1629:1) {#if (active === 'Identify')}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (1679:4) {:else}
+    function create_else_block_3(ctx) {
+    	let label;
+    	let input;
+    	let mounted;
+    	let dispose;
+
+    	const block = {
+    		c: function create() {
+    			label = element("label");
+    			label.textContent = "DOB: ";
+    			input = element("input");
+    			attr_dev(label, "for", "DOB");
+    			set_style(label, "display", "inline");
+    			attr_dev(label, "class", "svelte-1b4dyig");
+    			add_location(label, file, 1679, 5, 42736);
+    			attr_dev(input, "id", "DOB");
+    			attr_dev(input, "placeholder", "Date of Birth");
+    			set_style(input, "display", "inline");
+    			attr_dev(input, "class", "svelte-1b4dyig");
+    			add_location(input, file, 1679, 59, 42790);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, label, anchor);
+    			insert_dev(target, input, anchor);
+    			set_input_value(input, /*DOB*/ ctx[10]);
+
+    			if (!mounted) {
+    				dispose = listen_dev(input, "input", /*input_input_handler_1*/ ctx[53]);
+    				mounted = true;
+    			}
+    		},
+    		p: function update(ctx, dirty) {
+    			if (dirty[0] & /*DOB*/ 1024 && input.value !== /*DOB*/ ctx[10]) {
+    				set_input_value(input, /*DOB*/ ctx[10]);
+    			}
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(label);
+    			if (detaching) detach_dev(input);
+    			mounted = false;
+    			dispose();
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_else_block_3.name,
+    		type: "else",
+    		source: "(1679:4) {:else}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (1677:4) {#if business }
+    function create_if_block_7(ctx) {
+    	let label;
+    	let input;
+    	let mounted;
+    	let dispose;
+
+    	const block = {
+    		c: function create() {
+    			label = element("label");
+    			label.textContent = "Year of Inception: ";
+    			input = element("input");
+    			attr_dev(label, "for", "DOB");
+    			set_style(label, "display", "inline");
+    			attr_dev(label, "class", "svelte-1b4dyig");
+    			add_location(label, file, 1677, 5, 42561);
+    			attr_dev(input, "id", "DOB");
+    			attr_dev(input, "placeholder", "Year of Inception");
+    			set_style(input, "display", "inline");
+    			attr_dev(input, "class", "svelte-1b4dyig");
+    			add_location(input, file, 1677, 73, 42629);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, label, anchor);
+    			insert_dev(target, input, anchor);
+    			set_input_value(input, /*DOB*/ ctx[10]);
+
+    			if (!mounted) {
+    				dispose = listen_dev(input, "input", /*input_input_handler*/ ctx[52]);
+    				mounted = true;
+    			}
+    		},
+    		p: function update(ctx, dirty) {
+    			if (dirty[0] & /*DOB*/ 1024 && input.value !== /*DOB*/ ctx[10]) {
+    				set_input_value(input, /*DOB*/ ctx[10]);
+    			}
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(label);
+    			if (detaching) detach_dev(input);
+    			mounted = false;
+    			dispose();
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block_7.name,
+    		type: "if",
+    		source: "(1677:4) {#if business }",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (1686:4) {:else}
+    function create_else_block_2(ctx) {
+    	let label;
+    	let input;
+    	let mounted;
+    	let dispose;
+
+    	const block = {
+    		c: function create() {
+    			label = element("label");
+    			label.textContent = "Place of Origin: ";
+    			input = element("input");
+    			attr_dev(label, "for", "POO");
+    			set_style(label, "display", "inline");
+    			attr_dev(label, "class", "svelte-1b4dyig");
+    			add_location(label, file, 1686, 5, 43125);
+    			attr_dev(input, "id", "POO");
+    			attr_dev(input, "placeholder", "Place of Origin");
+    			set_style(input, "display", "inline");
+    			attr_dev(input, "class", "svelte-1b4dyig");
+    			add_location(input, file, 1686, 71, 43191);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, label, anchor);
+    			insert_dev(target, input, anchor);
+    			set_input_value(input, /*place_of_origin*/ ctx[11]);
+
+    			if (!mounted) {
+    				dispose = listen_dev(input, "input", /*input_input_handler_3*/ ctx[55]);
+    				mounted = true;
+    			}
+    		},
+    		p: function update(ctx, dirty) {
+    			if (dirty[0] & /*place_of_origin*/ 2048 && input.value !== /*place_of_origin*/ ctx[11]) {
+    				set_input_value(input, /*place_of_origin*/ ctx[11]);
+    			}
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(label);
+    			if (detaching) detach_dev(input);
+    			mounted = false;
+    			dispose();
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_else_block_2.name,
+    		type: "else",
+    		source: "(1686:4) {:else}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (1684:4) {#if business }
+    function create_if_block_6(ctx) {
+    	let label;
+    	let input;
+    	let mounted;
+    	let dispose;
+
+    	const block = {
+    		c: function create() {
+    			label = element("label");
+    			label.textContent = "Main Office: ";
+    			input = element("input");
+    			attr_dev(label, "for", "POO");
+    			set_style(label, "display", "inline");
+    			attr_dev(label, "class", "svelte-1b4dyig");
+    			add_location(label, file, 1684, 5, 42949);
+    			attr_dev(input, "id", "POO");
+    			attr_dev(input, "placeholder", "Main Office");
+    			set_style(input, "display", "inline");
+    			attr_dev(input, "class", "svelte-1b4dyig");
+    			add_location(input, file, 1684, 68, 43012);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, label, anchor);
+    			insert_dev(target, input, anchor);
+    			set_input_value(input, /*place_of_origin*/ ctx[11]);
+
+    			if (!mounted) {
+    				dispose = listen_dev(input, "input", /*input_input_handler_2*/ ctx[54]);
+    				mounted = true;
+    			}
+    		},
+    		p: function update(ctx, dirty) {
+    			if (dirty[0] & /*place_of_origin*/ 2048 && input.value !== /*place_of_origin*/ ctx[11]) {
+    				set_input_value(input, /*place_of_origin*/ ctx[11]);
+    			}
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(label);
+    			if (detaching) detach_dev(input);
+    			mounted = false;
+    			dispose();
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block_6.name,
+    		type: "if",
+    		source: "(1684:4) {#if business }",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (1699:4) {:else}
+    function create_else_block_1(ctx) {
+    	let div;
+    	let span0;
+    	let t1;
+    	let span1;
+    	let t2;
+    	let div_style_value;
+
+    	const block = {
+    		c: function create() {
+    			div = element("div");
+    			span0 = element("span");
+    			span0.textContent = "Your custom id number:";
+    			t1 = space();
+    			span1 = element("span");
+    			t2 = text(/*active_cid*/ ctx[0]);
+    			attr_dev(span0, "class", "cid-grabber-label svelte-1b4dyig");
+    			add_location(span0, file, 1700, 6, 44004);
+    			attr_dev(span1, "class", "cid-grabber svelte-1b4dyig");
+    			add_location(span1, file, 1700, 68, 44066);
+
+    			attr_dev(div, "style", div_style_value = /*green*/ ctx[16]
+    			? "background-color:rgba(245,255,250,0.9)"
+    			: "background-color:rgba(250,250,250,0.3)");
+
+    			attr_dev(div, "class", "svelte-1b4dyig");
+    			add_location(div, file, 1699, 5, 43887);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, div, anchor);
+    			append_dev(div, span0);
+    			append_dev(div, t1);
+    			append_dev(div, span1);
+    			append_dev(span1, t2);
+    		},
+    		p: function update(ctx, dirty) {
+    			if (dirty[0] & /*active_cid*/ 1) set_data_dev(t2, /*active_cid*/ ctx[0]);
+
+    			if (dirty[0] & /*green*/ 65536 && div_style_value !== (div_style_value = /*green*/ ctx[16]
+    			? "background-color:rgba(245,255,250,0.9)"
+    			: "background-color:rgba(250,250,250,0.3)")) {
+    				attr_dev(div, "style", div_style_value);
+    			}
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(div);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_else_block_1.name,
+    		type: "else",
+    		source: "(1699:4) {:else}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (1695:4) {#if creation_to_do }
+    function create_if_block_5(ctx) {
+    	let div;
+    	let button;
+    	let t;
+    	let div_style_value;
+    	let mounted;
+    	let dispose;
+
+    	const block = {
+    		c: function create() {
+    			div = element("div");
+    			button = element("button");
+    			t = text("Create my Intergalactic Identity.");
+    			attr_dev(button, "class", "long_button svelte-1b4dyig");
+    			button.disabled = /*creator_disabled*/ ctx[17];
+    			add_location(button, file, 1696, 6, 43736);
+
+    			attr_dev(div, "style", div_style_value = /*green*/ ctx[16]
+    			? "background-color:rgba(245,255,250,0.9)"
+    			: "background-color:rgba(250,250,250,0.3)");
+
+    			attr_dev(div, "class", "svelte-1b4dyig");
+    			add_location(div, file, 1695, 5, 43619);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, div, anchor);
+    			append_dev(div, button);
+    			append_dev(button, t);
+
+    			if (!mounted) {
+    				dispose = listen_dev(button, "click", /*add_profile*/ ctx[20], false, false, false);
+    				mounted = true;
+    			}
+    		},
+    		p: function update(ctx, dirty) {
+    			if (dirty[0] & /*creator_disabled*/ 131072) {
+    				prop_dev(button, "disabled", /*creator_disabled*/ ctx[17]);
+    			}
+
+    			if (dirty[0] & /*green*/ 65536 && div_style_value !== (div_style_value = /*green*/ ctx[16]
+    			? "background-color:rgba(245,255,250,0.9)"
+    			: "background-color:rgba(250,250,250,0.3)")) {
+    				attr_dev(div, "style", div_style_value);
+    			}
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(div);
+    			mounted = false;
+    			dispose();
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block_5.name,
+    		type: "if",
+    		source: "(1695:4) {#if creation_to_do }",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (1757:4) {#if creation_to_do }
+    function create_if_block_4(ctx) {
+    	let div;
+    	let img;
+    	let img_src_value;
+    	let mounted;
+    	let dispose;
+
+    	const block = {
+    		c: function create() {
+    			div = element("div");
+    			img = element("img");
+    			if (img.src !== (img_src_value = /*active_profile_biometric*/ ctx[18])) attr_dev(img, "src", img_src_value);
+    			attr_dev(img, "alt", /*src_biometric_instruct*/ ctx[8]);
+    			attr_dev(img, "class", "svelte-1b4dyig");
+    			add_location(img, file, 1758, 5, 47255);
+    			attr_dev(div, "class", "picture-drop svelte-1b4dyig");
+    			add_location(div, file, 1757, 4, 47164);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, div, anchor);
+    			append_dev(div, img);
+    			/*img_binding*/ ctx[57](img);
+
+    			if (!mounted) {
+    				dispose = [
+    					listen_dev(div, "drop", /*drop_biometric*/ ctx[24], false, false, false),
+    					listen_dev(div, "dragover", dragover_picture, false, false, false)
+    				];
+
+    				mounted = true;
+    			}
+    		},
+    		p: function update(ctx, dirty) {
+    			if (dirty[0] & /*src_biometric_instruct*/ 256) {
+    				attr_dev(img, "alt", /*src_biometric_instruct*/ ctx[8]);
+    			}
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(div);
+    			/*img_binding*/ ctx[57](null);
+    			mounted = false;
+    			run_all(dispose);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block_4.name,
+    		type: "if",
+    		source: "(1757:4) {#if creation_to_do }",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (1762:4) {#if !creation_to_do }
+    function create_if_block_3(ctx) {
+    	let div;
+    	let img;
+    	let img_src_value;
+    	let mounted;
+    	let dispose;
+
+    	const block = {
+    		c: function create() {
+    			div = element("div");
+    			img = element("img");
+    			if (img.src !== (img_src_value = /*active_profile_image*/ ctx[7])) attr_dev(img, "src", img_src_value);
+    			attr_dev(img, "alt", /*src_1_name*/ ctx[19]);
+    			attr_dev(img, "class", "svelte-1b4dyig");
+    			add_location(img, file, 1763, 5, 47494);
+    			attr_dev(div, "class", "picture-drop svelte-1b4dyig");
+    			add_location(div, file, 1762, 4, 47405);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, div, anchor);
+    			append_dev(div, img);
+    			/*img_binding_1*/ ctx[58](img);
+
+    			if (!mounted) {
+    				dispose = [
+    					listen_dev(div, "drop", /*drop_picture*/ ctx[23], false, false, false),
+    					listen_dev(div, "dragover", dragover_picture, false, false, false)
+    				];
+
+    				mounted = true;
+    			}
+    		},
+    		p: function update(ctx, dirty) {
+    			if (dirty[0] & /*active_profile_image*/ 128 && img.src !== (img_src_value = /*active_profile_image*/ ctx[7])) {
+    				attr_dev(img, "src", img_src_value);
+    			}
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(div);
+    			/*img_binding_1*/ ctx[58](null);
+    			mounted = false;
+    			run_all(dispose);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block_3.name,
+    		type: "if",
+    		source: "(1762:4) {#if !creation_to_do }",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (1644:2) {:else}
+    function create_else_block(ctx) {
+    	let div1;
+    	let t0;
+    	let div0;
+    	let t1;
+    	let span;
+    	let t3;
+
+    	const block = {
+    		c: function create() {
+    			div1 = element("div");
+    			t0 = text("Get started with your Intergalactic Identity.\n\t\t\t");
+    			div0 = element("div");
+    			t1 = text("Click on the ");
+    			span = element("span");
+    			span.textContent = "User";
+    			t3 = text(" tab.");
+    			attr_dev(span, "class", "svelte-1b4dyig");
+    			add_location(span, file, 1647, 17, 41565);
+    			attr_dev(div0, "class", "svelte-1b4dyig");
+    			add_location(div0, file, 1646, 3, 41542);
+    			attr_dev(div1, "class", "splash-if-you-will svelte-1b4dyig");
+    			add_location(div1, file, 1644, 2, 41456);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, div1, anchor);
+    			append_dev(div1, t0);
+    			append_dev(div1, div0);
+    			append_dev(div0, t1);
+    			append_dev(div0, span);
+    			append_dev(div0, t3);
+    		},
+    		p: noop,
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(div1);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_else_block.name,
+    		type: "else",
+    		source: "(1644:2) {:else}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (1631:2) {#if (known_users.length > 0) }
+    function create_if_block_1(ctx) {
+    	let div1;
+    	let t0;
+    	let span;
+
+    	let t1_value = (/*active_user*/ ctx[2]
+    	? /*active_user*/ ctx[2].name
+    	: "being created") + "";
+
+    	let t1;
+    	let t2;
+    	let br;
+    	let t3;
+    	let div0;
+    	let select;
+    	let mounted;
+    	let dispose;
+    	let each_value = /*known_users*/ ctx[3];
+    	validate_each_argument(each_value);
+    	let each_blocks = [];
+
+    	for (let i = 0; i < each_value.length; i += 1) {
+    		each_blocks[i] = create_each_block(get_each_context(ctx, each_value, i));
+    	}
+
+    	const block = {
+    		c: function create() {
+    			div1 = element("div");
+    			t0 = text("The current user is ");
+    			span = element("span");
+    			t1 = text(t1_value);
+    			t2 = text(".\n\t\t\t");
+    			br = element("br");
+    			t3 = text("\n\t\t\tNot you? Select from the list below or Add yourself with the User tab.\n\t\t\t");
+    			div0 = element("div");
+    			select = element("select");
+
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].c();
+    			}
+
+    			attr_dev(span, "class", "svelte-1b4dyig");
+    			add_location(span, file, 1632, 23, 40986);
+    			attr_dev(br, "class", "svelte-1b4dyig");
+    			add_location(br, file, 1633, 3, 41055);
+    			attr_dev(select, "size", 10);
+    			set_style(select, "text-align", "center");
+    			attr_dev(select, "class", "svelte-1b4dyig");
+    			if (/*u_index*/ ctx[6] === void 0) add_render_callback(() => /*select_change_handler*/ ctx[49].call(select));
+    			add_location(select, file, 1636, 4, 41195);
+    			attr_dev(div0, "class", "user-options svelte-1b4dyig");
+    			set_style(div0, "text-align", "center");
+    			add_location(div0, file, 1635, 3, 41137);
+    			set_style(div1, "height", "fit-content");
+    			attr_dev(div1, "class", "svelte-1b4dyig");
+    			add_location(div1, file, 1631, 2, 40930);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, div1, anchor);
+    			append_dev(div1, t0);
+    			append_dev(div1, span);
+    			append_dev(span, t1);
+    			append_dev(div1, t2);
+    			append_dev(div1, br);
+    			append_dev(div1, t3);
+    			append_dev(div1, div0);
+    			append_dev(div0, select);
+
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].m(select, null);
+    			}
+
+    			select_option(select, /*u_index*/ ctx[6]);
+
+    			if (!mounted) {
+    				dispose = [
+    					listen_dev(select, "change", /*select_change_handler*/ ctx[49]),
+    					listen_dev(select, "click", /*navigate_to_user*/ ctx[27], false, false, false)
+    				];
+
+    				mounted = true;
+    			}
+    		},
+    		p: function update(ctx, dirty) {
+    			if (dirty[0] & /*active_user*/ 4 && t1_value !== (t1_value = (/*active_user*/ ctx[2]
+    			? /*active_user*/ ctx[2].name
+    			: "being created") + "")) set_data_dev(t1, t1_value);
+
+    			if (dirty[0] & /*known_users*/ 8) {
+    				each_value = /*known_users*/ ctx[3];
+    				validate_each_argument(each_value);
+    				let i;
+
+    				for (i = 0; i < each_value.length; i += 1) {
+    					const child_ctx = get_each_context(ctx, each_value, i);
+
+    					if (each_blocks[i]) {
+    						each_blocks[i].p(child_ctx, dirty);
+    					} else {
+    						each_blocks[i] = create_each_block(child_ctx);
+    						each_blocks[i].c();
+    						each_blocks[i].m(select, null);
+    					}
+    				}
+
+    				for (; i < each_blocks.length; i += 1) {
+    					each_blocks[i].d(1);
+    				}
+
+    				each_blocks.length = each_value.length;
+    			}
+
+    			if (dirty[0] & /*u_index*/ 64) {
+    				select_option(select, /*u_index*/ ctx[6]);
+    			}
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(div1);
+    			destroy_each(each_blocks, detaching);
+    			mounted = false;
+    			run_all(dispose);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block_1.name,
+    		type: "if",
+    		source: "(1631:2) {#if (known_users.length > 0) }",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (1638:5) {#each known_users as maybe_user, u_index }
+    function create_each_block(ctx) {
+    	let option;
+    	let t_value = /*maybe_user*/ ctx[139].name + "";
+    	let t;
+
+    	const block = {
+    		c: function create() {
+    			option = element("option");
+    			t = text(t_value);
+    			option.__value = /*u_index*/ ctx[6];
+    			option.value = option.__value;
+    			attr_dev(option, "class", "svelte-1b4dyig");
+    			add_location(option, file, 1638, 6, 41346);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, option, anchor);
+    			append_dev(option, t);
+    		},
+    		p: function update(ctx, dirty) {
+    			if (dirty[0] & /*known_users*/ 8 && t_value !== (t_value = /*maybe_user*/ ctx[139].name + "")) set_data_dev(t, t_value);
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(option);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_each_block.name,
+    		type: "each",
+    		source: "(1638:5) {#each known_users as maybe_user, u_index }",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    function create_fragment(ctx) {
+    	let div;
+    	let tabbar;
+    	let updating_active;
+    	let t0;
+    	let br;
+    	let t1;
+    	let current;
+
+    	function tabbar_active_binding(value) {
+    		/*tabbar_active_binding*/ ctx[48](value);
+    	}
+
+    	let tabbar_props = {
+    		tabs: ["Identify", "User", "About Us"],
+    		$$slots: {
+    			default: [
+    				create_default_slot,
+    				({ tab }) => ({ 141: tab }),
+    				({ tab }) => [0, 0, 0, 0, tab ? 131072 : 0]
+    			]
+    		},
+    		$$scope: { ctx }
+    	};
+
+    	if (/*active*/ ctx[4] !== void 0) {
+    		tabbar_props.active = /*active*/ ctx[4];
+    	}
+
+    	tabbar = new TabBar({ props: tabbar_props, $$inline: true });
+    	binding_callbacks.push(() => bind(tabbar, "active", tabbar_active_binding));
+
+    	function select_block_type(ctx, dirty) {
+    		if (/*active*/ ctx[4] === "Identify") return create_if_block;
+    		if (/*active*/ ctx[4] === "User") return create_if_block_2;
+    		if (/*active*/ ctx[4] === "About Us") return create_if_block_8;
+    	}
+
+    	let current_block_type = select_block_type(ctx);
+    	let if_block = current_block_type && current_block_type(ctx);
+
+    	const block = {
+    		c: function create() {
+    			div = element("div");
+    			create_component(tabbar.$$.fragment);
+    			t0 = space();
+    			br = element("br");
+    			t1 = space();
+    			if (if_block) if_block.c();
+    			attr_dev(br, "class", "svelte-1b4dyig");
+    			add_location(br, file, 1626, 2, 40795);
+    			attr_dev(div, "class", "svelte-1b4dyig");
+    			add_location(div, file, 1616, 0, 40469);
+    		},
+    		l: function claim(nodes) {
+    			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, div, anchor);
+    			mount_component(tabbar, div, null);
+    			append_dev(div, t0);
+    			append_dev(div, br);
+    			append_dev(div, t1);
+    			if (if_block) if_block.m(div, null);
+    			current = true;
+    		},
+    		p: function update(ctx, dirty) {
+    			const tabbar_changes = {};
+
+    			if (dirty[0] & /*active*/ 16 | dirty[4] & /*$$scope, tab*/ 393216) {
+    				tabbar_changes.$$scope = { dirty, ctx };
+    			}
+
+    			if (!updating_active && dirty[0] & /*active*/ 16) {
+    				updating_active = true;
+    				tabbar_changes.active = /*active*/ ctx[4];
+    				add_flush_callback(() => updating_active = false);
+    			}
+
+    			tabbar.$set(tabbar_changes);
+
+    			if (current_block_type === (current_block_type = select_block_type(ctx)) && if_block) {
+    				if_block.p(ctx, dirty);
+    			} else {
+    				if (if_block) if_block.d(1);
+    				if_block = current_block_type && current_block_type(ctx);
+
+    				if (if_block) {
+    					if_block.c();
+    					if_block.m(div, null);
+    				}
+    			}
+    		},
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(tabbar.$$.fragment, local);
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			transition_out(tabbar.$$.fragment, local);
+    			current = false;
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(div);
+    			destroy_component(tabbar);
+
+    			if (if_block) {
+    				if_block.d();
+    			}
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_fragment.name,
+    		type: "component",
+    		source: "",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    function popup_size() {
+    	let smallest_w = 200; // smallest and bigget willing to accomodate
+    	let biggest_w = 3000;
+    	let smallest_h = 600;
+    	let biggest_h = 1000;
+
+    	// bounded window width
+    	let w = Math.max(smallest_w, window.innerWidth);
+
+    	w = Math.min(biggest_w, w);
+
+    	// bounded window height
+    	let h = Math.max(smallest_h, window.innerHeight);
+
+    	h = Math.min(biggest_h, h);
+    	let p_range;
+    	let P;
+
+    	//	percentage h range 
+    	let h_p_max = 0.96;
+
+    	let h_p_min = 0.75;
+    	p_range = h_p_max - h_p_min;
+    	P = (biggest_h - h) / (biggest_h - smallest_h);
+
+    	//console.log("P h: " + P)
+    	let h_scale = P * p_range + h_p_min;
+
+    	//	percentage w range 
+    	let w_p_max = 0.96;
+
+    	let w_p_min = 0.2;
+    	p_range = w_p_max - w_p_min;
+    	P = (biggest_w - w) / (biggest_w - smallest_w);
+
+    	//console.log("P w: " + P)
+    	let w_scale = P * p_range + w_p_min;
+
+    	// Setting the current height & width 
+    	// to the elements 
+    	return { "w": w_scale, "h": h_scale };
+    }
+
+    function dragover_picture(ev) {
+    	ev.preventDefault();
+    }
+
+    // MESSAGES MESSAGES MESSAGES MESSAGES MESSAGES MESSAGES MESSAGES MESSAGES MESSAGES MESSAGES
+    // MESSAGES MESSAGES MESSAGES MESSAGES MESSAGES MESSAGES MESSAGES MESSAGES MESSAGES MESSAGES
+    // ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
+    function clear_checks(pattern, n) {
+    	let i = 0;
+    	let el = false;
+
+    	do {
+    		let el_id = `${pattern}${i}`;
+    		el = document.getElementById(el_id);
+
+    		if (el) {
+    			el.checked = false;
+    		}
+
+    		i++;
+    	} while (el);
+    }
+
+    function instance($$self, $$props, $$invalidate) {
+    	let filteredIndviduals;
+    	let filtered_manifest_contact_form_list;
+    	let { $$slots: slots = {}, $$scope } = $$props;
+    	validate_slots("App", slots, []);
+    	let active_profile_image = ""; //"/favicon.png" ; // "/brent-fox-jane-18-b.jpg"
+    	let active_profile_biometric = "";
+
+    	//
+    	let src_1_name = "Drop a picture here";
+
+    	let src_biometric_instruct = "Drop binary biometric file here";
+
+    	//
+    	let active_cid = "";
+
+    	let clear_cid = "";
+    	let dir_view = false;
+    	let signup_status = "OK";
+
+    	//
+    	let start_of_messages = 0;
+
+    	let messages_per_page = 100;
+    	let prefix = "";
+    	let man_prefix = "";
+    	let i = 0;
+    	let c_i = 0;
+    	let i_i = 0;
+    	let p_i = 0;
+    	let form_index = 0;
+    	let j_cid = false;
+    	let name = "";
+    	let DOB = "";
+    	let place_of_origin = "";
+    	let cool_public_info = "";
+    	let business = false;
+    	let biometric_blob = "";
+    	let c_name = "";
+    	let c_DOB = "";
+    	let c_place_of_origin = "";
+    	let c_cool_public_info = "";
+    	let c_business = false;
+    	let c_public_key = "testesttesttest";
+    	let c_signer_public_key = "testesttesttest";
+    	let c_cid = "testesttesttest";
+    	let c_answer_message = "";
+    	let c_biometric_blob = "";
+    	let c_empty_fields = false;
+    	let today = new Date().toUTCString();
+    	let active_user = false;
+    	let active_identity = false;
+    	let known_users = [false];
+    	let known_identities = [false];
+    	let u_index = 0;
+    	let adding_new = false;
+    	let manifest_selected_entry = false;
+    	let manifest_selected_form = false;
+    	let manifest_contact_form_list = [false];
+
+    	//
+    	let manifest_obj = {};
+
+    	let manifest_index = 0;
+    	let man_title = "";
+    	let man_cid = "";
+    	let man_wrapped_key = "";
+    	let man_html = "";
+    	let man_max_preference = 1;
+    	let man_preference = 1;
+
+    	//
+    	let man_sel_not_customized = true;
+
+    	let man_contact_is_default = false;
+
+    	//
+    	let man_encrypted = false;
+
+    	let message_edit_from_contact = false;
+    	let profile_image_el;
+    	let biometric_data_el;
+
+    	//
+    	let active = "Identify";
+
+    	let prev_active = active;
+    	let first_message = 0;
+    	let green = false; // an indicator telling if this user ID is set
+    	let todays_date = new Date().toLocaleString();
+    	let filtered_cc_list = [];
+    	let message_op_category = "read";
+    	let source_category = "messages";
+    	let processed_category = "Use Op to Select";
+
+    	// This is just a default... It will be used until the user picks something else 
+    	// when editing the manifest.
+    	let selected_form_link_types = {
+    		"business": {
+    			"link": "latest-contact",
+    			"from_cid": "QmTfD2LyTy8WGgdUkKE1Z1vAfb6HwNgmZA5kMaFAiy4fuz"
+    		},
+    		"profile": {
+    			"link": "latest-contact",
+    			"from_cid": "QmTfD2LyTy8WGgdUkKE1Z1vAfb6HwNgmZA5kMaFAiy4fuz"
+    		}
+    	};
+
+    	let selected_form_link = selected_form_link_types["profile"];
+
+    	//
+    	let individuals = [
+    		{
+    			"name": "Hans Solo",
+    			"DOB": "1000",
+    			"place_of_origin": "alpha centauri",
+    			"cool_public_info": "He is a Master Jedi",
+    			"business": false,
+    			"public_key": "testesttesttest",
+    			"signer_public_key": "ha ha ha ha ha ha ha ",
+    			"cid": "4504385938",
+    			"answer_message": "",
+    			"biometric": "53535"
+    		}
+    	];
+
+    	let cid_individuals_map = {};
+    	let selected = individuals[0];
+
+    	let inbound_solicitation_messages = [
+    		{
+    			"name": "Darth Vadar",
+    			"user_cid": "869968609",
+    			"subject": "Hans Solo is Mean",
+    			"date": todays_date,
+    			"readers": "luke,martha,chewy",
+    			"business": false,
+    			"public_key": false,
+    			"message": "this is a message 4",
+    			"reply_with": "default"
+    		}
+    	];
+
+    	let inbound_contact_messages = [
+    		{
+    			"name": "Hans Solo",
+    			"user_cid": "4504385938",
+    			"subject": "Darth Vadier Attacks",
+    			"date": todays_date,
+    			"readers": "joe,jane,harry",
+    			"business": false,
+    			"public_key": false,
+    			"message": "this is a message 1"
+    		}
+    	];
+
+    	let processed_messages = [];
+
+    	let message_selected = {
+    		"name": "Admin",
+    		"subject": "Hello From copious.world",
+    		"date": today,
+    		"readers": "you",
+    		"business": false,
+    		"public_key": false
+    	};
+
+    	let message_edit_list_name = "";
+    	let message_edit_list = [];
+    	let message_edit_source = false;
+
+    	function reinitialize_user_context() {
+    		$$invalidate(0, active_cid = "");
+    		clear_cid = "";
+    		dir_view = false;
+    		$$invalidate(9, signup_status = "OK");
+
+    		//
+    		start_of_messages = 0;
+
+    		messages_per_page = 100;
+
+    		//
+    		$$invalidate(7, active_profile_image = "");
+
+    		//
+    		$$invalidate(28, prefix = "");
+
+    		$$invalidate(29, man_prefix = "");
+    		$$invalidate(30, i = 0);
+    		c_i = 0;
+    		i_i = 0;
+    		p_i = 0;
+    		form_index = 0;
+
+    		//
+    		$$invalidate(31, c_name = "");
+
+    		$$invalidate(32, c_DOB = "");
+    		$$invalidate(33, c_place_of_origin = "");
+    		$$invalidate(34, c_cool_public_info = "");
+    		c_business = false;
+    		c_public_key = "testesttesttest";
+    		c_signer_public_key = "testesttesttest";
+    		c_cid = "testesttesttest";
+    		c_answer_message = "";
+    		c_empty_fields = false;
+
+    		//
+    		today = new Date().toUTCString();
+
+    		adding_new = false;
+    		$$invalidate(37, manifest_selected_entry = false);
+    		manifest_selected_form = false;
+    		$$invalidate(38, manifest_contact_form_list = [false]);
+    		$$invalidate(39, manifest_obj = {});
+    		$$invalidate(40, manifest_index = 0);
+    		man_title = "";
+    		$$invalidate(41, man_cid = "");
+    		man_wrapped_key = "";
+    		man_html = "";
+    		man_max_preference = 1;
+    		man_preference = 1;
+    		man_encrypted = false;
+    		first_message = 0;
+    		$$invalidate(16, green = false); // an indicator telling if this user ID is set
+    		todays_date = new Date().toLocaleString();
+
+    		$$invalidate(43, individuals = [
+    			{
+    				"name": "Hans Solo",
+    				"DOB": "1000",
+    				"place_of_origin": "alpha centauri",
+    				"cool_public_info": "He is a Master Jedi",
+    				"business": false,
+    				"public_key": "testesttesttest",
+    				"signer_public_key": "ha ha ha ha ha ha ha ",
+    				"cid": "4504385938",
+    				"answer_message": "",
+    				"biometric": "53535"
+    			}
+    		]);
+
+    		cid_individuals_map = {};
+
+    		inbound_solicitation_messages = [
+    			{
+    				"name": "Darth Vadar",
+    				"user_cid": "869968609",
+    				"subject": "Hans Solo is Mean",
+    				"date": todays_date,
+    				"readers": "luke,martha,chewy",
+    				"business": false,
+    				"public_key": false,
+    				"message": "this is a message 4",
+    				"reply_with": "default"
+    			}
+    		];
+
+    		inbound_contact_messages = [
+    			{
+    				"name": "Hans Solo",
+    				"user_cid": "4504385938",
+    				"subject": "Darth Vadier Attacks",
+    				"date": todays_date,
+    				"readers": "joe,jane,harry",
+    				"business": false,
+    				"public_key": false,
+    				"message": "this is a message 1"
+    			}
+    		];
+
+    		processed_messages = [];
+
+    		message_selected = {
+    			"name": "Admin",
+    			"subject": "Hello From copious.world",
+    			"date": today,
+    			"readers": "you",
+    			"business": false,
+    			"public_key": false
+    		};
+
+    		update_selected_form_links();
+    	}
+
+    	async function handle_message(evt) {
+    		let cmd = evt.detail.cmd;
+
+    		switch (cmd) {
+    			case "new-contact":
+    				{
+    					// from display -- sender initiated -- got sender public keys 
+    					// -- send yours automatically since you already accepted
+    					let signer_pk = evt.detail.signer_public_key;
+
+    					let added = await auto_add_contact(evt.detail.cid, signer_pk, true, message_selected);
+    					message_selected.is_in_contacts = added;
+    					break;
+    				}
+    			case "reply":
+    				{
+    					$$invalidate(44, selected.answer_message = true, selected);
+    					message_edit_from_contact = false;
+    					start_floating_window(1);
+    				}
+    			case "view-processed-messages":
+    				{
+    					message_op_category = evt.detail.category;
+    					processed_category = message_op_category;
+    					source_category = message_op_category;
+    					processed_messages = await fetch_category_messages(active_identity, message_op_category);
+    					break;
+    				}
+    			case "move-messages":
+    				{
+    					if (!active_identity) return;
+    					let cat = evt.detail.category;
+    					if (cat === source_category && !(message_op_category === "intros" || message_op_category === "messages")) return;
+    					let user_cid = active_identity.cid;
+
+    					if (active === "Introductions") {
+    						user_cid = active_identity.clear_cid;
+    					}
+
+    					let dst_cid = active_identity.cid;
+    					let business = active_identity.user_info.business;
+
+    					//
+    					// message_edit_list containes message from message_op_category
+    					// they are being sent to cat
+    					//
+    					let src_cat = false;
+
+    					if (message_op_category !== "messages" && message_op_category !== "intros") {
+    						src_cat = message_op_category;
+    					}
+
+    					await message_list_ops(user_cid, dst_cid, "move", cat, business, message_edit_list, src_cat);
+
+    					//
+    					//message_edit_source
+    					let status = remove_from_source_list(message_edit_source, message_edit_list);
+
+    					if (status == false) {
+    						console.log("no message removed");
+    					}
+
+    					break;
+    				}
+    			default:
+    				{
+    					console.log("message cmd not handled");
+    				}
+    		}
+    	}
+
+    	/*
+          "wrapped_key" : false,
+          "encoding" : "uri",
+      "when"  ... whereas"date" is a human readable string...
+    */
+    	//
+    	class Contact {
+    		//
+    		constructor() {
+    			this.empty_identity = {
+    				"name": "",
+    				"DOB": "",
+    				"place_of_origin": "",
+    				"cool_public_info": "",
+    				"business": false,
+    				"public_key": false,
+    				"signer_public_key": false,
+    				"biometric": false
+    			};
+
+    			this.data = this.empty_identity;
+    		}
+
+    		//
+    		set(name, DOB, place_of_origin, cool_public_info, business, public_key, signer_public_key, biometric_blob) {
+    			let user_data = {
+    				name,
+    				DOB,
+    				place_of_origin,
+    				cool_public_info,
+    				"business": business === undefined ? false : business,
+    				public_key,
+    				signer_public_key,
+    				"biometric": biometric_blob
+    			};
+
+    			this.data = user_data;
+    		}
+
+    		copy(contact_info) {
+    			let data = {};
+
+    			for (let ky in this.empty_identity) {
+    				data[ky] = contact_info[ky];
+    			}
+
+    			this.data = data;
+    		}
+
+    		match(contact_info) {
+    			let f_match = true;
+    			f_match = f_match && this.data.name === contact_info.name;
+    			f_match = f_match && this.data.DOB === contact_info.DOB;
+    			f_match = f_match && this.data.place_of_origin === contact_info.place_of_origin;
+    			f_match = f_match && this.data.cool_public_info === contact_info.cool_public_info;
+    			f_match = f_match && this.data.business === contact_info.business;
+    			return f_match;
+    		}
+
+    		extend_contact(field, value) {
+    			this.data[field] = value;
+    		}
+
+    		get_field(field) {
+    			return this.data[field];
+    		}
+
+    		identity() {
+    			let id_obj = Object.assign(this.empty_identity, this.data);
+    			return id_obj;
+    		}
+
+    		clear_identity() {
+    			let id_obj = {
+    				"name": this.data.name,
+    				"DOB": this.data.DOB,
+    				"place_of_origin": this.data.place_of_origin,
+    				"cool_public_info": this.data.cool_public_info,
+    				"business": this.data.business
+    			};
+
+    			return id_obj;
+    		}
+    	}
+
+    	let empty_identity = new Contact();
+    	let current_index = -1;
+
+    	// ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
+    	let creator_disabled = false;
+
+    	let creation_to_do = false;
+    	let window_scale = { "w": 0.4, "h": 0.8 };
+    	let edit_popup_scale = { "w": 0.45, "h": 0.3 };
+    	let all_window_scales = [];
+    	all_window_scales.push(window_scale);
+    	all_window_scales.push(window_scale);
+    	all_window_scales.push(edit_popup_scale);
+
+    	//
+    	window_scale = popup_size();
+
+    	all_window_scales[0] = window_scale;
+    	all_window_scales[1] = window_scale;
+
+    	//
+    	onMount(async () => {
+    		//
+    		window.addEventListener("resize", e => {
+    			//
+    			let scale = popup_size();
+
+    			//
+    			window_scale.h = scale.h;
+
+    			window_scale.w = scale.w;
+    			all_window_scales[0] = window_scale;
+    			all_window_scales[1] = window_scale;
+    		}); //
+
+    		await startup();
+
+    		// initialize
+    		await get_active_users(); // updates login page and initializes the view of this user.
+    	});
+
+    	async function update_selected_form_link(type) {
+    		let form_link = selected_form_link_types[type];
+
+    		if (!form_link.from_cid) {
+    			let template_name = form_link.link;
+    			let cid = await get_named_contact_template_cid(template_name, type);
+    			form_link.from_cid = cid;
+    		}
+    	}
+
+    	async function update_selected_form_links() {
+    		await update_selected_form_link("profile");
+    		await update_selected_form_link("business");
+    	}
+
+    	// PROFILE  PROFILE  PROFILE  PROFILE  PROFILE  PROFILE  PROFILE 
+    	// PROFILE  PROFILE  PROFILE  PROFILE  PROFILE  PROFILE  PROFILE 
+    	let g_required_user_fields = ["name", "DOB", "place_of_origin", "cool_public_info", "biometric"];
+
+    	let g_renamed_user_fields = {
+    		"DOB": "Year of inception",
+    		"place_of_origin": "Main Office"
+    	};
+
+    	let g_last_inspected_field = false;
+
+    	function check_required_fields(object, required_fields) {
+    		g_last_inspected_field = false;
+
+    		for (let field of required_fields) {
+    			let value = object[field];
+    			g_last_inspected_field = field;
+    			if (value === undefined || value.length === 0) return false;
+    		}
+
+    		return true;
+    	}
+
+    	function missing_fields(activity, app_rename, do_rename) {
+    		let l_field = g_last_inspected_field;
+
+    		// 
+    		if (do_rename) {
+    			let r_field = app_rename[l_field];
+
+    			if (r_field) {
+    				l_field = r_field;
+    			}
+    		}
+
+    		let message = `Missing field: ${l_field},  when ${activity}`;
+    		return message;
+    	}
+
+    	// ADD PROFILE.....
+    	async function add_profile$1() {
+    		//
+    		let contact = new Contact(); // contact of self... Stores the same info as a contact plus some special fields for local db
+
+    		contact.set(name, DOB, place_of_origin, cool_public_info, business, false, false, biometric_blob);
+
+    		//
+    		selected_form_link = selected_form_link_types[business ? "business" : "profile"];
+
+    		contact.extend_contact("form_link", selected_form_link);
+    		contact.extend_contact("answer_message", "");
+
+    		//
+    		let user_data = contact.identity();
+
+    		//
+    		$$invalidate(9, signup_status = "OK");
+
+    		if (!check_required_fields(user_data, g_required_user_fields)) {
+    			$$invalidate(9, signup_status = missing_fields("creating contact page", g_renamed_user_fields, business));
+    			return;
+    		}
+
+    		await gen_public_key(user_data); // by ref  // stores keys in DB  // converts biometric to signature (calls protect_hash)
+
+    		try {
+    			$$invalidate(16, green = await add_profile(user_data)); // will fetch the key (it is not riding along yet.)
+    		} catch(e) {
+    			
+    		}
+
+    		//
+    		await get_active_users(); // updates login page and initializes the view of this user.
+
+    		$$invalidate(6, u_index = known_users.length - 1); // user was added to the end...
+    	} //
+
+    	async function load_user_info(identity) {
+    		$$invalidate(0, active_cid = identity.cid);
+    		clear_cid = identity.clear_cid;
+    		await fix_keys(identity);
+    		await fetch_contacts$1(identity);
+
+    		//
+    		fetch_messages(identity);
+
+    		fetch_manifest$1(identity);
+
+    		if (identity.profile_image) {
+    			let img_cid = identity.profile_image;
+    			$$invalidate(7, active_profile_image = await load_blob_as_url(img_cid));
+    		}
+    	} /*
+    let manifest_cid = identity.files.cid
+    let contacts_cid = identity.files.cid
+
+    let dir_contact_pages_cid = identity.dirs.cid
+    let dir_spool_cid = identity.dirs.cid
+    */
+
+    	async function get_active_users() {
+    		try {
+    			let known_user_lists = await window.get_known_users();
+    			$$invalidate(3, known_users = known_user_lists[0]);
+    			$$invalidate(36, known_identities = known_user_lists[1]);
+    		} catch(e) {
+    			
+    		}
+    	}
+
+    	function clear_identify_form() {
+    		$$invalidate(1, name = "");
+    		$$invalidate(10, DOB = "");
+    		$$invalidate(11, place_of_origin = "");
+    		$$invalidate(12, cool_public_info = "");
+    		biometric_blob = "";
+    		$$invalidate(13, business = false);
+    		$$invalidate(2, active_user = false);
+    		$$invalidate(35, active_identity = false);
+    		$$invalidate(6, u_index = false);
+    		adding_new = true;
+    	}
+
+    	async function remove_identify_seen_in_form() {
+    		let identity = active_identity;
+    		const index = known_users.indexOf(active_user);
+
+    		if (index >= 0) {
+    			$$invalidate(3, known_users = [...known_users.slice(0, index), ...known_users.slice(index + 1)]);
+    			$$invalidate(6, u_index = Math.min(u_index, known_users.length - 1));
+    			await unstore_user(identity);
+    		}
+    	}
+
+    	async function drop_picture(ev) {
+    		ev.preventDefault();
+
+    		try {
+    			let files = ev.dataTransfer.files ? ev.dataTransfer.files : false;
+    			let items = ev.dataTransfer.items ? ev.dataTransfer.items : false;
+    			let [fname, blob64] = await drop(items, files);
+
+    			//
+    			fname = `images/contact`;
+
+    			let identity = active_identity;
+
+    			if (identity) {
+    				$$invalidate(7, active_profile_image = blob64);
+
+    				//
+    				let fcid = await upload_data_file(fname, blob64);
+
+    				if (fcid) {
+    					identity.profile_image = fcid;
+    					await update_identity(identity);
+    				}
+    			}
+    		} catch(e) {
+    			console.log(e);
+    		}
+    	}
+
+    	async function drop_biometric(ev) {
+    		ev.preventDefault();
+
+    		try {
+    			let files = ev.dataTransfer.files ? ev.dataTransfer.files : false;
+    			let items = ev.dataTransfer.items ? ev.dataTransfer.items : false;
+    			let [fname, blob64] = await drop(items, files);
+    			biometric_blob = blob64;
+    			$$invalidate(8, src_biometric_instruct = "Biometric has been dropped.");
+    		} catch(e) {
+    			console.log(e); //
+    		}
+    	}
+
+    	function remove_from_source_list(m_source, m_changed) {
+    		//
+    		let op_list = [];
+
+    		if (active == "Messages") {
+    			op_list = inbound_contact_messages;
+    			if (m_source !== op_list) return false;
+    		} else if (active == "Introductions") {
+    			op_list = inbound_solicitation_messages;
+    			if (m_source !== op_list) return false;
+    		} else {
+    			op_list = processed_messages;
+    			if (m_source !== op_list) return false;
+    		}
+
+    		//
+    		let changed_list = op_list.filter(m_el => {
+    			let cid = m_el.f_cid;
+
+    			if (cid) {
+    				if (m_changed.indexOf(cid) >= 0) return false;
+    			}
+
+    			return true;
+    		});
+
+    		//
+    		if (active === "Messages") {
+    			inbound_contact_messages = changed_list;
+    			clear_checks("doop-m_contact_", changed_list.length);
+    		} else if (active === "Introductions") {
+    			inbound_solicitation_messages = changed_list;
+    			clear_checks("doop-m_intro_", changed_list.length);
+    		} else {
+    			processed_messages = changed_list;
+    			clear_checks("doop-m_category_", changed_list.length);
+    		}
+    	} //
+
+    	async function fetch_messages(identify) {
+    		if (identify) {
+    			let all_inbound_messages = await get_message_files(identify, start_of_messages, messages_per_page);
+    			inbound_contact_messages = all_inbound_messages[0];
+    			inbound_solicitation_messages = all_inbound_messages[1];
+
+    			if (inbound_contact_messages === false) {
+    				inbound_contact_messages = [];
+    			}
+
+    			if (inbound_solicitation_messages === false) {
+    				inbound_solicitation_messages = [];
+    			}
+
+    			//
+    			await check_contacts(inbound_contact_messages, false);
+
+    			let auto_responses = await check_contacts(inbound_solicitation_messages, true);
+
+    			inbound_solicitation_messages = inbound_solicitation_messages.filter(m => {
+    				return auto_responses.indexOf(m) < 0;
+    			});
+    		}
+    	}
+
+    	async function fetch_category_messages(identify, op_category) {
+    		if (identify) {
+    			let start = start_of_messages ? start_of_messages : 0;
+    			let count = messages_per_page ? messages_per_page : 100;
+    			let inbound_messages = await get_categorized_message_files(identify, op_category, start, count);
+    			return inbound_messages;
+    		}
+    	}
+
+    	function messages_update_contacts(cid, bval) {
+    		if (Array.isArray(inbound_contact_messages)) {
+    			for (let m of inbound_contact_messages) {
+    				if (m.user_cid === cid) {
+    					m.is_in_contacts = bval;
+    				}
+    			}
+    		}
+
+    		if (Array.isArray(inbound_contact_messages)) {
+    			for (let m of inbound_solicitation_messages) {
+    				if (m.user_cid === cid) {
+    					m.is_in_contacts = bval;
+    				}
+    			}
+    		}
+    	}
+
+    	// CONTACTS CONTACTS CONTACTS CONTACTS CONTACTS CONTACTS CONTACTS CONTACTS
+    	// CONTACTS CONTACTS CONTACTS CONTACTS CONTACTS CONTACTS CONTACTS CONTACTS
+    	function make_individuals_map(indivs_map) {
+    		if (Array.isArray(indivs_map)) {
+    			cid_individuals_map = {};
+
+    			for (let indiv of indivs_map) {
+    				if (indiv && typeof indiv !== "string") {
+    					cid_individuals_map[indiv.cid] = indiv;
+    				}
+    			}
+    		} else {
+    			cid_individuals_map = Object.assign(cid_individuals_map, indivs_map);
+    		}
+
+    		window.set_contact_map(cid_individuals_map);
+    	}
+
+    	async function check_contacts(message_list, clear) {
+    		let removals = [];
+
+    		if (Array.isArray(message_list)) {
+    			for (let m of message_list) {
+    				// This will be false -- 
+    				// the introduction will supply the sender (from) cid for the keyed path.
+    				let is = cid_individuals_map[m.user_cid] !== undefined;
+
+    				m.is_in_contacts = is;
+
+    				//
+    				if (is && clear) {
+    					let c = cid_individuals_map[m.user_cid];
+    					let do_update = await check_for_auto_update(c, m);
+
+    					if (do_update) {
+    						if (c.public_key && c.signer_public_key) {
+    							let contact = contact_wrapper(c);
+
+    							if (contact) {
+    								await respond_to_intro(m, contact);
+    							}
+    						} else {
+    							auto_add_contact(m.user_cid, m.signer_public_key, c.must_send_keys, m);
+    							removals.push(m);
+    						}
+    					}
+    				} else if (clear) {
+    					if (m.response_acceptance) {
+    						auto_add_contact(m.user_cid, m.signer_public_key, false, m);
+    						removals.push(m);
+    					}
+    				}
+    			}
+    		}
+
+    		return removals;
+    	}
+
+    	//
+    	async function check_for_auto_update(c, m) {
+    		//
+    		if (c.must_send_keys === undefined) return false;
+
+    		//
+    		if (!c.received_keys) {
+    			if (c.public_key && c.signer_public_key) {
+    				c.received_keys = true;
+    				await update_contact();
+    				return false;
+    			}
+
+    			let cid = m.user_cid;
+
+    			if (cid) {
+    				if (active_identity.introductions) {
+    					let intros = active_identity.introductions;
+
+    					if (intros.indexOf(cid) >= 0) {
+    						return true;
+    					}
+    				} else return true; // let "received_keys" make the decision.
+    			}
+    		} else {
+    			if (c.must_send_keys) {
+    				if (c.public_key && c.signer_public_key) {
+    					return true;
+    				}
+    			}
+    		}
+
+    		//
+    		return false;
+    	}
+
+    	//
+    	async function get_contact_info(cid) {
+    		let user_info = await fetch_contact_info(cid);
+
+    		if (!user_info) {
+    			alert("get_contact_info: user does not exist");
+    		}
+
+    		return user_info;
+    	}
+
+    	function reset_inputs(individual) {
+    		$$invalidate(31, c_name = individual ? individual.name : "");
+    		$$invalidate(32, c_DOB = individual ? individual.DOB : "");
+    		$$invalidate(33, c_place_of_origin = individual ? individual.place_of_origin : "");
+    		$$invalidate(34, c_cool_public_info = individual ? individual.cool_public_info : "");
+    		c_business = individual ? individual.business : "";
+    		c_public_key = individual ? individual.public_key : "";
+    		c_signer_public_key = individual ? individual.signer_public_key : "";
+    		c_answer_message = individual ? individual.answer_message : "";
+    		c_cid = individual ? individual.cid : "";
+    	}
+
+    	let pre_clear_i = 0;
+
+    	function exising_contact(contact) {
+    		//
+    		for (let cid in cid_individuals_map) {
+    			let user_info = cid_individuals_map[cid];
+
+    			if (contact.match(user_info)) {
+    				return cid;
+    			}
+    		}
+
+    		//
+    		return false;
+    	}
+
+    	async function respond_to_intro(msg, contact) {
+    		//
+    		if (!contact) return;
+
+    		//
+    		let identify = active_identity;
+
+    		if (identify) {
+    			let message = Object.assign({}, msg); // make a special automatic message. ...
+
+    			//
+    			message.user_cid = identify.cid;
+
+    			message.public_key = identify.user_info.public_key;
+    			message.signer_public_key = identify.user_info.signer_public_key;
+    			message.date = Date.now();
+    			message.business = business;
+    			message.response_acceptance = true;
+    			message.attachments = [msg.user_cid]; //[msg.public_key,msg.signer_public_key]
+
+    			//
+    			let i_cid = await send_introduction(contact.clear_identity(), identify, message);
+
+    			if (i_cid) {
+    				contact.extend_contact("must_send_keys", false); // only comes in from the intro message...
+    				await update_contact_page();
+
+    				if (identify.introductions === undefined) {
+    					identify.introductions = [];
+    				}
+
+    				identify.introductions.push(i_cid);
+    				update_identity(identify);
+    			}
+    		}
+    	} //
+
+    	async function warn_spoofing(msg, contact) {
+    		let identify = active_identity;
+
+    		if (identify) {
+    			//
+    			let message = Object.assign({}, msg); // make a special automatic message. ...
+
+    			//
+    			message.user_cid = identify.cid;
+
+    			message.public_key = identify.user_info.public_key;
+    			message.signer_public_key = identify.user_info.signer_public_key;
+    			message.date = Date.now();
+    			message.business = business;
+    			message.response_acceptance = true;
+    			message.attachments = [];
+    			message.subject = "You received a spurious introduction.";
+    			message.message = `Someone faking my identity sent you a message pretending to be me. Watch out for this user cid: ${msg.user_cid}`;
+
+    			//
+    			await send_introduction(contact.clear_identity(), identify, message);
+    		}
+    	}
+
+    	async function update_contact_page() {
+    		let identify = active_identity; // write to client user dir
+
+    		if (identify) {
+    			let update_cid = await update_contacts_to_ipfs(identify, business, cid_individuals_map);
+    			identify.files.contacts.cid = update_cid;
+    			await update_identity(identify);
+    			await get_active_users();
+    		}
+    	}
+
+    	function contact_wrapper(contact_info) {
+    		let cid = contact_info.cid;
+
+    		if (cid) {
+    			//
+    			let contact = new Contact();
+
+    			contact.copy(contact_info);
+    			return contact;
+    		}
+
+    		return false;
+    	}
+
+    	// auto_add_contact
+    	// cid -- came in the message ... this is the sender private path cid.
+    	// signer_pk is passed.... assuming identity is made by one key -- but it could be two keys, wrapper and signer
+    	// if approving a contact, then do_response is true, and a message is sent back automatically with the public keys of the current user.
+    	async function auto_add_contact(cid, signer_pk, do_response, msg) {
+    		//
+    		// use the private path cid pull in public wrapper key from here.
+    		let contact_info = await get_contact_info(cid);
+
+    		//
+    		if (contact_info) {
+    			//
+    			let origin_cid = msg.attachments[0]; // should be a cid there
+
+    			let a_cid = active_identity.cid;
+
+    			//
+    			let contact = new Contact();
+
+    			contact.copy(contact_info);
+    			let old_cid = exising_contact(contact);
+
+    			if (old_cid !== false) {
+    				delete cid_individuals_map[old_cid];
+    			} // remove from individuals
+
+    			contact.extend_contact("cid", cid);
+    			contact.extend_contact("answer_message", "");
+    			contact.extend_contact("signer_public_key", signer_pk); // only comes in from the intro message...
+    			contact.extend_contact("received_keys", true); // If here, then the keys have been received
+
+    			if (origin_cid && origin_cid !== a_cid) {
+    				//
+    				await warn_spoofing(msg, contact);
+
+    				return;
+    			} //
+
+    			//
+    			let user_data = contact.identity();
+
+    			//
+    			let b = individuals;
+
+    			if (individuals[0] === empty_identity.identity()) {
+    				b[0] = user_data;
+    			} else {
+    				individuals.push(user_data);
+    			}
+
+    			$$invalidate(43, individuals = b);
+    			$$invalidate(30, i = individuals.length - 1);
+
+    			//
+    			cid_individuals_map[cid] = user_data;
+
+    			messages_update_contacts(cid, false);
+
+    			//
+    			if (do_response) {
+    				// When adding a contact from an introduction, send public keys to sender, who does have these keys - yet...
+    				await respond_to_intro(msg, contact);
+
+    				contact.extend_contact("must_send_keys", false); // only comes in from the intro message...
+    			}
+
+    			await update_contact_page();
+    			return true;
+    		}
+
+    		return false;
+    	}
+
+    	async function update_contact() {
+    		$$invalidate(44, selected.name = c_name, selected);
+    		$$invalidate(44, selected.DOB = c_DOB, selected);
+    		$$invalidate(44, selected.place_of_origin = c_place_of_origin, selected);
+    		$$invalidate(44, selected.cool_public_info = c_cool_public_info, selected);
+    		$$invalidate(44, selected.business = c_business, selected);
+    		$$invalidate(44, selected.public_key = c_public_key, selected);
+    		$$invalidate(44, selected.c_signer_public_key = c_signer_public_key, selected);
+
+    		//
+    		let cid = selected.cid;
+
+    		delete cid_individuals_map[cid];
+    		messages_update_contacts(cid, false);
+    		cid = await fetch_contact_cid(selected, c_signer_public_key !== undefined && c_signer_public_key);
+    		$$invalidate(44, selected.cid = cid, selected);
+    		cid_individuals_map[cid] = user_data;
+    		messages_update_contacts(cid, true);
+
+    		//
+    		await update_contact_page();
+    	} //
+
+    	async function fetch_contacts$1(identify) {
+    		if (identify && identify.files) {
+    			if (identify.files.contacts) {
+    				let contacts_cid = identify.files.contacts.cid;
+    				let contacts_data = await fetch_contacts(contacts_cid, identify);
+    				let indivs = [];
+
+    				if (Array.isArray(contacts_data)) {
+    					indivs = contacts_data.filter(el => {
+    						let t = typeof el === "object" && typeof el !== "string" && el !== false;
+    						return t;
+    					});
+    				} else {
+    					for (let ky in contacts_data) {
+    						if (typeof ky === "string") {
+    							// make sure this is a cid string
+    							indivs.push(contacts_data[ky]);
+    						}
+    					}
+    				}
+
+    				if (indivs.length === 0) {
+    					$$invalidate(43, individuals = [empty_identity.identity()]);
+    				} else {
+    					$$invalidate(43, individuals = indivs);
+    				}
+
+    				make_individuals_map(contacts_data);
+    			}
+    		}
+    	}
+
+    	async function app_upload_identity() {
+    		await upload_identity();
+    		await get_active_users(); // updates login page and initializes the view of this user.
+    		$$invalidate(6, u_index = known_users.length - 1); // user was added to the end...
+    	}
+
+    	async function app_download_identity() {
+    		if (active_identity) {
+    			let user_info = active_identity.user_info;
+    			await download_identity(user_info, false);
+    		}
+    	}
+
+    	// ---- ---- ---- ---- ---- ---- ----
+    	async function fetch_manifest$1(identify) {
+    		if (identify && identify.files) {
+    			if (identify.files.manifest) {
+    				let manifest_cid = identify.files.manifest.cid;
+    				$$invalidate(39, manifest_obj = await fetch_manifest(manifest_cid, identify));
+
+    				if (manifest_obj.clear_cid === undefined) {
+    					$$invalidate(39, manifest_obj.clear_cid = identify.clear_cid, manifest_obj);
+    				}
+
+    				//
+    				let m_list = [];
+
+    				if (Array.isArray(manifest_obj.custom_contact_forms)) {
+    					m_list = manifest_obj.custom_contact_forms;
+    				} else {
+    					for (let ky in manifest_obj.custom_contact_forms) {
+    						let mm = manifest_obj.custom_contact_forms[ky];
+    						mm.cid = ky;
+    						m_list.push(mm);
+    					}
+    				}
+
+    				//
+    				$$invalidate(38, manifest_contact_form_list = m_list);
+    			}
+    		}
+    	}
+
+    	function navigate_to_user(e) {
+    		$$invalidate(4, active = "User");
+    	}
+
+    	const writable_props = [];
+
+    	Object_1.keys($$props).forEach(key => {
+    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console_1.warn(`<App> was created with unknown prop '${key}'`);
+    	});
+
+    	function tabbar_active_binding(value) {
+    		active = value;
+    		$$invalidate(4, active);
+    	}
+
+    	function select_change_handler() {
+    		u_index = select_value(this);
+    		$$invalidate(6, u_index);
+    	}
+
+    	function input0_input_handler() {
+    		name = this.value;
+    		((($$invalidate(1, name), $$invalidate(2, active_user)), $$invalidate(3, known_users)), $$invalidate(6, u_index));
+    	}
+
+    	function input1_change_handler() {
+    		business = this.checked;
+    		((($$invalidate(13, business), $$invalidate(2, active_user)), $$invalidate(3, known_users)), $$invalidate(6, u_index));
+    	}
+
+    	function input_input_handler() {
+    		DOB = this.value;
+    		((($$invalidate(10, DOB), $$invalidate(2, active_user)), $$invalidate(3, known_users)), $$invalidate(6, u_index));
+    	}
+
+    	function input_input_handler_1() {
+    		DOB = this.value;
+    		((($$invalidate(10, DOB), $$invalidate(2, active_user)), $$invalidate(3, known_users)), $$invalidate(6, u_index));
+    	}
+
+    	function input_input_handler_2() {
+    		place_of_origin = this.value;
+    		((($$invalidate(11, place_of_origin), $$invalidate(2, active_user)), $$invalidate(3, known_users)), $$invalidate(6, u_index));
+    	}
+
+    	function input_input_handler_3() {
+    		place_of_origin = this.value;
+    		((($$invalidate(11, place_of_origin), $$invalidate(2, active_user)), $$invalidate(3, known_users)), $$invalidate(6, u_index));
+    	}
+
+    	function textarea_input_handler() {
+    		cool_public_info = this.value;
+    		((($$invalidate(12, cool_public_info), $$invalidate(2, active_user)), $$invalidate(3, known_users)), $$invalidate(6, u_index));
+    	}
+
+    	function img_binding($$value) {
+    		binding_callbacks[$$value ? "unshift" : "push"](() => {
+    			biometric_data_el = $$value;
+    			$$invalidate(15, biometric_data_el);
+    		});
+    	}
+
+    	function img_binding_1($$value) {
+    		binding_callbacks[$$value ? "unshift" : "push"](() => {
+    			profile_image_el = $$value;
+    			$$invalidate(14, profile_image_el);
+    		});
+    	}
+
+    	$$self.$capture_state = () => ({
+    		Tab,
+    		Label: CommonLabel,
+    		TabBar,
+    		onMount,
+    		ipfs_profiles,
+    		utils,
+    		active_profile_image,
+    		active_profile_biometric,
+    		src_1_name,
+    		src_biometric_instruct,
+    		active_cid,
+    		clear_cid,
+    		dir_view,
+    		signup_status,
+    		start_of_messages,
+    		messages_per_page,
+    		prefix,
+    		man_prefix,
+    		i,
+    		c_i,
+    		i_i,
+    		p_i,
+    		form_index,
+    		j_cid,
+    		name,
+    		DOB,
+    		place_of_origin,
+    		cool_public_info,
+    		business,
+    		biometric_blob,
+    		c_name,
+    		c_DOB,
+    		c_place_of_origin,
+    		c_cool_public_info,
+    		c_business,
+    		c_public_key,
+    		c_signer_public_key,
+    		c_cid,
+    		c_answer_message,
+    		c_biometric_blob,
+    		c_empty_fields,
+    		today,
+    		active_user,
+    		active_identity,
+    		known_users,
+    		known_identities,
+    		u_index,
+    		adding_new,
+    		manifest_selected_entry,
+    		manifest_selected_form,
+    		manifest_contact_form_list,
+    		manifest_obj,
+    		manifest_index,
+    		man_title,
+    		man_cid,
+    		man_wrapped_key,
+    		man_html,
+    		man_max_preference,
+    		man_preference,
+    		man_sel_not_customized,
+    		man_contact_is_default,
+    		man_encrypted,
+    		message_edit_from_contact,
+    		profile_image_el,
+    		biometric_data_el,
+    		active,
+    		prev_active,
+    		first_message,
+    		green,
+    		todays_date,
+    		filtered_cc_list,
+    		message_op_category,
+    		source_category,
+    		processed_category,
+    		selected_form_link_types,
+    		selected_form_link,
+    		individuals,
+    		cid_individuals_map,
+    		selected,
+    		inbound_solicitation_messages,
+    		inbound_contact_messages,
+    		processed_messages,
+    		message_selected,
+    		message_edit_list_name,
+    		message_edit_list,
+    		message_edit_source,
+    		reinitialize_user_context,
+    		handle_message,
+    		Contact,
+    		empty_identity,
+    		current_index,
+    		creator_disabled,
+    		creation_to_do,
+    		window_scale,
+    		edit_popup_scale,
+    		all_window_scales,
+    		popup_size,
+    		update_selected_form_link,
+    		update_selected_form_links,
+    		g_required_user_fields,
+    		g_renamed_user_fields,
+    		g_last_inspected_field,
+    		check_required_fields,
+    		missing_fields,
+    		add_profile: add_profile$1,
+    		load_user_info,
+    		get_active_users,
+    		clear_identify_form,
+    		remove_identify_seen_in_form,
+    		drop_picture,
+    		drop_biometric,
+    		dragover_picture,
+    		clear_checks,
+    		remove_from_source_list,
+    		fetch_messages,
+    		fetch_category_messages,
+    		messages_update_contacts,
+    		make_individuals_map,
+    		check_contacts,
+    		check_for_auto_update,
+    		get_contact_info,
+    		reset_inputs,
+    		pre_clear_i,
+    		exising_contact,
+    		respond_to_intro,
+    		warn_spoofing,
+    		update_contact_page,
+    		contact_wrapper,
+    		auto_add_contact,
+    		update_contact,
+    		fetch_contacts: fetch_contacts$1,
+    		app_upload_identity,
+    		app_download_identity,
+    		fetch_manifest: fetch_manifest$1,
+    		navigate_to_user,
+    		filteredIndviduals,
+    		filtered_manifest_contact_form_list
+    	});
+
+    	$$self.$inject_state = $$props => {
+    		if ("active_profile_image" in $$props) $$invalidate(7, active_profile_image = $$props.active_profile_image);
+    		if ("active_profile_biometric" in $$props) $$invalidate(18, active_profile_biometric = $$props.active_profile_biometric);
+    		if ("src_1_name" in $$props) $$invalidate(19, src_1_name = $$props.src_1_name);
+    		if ("src_biometric_instruct" in $$props) $$invalidate(8, src_biometric_instruct = $$props.src_biometric_instruct);
+    		if ("active_cid" in $$props) $$invalidate(0, active_cid = $$props.active_cid);
+    		if ("clear_cid" in $$props) clear_cid = $$props.clear_cid;
+    		if ("dir_view" in $$props) dir_view = $$props.dir_view;
+    		if ("signup_status" in $$props) $$invalidate(9, signup_status = $$props.signup_status);
+    		if ("start_of_messages" in $$props) start_of_messages = $$props.start_of_messages;
+    		if ("messages_per_page" in $$props) messages_per_page = $$props.messages_per_page;
+    		if ("prefix" in $$props) $$invalidate(28, prefix = $$props.prefix);
+    		if ("man_prefix" in $$props) $$invalidate(29, man_prefix = $$props.man_prefix);
+    		if ("i" in $$props) $$invalidate(30, i = $$props.i);
+    		if ("c_i" in $$props) c_i = $$props.c_i;
+    		if ("i_i" in $$props) i_i = $$props.i_i;
+    		if ("p_i" in $$props) p_i = $$props.p_i;
+    		if ("form_index" in $$props) form_index = $$props.form_index;
+    		if ("j_cid" in $$props) j_cid = $$props.j_cid;
+    		if ("name" in $$props) $$invalidate(1, name = $$props.name);
+    		if ("DOB" in $$props) $$invalidate(10, DOB = $$props.DOB);
+    		if ("place_of_origin" in $$props) $$invalidate(11, place_of_origin = $$props.place_of_origin);
+    		if ("cool_public_info" in $$props) $$invalidate(12, cool_public_info = $$props.cool_public_info);
+    		if ("business" in $$props) $$invalidate(13, business = $$props.business);
+    		if ("biometric_blob" in $$props) biometric_blob = $$props.biometric_blob;
+    		if ("c_name" in $$props) $$invalidate(31, c_name = $$props.c_name);
+    		if ("c_DOB" in $$props) $$invalidate(32, c_DOB = $$props.c_DOB);
+    		if ("c_place_of_origin" in $$props) $$invalidate(33, c_place_of_origin = $$props.c_place_of_origin);
+    		if ("c_cool_public_info" in $$props) $$invalidate(34, c_cool_public_info = $$props.c_cool_public_info);
+    		if ("c_business" in $$props) c_business = $$props.c_business;
+    		if ("c_public_key" in $$props) c_public_key = $$props.c_public_key;
+    		if ("c_signer_public_key" in $$props) c_signer_public_key = $$props.c_signer_public_key;
+    		if ("c_cid" in $$props) c_cid = $$props.c_cid;
+    		if ("c_answer_message" in $$props) c_answer_message = $$props.c_answer_message;
+    		if ("c_biometric_blob" in $$props) c_biometric_blob = $$props.c_biometric_blob;
+    		if ("c_empty_fields" in $$props) c_empty_fields = $$props.c_empty_fields;
+    		if ("today" in $$props) today = $$props.today;
+    		if ("active_user" in $$props) $$invalidate(2, active_user = $$props.active_user);
+    		if ("active_identity" in $$props) $$invalidate(35, active_identity = $$props.active_identity);
+    		if ("known_users" in $$props) $$invalidate(3, known_users = $$props.known_users);
+    		if ("known_identities" in $$props) $$invalidate(36, known_identities = $$props.known_identities);
+    		if ("u_index" in $$props) $$invalidate(6, u_index = $$props.u_index);
+    		if ("adding_new" in $$props) adding_new = $$props.adding_new;
+    		if ("manifest_selected_entry" in $$props) $$invalidate(37, manifest_selected_entry = $$props.manifest_selected_entry);
+    		if ("manifest_selected_form" in $$props) manifest_selected_form = $$props.manifest_selected_form;
+    		if ("manifest_contact_form_list" in $$props) $$invalidate(38, manifest_contact_form_list = $$props.manifest_contact_form_list);
+    		if ("manifest_obj" in $$props) $$invalidate(39, manifest_obj = $$props.manifest_obj);
+    		if ("manifest_index" in $$props) $$invalidate(40, manifest_index = $$props.manifest_index);
+    		if ("man_title" in $$props) man_title = $$props.man_title;
+    		if ("man_cid" in $$props) $$invalidate(41, man_cid = $$props.man_cid);
+    		if ("man_wrapped_key" in $$props) man_wrapped_key = $$props.man_wrapped_key;
+    		if ("man_html" in $$props) man_html = $$props.man_html;
+    		if ("man_max_preference" in $$props) man_max_preference = $$props.man_max_preference;
+    		if ("man_preference" in $$props) man_preference = $$props.man_preference;
+    		if ("man_sel_not_customized" in $$props) man_sel_not_customized = $$props.man_sel_not_customized;
+    		if ("man_contact_is_default" in $$props) man_contact_is_default = $$props.man_contact_is_default;
+    		if ("man_encrypted" in $$props) man_encrypted = $$props.man_encrypted;
+    		if ("message_edit_from_contact" in $$props) message_edit_from_contact = $$props.message_edit_from_contact;
+    		if ("profile_image_el" in $$props) $$invalidate(14, profile_image_el = $$props.profile_image_el);
+    		if ("biometric_data_el" in $$props) $$invalidate(15, biometric_data_el = $$props.biometric_data_el);
+    		if ("active" in $$props) $$invalidate(4, active = $$props.active);
+    		if ("prev_active" in $$props) $$invalidate(42, prev_active = $$props.prev_active);
+    		if ("first_message" in $$props) first_message = $$props.first_message;
+    		if ("green" in $$props) $$invalidate(16, green = $$props.green);
+    		if ("todays_date" in $$props) todays_date = $$props.todays_date;
+    		if ("filtered_cc_list" in $$props) filtered_cc_list = $$props.filtered_cc_list;
+    		if ("message_op_category" in $$props) message_op_category = $$props.message_op_category;
+    		if ("source_category" in $$props) source_category = $$props.source_category;
+    		if ("processed_category" in $$props) processed_category = $$props.processed_category;
+    		if ("selected_form_link_types" in $$props) selected_form_link_types = $$props.selected_form_link_types;
+    		if ("selected_form_link" in $$props) selected_form_link = $$props.selected_form_link;
+    		if ("individuals" in $$props) $$invalidate(43, individuals = $$props.individuals);
+    		if ("cid_individuals_map" in $$props) cid_individuals_map = $$props.cid_individuals_map;
+    		if ("selected" in $$props) $$invalidate(44, selected = $$props.selected);
+    		if ("inbound_solicitation_messages" in $$props) inbound_solicitation_messages = $$props.inbound_solicitation_messages;
+    		if ("inbound_contact_messages" in $$props) inbound_contact_messages = $$props.inbound_contact_messages;
+    		if ("processed_messages" in $$props) processed_messages = $$props.processed_messages;
+    		if ("message_selected" in $$props) message_selected = $$props.message_selected;
+    		if ("message_edit_list_name" in $$props) message_edit_list_name = $$props.message_edit_list_name;
+    		if ("message_edit_list" in $$props) message_edit_list = $$props.message_edit_list;
+    		if ("message_edit_source" in $$props) message_edit_source = $$props.message_edit_source;
+    		if ("empty_identity" in $$props) $$invalidate(110, empty_identity = $$props.empty_identity);
+    		if ("current_index" in $$props) $$invalidate(45, current_index = $$props.current_index);
+    		if ("creator_disabled" in $$props) $$invalidate(17, creator_disabled = $$props.creator_disabled);
+    		if ("creation_to_do" in $$props) $$invalidate(5, creation_to_do = $$props.creation_to_do);
+    		if ("window_scale" in $$props) window_scale = $$props.window_scale;
+    		if ("edit_popup_scale" in $$props) edit_popup_scale = $$props.edit_popup_scale;
+    		if ("all_window_scales" in $$props) all_window_scales = $$props.all_window_scales;
+    		if ("g_required_user_fields" in $$props) g_required_user_fields = $$props.g_required_user_fields;
+    		if ("g_renamed_user_fields" in $$props) g_renamed_user_fields = $$props.g_renamed_user_fields;
+    		if ("g_last_inspected_field" in $$props) g_last_inspected_field = $$props.g_last_inspected_field;
+    		if ("pre_clear_i" in $$props) pre_clear_i = $$props.pre_clear_i;
+    		if ("filteredIndviduals" in $$props) $$invalidate(46, filteredIndviduals = $$props.filteredIndviduals);
+    		if ("filtered_manifest_contact_form_list" in $$props) $$invalidate(47, filtered_manifest_contact_form_list = $$props.filtered_manifest_contact_form_list);
+    	};
+
+    	if ($$props && "$$inject" in $$props) {
+    		$$self.$inject_state($$props.$$inject);
+    	}
+
+    	$$self.$$.update = () => {
+    		if ($$self.$$.dirty[0] & /*prefix*/ 268435456 | $$self.$$.dirty[1] & /*individuals*/ 4096) {
+    			//
+    			// ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
+    			$$invalidate(46, filteredIndviduals = prefix
+    			? individuals.filter(individual => {
+    					const name = `${individual.name}`;
+    					return name.toLowerCase().startsWith(prefix.toLowerCase());
+    				})
+    			: individuals);
+    		}
+
+    		if ($$self.$$.dirty[0] & /*i*/ 1073741824 | $$self.$$.dirty[1] & /*filteredIndviduals*/ 32768) {
+    			$$invalidate(44, selected = i >= 0
+    			? filteredIndviduals[i]
+    			: empty_identity.identity());
+    		}
+
+    		if ($$self.$$.dirty[1] & /*selected*/ 8192) {
+    			reset_inputs(selected);
+    		}
+
+    		if ($$self.$$.dirty[0] & /*u_index*/ 64 | $$self.$$.dirty[1] & /*known_identities*/ 32) {
+    			$$invalidate(35, active_identity = known_identities[u_index]);
+    		}
+
+    		if ($$self.$$.dirty[1] & /*active_identity, individuals*/ 4112) {
+    			if (active_identity) {
+    				filtered_cc_list = individuals.filter(ident => {
+    					if (ident.cid !== active_identity.cid) {
+    						return true;
+    					}
+
+    					return false;
+    				});
+    			}
+    		}
+
+    		if ($$self.$$.dirty[0] & /*known_users, u_index*/ 72) {
+    			//
+    			//
+    			$$invalidate(2, active_user = known_users[u_index]);
+    		}
+
+    		if ($$self.$$.dirty[1] & /*active_identity*/ 16) {
+    			$$invalidate(16, green = active_identity
+    			? active_identity.stored_externally
+    			: false);
+    		}
+
+    		if ($$self.$$.dirty[0] & /*active_user*/ 4) {
+    			{
+    				if (active_user) {
+    					window.set_user_title(active_user.name);
+    				}
+    			}
+    		}
+
+    		if ($$self.$$.dirty[0] & /*active_user*/ 4) {
+    			{
+    				if (active_user !== undefined && active_user) {
+    					$$invalidate(1, name = active_user.name);
+    					$$invalidate(10, DOB = active_user.DOB);
+    					$$invalidate(11, place_of_origin = active_user.place_of_origin);
+    					$$invalidate(12, cool_public_info = active_user.cool_public_info);
+    					$$invalidate(13, business = active_user.business);
+    					adding_new = false;
+    				}
+    			}
+    		}
+
+    		if ($$self.$$.dirty[0] & /*u_index*/ 64 | $$self.$$.dirty[1] & /*current_index, active_identity*/ 16400) {
+    			{
+    				if (current_index !== u_index) {
+    					$$invalidate(45, current_index = u_index);
+    					reinitialize_user_context();
+    				}
+
+    				if (active_identity) {
+    					load_user_info(active_identity);
+    				}
+    			}
+    		}
+
+    		if ($$self.$$.dirty[0] & /*man_prefix*/ 536870912 | $$self.$$.dirty[1] & /*manifest_contact_form_list*/ 128) {
+    			$$invalidate(47, filtered_manifest_contact_form_list = man_prefix
+    			? manifest_contact_form_list.filter(man_contact => {
+    					const name = `${man_contact.name}`;
+    					return name.toLowerCase().startsWith(man_prefix.toLowerCase());
+    				})
+    			: manifest_contact_form_list);
+    		}
+
+    		if ($$self.$$.dirty[1] & /*filtered_manifest_contact_form_list, manifest_index, manifest_selected_entry, manifest_obj, man_cid*/ 67392) {
+    			{
+    				$$invalidate(37, manifest_selected_entry = filtered_manifest_contact_form_list[manifest_index]);
+
+    				if (manifest_selected_entry !== undefined && manifest_selected_entry) {
+    					manifest_selected_form = manifest_selected_entry.html;
+    					man_title = manifest_selected_entry.info;
+    					man_max_preference = manifest_obj.max_preference;
+    					man_preference = manifest_selected_entry.preference;
+    					$$invalidate(41, man_cid = manifest_selected_entry.cid);
+    					man_contact_is_default = man_cid === manifest_obj.default_contact_form;
+    				}
+    			}
+    		}
+
+    		if ($$self.$$.dirty[1] & /*c_name, c_DOB, c_place_of_origin, c_cool_public_info*/ 15) {
+    			c_empty_fields = !c_name || c_name.length == 0 || (!c_DOB || c_DOB.length == 0) || (!c_place_of_origin || c_place_of_origin.length == 0) || c_cool_public_info.length == 0;
+    		}
+
+    		if ($$self.$$.dirty[0] & /*active*/ 16 | $$self.$$.dirty[1] & /*prev_active*/ 2048) {
+    			{
+    				if (prev_active !== active) {
+    					message_edit_list = [];
+    					message_edit_source = false;
+
+    					if (active == "Introductions") {
+    						message_op_category = "intros";
+    					} else if (active == "Messages") {
+    						message_op_category = "messages";
+    					}
+    				}
+
+    				$$invalidate(42, prev_active = active);
+    			}
+    		}
+
+    		if ($$self.$$.dirty[0] & /*u_index, active_user, active_cid, creation_to_do*/ 101) {
+    			{
+    				$$invalidate(5, creation_to_do = u_index === false || active_user && active_user.biometric === undefined);
+
+    				if (typeof active_cid === "string" && active_cid.length === 0) {
+    					$$invalidate(5, creation_to_do = true);
+    				}
+
+    				$$invalidate(17, creator_disabled = !creation_to_do);
+    				console.log(active_cid);
+    			}
+    		}
+    	};
+
+    	return [
+    		active_cid,
+    		name,
+    		active_user,
+    		known_users,
+    		active,
+    		creation_to_do,
+    		u_index,
+    		active_profile_image,
+    		src_biometric_instruct,
+    		signup_status,
+    		DOB,
+    		place_of_origin,
+    		cool_public_info,
+    		business,
+    		profile_image_el,
+    		biometric_data_el,
+    		green,
+    		creator_disabled,
+    		active_profile_biometric,
+    		src_1_name,
+    		add_profile$1,
+    		clear_identify_form,
+    		remove_identify_seen_in_form,
+    		drop_picture,
+    		drop_biometric,
+    		app_upload_identity,
+    		app_download_identity,
+    		navigate_to_user,
+    		prefix,
+    		man_prefix,
+    		i,
+    		c_name,
+    		c_DOB,
+    		c_place_of_origin,
+    		c_cool_public_info,
+    		active_identity,
+    		known_identities,
+    		manifest_selected_entry,
+    		manifest_contact_form_list,
+    		manifest_obj,
+    		manifest_index,
+    		man_cid,
+    		prev_active,
+    		individuals,
+    		selected,
+    		current_index,
+    		filteredIndviduals,
+    		filtered_manifest_contact_form_list,
+    		tabbar_active_binding,
+    		select_change_handler,
+    		input0_input_handler,
+    		input1_change_handler,
+    		input_input_handler,
+    		input_input_handler_1,
+    		input_input_handler_2,
+    		input_input_handler_3,
+    		textarea_input_handler,
+    		img_binding,
+    		img_binding_1
+    	];
+    }
+
+    class App extends SvelteComponentDev {
+    	constructor(options) {
+    		super(options);
+    		init(this, options, instance, create_fragment, safe_not_equal, {}, [-1, -1, -1, -1, -1]);
+
+    		dispatch_dev("SvelteRegisterComponent", {
+    			component: this,
+    			tagName: "App",
+    			options,
+    			id: create_fragment.name
+    		});
+    	}
+    }
+
+    const app = new App({
+    	target: document.getElementById('app-main'),
+    	props: {
+    		name: 'My Blog With Grid'
+    	}
+    });
+
+    return app;
+
+}());
 //# sourceMappingURL=bundle.js.map
