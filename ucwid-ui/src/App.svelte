@@ -214,62 +214,6 @@
 		update_selected_form_links()
 	}
 
-	async function handle_message(evt) {
-		let cmd = evt.detail.cmd
-		switch ( cmd ) {
-			case "new-contact" : {
-				// from display -- sender initiated -- got sender public keys 
-				// -- send yours automatically since you already accepted
-				let signer_pk = evt.detail.signer_public_key
-				let added = await auto_add_contact(evt.detail.cid,signer_pk,true,message_selected)
-				message_selected.is_in_contacts = added
-				break;
-			}
-			case "reply": {
-				selected.answer_message = true
-				message_edit_from_contact = false
-				start_floating_window(1);
-			}
-			case "view-processed-messages": {
-				message_op_category = evt.detail.category
-				processed_category = message_op_category
-				source_category = message_op_category
-				processed_messages = await fetch_category_messages(active_identity,message_op_category)
-				break;
-			}
-			case 'move-messages': {
-				if ( !active_identity ) return
-				let cat =  evt.detail.category
-				if ( (cat === source_category) && !(message_op_category === 'intros' || message_op_category === 'messages')) return
-				let user_cid = active_identity.cid
-				if ( active === 'Introductions' ) {
-					user_cid = active_identity.clear_cid
-				}
-				let dst_cid = active_identity.cid
-				let business = active_identity.user_info.business
-				//
-				// message_edit_list containes message from message_op_category
-				// they are being sent to cat
-				//
-				let src_cat = false
-				if ( (message_op_category !== 'messages') && (message_op_category !== 'intros') ) {
-					src_cat = message_op_category
-				}
-				await ipfs_profiles.message_list_ops(user_cid,dst_cid,'move',cat,business,message_edit_list,src_cat)
-				//
-				//message_edit_source
-				let status = remove_from_source_list(message_edit_source,message_edit_list)
-				if ( status == false ) {
-					console.log("no message removed")
-				}
-				break;
-			}
-			default: {
-				console.log("message cmd not handled")
-			}
-		}
-	}
-
 	/*
       "wrapped_key" : false,
       "encoding" : "uri",
@@ -585,6 +529,9 @@
 		return(message);
 	}
 
+	async function create_intergalactic_id() {
+
+	}
 
 	// ADD PROFILE.....
 	async function add_profile() {
@@ -604,9 +551,9 @@
 			return;
 		}
 
-		await gen_public_key(user_data) // by ref  // stores keys in DB  // converts biometric to signature (calls protect_hash)
+		await gen_public_key(user_data,store_user) // by ref  // stores keys in DB  // converts biometric to signature (calls protect_hash)
 		try {
-			green = await ipfs_profiles.add_profile(user_data)  // will fetch the key (it is not riding along yet.)
+			// green = // await ipfs_profiles.add_profile(user_data)  // will fetch the key (it is not riding along yet.)
 		} catch (e) {
 		}
 		//
@@ -614,6 +561,7 @@
 		u_index = (known_users.length - 1)	// user was added to the end...
 		//
 	}
+
 
 	async function load_user_info(identity) {
 		active_cid = identity.cid
@@ -1694,7 +1642,7 @@
 			<div class="add-profile-div" style="text-align:center" >
 				{#if creation_to_do }
 					<div style = { green ? "background-color:rgba(245,255,250,0.9)" : "background-color:rgba(250,250,250,0.3)" } >
-						<button class="long_button" on:click={add_profile} disabled={creator_disabled}>Create my Intergalactic Identity.</button>
+						<button class="long_button" on:click={create_intergalactic_id} disabled={creator_disabled}>Create my Intergalactic Identity.</button>
 					</div>
 				{:else}
 					<div style = { green ? "background-color:rgba(245,255,250,0.9)" : "background-color:rgba(250,250,250,0.3)" } >

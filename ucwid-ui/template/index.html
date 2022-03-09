@@ -23,6 +23,18 @@
 <style>
 	/*csslint important:false*/
 
+	/* ==========================================================================
+	Pure Base Extras
+	========================================================================== */
+
+	/**
+	* Extra rules that Pure adds on top of Normalize.css
+
+	html {
+
+	}
+	*/
+
 	body {
 			height: 100%;
 		}
@@ -46,6 +58,72 @@
 		display: block;
 	}
 
+	.items {
+		display: flex;
+		flex-wrap: wrap;
+		margin-left: -10px;
+		margin-top: -10px;
+	}
+
+	.items .item {
+		flex: 1 0 300px;
+		box-sizing: border-box;
+		background: -webkit-linear-gradient(to right, rgba(242, 242, 210, 0.3), white);
+		background: linear-gradient(to right, rgba(242, 242, 210, 0.3), white );
+		color: #171e42;
+		padding: 10px;
+		margin-left: 10px;
+		margin-top: 0px;
+	}
+
+	.items .extra-i {
+		padding-left: 10%;
+		padding-bottom: 4px;
+		padding-right: 12px;
+		font-size: 110%;
+		font-family: sans-serif;
+	}
+
+	.middleBanner {
+		text-align: 'center';
+		padding-left: 10%;
+		padding-right: 10%;
+		font-weight:bold;
+		color: darkgreen;
+		padding-top:4%;
+		overflow:auto;
+	}
+
+	.applink {
+		padding:3px;
+		background-color: cornsilk;
+		width:inherit;
+		min-height: 100%;
+		color:darkolivegreen;
+		font-weight: bolder;
+
+	}
+
+	.extraBanner {
+		text-align: 'center';
+		padding-left: 10%;
+		padding-right: 10%;
+		font-weight:bold;
+		color: #FF4400;
+		padding-top:4%;
+	}
+
+
+	.fillLowerWrap {
+		width: 66%;
+		margin-left:0px;
+		margin-right:0px;
+		padding: 8px;
+		margin-top:8px;
+		background: -webkit-linear-gradient(to right, white, #FAFAFF);
+		background: linear-gradient(to right, white, #FAFAFF );
+		margin-left: 10px;
+	}
 
 	.fitMenuLower {
 		width: 95%;
@@ -76,6 +154,36 @@
 		background-color: white;
 	}
 
+	.fade_able {
+		position:absolute;
+		visibility:hidden;
+		top : 10px; left : 10px;
+		height:80%;
+		width: 40%;
+		z-index:101;
+		border: rgba(252, 190, 190, 0.4) 2px solid;
+		background-color: white;
+		overflow:hidden;
+	}
+
+	.solid_able {
+		position:absolute;
+		visibility:hidden;
+		top : 10px; left : 10px;
+		height:80%;
+		width: 40%;
+		z-index:111;
+		border: rgba(252, 190, 190, 0.4) 2px solid;
+		background-color: white;
+		overflow: hidden;
+	}
+
+	@media screen and (max-width: 950px) {
+		.solid_able {
+			width: 90%;
+		}
+	}
+
 	#thankyou_box {
 		position:absolute;
 		visibility:hidden;
@@ -86,6 +194,57 @@
 		border: rgba(100, 5, 5, 0.6) 2px solid;
 		background-color: lightgoldenrodyellow;
 		overflow: auto;
+	}
+
+	@media screen and (max-width: 1040px) {
+		.fade_able {
+			width: 60%;
+		}
+	}
+
+	@media screen and (max-width: 600px) {
+		.fade_able {
+			width: 90%;
+		}
+	}
+
+	.fade_able_content {
+		height:100%;
+		width: 100%;
+		overflow:auto;
+	}
+
+	.togglebar {
+		height:20px;
+		visibility:inherit;
+		background-color: navy;
+		text-align:right;
+	}
+
+	.closer_x {
+		padding:2px;
+		color:purple;
+		font-weight:bolder;
+		border: solid 1px red;
+		cursor:pointer;
+	}
+
+	@media (max-width: 1225px) {
+		.fillLowerWrap {
+			visibility : "none";
+			height : 0px;
+		}
+	}
+
+
+	.fillLower {
+		border: darkred 2px solid;
+		height: 96%;
+		width: 96%;
+		margin-left: 10px;
+		padding:8px;
+		background: -webkit-linear-gradient(to right, rgba(252, 252, 240, 0.4), #FEFEFE);
+		background: linear-gradient(to right, rgba(252, 252, 240, 0.4), #FEFEFE );
 	}
 
 	button {
@@ -100,6 +259,101 @@
 	button:hover {
 		background-color : #CACAFF;
 		color: darkred;
+	}
+
+	@media screen and (max-width: 390px) {
+		.items .extra-i {
+			padding-left: 1%;
+		}
+	}
+
+	@media screen and (max-width: 600px) {
+		.items .extra-i {
+			padding-left: 3%;
+		}
+	}
+
+	.longviz {
+		visibility : "visibile";
+		height: 10px;
+		background-color:inherit;
+	}
+
+	@media (max-width: 1040px) {
+		.longviz {
+			visibility : "none";
+			height : 0px;
+		}
+	}
+
+	.shortviz {
+		visibility : "none";
+		height:0px;
+		margin-top:6px;
+	}
+
+	@media (max-width: 620px) {
+		.shortviz {
+			visibility : "visible";
+			height:2px;
+			background-color:darkgreen;
+			margin-bottom:12px;
+		}
+	}
+
+	@media (min-width: 1040px) {
+		.shortviz {
+			visibility : "visible";
+			height:120px;
+			border: 2px darkblue solid;
+			background-color:#FFFFF6;
+			margin-bottom:30px;
+			margin-top:5px;
+		}
+	}
+
+	@media (min-width: 380px) {
+		.items .item {
+			max-width: calc(100% - 20px);
+		}
+		.items .extra-i {
+			padding-left: 3%;
+		}
+	}
+	@media (min-width: 410px) {
+		.items .item {
+			max-width: calc(100% - 10px);
+		}
+	}
+	@media (min-width: 620px) {
+		.items .item {
+			max-width: calc(50% - 10px);
+		}
+	}
+	@media (min-width: 830px) {
+		.items .item {
+			max-width: calc(50% - 10px);
+		}
+	}
+	@media (min-width: 1040px) {
+		.items .item {
+			max-width: calc(33.33333% - 10px);
+		}
+	}
+	@media (min-width: 1250px) {
+		.items .item {
+			max-width: calc(25%- 10px);
+		}
+	}
+	@media (min-width: 1460px) {
+		.items .item {
+			max-width: calc(20% - 10px);
+		}
+	}
+	@media (min-width: 1670px) {
+		.items .item {
+			min-width: calc(16.66667% - 10px);
+		}
 	}
 
 
@@ -137,8 +391,8 @@
 		border-left: solid 3px navy;
 		border-top: solid 3px navy;
 		border-bottom: solid 3px rgba(252,252,255,0.7);
-		min-height: 90px;
-		padding: 20px;
+		min-height: 90px
+		padding: 20px
 		background: -webkit-linear-gradient(to left, rgba(242, 242, 210, 0.3), white);
 		background: linear-gradient(to left, rgba(242, 242, 210, 0.3), white );
 		
@@ -147,6 +401,7 @@
 	#mainNav table {
 		padding-left: 3%;
 	}
+
 
 	#mainNav  table  a:focus { outline: none; }
 	#mainNav  table  .navbar-brand {
@@ -165,6 +420,8 @@
 		display:inline;
 	}
 
+	
+	
 	#mainNav  table  .navbar-nav li.nav-item a.nav-link {
 		color: darkgreen;
 		text-decoration: none;
@@ -178,6 +435,7 @@
 		
 	}
 
+
 	#mainNav  table  .navbar-nav a.nav-text {
 		background-color : rgba(242,222,255,0.6);
 		border-radius: 25px;
@@ -186,6 +444,7 @@
 		white-space: nowrap;
 	}
 
+
 	#mainNav  table  .navbar-nav li.nav-item a.nav-link:active, #mainNav .navbar-nav li.nav-item a.nav-link:focus { color: white; }
 	
 	.footer-list li {
@@ -193,6 +452,18 @@
 	}
 
 	.footer-list li a:hover { color: gold; }
+	
+	.hover_group {
+		cursor:pointer;
+	}
+
+	.hover_group rect {
+		fill:#e6e6e6;
+	}
+
+	.hover_group:hover rect {
+		fill: #F6F6e6;
+	}
 
 	footer {
 		padding:10px;
@@ -238,10 +509,46 @@
 		100% {stroke-opacity: 0}
 	}
 
+	.form_el {
+		border:lightgray solid 1px;
+		padding:6px;
+		margin:2px;
+		width:80%;
+	}
+
+	.form_el_inner {
+		border:lightgray solid 1px;
+		padding:6px;
+		margin:2px;
+		width:100%;
+	}
+
 	label {
 		font-weight:bold;
 		color:darkgreen;
 		width:35%;
+	}
+
+	.field_el {
+		width:65%;
+	}
+
+	@media (max-width: 1040px) {
+		.field_el {
+			width:94%;
+			margin-left:3%;
+			margin-right:3%;
+		}
+	}
+
+	#contact_box {
+		background: -webkit-linear-gradient(to right, rgba(252, 252, 240, 1.0), #FEFEFE);
+		background: linear-gradient(to right, rgba(252, 252, 240, 1.0), #FEFEFE );
+	}
+
+	.textarea_field_el {
+		width: 94%;
+		margin:3%;
 	}
 
 	.error-message {
@@ -253,6 +560,36 @@
 		border: solid 1px orange;
 		padding:2px;
 		margin:3px;
+	}
+
+	/* The Modal (background) */
+	.modal {
+		display: none; /* Hidden by default */
+		position: relative; /* Stay in place */
+		z-index: 1; /* Sit on top */
+		left: 0;
+		top: 0;
+		width: 100%; /* Full width */
+		height: 100%; /* Full height */
+		overflow: auto; /* Enable scroll if needed */
+		background-color: rgb(0,0,0); /* Fallback color */
+		background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+		-webkit-animation-name: fadeIn; /* Fade in the background */
+		-webkit-animation-duration: 0.4s;
+		animation-name: fadeIn;
+		animation-duration: 0.4s
+	}
+
+	/* Modal Content */
+	.modal-content {
+		position: inherit;
+		top: 0;
+		background-color: #fefefe;
+		width: 100%;
+		-webkit-animation-name: slideIn;
+		-webkit-animation-duration: 0.4s;
+		animation-name: slideIn;
+		animation-duration: 0.4s
 	}
 
 	/* The Close Button */
@@ -268,6 +605,21 @@
 		color: #000;
 		text-decoration: none;
 		cursor: pointer;
+	}
+
+	.modal-header {
+		padding: 2px 16px;
+		background-color: #4ca85c;
+		color: white;
+	}
+
+	.modal-body {padding: 2px 16px;}
+
+	.modal-footer {
+		padding: 2px 16px;
+		margin-bottom: 20px;
+		background-color: darkgreen;
+		color: white;
 	}
 
 	/* Add Animation */
@@ -291,10 +643,16 @@
 		to {opacity: 1}
 	}
 
+	#logout-control-top {
+		visibility: hidden;
+		display: none;
+	}
+
 	.no-view-file-field {
 		display: none;
 		visibility: hidden;
 	}
+
 
 	h2 {
 		text-transform: capitalize;
@@ -385,8 +743,8 @@ function set_user_title(u_name) {
 	}
 }
 
-// ---- ---- ---- ---- ---- ----
-// ---- ---- ---- ---- ---- ----
+// ---- ---- ---- ---- ---- ----  ---- ---- ---- ---- ---- ----  ---- ---- ---- ---- ---- ----  ---- ---- ---- ---- ---- ----
+// ---- ---- ---- ---- ---- ----  ---- ---- ---- ---- ---- ----  ---- ---- ---- ---- ---- ----  ---- ---- ---- ---- ---- ----
 
 function pc_getLocation() {
   if (navigator.geolocation) {
@@ -400,6 +758,23 @@ function pc_getLocation() {
     alert("Geolocation is not supported by this browser.");
   }
 }
+
+
+
+var g_crypto = window.crypto ? window.crypto.subtle : null
+if ( g_crypto === null  ) {
+  alert("No cryptography support in this browser. To claim ownership of assets, please use another browser.")
+}
+
+var g_window_can_process = true
+if (!window.indexedDB) {
+  g_window_can_process = false
+  console.log("Your browser doesn't support a stable version of IndexedDB. Such and such feature will not be available.");
+}
+
+
+
+
 
 //>--
 function hex_fromArrayOfBytes(arrayOfBytes) {
@@ -497,19 +872,6 @@ var g_url_match = /[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0
 function matches_url(maybe_url) {
 	return g_url_match.test(maybe_url)
 }
-
-
-var g_crypto = window.crypto ? window.crypto.subtle : null
-if ( g_crypto === null  ) {
-  alert("No cryptography support in this browser. To claim ownership of assets, please use another browser.")
-}
-
-var g_window_can_process = true
-if (!window.indexedDB) {
-  g_window_can_process = false
-  console.log("Your browser doesn't support a stable version of IndexedDB. Such and such feature will not be available.");
-}
-
 
 
 

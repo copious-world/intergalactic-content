@@ -1,5 +1,5 @@
 
-(function(l, r) { if (l.getElementById('livereloadscript')) return; r = l.createElement('script'); r.async = 1; r.src = '//' + (window.location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=1'; r.id = 'livereloadscript'; l.getElementsByTagName('head')[0].appendChild(r) })(window.document);
+(function(l, r) { if (!l || l.getElementById('livereloadscript')) return; r = l.createElement('script'); r.async = 1; r.src = '//' + (self.location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=1'; r.id = 'livereloadscript'; l.getElementsByTagName('head')[0].appendChild(r) })(self.document);
 var app = (function () {
     'use strict';
 
@@ -29,6 +29,14 @@ var app = (function () {
     }
     function safe_not_equal(a, b) {
         return a != a ? b == b : a !== b || ((a && typeof a === 'object') || typeof a === 'function');
+    }
+    let src_url_equal_anchor;
+    function src_url_equal(element_src, url) {
+        if (!src_url_equal_anchor) {
+            src_url_equal_anchor = document.createElement('a');
+        }
+        src_url_equal_anchor.href = url;
+        return element_src === src_url_equal_anchor.href;
     }
     function is_empty(obj) {
         return Object.keys(obj).length === 0;
@@ -62,12 +70,22 @@ var app = (function () {
         }
         return $$scope.dirty;
     }
-    function update_slot(slot, slot_definition, ctx, $$scope, dirty, get_slot_changes_fn, get_slot_context_fn) {
-        const slot_changes = get_slot_changes(slot_definition, $$scope, dirty, get_slot_changes_fn);
+    function update_slot_base(slot, slot_definition, ctx, $$scope, slot_changes, get_slot_context_fn) {
         if (slot_changes) {
             const slot_context = get_slot_context(slot_definition, ctx, $$scope, get_slot_context_fn);
             slot.p(slot_context, slot_changes);
         }
+    }
+    function get_all_dirty_from_scope($$scope) {
+        if ($$scope.ctx.length > 32) {
+            const dirty = [];
+            const length = $$scope.ctx.length / 32;
+            for (let i = 0; i < length; i++) {
+                dirty[i] = -1;
+            }
+            return dirty;
+        }
+        return -1;
     }
     function exclude_internal_props(props) {
         const result = {};
@@ -90,7 +108,6 @@ var app = (function () {
     function action_destroyer(action_result) {
         return action_result && is_function(action_result.destroy) ? action_result.destroy : noop;
     }
-
     function append(target, node) {
         target.appendChild(node);
     }
@@ -170,7 +187,12 @@ var app = (function () {
         input.value = value == null ? '' : value;
     }
     function set_style(node, key, value, important) {
-        node.style.setProperty(key, value, important ? 'important' : '');
+        if (value === null) {
+            node.style.removeProperty(key);
+        }
+        else {
+            node.style.setProperty(key, value, important ? 'important' : '');
+        }
     }
     function select_option(select, value) {
         for (let i = 0; i < select.options.length; i += 1) {
@@ -180,14 +202,15 @@ var app = (function () {
                 return;
             }
         }
+        select.selectedIndex = -1; // no option should be selected
     }
     function select_value(select) {
         const selected_option = select.querySelector(':checked') || select.options[0];
         return selected_option && selected_option.__value;
     }
-    function custom_event(type, detail) {
+    function custom_event(type, detail, bubbles = false) {
         const e = document.createEvent('CustomEvent');
-        e.initCustomEvent(type, false, false, detail);
+        e.initCustomEvent(type, bubbles, false, detail);
         return e;
     }
 
@@ -215,7 +238,8 @@ var app = (function () {
     function bubble(component, event) {
         const callbacks = component.$$.callbacks[event.type];
         if (callbacks) {
-            callbacks.slice().forEach(fn => fn(event));
+            // @ts-ignore
+            callbacks.slice().forEach(fn => fn.call(this, event));
         }
     }
 
@@ -237,22 +261,40 @@ var app = (function () {
     function add_flush_callback(fn) {
         flush_callbacks.push(fn);
     }
-    let flushing = false;
+    // flush() calls callbacks in this order:
+    // 1. All beforeUpdate callbacks, in order: parents before children
+    // 2. All bind:this callbacks, in reverse order: children before parents.
+    // 3. All afterUpdate callbacks, in order: parents before children. EXCEPT
+    //    for afterUpdates called during the initial onMount, which are called in
+    //    reverse order: children before parents.
+    // Since callbacks might update component values, which could trigger another
+    // call to flush(), the following steps guard against this:
+    // 1. During beforeUpdate, any updated components will be added to the
+    //    dirty_components array and will cause a reentrant call to flush(). Because
+    //    the flush index is kept outside the function, the reentrant call will pick
+    //    up where the earlier call left off and go through all dirty components. The
+    //    current_component value is saved and restored so that the reentrant call will
+    //    not interfere with the "parent" flush() call.
+    // 2. bind:this callbacks cannot trigger new flush() calls.
+    // 3. During afterUpdate, any updated components will NOT have their afterUpdate
+    //    callback called a second time; the seen_callbacks set, outside the flush()
+    //    function, guarantees this behavior.
     const seen_callbacks = new Set();
+    let flushidx = 0; // Do *not* move this inside the flush() function
     function flush() {
-        if (flushing)
-            return;
-        flushing = true;
+        const saved_component = current_component;
         do {
             // first, call beforeUpdate functions
             // and update components
-            for (let i = 0; i < dirty_components.length; i += 1) {
-                const component = dirty_components[i];
+            while (flushidx < dirty_components.length) {
+                const component = dirty_components[flushidx];
+                flushidx++;
                 set_current_component(component);
                 update(component.$$);
             }
             set_current_component(null);
             dirty_components.length = 0;
+            flushidx = 0;
             while (binding_callbacks.length)
                 binding_callbacks.pop()();
             // then, once components are updated, call
@@ -272,8 +314,8 @@ var app = (function () {
             flush_callbacks.pop()();
         }
         update_scheduled = false;
-        flushing = false;
         seen_callbacks.clear();
+        set_current_component(saved_component);
     }
     function update($$) {
         if ($$.fragment !== null) {
@@ -505,7 +547,7 @@ var app = (function () {
         }
         component.$$.dirty[(i / 31) | 0] |= (1 << (i % 31));
     }
-    function init(component, options, instance, create_fragment, not_equal, props, dirty = [-1]) {
+    function init(component, options, instance, create_fragment, not_equal, props, append_styles, dirty = [-1]) {
         const parent_component = current_component;
         set_current_component(component);
         const $$ = component.$$ = {
@@ -522,12 +564,14 @@ var app = (function () {
             on_disconnect: [],
             before_update: [],
             after_update: [],
-            context: new Map(parent_component ? parent_component.$$.context : options.context || []),
+            context: new Map(options.context || (parent_component ? parent_component.$$.context : [])),
             // everything else
             callbacks: blank_object(),
             dirty,
-            skip_bound: false
+            skip_bound: false,
+            root: options.target || parent_component.$$.root
         };
+        append_styles && append_styles($$.root);
         let ready = false;
         $$.ctx = instance
             ? instance(component, options.props || {}, (i, ret, ...rest) => {
@@ -591,7 +635,7 @@ var app = (function () {
     }
 
     function dispatch_dev(type, detail) {
-        document.dispatchEvent(custom_event(type, Object.assign({ version: '3.37.0' }, detail)));
+        document.dispatchEvent(custom_event(type, Object.assign({ version: '3.46.4' }, detail), true));
     }
     function append_dev(target, node) {
         dispatch_dev('SvelteDOMInsert', { target, node });
@@ -1857,15 +1901,15 @@ var app = (function () {
       const componentOn = component.$on;
 
       // And we override the $on function to forward all bound events.
-      component.$on = (fullEventType, ...args) => {
+      component.$on = (fullEventType, callback) => {
         let eventType = fullEventType;
         let destructor = () => {};
         if ($on) {
           // The event was bound programmatically.
-          destructor = $on(eventType);
+          destructor = $on(eventType, callback);
         } else {
           // The event was bound before mount by Svelte.
-          events.push(eventType);
+          events.push([eventType, callback]);
         }
         const oldModifierMatch = eventType.match(oldModifierRegex);
         const newModifierMatch = eventType.match(newModifierRegex);
@@ -1885,7 +1929,11 @@ var app = (function () {
         }
 
         // Call the original $on function.
-        const componentDestructor = componentOn.call(component, eventType, ...args);
+        const componentDestructor = componentOn.call(
+          component,
+          eventType,
+          callback
+        );
 
         return (...args) => {
           destructor();
@@ -1900,11 +1948,12 @@ var app = (function () {
 
       return (node) => {
         const destructors = [];
+        const forwardDestructors = {};
 
         // This function is responsible for forwarding all bound events.
-        $on = (fullEventType) => {
+        $on = (fullEventType, callback) => {
           let eventType = fullEventType;
-          let handler = forward;
+          let handler = callback;
           // DOM addEventListener options argument.
           let options = false;
           const oldModifierMatch = eventType.match(oldModifierRegex);
@@ -1936,6 +1985,7 @@ var app = (function () {
             }
           }
 
+          // Listen for the event directly, with the given options.
           const off = listen(node, eventType, handler, options);
           const destructor = () => {
             off();
@@ -1946,12 +1996,18 @@ var app = (function () {
           };
 
           destructors.push(destructor);
+
+          // Forward the event from Svelte.
+          if (!eventType in forwardDestructors) {
+            forwardDestructors[eventType] = listen(node, eventType, forward);
+          }
+
           return destructor;
         };
 
         for (let i = 0; i < events.length; i++) {
           // Listen to all the events added before mount.
-          $on(events[i]);
+          $on(events[i][0], events[i][1]);
         }
 
         return {
@@ -1959,6 +2015,11 @@ var app = (function () {
             // Remove all event listeners.
             for (let i = 0; i < destructors.length; i++) {
               destructors[i]();
+            }
+
+            // Remove all event forwarders.
+            for (let entry of Object.entries(forwardDestructors)) {
+              entry[1]();
             }
           },
         };
@@ -2261,10 +2322,10 @@ var app = (function () {
       };
     }
 
-    /* node_modules/@smui/common/A.svelte generated by Svelte v3.37.0 */
-    const file$7 = "node_modules/@smui/common/A.svelte";
+    /* node_modules/.pnpm/@smui+common@4.2.0/node_modules/@smui/common/A.svelte generated by Svelte v3.46.4 */
+    const file$7 = "node_modules/.pnpm/@smui+common@4.2.0/node_modules/@smui/common/A.svelte";
 
-    function create_fragment$7(ctx) {
+    function create_fragment$8(ctx) {
     	let a;
     	let useActions_action;
     	let current;
@@ -2310,8 +2371,17 @@ var app = (function () {
     		},
     		p: function update(ctx, [dirty]) {
     			if (default_slot) {
-    				if (default_slot.p && dirty & /*$$scope*/ 64) {
-    					update_slot(default_slot, default_slot_template, ctx, /*$$scope*/ ctx[6], dirty, null, null);
+    				if (default_slot.p && (!current || dirty & /*$$scope*/ 64)) {
+    					update_slot_base(
+    						default_slot,
+    						default_slot_template,
+    						ctx,
+    						/*$$scope*/ ctx[6],
+    						!current
+    						? get_all_dirty_from_scope(/*$$scope*/ ctx[6])
+    						: get_slot_changes(default_slot_template, /*$$scope*/ ctx[6], dirty, null),
+    						null
+    					);
     				}
     			}
 
@@ -2342,7 +2412,7 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$7.name,
+    		id: create_fragment$8.name,
     		type: "component",
     		source: "",
     		ctx
@@ -2351,12 +2421,12 @@ var app = (function () {
     	return block;
     }
 
-    function instance$3($$self, $$props, $$invalidate) {
+    function instance$4($$self, $$props, $$invalidate) {
     	const omit_props_names = ["href","use","getElement"];
     	let $$restProps = compute_rest_props($$props, omit_props_names);
     	let { $$slots: slots = {}, $$scope } = $$props;
-    	validate_slots("A", slots, ['default']);
-    	let { href = "javascript:void(0);" } = $$props;
+    	validate_slots('A', slots, ['default']);
+    	let { href = 'javascript:void(0);' } = $$props;
     	let { use = [] } = $$props;
     	const forwardEvents = forwardEventsBuilder(get_current_component());
     	let element = null;
@@ -2366,7 +2436,7 @@ var app = (function () {
     	}
 
     	function a_binding($$value) {
-    		binding_callbacks[$$value ? "unshift" : "push"](() => {
+    		binding_callbacks[$$value ? 'unshift' : 'push'](() => {
     			element = $$value;
     			$$invalidate(2, element);
     		});
@@ -2375,9 +2445,9 @@ var app = (function () {
     	$$self.$$set = $$new_props => {
     		$$props = assign(assign({}, $$props), exclude_internal_props($$new_props));
     		$$invalidate(4, $$restProps = compute_rest_props($$props, omit_props_names));
-    		if ("href" in $$new_props) $$invalidate(0, href = $$new_props.href);
-    		if ("use" in $$new_props) $$invalidate(1, use = $$new_props.use);
-    		if ("$$scope" in $$new_props) $$invalidate(6, $$scope = $$new_props.$$scope);
+    		if ('href' in $$new_props) $$invalidate(0, href = $$new_props.href);
+    		if ('use' in $$new_props) $$invalidate(1, use = $$new_props.use);
+    		if ('$$scope' in $$new_props) $$invalidate(6, $$scope = $$new_props.$$scope);
     	};
 
     	$$self.$capture_state = () => ({
@@ -2392,9 +2462,9 @@ var app = (function () {
     	});
 
     	$$self.$inject_state = $$new_props => {
-    		if ("href" in $$props) $$invalidate(0, href = $$new_props.href);
-    		if ("use" in $$props) $$invalidate(1, use = $$new_props.use);
-    		if ("element" in $$props) $$invalidate(2, element = $$new_props.element);
+    		if ('href' in $$props) $$invalidate(0, href = $$new_props.href);
+    		if ('use' in $$props) $$invalidate(1, use = $$new_props.use);
+    		if ('element' in $$props) $$invalidate(2, element = $$new_props.element);
     	};
 
     	if ($$props && "$$inject" in $$props) {
@@ -2417,13 +2487,13 @@ var app = (function () {
     class A extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$3, create_fragment$7, safe_not_equal, { href: 0, use: 1, getElement: 5 });
+    		init(this, options, instance$4, create_fragment$8, safe_not_equal, { href: 0, use: 1, getElement: 5 });
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
     			tagName: "A",
     			options,
-    			id: create_fragment$7.name
+    			id: create_fragment$8.name
     		});
     	}
 
@@ -2452,10 +2522,10 @@ var app = (function () {
     	}
     }
 
-    /* node_modules/@smui/common/Button.svelte generated by Svelte v3.37.0 */
-    const file$6 = "node_modules/@smui/common/Button.svelte";
+    /* node_modules/.pnpm/@smui+common@4.2.0/node_modules/@smui/common/Button.svelte generated by Svelte v3.46.4 */
+    const file$6 = "node_modules/.pnpm/@smui+common@4.2.0/node_modules/@smui/common/Button.svelte";
 
-    function create_fragment$6(ctx) {
+    function create_fragment$7(ctx) {
     	let button;
     	let useActions_action;
     	let current;
@@ -2487,6 +2557,7 @@ var app = (function () {
     				default_slot.m(button, null);
     			}
 
+    			if (button.autofocus) button.focus();
     			/*button_binding*/ ctx[7](button);
     			current = true;
 
@@ -2501,8 +2572,17 @@ var app = (function () {
     		},
     		p: function update(ctx, [dirty]) {
     			if (default_slot) {
-    				if (default_slot.p && dirty & /*$$scope*/ 32) {
-    					update_slot(default_slot, default_slot_template, ctx, /*$$scope*/ ctx[5], dirty, null, null);
+    				if (default_slot.p && (!current || dirty & /*$$scope*/ 32)) {
+    					update_slot_base(
+    						default_slot,
+    						default_slot_template,
+    						ctx,
+    						/*$$scope*/ ctx[5],
+    						!current
+    						? get_all_dirty_from_scope(/*$$scope*/ ctx[5])
+    						: get_slot_changes(default_slot_template, /*$$scope*/ ctx[5], dirty, null),
+    						null
+    					);
     				}
     			}
 
@@ -2529,7 +2609,7 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$6.name,
+    		id: create_fragment$7.name,
     		type: "component",
     		source: "",
     		ctx
@@ -2538,11 +2618,11 @@ var app = (function () {
     	return block;
     }
 
-    function instance$2($$self, $$props, $$invalidate) {
+    function instance$3($$self, $$props, $$invalidate) {
     	const omit_props_names = ["use","getElement"];
     	let $$restProps = compute_rest_props($$props, omit_props_names);
     	let { $$slots: slots = {}, $$scope } = $$props;
-    	validate_slots("Button", slots, ['default']);
+    	validate_slots('Button', slots, ['default']);
     	let { use = [] } = $$props;
     	const forwardEvents = forwardEventsBuilder(get_current_component());
     	let element = null;
@@ -2552,7 +2632,7 @@ var app = (function () {
     	}
 
     	function button_binding($$value) {
-    		binding_callbacks[$$value ? "unshift" : "push"](() => {
+    		binding_callbacks[$$value ? 'unshift' : 'push'](() => {
     			element = $$value;
     			$$invalidate(1, element);
     		});
@@ -2561,8 +2641,8 @@ var app = (function () {
     	$$self.$$set = $$new_props => {
     		$$props = assign(assign({}, $$props), exclude_internal_props($$new_props));
     		$$invalidate(3, $$restProps = compute_rest_props($$props, omit_props_names));
-    		if ("use" in $$new_props) $$invalidate(0, use = $$new_props.use);
-    		if ("$$scope" in $$new_props) $$invalidate(5, $$scope = $$new_props.$$scope);
+    		if ('use' in $$new_props) $$invalidate(0, use = $$new_props.use);
+    		if ('$$scope' in $$new_props) $$invalidate(5, $$scope = $$new_props.$$scope);
     	};
 
     	$$self.$capture_state = () => ({
@@ -2576,8 +2656,8 @@ var app = (function () {
     	});
 
     	$$self.$inject_state = $$new_props => {
-    		if ("use" in $$props) $$invalidate(0, use = $$new_props.use);
-    		if ("element" in $$props) $$invalidate(1, element = $$new_props.element);
+    		if ('use' in $$props) $$invalidate(0, use = $$new_props.use);
+    		if ('element' in $$props) $$invalidate(1, element = $$new_props.element);
     	};
 
     	if ($$props && "$$inject" in $$props) {
@@ -2599,13 +2679,13 @@ var app = (function () {
     class Button extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$2, create_fragment$6, safe_not_equal, { use: 0, getElement: 4 });
+    		init(this, options, instance$3, create_fragment$7, safe_not_equal, { use: 0, getElement: 4 });
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
     			tagName: "Button",
     			options,
-    			id: create_fragment$6.name
+    			id: create_fragment$7.name
     		});
     	}
 
@@ -2626,11 +2706,11 @@ var app = (function () {
     	}
     }
 
-    /* node_modules/@smui/tab-indicator/TabIndicator.svelte generated by Svelte v3.37.0 */
+    /* node_modules/.pnpm/@smui+tab-indicator@4.2.0/node_modules/@smui/tab-indicator/TabIndicator.svelte generated by Svelte v3.46.4 */
 
-    const file$5 = "node_modules/@smui/tab-indicator/TabIndicator.svelte";
+    const file$5 = "node_modules/.pnpm/@smui+tab-indicator@4.2.0/node_modules/@smui/tab-indicator/TabIndicator.svelte";
 
-    function create_fragment$5(ctx) {
+    function create_fragment$6(ctx) {
     	let span1;
     	let span0;
     	let span0_class_value;
@@ -2649,18 +2729,18 @@ var app = (function () {
     		{
     			class: span0_class_value = classMap({
     				[/*content$class*/ ctx[6]]: true,
-    				"mdc-tab-indicator__content": true,
-    				"mdc-tab-indicator__content--underline": /*type*/ ctx[3] === "underline",
-    				"mdc-tab-indicator__content--icon": /*type*/ ctx[3] === "icon"
+    				'mdc-tab-indicator__content': true,
+    				'mdc-tab-indicator__content--underline': /*type*/ ctx[3] === 'underline',
+    				'mdc-tab-indicator__content--icon': /*type*/ ctx[3] === 'icon'
     			})
     		},
     		{
-    			style: span0_style_value = Object.entries(/*contentStyles*/ ctx[10]).map(func$2).join(" ")
+    			style: span0_style_value = Object.entries(/*contentStyles*/ ctx[10]).map(func$2).join(' ')
     		},
     		{
-    			"aria-hidden": span0_aria_hidden_value = /*type*/ ctx[3] === "icon" ? "true" : null
+    			"aria-hidden": span0_aria_hidden_value = /*type*/ ctx[3] === 'icon' ? 'true' : null
     		},
-    		prefixFilter(/*$$restProps*/ ctx[12], "content$")
+    		prefixFilter(/*$$restProps*/ ctx[12], 'content$')
     	];
 
     	let span0_data = {};
@@ -2673,13 +2753,13 @@ var app = (function () {
     		{
     			class: span1_class_value = classMap({
     				[/*className*/ ctx[2]]: true,
-    				"mdc-tab-indicator": true,
-    				"mdc-tab-indicator--active": /*active*/ ctx[0],
-    				"mdc-tab-indicator--fade": /*transition*/ ctx[4] === "fade",
+    				'mdc-tab-indicator': true,
+    				'mdc-tab-indicator--active': /*active*/ ctx[0],
+    				'mdc-tab-indicator--fade': /*transition*/ ctx[4] === 'fade',
     				.../*internalClasses*/ ctx[9]
     			})
     		},
-    		exclude(/*$$restProps*/ ctx[12], ["content$"])
+    		exclude(/*$$restProps*/ ctx[12], ['content$'])
     	];
 
     	let span1_data = {};
@@ -2725,21 +2805,30 @@ var app = (function () {
     		},
     		p: function update(ctx, [dirty]) {
     			if (default_slot) {
-    				if (default_slot.p && dirty & /*$$scope*/ 1048576) {
-    					update_slot(default_slot, default_slot_template, ctx, /*$$scope*/ ctx[20], dirty, null, null);
+    				if (default_slot.p && (!current || dirty & /*$$scope*/ 1048576)) {
+    					update_slot_base(
+    						default_slot,
+    						default_slot_template,
+    						ctx,
+    						/*$$scope*/ ctx[20],
+    						!current
+    						? get_all_dirty_from_scope(/*$$scope*/ ctx[20])
+    						: get_slot_changes(default_slot_template, /*$$scope*/ ctx[20], dirty, null),
+    						null
+    					);
     				}
     			}
 
     			set_attributes(span0, span0_data = get_spread_update(span0_levels, [
     				(!current || dirty & /*content$class, type*/ 72 && span0_class_value !== (span0_class_value = classMap({
     					[/*content$class*/ ctx[6]]: true,
-    					"mdc-tab-indicator__content": true,
-    					"mdc-tab-indicator__content--underline": /*type*/ ctx[3] === "underline",
-    					"mdc-tab-indicator__content--icon": /*type*/ ctx[3] === "icon"
+    					'mdc-tab-indicator__content': true,
+    					'mdc-tab-indicator__content--underline': /*type*/ ctx[3] === 'underline',
+    					'mdc-tab-indicator__content--icon': /*type*/ ctx[3] === 'icon'
     				}))) && { class: span0_class_value },
-    				(!current || dirty & /*contentStyles*/ 1024 && span0_style_value !== (span0_style_value = Object.entries(/*contentStyles*/ ctx[10]).map(func$2).join(" "))) && { style: span0_style_value },
-    				(!current || dirty & /*type*/ 8 && span0_aria_hidden_value !== (span0_aria_hidden_value = /*type*/ ctx[3] === "icon" ? "true" : null)) && { "aria-hidden": span0_aria_hidden_value },
-    				dirty & /*$$restProps*/ 4096 && prefixFilter(/*$$restProps*/ ctx[12], "content$")
+    				(!current || dirty & /*contentStyles*/ 1024 && span0_style_value !== (span0_style_value = Object.entries(/*contentStyles*/ ctx[10]).map(func$2).join(' '))) && { style: span0_style_value },
+    				(!current || dirty & /*type*/ 8 && span0_aria_hidden_value !== (span0_aria_hidden_value = /*type*/ ctx[3] === 'icon' ? 'true' : null)) && { "aria-hidden": span0_aria_hidden_value },
+    				dirty & /*$$restProps*/ 4096 && prefixFilter(/*$$restProps*/ ctx[12], 'content$')
     			]));
 
     			if (useActions_action && is_function(useActions_action.update) && dirty & /*content$use*/ 32) useActions_action.update.call(null, /*content$use*/ ctx[5]);
@@ -2747,12 +2836,12 @@ var app = (function () {
     			set_attributes(span1, span1_data = get_spread_update(span1_levels, [
     				(!current || dirty & /*className, active, transition, internalClasses*/ 533 && span1_class_value !== (span1_class_value = classMap({
     					[/*className*/ ctx[2]]: true,
-    					"mdc-tab-indicator": true,
-    					"mdc-tab-indicator--active": /*active*/ ctx[0],
-    					"mdc-tab-indicator--fade": /*transition*/ ctx[4] === "fade",
+    					'mdc-tab-indicator': true,
+    					'mdc-tab-indicator--active': /*active*/ ctx[0],
+    					'mdc-tab-indicator--fade': /*transition*/ ctx[4] === 'fade',
     					.../*internalClasses*/ ctx[9]
     				}))) && { class: span1_class_value },
-    				dirty & /*$$restProps*/ 4096 && exclude(/*$$restProps*/ ctx[12], ["content$"])
+    				dirty & /*$$restProps*/ 4096 && exclude(/*$$restProps*/ ctx[12], ['content$'])
     			]));
 
     			if (useActions_action_1 && is_function(useActions_action_1.update) && dirty & /*use*/ 2) useActions_action_1.update.call(null, /*use*/ ctx[1]);
@@ -2778,7 +2867,7 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$5.name,
+    		id: create_fragment$6.name,
     		type: "component",
     		source: "",
     		ctx
@@ -2796,15 +2885,15 @@ var app = (function () {
 
     	let $$restProps = compute_rest_props($$props, omit_props_names);
     	let { $$slots: slots = {}, $$scope } = $$props;
-    	validate_slots("TabIndicator", slots, ['default']);
+    	validate_slots('TabIndicator', slots, ['default']);
     	const forwardEvents = forwardEventsBuilder(get_current_component());
     	let { use = [] } = $$props;
-    	let { class: className = "" } = $$props;
+    	let { class: className = '' } = $$props;
     	let { active = false } = $$props;
-    	let { type = "underline" } = $$props;
-    	let { transition = "slide" } = $$props;
+    	let { type = 'underline' } = $$props;
+    	let { transition = 'slide' } = $$props;
     	let { content$use = [] } = $$props;
-    	let { content$class = "" } = $$props;
+    	let { content$class = '' } = $$props;
     	let element;
     	let instance;
     	let content;
@@ -2860,7 +2949,7 @@ var app = (function () {
 
     	function addContentStyle(name, value) {
     		if (contentStyles[name] != value) {
-    			if (value === "" || value == null) {
+    			if (value === '' || value == null) {
     				delete contentStyles[name];
     				((($$invalidate(10, contentStyles), $$invalidate(19, oldTransition)), $$invalidate(4, transition)), $$invalidate(17, instance));
     			} else {
@@ -2890,14 +2979,14 @@ var app = (function () {
     	}
 
     	function span0_binding($$value) {
-    		binding_callbacks[$$value ? "unshift" : "push"](() => {
+    		binding_callbacks[$$value ? 'unshift' : 'push'](() => {
     			content = $$value;
     			$$invalidate(8, content);
     		});
     	}
 
     	function span1_binding($$value) {
-    		binding_callbacks[$$value ? "unshift" : "push"](() => {
+    		binding_callbacks[$$value ? 'unshift' : 'push'](() => {
     			element = $$value;
     			$$invalidate(7, element);
     		});
@@ -2906,14 +2995,14 @@ var app = (function () {
     	$$self.$$set = $$new_props => {
     		$$props = assign(assign({}, $$props), exclude_internal_props($$new_props));
     		$$invalidate(12, $$restProps = compute_rest_props($$props, omit_props_names));
-    		if ("use" in $$new_props) $$invalidate(1, use = $$new_props.use);
-    		if ("class" in $$new_props) $$invalidate(2, className = $$new_props.class);
-    		if ("active" in $$new_props) $$invalidate(0, active = $$new_props.active);
-    		if ("type" in $$new_props) $$invalidate(3, type = $$new_props.type);
-    		if ("transition" in $$new_props) $$invalidate(4, transition = $$new_props.transition);
-    		if ("content$use" in $$new_props) $$invalidate(5, content$use = $$new_props.content$use);
-    		if ("content$class" in $$new_props) $$invalidate(6, content$class = $$new_props.content$class);
-    		if ("$$scope" in $$new_props) $$invalidate(20, $$scope = $$new_props.$$scope);
+    		if ('use' in $$new_props) $$invalidate(1, use = $$new_props.use);
+    		if ('class' in $$new_props) $$invalidate(2, className = $$new_props.class);
+    		if ('active' in $$new_props) $$invalidate(0, active = $$new_props.active);
+    		if ('type' in $$new_props) $$invalidate(3, type = $$new_props.type);
+    		if ('transition' in $$new_props) $$invalidate(4, transition = $$new_props.transition);
+    		if ('content$use' in $$new_props) $$invalidate(5, content$use = $$new_props.content$use);
+    		if ('content$class' in $$new_props) $$invalidate(6, content$class = $$new_props.content$class);
+    		if ('$$scope' in $$new_props) $$invalidate(20, $$scope = $$new_props.$$scope);
     	};
 
     	$$self.$capture_state = () => ({
@@ -2953,20 +3042,20 @@ var app = (function () {
     	});
 
     	$$self.$inject_state = $$new_props => {
-    		if ("use" in $$props) $$invalidate(1, use = $$new_props.use);
-    		if ("className" in $$props) $$invalidate(2, className = $$new_props.className);
-    		if ("active" in $$props) $$invalidate(0, active = $$new_props.active);
-    		if ("type" in $$props) $$invalidate(3, type = $$new_props.type);
-    		if ("transition" in $$props) $$invalidate(4, transition = $$new_props.transition);
-    		if ("content$use" in $$props) $$invalidate(5, content$use = $$new_props.content$use);
-    		if ("content$class" in $$props) $$invalidate(6, content$class = $$new_props.content$class);
-    		if ("element" in $$props) $$invalidate(7, element = $$new_props.element);
-    		if ("instance" in $$props) $$invalidate(17, instance = $$new_props.instance);
-    		if ("content" in $$props) $$invalidate(8, content = $$new_props.content);
-    		if ("internalClasses" in $$props) $$invalidate(9, internalClasses = $$new_props.internalClasses);
-    		if ("contentStyles" in $$props) $$invalidate(10, contentStyles = $$new_props.contentStyles);
-    		if ("changeSets" in $$props) $$invalidate(18, changeSets = $$new_props.changeSets);
-    		if ("oldTransition" in $$props) $$invalidate(19, oldTransition = $$new_props.oldTransition);
+    		if ('use' in $$props) $$invalidate(1, use = $$new_props.use);
+    		if ('className' in $$props) $$invalidate(2, className = $$new_props.className);
+    		if ('active' in $$props) $$invalidate(0, active = $$new_props.active);
+    		if ('type' in $$props) $$invalidate(3, type = $$new_props.type);
+    		if ('transition' in $$props) $$invalidate(4, transition = $$new_props.transition);
+    		if ('content$use' in $$props) $$invalidate(5, content$use = $$new_props.content$use);
+    		if ('content$class' in $$props) $$invalidate(6, content$class = $$new_props.content$class);
+    		if ('element' in $$props) $$invalidate(7, element = $$new_props.element);
+    		if ('instance' in $$props) $$invalidate(17, instance = $$new_props.instance);
+    		if ('content' in $$props) $$invalidate(8, content = $$new_props.content);
+    		if ('internalClasses' in $$props) $$invalidate(9, internalClasses = $$new_props.internalClasses);
+    		if ('contentStyles' in $$props) $$invalidate(10, contentStyles = $$new_props.contentStyles);
+    		if ('changeSets' in $$props) $$invalidate(18, changeSets = $$new_props.changeSets);
+    		if ('oldTransition' in $$props) $$invalidate(19, oldTransition = $$new_props.oldTransition);
     	};
 
     	if ($$props && "$$inject" in $$props) {
@@ -3032,7 +3121,7 @@ var app = (function () {
     	constructor(options) {
     		super(options);
 
-    		init(this, options, instance_1$3, create_fragment$5, safe_not_equal, {
+    		init(this, options, instance_1$3, create_fragment$6, safe_not_equal, {
     			use: 1,
     			class: 2,
     			active: 0,
@@ -3050,7 +3139,7 @@ var app = (function () {
     			component: this,
     			tagName: "TabIndicator",
     			options,
-    			id: create_fragment$5.name
+    			id: create_fragment$6.name
     		});
     	}
 
@@ -3143,10 +3232,10 @@ var app = (function () {
     	}
     }
 
-    /* node_modules/@smui/tab/Tab.svelte generated by Svelte v3.37.0 */
+    /* node_modules/.pnpm/@smui+tab@4.2.0/node_modules/@smui/tab/Tab.svelte generated by Svelte v3.46.4 */
 
     const { Error: Error_1 } = globals;
-    const file$4 = "node_modules/@smui/tab/Tab.svelte";
+    const file$4 = "node_modules/.pnpm/@smui+tab@4.2.0/node_modules/@smui/tab/Tab.svelte";
     const get_tab_indicator_slot_changes_1 = dirty => ({});
     const get_tab_indicator_slot_context_1 = ctx => ({});
     const get_tab_indicator_slot_changes = dirty => ({});
@@ -3159,7 +3248,7 @@ var app = (function () {
 
     	const tabindicator_spread_levels = [
     		{ active: /*active*/ ctx[18] },
-    		prefixFilter(/*$$restProps*/ ctx[24], "tabIndicator$")
+    		prefixFilter(/*$$restProps*/ ctx[24], 'tabIndicator$')
     	];
 
     	let tabindicator_props = {
@@ -3190,7 +3279,7 @@ var app = (function () {
     			const tabindicator_changes = (dirty[0] & /*active, $$restProps*/ 17039360)
     			? get_spread_update(tabindicator_spread_levels, [
     					dirty[0] & /*active*/ 262144 && { active: /*active*/ ctx[18] },
-    					dirty[0] & /*$$restProps*/ 16777216 && get_spread_object(prefixFilter(/*$$restProps*/ ctx[24], "tabIndicator$"))
+    					dirty[0] & /*$$restProps*/ 16777216 && get_spread_object(prefixFilter(/*$$restProps*/ ctx[24], 'tabIndicator$'))
     				])
     			: {};
 
@@ -3245,8 +3334,17 @@ var app = (function () {
     		},
     		p: function update(ctx, dirty) {
     			if (tab_indicator_slot) {
-    				if (tab_indicator_slot.p && dirty[1] & /*$$scope*/ 16) {
-    					update_slot(tab_indicator_slot, tab_indicator_slot_template, ctx, /*$$scope*/ ctx[35], dirty, get_tab_indicator_slot_changes, get_tab_indicator_slot_context);
+    				if (tab_indicator_slot.p && (!current || dirty[1] & /*$$scope*/ 16)) {
+    					update_slot_base(
+    						tab_indicator_slot,
+    						tab_indicator_slot_template,
+    						ctx,
+    						/*$$scope*/ ctx[35],
+    						!current
+    						? get_all_dirty_from_scope(/*$$scope*/ ctx[35])
+    						: get_slot_changes(tab_indicator_slot_template, /*$$scope*/ ctx[35], dirty, get_tab_indicator_slot_changes),
+    						get_tab_indicator_slot_context
+    					);
     				}
     			}
     		},
@@ -3282,7 +3380,7 @@ var app = (function () {
 
     	const tabindicator_spread_levels = [
     		{ active: /*active*/ ctx[18] },
-    		prefixFilter(/*$$restProps*/ ctx[24], "tabIndicator$")
+    		prefixFilter(/*$$restProps*/ ctx[24], 'tabIndicator$')
     	];
 
     	let tabindicator_props = {
@@ -3313,7 +3411,7 @@ var app = (function () {
     			const tabindicator_changes = (dirty[0] & /*active, $$restProps*/ 17039360)
     			? get_spread_update(tabindicator_spread_levels, [
     					dirty[0] & /*active*/ 262144 && { active: /*active*/ ctx[18] },
-    					dirty[0] & /*$$restProps*/ 16777216 && get_spread_object(prefixFilter(/*$$restProps*/ ctx[24], "tabIndicator$"))
+    					dirty[0] & /*$$restProps*/ 16777216 && get_spread_object(prefixFilter(/*$$restProps*/ ctx[24], 'tabIndicator$'))
     				])
     			: {};
 
@@ -3368,8 +3466,17 @@ var app = (function () {
     		},
     		p: function update(ctx, dirty) {
     			if (tab_indicator_slot) {
-    				if (tab_indicator_slot.p && dirty[1] & /*$$scope*/ 16) {
-    					update_slot(tab_indicator_slot, tab_indicator_slot_template, ctx, /*$$scope*/ ctx[35], dirty, get_tab_indicator_slot_changes_1, get_tab_indicator_slot_context_1);
+    				if (tab_indicator_slot.p && (!current || dirty[1] & /*$$scope*/ 16)) {
+    					update_slot_base(
+    						tab_indicator_slot,
+    						tab_indicator_slot_template,
+    						ctx,
+    						/*$$scope*/ ctx[35],
+    						!current
+    						? get_all_dirty_from_scope(/*$$scope*/ ctx[35])
+    						: get_slot_changes(tab_indicator_slot_template, /*$$scope*/ ctx[35], dirty, get_tab_indicator_slot_changes_1),
+    						get_tab_indicator_slot_context_1
+    					);
     				}
     			}
     		},
@@ -3399,7 +3506,7 @@ var app = (function () {
     }
 
     // (1:0) <svelte:component   this={component}   bind:this={element}   use={[     [       Ripple,       {         ripple,         unbounded: false,         addClass,         removeClass,         addStyle,       },     ],     forwardEvents,     ...use,   ]}   class={classMap({     [className]: true,     'mdc-tab': true,     'mdc-tab--active': active,     'mdc-tab--stacked': stacked,     'mdc-tab--min-width': minWidth,     ...internalClasses,   })}   style={Object.entries(internalStyles)     .map(([name, value]) => `${name}: ${value};`)     .concat([style])     .join(' ')}   role="tab"   aria-selected={active ? 'true' : 'false'}   tabindex={active || forceAccessible ? '0' : '-1'}   {href}   on:click={instance && instance.handleClick()}   {...internalAttrs}   {...exclude($$restProps, ['content$', 'tabIndicator$'])} >
-    function create_default_slot$2(ctx) {
+    function create_default_slot$3(ctx) {
     	let span0;
     	let t0;
     	let span0_class_value;
@@ -3418,10 +3525,10 @@ var app = (function () {
     		{
     			class: span0_class_value = classMap({
     				[/*content$class*/ ctx[9]]: true,
-    				"mdc-tab__content": true
+    				'mdc-tab__content': true
     			})
     		},
-    		prefixFilter(/*$$restProps*/ ctx[24], "content$")
+    		prefixFilter(/*$$restProps*/ ctx[24], 'content$')
     	];
 
     	let span0_data = {};
@@ -3470,8 +3577,17 @@ var app = (function () {
     		},
     		p: function update(ctx, dirty) {
     			if (default_slot) {
-    				if (default_slot.p && dirty[1] & /*$$scope*/ 16) {
-    					update_slot(default_slot, default_slot_template, ctx, /*$$scope*/ ctx[35], dirty, null, null);
+    				if (default_slot.p && (!current || dirty[1] & /*$$scope*/ 16)) {
+    					update_slot_base(
+    						default_slot,
+    						default_slot_template,
+    						ctx,
+    						/*$$scope*/ ctx[35],
+    						!current
+    						? get_all_dirty_from_scope(/*$$scope*/ ctx[35])
+    						: get_slot_changes(default_slot_template, /*$$scope*/ ctx[35], dirty, null),
+    						null
+    					);
     				}
     			}
 
@@ -3501,9 +3617,9 @@ var app = (function () {
     			set_attributes(span0, span0_data = get_spread_update(span0_levels, [
     				(!current || dirty[0] & /*content$class*/ 512 && span0_class_value !== (span0_class_value = classMap({
     					[/*content$class*/ ctx[9]]: true,
-    					"mdc-tab__content": true
+    					'mdc-tab__content': true
     				}))) && { class: span0_class_value },
-    				dirty[0] & /*$$restProps*/ 16777216 && prefixFilter(/*$$restProps*/ ctx[24], "content$")
+    				dirty[0] & /*$$restProps*/ 16777216 && prefixFilter(/*$$restProps*/ ctx[24], 'content$')
     			]));
 
     			if (useActions_action && is_function(useActions_action.update) && dirty[0] & /*content$use*/ 256) useActions_action.update.call(null, /*content$use*/ ctx[8]);
@@ -3560,7 +3676,7 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_default_slot$2.name,
+    		id: create_default_slot$3.name,
     		type: "slot",
     		source: "(1:0) <svelte:component   this={component}   bind:this={element}   use={[     [       Ripple,       {         ripple,         unbounded: false,         addClass,         removeClass,         addStyle,       },     ],     forwardEvents,     ...use,   ]}   class={classMap({     [className]: true,     'mdc-tab': true,     'mdc-tab--active': active,     'mdc-tab--stacked': stacked,     'mdc-tab--min-width': minWidth,     ...internalClasses,   })}   style={Object.entries(internalStyles)     .map(([name, value]) => `${name}: ${value};`)     .concat([style])     .join(' ')}   role=\\\"tab\\\"   aria-selected={active ? 'true' : 'false'}   tabindex={active || forceAccessible ? '0' : '-1'}   {href}   on:click={instance && instance.handleClick()}   {...internalAttrs}   {...exclude($$restProps, ['content$', 'tabIndicator$'])} >",
     		ctx
@@ -3569,7 +3685,7 @@ var app = (function () {
     	return block;
     }
 
-    function create_fragment$4(ctx) {
+    function create_fragment$5(ctx) {
     	let switch_instance;
     	let switch_instance_anchor;
     	let current;
@@ -3594,35 +3710,35 @@ var app = (function () {
     		{
     			class: classMap({
     				[/*className*/ ctx[1]]: true,
-    				"mdc-tab": true,
-    				"mdc-tab--active": /*active*/ ctx[18],
-    				"mdc-tab--stacked": /*stacked*/ ctx[4],
-    				"mdc-tab--min-width": /*minWidth*/ ctx[5],
+    				'mdc-tab': true,
+    				'mdc-tab--active': /*active*/ ctx[18],
+    				'mdc-tab--stacked': /*stacked*/ ctx[4],
+    				'mdc-tab--min-width': /*minWidth*/ ctx[5],
     				.../*internalClasses*/ ctx[15]
     			})
     		},
     		{
-    			style: Object.entries(/*internalStyles*/ ctx[16]).map(func$1).concat([/*style*/ ctx[2]]).join(" ")
+    			style: Object.entries(/*internalStyles*/ ctx[16]).map(func$1).concat([/*style*/ ctx[2]]).join(' ')
     		},
     		{ role: "tab" },
     		{
-    			"aria-selected": /*active*/ ctx[18] ? "true" : "false"
+    			"aria-selected": /*active*/ ctx[18] ? 'true' : 'false'
     		},
     		{
     			tabindex: /*active*/ ctx[18] || /*forceAccessible*/ ctx[19]
-    			? "0"
-    			: "-1"
+    			? '0'
+    			: '-1'
     		},
     		{ href: /*href*/ ctx[7] },
     		/*internalAttrs*/ ctx[17],
-    		exclude(/*$$restProps*/ ctx[24], ["content$", "tabIndicator$"])
+    		exclude(/*$$restProps*/ ctx[24], ['content$', 'tabIndicator$'])
     	];
 
     	var switch_value = /*component*/ ctx[10];
 
     	function switch_props(ctx) {
     		let switch_instance_props = {
-    			$$slots: { default: [create_default_slot$2] },
+    			$$slots: { default: [create_default_slot$3] },
     			$$scope: { ctx }
     		};
 
@@ -3685,28 +3801,28 @@ var app = (function () {
     					dirty[0] & /*className, active, stacked, minWidth, internalClasses*/ 294962 && {
     						class: classMap({
     							[/*className*/ ctx[1]]: true,
-    							"mdc-tab": true,
-    							"mdc-tab--active": /*active*/ ctx[18],
-    							"mdc-tab--stacked": /*stacked*/ ctx[4],
-    							"mdc-tab--min-width": /*minWidth*/ ctx[5],
+    							'mdc-tab': true,
+    							'mdc-tab--active': /*active*/ ctx[18],
+    							'mdc-tab--stacked': /*stacked*/ ctx[4],
+    							'mdc-tab--min-width': /*minWidth*/ ctx[5],
     							.../*internalClasses*/ ctx[15]
     						})
     					},
     					dirty[0] & /*internalStyles, style*/ 65540 && {
-    						style: Object.entries(/*internalStyles*/ ctx[16]).map(func$1).concat([/*style*/ ctx[2]]).join(" ")
+    						style: Object.entries(/*internalStyles*/ ctx[16]).map(func$1).concat([/*style*/ ctx[2]]).join(' ')
     					},
     					switch_instance_spread_levels[3],
     					dirty[0] & /*active*/ 262144 && {
-    						"aria-selected": /*active*/ ctx[18] ? "true" : "false"
+    						"aria-selected": /*active*/ ctx[18] ? 'true' : 'false'
     					},
     					dirty[0] & /*active, forceAccessible*/ 786432 && {
     						tabindex: /*active*/ ctx[18] || /*forceAccessible*/ ctx[19]
-    						? "0"
-    						: "-1"
+    						? '0'
+    						: '-1'
     					},
     					dirty[0] & /*href*/ 128 && { href: /*href*/ ctx[7] },
     					dirty[0] & /*internalAttrs*/ 131072 && get_spread_object(/*internalAttrs*/ ctx[17]),
-    					dirty[0] & /*$$restProps*/ 16777216 && get_spread_object(exclude(/*$$restProps*/ ctx[24], ["content$", "tabIndicator$"]))
+    					dirty[0] & /*$$restProps*/ 16777216 && get_spread_object(exclude(/*$$restProps*/ ctx[24], ['content$', 'tabIndicator$']))
     				])
     			: {};
 
@@ -3762,7 +3878,7 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$4.name,
+    		id: create_fragment$5.name,
     		type: "component",
     		source: "",
     		ctx
@@ -3780,11 +3896,11 @@ var app = (function () {
 
     	let $$restProps = compute_rest_props($$props, omit_props_names);
     	let { $$slots: slots = {}, $$scope } = $$props;
-    	validate_slots("Tab", slots, ['default','tab-indicator']);
+    	validate_slots('Tab', slots, ['default','tab-indicator']);
     	const forwardEvents = forwardEventsBuilder(get_current_component());
     	let { use = [] } = $$props;
-    	let { class: className = "" } = $$props;
-    	let { style = "" } = $$props;
+    	let { class: className = '' } = $$props;
+    	let { style = '' } = $$props;
     	let { tab: tabId } = $$props;
     	let { ripple = true } = $$props;
     	let { stacked = false } = $$props;
@@ -3792,7 +3908,7 @@ var app = (function () {
     	let { indicatorSpanOnlyContent = false } = $$props;
     	let { href = null } = $$props;
     	let { content$use = [] } = $$props;
-    	let { content$class = "" } = $$props;
+    	let { content$class = '' } = $$props;
     	let element;
     	let instance;
     	let content;
@@ -3800,15 +3916,15 @@ var app = (function () {
     	let internalClasses = {};
     	let internalStyles = {};
     	let internalAttrs = {};
-    	let focusOnActivate = getContext("SMUI:tab:focusOnActivate");
-    	let active = tabId === getContext("SMUI:tab:initialActive");
+    	let focusOnActivate = getContext('SMUI:tab:focusOnActivate');
+    	let active = tabId === getContext('SMUI:tab:initialActive');
     	let forceAccessible = false;
     	let { component = href == null ? Button : A } = $$props;
-    	setContext("SMUI:label:context", "tab");
-    	setContext("SMUI:icon:context", "tab");
+    	setContext('SMUI:label:context', 'tab');
+    	setContext('SMUI:icon:context', 'tab');
 
     	if (!tabId) {
-    		throw new Error("The tab property is required! It should be passed down from the TabBar to the Tab.");
+    		throw new Error('The tab property is required! It should be passed down from the TabBar to the Tab.');
     	}
 
     	onMount(() => {
@@ -3819,7 +3935,7 @@ var app = (function () {
     				hasClass,
     				activateIndicator: previousIndicatorClientRect => tabIndicator.activate(previousIndicatorClientRect),
     				deactivateIndicator: () => tabIndicator.deactivate(),
-    				notifyInteracted: () => dispatch(getElement(), "MDCTab:interacted", { tabId }),
+    				notifyInteracted: () => dispatch(getElement(), 'MDCTab:interacted', { tabId }),
     				getOffsetLeft: () => getElement().offsetLeft,
     				getOffsetWidth: () => getElement().offsetWidth,
     				getContentOffsetLeft: () => content.offsetLeft,
@@ -3845,11 +3961,11 @@ var app = (function () {
     			deactivate
     		};
 
-    		dispatch(getElement(), "SMUI:tab:mount", accessor);
+    		dispatch(getElement(), 'SMUI:tab:mount', accessor);
     		instance.init();
 
     		return () => {
-    			dispatch(getElement(), "SMUI:tab:unmount", accessor);
+    			dispatch(getElement(), 'SMUI:tab:unmount', accessor);
     			instance.destroy();
     		};
     	});
@@ -3874,7 +3990,7 @@ var app = (function () {
 
     	function addStyle(name, value) {
     		if (internalStyles[name] != value) {
-    			if (value === "" || value == null) {
+    			if (value === '' || value == null) {
     				delete internalStyles[name];
     				$$invalidate(16, internalStyles);
     			} else {
@@ -3917,28 +4033,28 @@ var app = (function () {
     	}
 
     	function tabindicator_binding($$value) {
-    		binding_callbacks[$$value ? "unshift" : "push"](() => {
+    		binding_callbacks[$$value ? 'unshift' : 'push'](() => {
     			tabIndicator = $$value;
     			$$invalidate(14, tabIndicator);
     		});
     	}
 
     	function span0_binding($$value) {
-    		binding_callbacks[$$value ? "unshift" : "push"](() => {
+    		binding_callbacks[$$value ? 'unshift' : 'push'](() => {
     			content = $$value;
     			$$invalidate(13, content);
     		});
     	}
 
     	function tabindicator_binding_1($$value) {
-    		binding_callbacks[$$value ? "unshift" : "push"](() => {
+    		binding_callbacks[$$value ? 'unshift' : 'push'](() => {
     			tabIndicator = $$value;
     			$$invalidate(14, tabIndicator);
     		});
     	}
 
     	function switch_instance_binding($$value) {
-    		binding_callbacks[$$value ? "unshift" : "push"](() => {
+    		binding_callbacks[$$value ? 'unshift' : 'push'](() => {
     			element = $$value;
     			$$invalidate(12, element);
     		});
@@ -3947,19 +4063,19 @@ var app = (function () {
     	$$self.$$set = $$new_props => {
     		$$props = assign(assign({}, $$props), exclude_internal_props($$new_props));
     		$$invalidate(24, $$restProps = compute_rest_props($$props, omit_props_names));
-    		if ("use" in $$new_props) $$invalidate(0, use = $$new_props.use);
-    		if ("class" in $$new_props) $$invalidate(1, className = $$new_props.class);
-    		if ("style" in $$new_props) $$invalidate(2, style = $$new_props.style);
-    		if ("tab" in $$new_props) $$invalidate(25, tabId = $$new_props.tab);
-    		if ("ripple" in $$new_props) $$invalidate(3, ripple = $$new_props.ripple);
-    		if ("stacked" in $$new_props) $$invalidate(4, stacked = $$new_props.stacked);
-    		if ("minWidth" in $$new_props) $$invalidate(5, minWidth = $$new_props.minWidth);
-    		if ("indicatorSpanOnlyContent" in $$new_props) $$invalidate(6, indicatorSpanOnlyContent = $$new_props.indicatorSpanOnlyContent);
-    		if ("href" in $$new_props) $$invalidate(7, href = $$new_props.href);
-    		if ("content$use" in $$new_props) $$invalidate(8, content$use = $$new_props.content$use);
-    		if ("content$class" in $$new_props) $$invalidate(9, content$class = $$new_props.content$class);
-    		if ("component" in $$new_props) $$invalidate(10, component = $$new_props.component);
-    		if ("$$scope" in $$new_props) $$invalidate(35, $$scope = $$new_props.$$scope);
+    		if ('use' in $$new_props) $$invalidate(0, use = $$new_props.use);
+    		if ('class' in $$new_props) $$invalidate(1, className = $$new_props.class);
+    		if ('style' in $$new_props) $$invalidate(2, style = $$new_props.style);
+    		if ('tab' in $$new_props) $$invalidate(25, tabId = $$new_props.tab);
+    		if ('ripple' in $$new_props) $$invalidate(3, ripple = $$new_props.ripple);
+    		if ('stacked' in $$new_props) $$invalidate(4, stacked = $$new_props.stacked);
+    		if ('minWidth' in $$new_props) $$invalidate(5, minWidth = $$new_props.minWidth);
+    		if ('indicatorSpanOnlyContent' in $$new_props) $$invalidate(6, indicatorSpanOnlyContent = $$new_props.indicatorSpanOnlyContent);
+    		if ('href' in $$new_props) $$invalidate(7, href = $$new_props.href);
+    		if ('content$use' in $$new_props) $$invalidate(8, content$use = $$new_props.content$use);
+    		if ('content$class' in $$new_props) $$invalidate(9, content$class = $$new_props.content$class);
+    		if ('component' in $$new_props) $$invalidate(10, component = $$new_props.component);
+    		if ('$$scope' in $$new_props) $$invalidate(35, $$scope = $$new_props.$$scope);
     	};
 
     	$$self.$capture_state = () => ({
@@ -4013,28 +4129,28 @@ var app = (function () {
     	});
 
     	$$self.$inject_state = $$new_props => {
-    		if ("use" in $$props) $$invalidate(0, use = $$new_props.use);
-    		if ("className" in $$props) $$invalidate(1, className = $$new_props.className);
-    		if ("style" in $$props) $$invalidate(2, style = $$new_props.style);
-    		if ("tabId" in $$props) $$invalidate(25, tabId = $$new_props.tabId);
-    		if ("ripple" in $$props) $$invalidate(3, ripple = $$new_props.ripple);
-    		if ("stacked" in $$props) $$invalidate(4, stacked = $$new_props.stacked);
-    		if ("minWidth" in $$props) $$invalidate(5, minWidth = $$new_props.minWidth);
-    		if ("indicatorSpanOnlyContent" in $$props) $$invalidate(6, indicatorSpanOnlyContent = $$new_props.indicatorSpanOnlyContent);
-    		if ("href" in $$props) $$invalidate(7, href = $$new_props.href);
-    		if ("content$use" in $$props) $$invalidate(8, content$use = $$new_props.content$use);
-    		if ("content$class" in $$props) $$invalidate(9, content$class = $$new_props.content$class);
-    		if ("element" in $$props) $$invalidate(12, element = $$new_props.element);
-    		if ("instance" in $$props) $$invalidate(11, instance = $$new_props.instance);
-    		if ("content" in $$props) $$invalidate(13, content = $$new_props.content);
-    		if ("tabIndicator" in $$props) $$invalidate(14, tabIndicator = $$new_props.tabIndicator);
-    		if ("internalClasses" in $$props) $$invalidate(15, internalClasses = $$new_props.internalClasses);
-    		if ("internalStyles" in $$props) $$invalidate(16, internalStyles = $$new_props.internalStyles);
-    		if ("internalAttrs" in $$props) $$invalidate(17, internalAttrs = $$new_props.internalAttrs);
-    		if ("focusOnActivate" in $$props) $$invalidate(36, focusOnActivate = $$new_props.focusOnActivate);
-    		if ("active" in $$props) $$invalidate(18, active = $$new_props.active);
-    		if ("forceAccessible" in $$props) $$invalidate(19, forceAccessible = $$new_props.forceAccessible);
-    		if ("component" in $$props) $$invalidate(10, component = $$new_props.component);
+    		if ('use' in $$props) $$invalidate(0, use = $$new_props.use);
+    		if ('className' in $$props) $$invalidate(1, className = $$new_props.className);
+    		if ('style' in $$props) $$invalidate(2, style = $$new_props.style);
+    		if ('tabId' in $$props) $$invalidate(25, tabId = $$new_props.tabId);
+    		if ('ripple' in $$props) $$invalidate(3, ripple = $$new_props.ripple);
+    		if ('stacked' in $$props) $$invalidate(4, stacked = $$new_props.stacked);
+    		if ('minWidth' in $$props) $$invalidate(5, minWidth = $$new_props.minWidth);
+    		if ('indicatorSpanOnlyContent' in $$props) $$invalidate(6, indicatorSpanOnlyContent = $$new_props.indicatorSpanOnlyContent);
+    		if ('href' in $$props) $$invalidate(7, href = $$new_props.href);
+    		if ('content$use' in $$props) $$invalidate(8, content$use = $$new_props.content$use);
+    		if ('content$class' in $$props) $$invalidate(9, content$class = $$new_props.content$class);
+    		if ('element' in $$props) $$invalidate(12, element = $$new_props.element);
+    		if ('instance' in $$props) $$invalidate(11, instance = $$new_props.instance);
+    		if ('content' in $$props) $$invalidate(13, content = $$new_props.content);
+    		if ('tabIndicator' in $$props) $$invalidate(14, tabIndicator = $$new_props.tabIndicator);
+    		if ('internalClasses' in $$props) $$invalidate(15, internalClasses = $$new_props.internalClasses);
+    		if ('internalStyles' in $$props) $$invalidate(16, internalStyles = $$new_props.internalStyles);
+    		if ('internalAttrs' in $$props) $$invalidate(17, internalAttrs = $$new_props.internalAttrs);
+    		if ('focusOnActivate' in $$props) $$invalidate(36, focusOnActivate = $$new_props.focusOnActivate);
+    		if ('active' in $$props) $$invalidate(18, active = $$new_props.active);
+    		if ('forceAccessible' in $$props) $$invalidate(19, forceAccessible = $$new_props.forceAccessible);
+    		if ('component' in $$props) $$invalidate(10, component = $$new_props.component);
     	};
 
     	if ($$props && "$$inject" in $$props) {
@@ -4097,7 +4213,7 @@ var app = (function () {
     			this,
     			options,
     			instance_1$2,
-    			create_fragment$4,
+    			create_fragment$5,
     			safe_not_equal,
     			{
     				use: 0,
@@ -4117,6 +4233,7 @@ var app = (function () {
     				focus: 28,
     				getElement: 29
     			},
+    			null,
     			[-1, -1]
     		);
 
@@ -4124,13 +4241,13 @@ var app = (function () {
     			component: this,
     			tagName: "Tab",
     			options,
-    			id: create_fragment$4.name
+    			id: create_fragment$5.name
     		});
 
     		const { ctx } = this.$$;
     		const props = options.props || {};
 
-    		if (/*tabId*/ ctx[25] === undefined && !("tab" in props)) {
+    		if (/*tabId*/ ctx[25] === undefined && !('tab' in props)) {
     			console.warn("<Tab> was created without expected prop 'tab'");
     		}
     	}
@@ -4264,41 +4381,18 @@ var app = (function () {
     	}
     }
 
-    /* node_modules/@smui/common/CommonLabel.svelte generated by Svelte v3.37.0 */
-    const file$3 = "node_modules/@smui/common/CommonLabel.svelte";
+    /* node_modules/.pnpm/@smui+common@4.2.0/node_modules/@smui/common/Span.svelte generated by Svelte v3.46.4 */
+    const file$3 = "node_modules/.pnpm/@smui+common@4.2.0/node_modules/@smui/common/Span.svelte";
 
-    function create_fragment$3(ctx) {
+    function create_fragment$4(ctx) {
     	let span;
-    	let span_class_value;
     	let useActions_action;
     	let current;
     	let mounted;
     	let dispose;
-    	const default_slot_template = /*#slots*/ ctx[9].default;
-    	const default_slot = create_slot(default_slot_template, ctx, /*$$scope*/ ctx[8], null);
-
-    	let span_levels = [
-    		{
-    			class: span_class_value = classMap({
-    				[/*className*/ ctx[1]]: true,
-    				"mdc-button__label": /*context*/ ctx[4] === "button",
-    				"mdc-fab__label": /*context*/ ctx[4] === "fab",
-    				"mdc-tab__text-label": /*context*/ ctx[4] === "tab",
-    				"mdc-image-list__label": /*context*/ ctx[4] === "image-list",
-    				"mdc-snackbar__label": /*context*/ ctx[4] === "snackbar",
-    				"mdc-banner__text": /*context*/ ctx[4] === "banner",
-    				"mdc-segmented-button__label": /*context*/ ctx[4] === "segmented-button",
-    				"mdc-data-table__pagination-rows-per-page-label": /*context*/ ctx[4] === "data-table:pagination",
-    				"mdc-data-table__header-cell-label": /*context*/ ctx[4] === "data-table:sortable-header-cell"
-    			})
-    		},
-    		/*context*/ ctx[4] === "snackbar"
-    		? { "aria-atomic": "false" }
-    		: {},
-    		{ tabindex: /*tabindex*/ ctx[5] },
-    		/*$$restProps*/ ctx[6]
-    	];
-
+    	const default_slot_template = /*#slots*/ ctx[6].default;
+    	const default_slot = create_slot(default_slot_template, ctx, /*$$scope*/ ctx[5], null);
+    	let span_levels = [/*$$restProps*/ ctx[3]];
     	let span_data = {};
 
     	for (let i = 0; i < span_levels.length; i += 1) {
@@ -4322,13 +4416,13 @@ var app = (function () {
     				default_slot.m(span, null);
     			}
 
-    			/*span_binding*/ ctx[10](span);
+    			/*span_binding*/ ctx[7](span);
     			current = true;
 
     			if (!mounted) {
     				dispose = [
     					action_destroyer(useActions_action = useActions.call(null, span, /*use*/ ctx[0])),
-    					action_destroyer(/*forwardEvents*/ ctx[3].call(null, span))
+    					action_destroyer(/*forwardEvents*/ ctx[2].call(null, span))
     				];
 
     				mounted = true;
@@ -4336,31 +4430,21 @@ var app = (function () {
     		},
     		p: function update(ctx, [dirty]) {
     			if (default_slot) {
-    				if (default_slot.p && dirty & /*$$scope*/ 256) {
-    					update_slot(default_slot, default_slot_template, ctx, /*$$scope*/ ctx[8], dirty, null, null);
+    				if (default_slot.p && (!current || dirty & /*$$scope*/ 32)) {
+    					update_slot_base(
+    						default_slot,
+    						default_slot_template,
+    						ctx,
+    						/*$$scope*/ ctx[5],
+    						!current
+    						? get_all_dirty_from_scope(/*$$scope*/ ctx[5])
+    						: get_slot_changes(default_slot_template, /*$$scope*/ ctx[5], dirty, null),
+    						null
+    					);
     				}
     			}
 
-    			set_attributes(span, span_data = get_spread_update(span_levels, [
-    				(!current || dirty & /*className*/ 2 && span_class_value !== (span_class_value = classMap({
-    					[/*className*/ ctx[1]]: true,
-    					"mdc-button__label": /*context*/ ctx[4] === "button",
-    					"mdc-fab__label": /*context*/ ctx[4] === "fab",
-    					"mdc-tab__text-label": /*context*/ ctx[4] === "tab",
-    					"mdc-image-list__label": /*context*/ ctx[4] === "image-list",
-    					"mdc-snackbar__label": /*context*/ ctx[4] === "snackbar",
-    					"mdc-banner__text": /*context*/ ctx[4] === "banner",
-    					"mdc-segmented-button__label": /*context*/ ctx[4] === "segmented-button",
-    					"mdc-data-table__pagination-rows-per-page-label": /*context*/ ctx[4] === "data-table:pagination",
-    					"mdc-data-table__header-cell-label": /*context*/ ctx[4] === "data-table:sortable-header-cell"
-    				}))) && { class: span_class_value },
-    				/*context*/ ctx[4] === "snackbar"
-    				? { "aria-atomic": "false" }
-    				: {},
-    				{ tabindex: /*tabindex*/ ctx[5] },
-    				dirty & /*$$restProps*/ 64 && /*$$restProps*/ ctx[6]
-    			]));
-
+    			set_attributes(span, span_data = get_spread_update(span_levels, [dirty & /*$$restProps*/ 8 && /*$$restProps*/ ctx[3]]));
     			if (useActions_action && is_function(useActions_action.update) && dirty & /*use*/ 1) useActions_action.update.call(null, /*use*/ ctx[0]);
     		},
     		i: function intro(local) {
@@ -4375,9 +4459,310 @@ var app = (function () {
     		d: function destroy(detaching) {
     			if (detaching) detach_dev(span);
     			if (default_slot) default_slot.d(detaching);
-    			/*span_binding*/ ctx[10](null);
+    			/*span_binding*/ ctx[7](null);
     			mounted = false;
     			run_all(dispose);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_fragment$4.name,
+    		type: "component",
+    		source: "",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    function instance$2($$self, $$props, $$invalidate) {
+    	const omit_props_names = ["use","getElement"];
+    	let $$restProps = compute_rest_props($$props, omit_props_names);
+    	let { $$slots: slots = {}, $$scope } = $$props;
+    	validate_slots('Span', slots, ['default']);
+    	let { use = [] } = $$props;
+    	const forwardEvents = forwardEventsBuilder(get_current_component());
+    	let element = null;
+
+    	function getElement() {
+    		return element;
+    	}
+
+    	function span_binding($$value) {
+    		binding_callbacks[$$value ? 'unshift' : 'push'](() => {
+    			element = $$value;
+    			$$invalidate(1, element);
+    		});
+    	}
+
+    	$$self.$$set = $$new_props => {
+    		$$props = assign(assign({}, $$props), exclude_internal_props($$new_props));
+    		$$invalidate(3, $$restProps = compute_rest_props($$props, omit_props_names));
+    		if ('use' in $$new_props) $$invalidate(0, use = $$new_props.use);
+    		if ('$$scope' in $$new_props) $$invalidate(5, $$scope = $$new_props.$$scope);
+    	};
+
+    	$$self.$capture_state = () => ({
+    		get_current_component,
+    		forwardEventsBuilder,
+    		useActions,
+    		use,
+    		forwardEvents,
+    		element,
+    		getElement
+    	});
+
+    	$$self.$inject_state = $$new_props => {
+    		if ('use' in $$props) $$invalidate(0, use = $$new_props.use);
+    		if ('element' in $$props) $$invalidate(1, element = $$new_props.element);
+    	};
+
+    	if ($$props && "$$inject" in $$props) {
+    		$$self.$inject_state($$props.$$inject);
+    	}
+
+    	return [
+    		use,
+    		element,
+    		forwardEvents,
+    		$$restProps,
+    		getElement,
+    		$$scope,
+    		slots,
+    		span_binding
+    	];
+    }
+
+    class Span extends SvelteComponentDev {
+    	constructor(options) {
+    		super(options);
+    		init(this, options, instance$2, create_fragment$4, safe_not_equal, { use: 0, getElement: 4 });
+
+    		dispatch_dev("SvelteRegisterComponent", {
+    			component: this,
+    			tagName: "Span",
+    			options,
+    			id: create_fragment$4.name
+    		});
+    	}
+
+    	get use() {
+    		throw new Error("<Span>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set use(value) {
+    		throw new Error("<Span>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get getElement() {
+    		return this.$$.ctx[4];
+    	}
+
+    	set getElement(value) {
+    		throw new Error("<Span>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+    }
+
+    /* node_modules/.pnpm/@smui+common@4.2.0/node_modules/@smui/common/CommonLabel.svelte generated by Svelte v3.46.4 */
+
+    // (1:0) <svelte:component   this={component}   bind:this={element}   use={[forwardEvents, ...use]}   class={classMap({     [className]: true,     'mdc-button__label': context === 'button',     'mdc-fab__label': context === 'fab',     'mdc-tab__text-label': context === 'tab',     'mdc-image-list__label': context === 'image-list',     'mdc-snackbar__label': context === 'snackbar',     'mdc-banner__text': context === 'banner',     'mdc-segmented-button__label': context === 'segmented-button',     'mdc-data-table__pagination-rows-per-page-label':       context === 'data-table:pagination',     'mdc-data-table__header-cell-label':       context === 'data-table:sortable-header-cell',   })}   {...context === 'snackbar' ? { 'aria-atomic': 'false' } : {}}   {tabindex}   {...$$restProps}>
+    function create_default_slot$2(ctx) {
+    	let current;
+    	const default_slot_template = /*#slots*/ ctx[9].default;
+    	const default_slot = create_slot(default_slot_template, ctx, /*$$scope*/ ctx[11], null);
+
+    	const block = {
+    		c: function create() {
+    			if (default_slot) default_slot.c();
+    		},
+    		m: function mount(target, anchor) {
+    			if (default_slot) {
+    				default_slot.m(target, anchor);
+    			}
+
+    			current = true;
+    		},
+    		p: function update(ctx, dirty) {
+    			if (default_slot) {
+    				if (default_slot.p && (!current || dirty & /*$$scope*/ 2048)) {
+    					update_slot_base(
+    						default_slot,
+    						default_slot_template,
+    						ctx,
+    						/*$$scope*/ ctx[11],
+    						!current
+    						? get_all_dirty_from_scope(/*$$scope*/ ctx[11])
+    						: get_slot_changes(default_slot_template, /*$$scope*/ ctx[11], dirty, null),
+    						null
+    					);
+    				}
+    			}
+    		},
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(default_slot, local);
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			transition_out(default_slot, local);
+    			current = false;
+    		},
+    		d: function destroy(detaching) {
+    			if (default_slot) default_slot.d(detaching);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_default_slot$2.name,
+    		type: "slot",
+    		source: "(1:0) <svelte:component   this={component}   bind:this={element}   use={[forwardEvents, ...use]}   class={classMap({     [className]: true,     'mdc-button__label': context === 'button',     'mdc-fab__label': context === 'fab',     'mdc-tab__text-label': context === 'tab',     'mdc-image-list__label': context === 'image-list',     'mdc-snackbar__label': context === 'snackbar',     'mdc-banner__text': context === 'banner',     'mdc-segmented-button__label': context === 'segmented-button',     'mdc-data-table__pagination-rows-per-page-label':       context === 'data-table:pagination',     'mdc-data-table__header-cell-label':       context === 'data-table:sortable-header-cell',   })}   {...context === 'snackbar' ? { 'aria-atomic': 'false' } : {}}   {tabindex}   {...$$restProps}>",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    function create_fragment$3(ctx) {
+    	let switch_instance;
+    	let switch_instance_anchor;
+    	let current;
+
+    	const switch_instance_spread_levels = [
+    		{
+    			use: [/*forwardEvents*/ ctx[4], .../*use*/ ctx[0]]
+    		},
+    		{
+    			class: classMap({
+    				[/*className*/ ctx[1]]: true,
+    				'mdc-button__label': /*context*/ ctx[5] === 'button',
+    				'mdc-fab__label': /*context*/ ctx[5] === 'fab',
+    				'mdc-tab__text-label': /*context*/ ctx[5] === 'tab',
+    				'mdc-image-list__label': /*context*/ ctx[5] === 'image-list',
+    				'mdc-snackbar__label': /*context*/ ctx[5] === 'snackbar',
+    				'mdc-banner__text': /*context*/ ctx[5] === 'banner',
+    				'mdc-segmented-button__label': /*context*/ ctx[5] === 'segmented-button',
+    				'mdc-data-table__pagination-rows-per-page-label': /*context*/ ctx[5] === 'data-table:pagination',
+    				'mdc-data-table__header-cell-label': /*context*/ ctx[5] === 'data-table:sortable-header-cell'
+    			})
+    		},
+    		/*context*/ ctx[5] === 'snackbar'
+    		? { 'aria-atomic': 'false' }
+    		: {},
+    		{ tabindex: /*tabindex*/ ctx[6] },
+    		/*$$restProps*/ ctx[7]
+    	];
+
+    	var switch_value = /*component*/ ctx[2];
+
+    	function switch_props(ctx) {
+    		let switch_instance_props = {
+    			$$slots: { default: [create_default_slot$2] },
+    			$$scope: { ctx }
+    		};
+
+    		for (let i = 0; i < switch_instance_spread_levels.length; i += 1) {
+    			switch_instance_props = assign(switch_instance_props, switch_instance_spread_levels[i]);
+    		}
+
+    		return {
+    			props: switch_instance_props,
+    			$$inline: true
+    		};
+    	}
+
+    	if (switch_value) {
+    		switch_instance = new switch_value(switch_props(ctx));
+    		/*switch_instance_binding*/ ctx[10](switch_instance);
+    	}
+
+    	const block = {
+    		c: function create() {
+    			if (switch_instance) create_component(switch_instance.$$.fragment);
+    			switch_instance_anchor = empty();
+    		},
+    		l: function claim(nodes) {
+    			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
+    		},
+    		m: function mount(target, anchor) {
+    			if (switch_instance) {
+    				mount_component(switch_instance, target, anchor);
+    			}
+
+    			insert_dev(target, switch_instance_anchor, anchor);
+    			current = true;
+    		},
+    		p: function update(ctx, [dirty]) {
+    			const switch_instance_changes = (dirty & /*forwardEvents, use, classMap, className, context, tabindex, $$restProps*/ 243)
+    			? get_spread_update(switch_instance_spread_levels, [
+    					dirty & /*forwardEvents, use*/ 17 && {
+    						use: [/*forwardEvents*/ ctx[4], .../*use*/ ctx[0]]
+    					},
+    					dirty & /*classMap, className, context*/ 34 && {
+    						class: classMap({
+    							[/*className*/ ctx[1]]: true,
+    							'mdc-button__label': /*context*/ ctx[5] === 'button',
+    							'mdc-fab__label': /*context*/ ctx[5] === 'fab',
+    							'mdc-tab__text-label': /*context*/ ctx[5] === 'tab',
+    							'mdc-image-list__label': /*context*/ ctx[5] === 'image-list',
+    							'mdc-snackbar__label': /*context*/ ctx[5] === 'snackbar',
+    							'mdc-banner__text': /*context*/ ctx[5] === 'banner',
+    							'mdc-segmented-button__label': /*context*/ ctx[5] === 'segmented-button',
+    							'mdc-data-table__pagination-rows-per-page-label': /*context*/ ctx[5] === 'data-table:pagination',
+    							'mdc-data-table__header-cell-label': /*context*/ ctx[5] === 'data-table:sortable-header-cell'
+    						})
+    					},
+    					dirty & /*context*/ 32 && get_spread_object(/*context*/ ctx[5] === 'snackbar'
+    					? { 'aria-atomic': 'false' }
+    					: {}),
+    					dirty & /*tabindex*/ 64 && { tabindex: /*tabindex*/ ctx[6] },
+    					dirty & /*$$restProps*/ 128 && get_spread_object(/*$$restProps*/ ctx[7])
+    				])
+    			: {};
+
+    			if (dirty & /*$$scope*/ 2048) {
+    				switch_instance_changes.$$scope = { dirty, ctx };
+    			}
+
+    			if (switch_value !== (switch_value = /*component*/ ctx[2])) {
+    				if (switch_instance) {
+    					group_outros();
+    					const old_component = switch_instance;
+
+    					transition_out(old_component.$$.fragment, 1, 0, () => {
+    						destroy_component(old_component, 1);
+    					});
+
+    					check_outros();
+    				}
+
+    				if (switch_value) {
+    					switch_instance = new switch_value(switch_props(ctx));
+    					/*switch_instance_binding*/ ctx[10](switch_instance);
+    					create_component(switch_instance.$$.fragment);
+    					transition_in(switch_instance.$$.fragment, 1);
+    					mount_component(switch_instance, switch_instance_anchor.parentNode, switch_instance_anchor);
+    				} else {
+    					switch_instance = null;
+    				}
+    			} else if (switch_value) {
+    				switch_instance.$set(switch_instance_changes);
+    			}
+    		},
+    		i: function intro(local) {
+    			if (current) return;
+    			if (switch_instance) transition_in(switch_instance.$$.fragment, local);
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			if (switch_instance) transition_out(switch_instance.$$.fragment, local);
+    			current = false;
+    		},
+    		d: function destroy(detaching) {
+    			/*switch_instance_binding*/ ctx[10](null);
+    			if (detaching) detach_dev(switch_instance_anchor);
+    			if (switch_instance) destroy_component(switch_instance, detaching);
     		}
     	};
 
@@ -4393,34 +4778,36 @@ var app = (function () {
     }
 
     function instance$1($$self, $$props, $$invalidate) {
-    	const omit_props_names = ["use","class","getElement"];
+    	const omit_props_names = ["use","class","component","getElement"];
     	let $$restProps = compute_rest_props($$props, omit_props_names);
     	let { $$slots: slots = {}, $$scope } = $$props;
-    	validate_slots("CommonLabel", slots, ['default']);
+    	validate_slots('CommonLabel', slots, ['default']);
     	const forwardEvents = forwardEventsBuilder(get_current_component());
     	let { use = [] } = $$props;
-    	let { class: className = "" } = $$props;
+    	let { class: className = '' } = $$props;
     	let element;
-    	const context = getContext("SMUI:label:context");
-    	const tabindex = getContext("SMUI:label:tabindex");
+    	let { component = Span } = $$props;
+    	const context = getContext('SMUI:label:context');
+    	const tabindex = getContext('SMUI:label:tabindex');
 
     	function getElement() {
-    		return element;
+    		return element.getElement();
     	}
 
-    	function span_binding($$value) {
-    		binding_callbacks[$$value ? "unshift" : "push"](() => {
+    	function switch_instance_binding($$value) {
+    		binding_callbacks[$$value ? 'unshift' : 'push'](() => {
     			element = $$value;
-    			$$invalidate(2, element);
+    			$$invalidate(3, element);
     		});
     	}
 
     	$$self.$$set = $$new_props => {
     		$$props = assign(assign({}, $$props), exclude_internal_props($$new_props));
-    		$$invalidate(6, $$restProps = compute_rest_props($$props, omit_props_names));
-    		if ("use" in $$new_props) $$invalidate(0, use = $$new_props.use);
-    		if ("class" in $$new_props) $$invalidate(1, className = $$new_props.class);
-    		if ("$$scope" in $$new_props) $$invalidate(8, $$scope = $$new_props.$$scope);
+    		$$invalidate(7, $$restProps = compute_rest_props($$props, omit_props_names));
+    		if ('use' in $$new_props) $$invalidate(0, use = $$new_props.use);
+    		if ('class' in $$new_props) $$invalidate(1, className = $$new_props.class);
+    		if ('component' in $$new_props) $$invalidate(2, component = $$new_props.component);
+    		if ('$$scope' in $$new_props) $$invalidate(11, $$scope = $$new_props.$$scope);
     	};
 
     	$$self.$capture_state = () => ({
@@ -4429,19 +4816,22 @@ var app = (function () {
     		forwardEventsBuilder,
     		classMap,
     		useActions,
+    		Span,
     		forwardEvents,
     		use,
     		className,
     		element,
+    		component,
     		context,
     		tabindex,
     		getElement
     	});
 
     	$$self.$inject_state = $$new_props => {
-    		if ("use" in $$props) $$invalidate(0, use = $$new_props.use);
-    		if ("className" in $$props) $$invalidate(1, className = $$new_props.className);
-    		if ("element" in $$props) $$invalidate(2, element = $$new_props.element);
+    		if ('use' in $$props) $$invalidate(0, use = $$new_props.use);
+    		if ('className' in $$props) $$invalidate(1, className = $$new_props.className);
+    		if ('element' in $$props) $$invalidate(3, element = $$new_props.element);
+    		if ('component' in $$props) $$invalidate(2, component = $$new_props.component);
     	};
 
     	if ($$props && "$$inject" in $$props) {
@@ -4451,22 +4841,29 @@ var app = (function () {
     	return [
     		use,
     		className,
+    		component,
     		element,
     		forwardEvents,
     		context,
     		tabindex,
     		$$restProps,
     		getElement,
-    		$$scope,
     		slots,
-    		span_binding
+    		switch_instance_binding,
+    		$$scope
     	];
     }
 
     class CommonLabel extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$1, create_fragment$3, safe_not_equal, { use: 0, class: 1, getElement: 7 });
+
+    		init(this, options, instance$1, create_fragment$3, safe_not_equal, {
+    			use: 0,
+    			class: 1,
+    			component: 2,
+    			getElement: 8
+    		});
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
@@ -4492,8 +4889,16 @@ var app = (function () {
     		throw new Error("<CommonLabel>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
     	}
 
+    	get component() {
+    		throw new Error("<CommonLabel>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set component(value) {
+    		throw new Error("<CommonLabel>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
     	get getElement() {
-    		return this.$$.ctx[7];
+    		return this.$$.ctx[8];
     	}
 
     	set getElement(value) {
@@ -5554,9 +5959,9 @@ var app = (function () {
         return MDCTabBarFoundation;
     }(MDCFoundation));
 
-    /* node_modules/@smui/tab-scroller/TabScroller.svelte generated by Svelte v3.37.0 */
+    /* node_modules/.pnpm/@smui+tab-scroller@4.2.0/node_modules/@smui/tab-scroller/TabScroller.svelte generated by Svelte v3.46.4 */
 
-    const file$2 = "node_modules/@smui/tab-scroller/TabScroller.svelte";
+    const file$2 = "node_modules/.pnpm/@smui+tab-scroller@4.2.0/node_modules/@smui/tab-scroller/TabScroller.svelte";
 
     function create_fragment$2(ctx) {
     	let div2;
@@ -5580,13 +5985,13 @@ var app = (function () {
     		{
     			class: div0_class_value = classMap({
     				[/*scrollContent$class*/ ctx[6]]: true,
-    				"mdc-tab-scroller__scroll-content": true
+    				'mdc-tab-scroller__scroll-content': true
     			})
     		},
     		{
-    			style: div0_style_value = Object.entries(/*scrollContentStyles*/ ctx[14]).map(func).join(" ")
+    			style: div0_style_value = Object.entries(/*scrollContentStyles*/ ctx[14]).map(func).join(' ')
     		},
-    		prefixFilter(/*$$restProps*/ ctx[16], "scrollContent$")
+    		prefixFilter(/*$$restProps*/ ctx[16], 'scrollContent$')
     	];
 
     	let div0_data = {};
@@ -5599,14 +6004,14 @@ var app = (function () {
     		{
     			class: div1_class_value = classMap({
     				[/*scrollArea$class*/ ctx[4]]: true,
-    				"mdc-tab-scroller__scroll-area": true,
+    				'mdc-tab-scroller__scroll-area': true,
     				.../*scrollAreaClasses*/ ctx[12]
     			})
     		},
     		{
-    			style: div1_style_value = Object.entries(/*scrollAreaStyles*/ ctx[13]).map(func_1).join(" ")
+    			style: div1_style_value = Object.entries(/*scrollAreaStyles*/ ctx[13]).map(func_1).join(' ')
     		},
-    		prefixFilter(/*$$restProps*/ ctx[16], "scrollArea$")
+    		prefixFilter(/*$$restProps*/ ctx[16], 'scrollArea$')
     	];
 
     	let div1_data = {};
@@ -5619,14 +6024,14 @@ var app = (function () {
     		{
     			class: div2_class_value = classMap({
     				[/*className*/ ctx[1]]: true,
-    				"mdc-tab-scroller": true,
-    				"mdc-tab-scroller--align-start": /*align*/ ctx[2] === "start",
-    				"mdc-tab-scroller--align-end": /*align*/ ctx[2] === "end",
-    				"mdc-tab-scroller--align-center": /*align*/ ctx[2] === "center",
+    				'mdc-tab-scroller': true,
+    				'mdc-tab-scroller--align-start': /*align*/ ctx[2] === 'start',
+    				'mdc-tab-scroller--align-end': /*align*/ ctx[2] === 'end',
+    				'mdc-tab-scroller--align-center': /*align*/ ctx[2] === 'center',
     				.../*internalClasses*/ ctx[11]
     			})
     		},
-    		exclude(/*$$restProps*/ ctx[16], ["scrollArea$", "scrollContent$"])
+    		exclude(/*$$restProps*/ ctx[16], ['scrollArea$', 'scrollContent$'])
     	];
 
     	let div2_data = {};
@@ -5684,18 +6089,27 @@ var app = (function () {
     		},
     		p: function update(ctx, dirty) {
     			if (default_slot) {
-    				if (default_slot.p && dirty[0] & /*$$scope*/ 4194304) {
-    					update_slot(default_slot, default_slot_template, ctx, /*$$scope*/ ctx[22], dirty, null, null);
+    				if (default_slot.p && (!current || dirty[0] & /*$$scope*/ 4194304)) {
+    					update_slot_base(
+    						default_slot,
+    						default_slot_template,
+    						ctx,
+    						/*$$scope*/ ctx[22],
+    						!current
+    						? get_all_dirty_from_scope(/*$$scope*/ ctx[22])
+    						: get_slot_changes(default_slot_template, /*$$scope*/ ctx[22], dirty, null),
+    						null
+    					);
     				}
     			}
 
     			set_attributes(div0, div0_data = get_spread_update(div0_levels, [
     				(!current || dirty[0] & /*scrollContent$class*/ 64 && div0_class_value !== (div0_class_value = classMap({
     					[/*scrollContent$class*/ ctx[6]]: true,
-    					"mdc-tab-scroller__scroll-content": true
+    					'mdc-tab-scroller__scroll-content': true
     				}))) && { class: div0_class_value },
-    				(!current || dirty[0] & /*scrollContentStyles*/ 16384 && div0_style_value !== (div0_style_value = Object.entries(/*scrollContentStyles*/ ctx[14]).map(func).join(" "))) && { style: div0_style_value },
-    				dirty[0] & /*$$restProps*/ 65536 && prefixFilter(/*$$restProps*/ ctx[16], "scrollContent$")
+    				(!current || dirty[0] & /*scrollContentStyles*/ 16384 && div0_style_value !== (div0_style_value = Object.entries(/*scrollContentStyles*/ ctx[14]).map(func).join(' '))) && { style: div0_style_value },
+    				dirty[0] & /*$$restProps*/ 65536 && prefixFilter(/*$$restProps*/ ctx[16], 'scrollContent$')
     			]));
 
     			if (useActions_action && is_function(useActions_action.update) && dirty[0] & /*scrollContent$use*/ 32) useActions_action.update.call(null, /*scrollContent$use*/ ctx[5]);
@@ -5703,11 +6117,11 @@ var app = (function () {
     			set_attributes(div1, div1_data = get_spread_update(div1_levels, [
     				(!current || dirty[0] & /*scrollArea$class, scrollAreaClasses*/ 4112 && div1_class_value !== (div1_class_value = classMap({
     					[/*scrollArea$class*/ ctx[4]]: true,
-    					"mdc-tab-scroller__scroll-area": true,
+    					'mdc-tab-scroller__scroll-area': true,
     					.../*scrollAreaClasses*/ ctx[12]
     				}))) && { class: div1_class_value },
-    				(!current || dirty[0] & /*scrollAreaStyles*/ 8192 && div1_style_value !== (div1_style_value = Object.entries(/*scrollAreaStyles*/ ctx[13]).map(func_1).join(" "))) && { style: div1_style_value },
-    				dirty[0] & /*$$restProps*/ 65536 && prefixFilter(/*$$restProps*/ ctx[16], "scrollArea$")
+    				(!current || dirty[0] & /*scrollAreaStyles*/ 8192 && div1_style_value !== (div1_style_value = Object.entries(/*scrollAreaStyles*/ ctx[13]).map(func_1).join(' '))) && { style: div1_style_value },
+    				dirty[0] & /*$$restProps*/ 65536 && prefixFilter(/*$$restProps*/ ctx[16], 'scrollArea$')
     			]));
 
     			if (useActions_action_1 && is_function(useActions_action_1.update) && dirty[0] & /*scrollArea$use*/ 8) useActions_action_1.update.call(null, /*scrollArea$use*/ ctx[3]);
@@ -5715,13 +6129,13 @@ var app = (function () {
     			set_attributes(div2, div2_data = get_spread_update(div2_levels, [
     				(!current || dirty[0] & /*className, align, internalClasses*/ 2054 && div2_class_value !== (div2_class_value = classMap({
     					[/*className*/ ctx[1]]: true,
-    					"mdc-tab-scroller": true,
-    					"mdc-tab-scroller--align-start": /*align*/ ctx[2] === "start",
-    					"mdc-tab-scroller--align-end": /*align*/ ctx[2] === "end",
-    					"mdc-tab-scroller--align-center": /*align*/ ctx[2] === "center",
+    					'mdc-tab-scroller': true,
+    					'mdc-tab-scroller--align-start': /*align*/ ctx[2] === 'start',
+    					'mdc-tab-scroller--align-end': /*align*/ ctx[2] === 'end',
+    					'mdc-tab-scroller--align-center': /*align*/ ctx[2] === 'center',
     					.../*internalClasses*/ ctx[11]
     				}))) && { class: div2_class_value },
-    				dirty[0] & /*$$restProps*/ 65536 && exclude(/*$$restProps*/ ctx[16], ["scrollArea$", "scrollContent$"])
+    				dirty[0] & /*$$restProps*/ 65536 && exclude(/*$$restProps*/ ctx[16], ['scrollArea$', 'scrollContent$'])
     			]));
 
     			if (useActions_action_2 && is_function(useActions_action_2.update) && dirty[0] & /*use*/ 1) useActions_action_2.update.call(null, /*use*/ ctx[0]);
@@ -5767,16 +6181,16 @@ var app = (function () {
 
     	let $$restProps = compute_rest_props($$props, omit_props_names);
     	let { $$slots: slots = {}, $$scope } = $$props;
-    	validate_slots("TabScroller", slots, ['default']);
+    	validate_slots('TabScroller', slots, ['default']);
     	const { matches } = ponyfill;
     	const forwardEvents = forwardEventsBuilder(get_current_component());
     	let { use = [] } = $$props;
-    	let { class: className = "" } = $$props;
+    	let { class: className = '' } = $$props;
     	let { align = null } = $$props;
     	let { scrollArea$use = [] } = $$props;
-    	let { scrollArea$class = "" } = $$props;
+    	let { scrollArea$class = '' } = $$props;
     	let { scrollContent$use = [] } = $$props;
-    	let { scrollContent$class = "" } = $$props;
+    	let { scrollContent$class = '' } = $$props;
     	let element;
     	let instance;
     	let scrollArea;
@@ -5831,7 +6245,7 @@ var app = (function () {
 
     	function addScrollAreaStyle(name, value) {
     		if (scrollAreaStyles[name] != value) {
-    			if (value === "" || value == null) {
+    			if (value === '' || value == null) {
     				delete scrollAreaStyles[name];
     				$$invalidate(13, scrollAreaStyles);
     			} else {
@@ -5842,7 +6256,7 @@ var app = (function () {
 
     	function addScrollContentStyle(name, value) {
     		if (scrollContentStyles[name] != value) {
-    			if (value === "" || value == null) {
+    			if (value === '' || value == null) {
     				delete scrollContentStyles[name];
     				$$invalidate(14, scrollContentStyles);
     			} else {
@@ -5878,7 +6292,7 @@ var app = (function () {
     	}
 
     	function div0_binding($$value) {
-    		binding_callbacks[$$value ? "unshift" : "push"](() => {
+    		binding_callbacks[$$value ? 'unshift' : 'push'](() => {
     			scrollContent = $$value;
     			$$invalidate(10, scrollContent);
     		});
@@ -5887,7 +6301,7 @@ var app = (function () {
     	const transitionend_handler = event => instance && instance.handleTransitionEnd(event);
 
     	function div1_binding($$value) {
-    		binding_callbacks[$$value ? "unshift" : "push"](() => {
+    		binding_callbacks[$$value ? 'unshift' : 'push'](() => {
     			scrollArea = $$value;
     			$$invalidate(9, scrollArea);
     		});
@@ -5900,7 +6314,7 @@ var app = (function () {
     	const keydown_handler = () => instance && instance.handleInteraction();
 
     	function div2_binding($$value) {
-    		binding_callbacks[$$value ? "unshift" : "push"](() => {
+    		binding_callbacks[$$value ? 'unshift' : 'push'](() => {
     			element = $$value;
     			$$invalidate(7, element);
     		});
@@ -5909,14 +6323,14 @@ var app = (function () {
     	$$self.$$set = $$new_props => {
     		$$props = assign(assign({}, $$props), exclude_internal_props($$new_props));
     		$$invalidate(16, $$restProps = compute_rest_props($$props, omit_props_names));
-    		if ("use" in $$new_props) $$invalidate(0, use = $$new_props.use);
-    		if ("class" in $$new_props) $$invalidate(1, className = $$new_props.class);
-    		if ("align" in $$new_props) $$invalidate(2, align = $$new_props.align);
-    		if ("scrollArea$use" in $$new_props) $$invalidate(3, scrollArea$use = $$new_props.scrollArea$use);
-    		if ("scrollArea$class" in $$new_props) $$invalidate(4, scrollArea$class = $$new_props.scrollArea$class);
-    		if ("scrollContent$use" in $$new_props) $$invalidate(5, scrollContent$use = $$new_props.scrollContent$use);
-    		if ("scrollContent$class" in $$new_props) $$invalidate(6, scrollContent$class = $$new_props.scrollContent$class);
-    		if ("$$scope" in $$new_props) $$invalidate(22, $$scope = $$new_props.$$scope);
+    		if ('use' in $$new_props) $$invalidate(0, use = $$new_props.use);
+    		if ('class' in $$new_props) $$invalidate(1, className = $$new_props.class);
+    		if ('align' in $$new_props) $$invalidate(2, align = $$new_props.align);
+    		if ('scrollArea$use' in $$new_props) $$invalidate(3, scrollArea$use = $$new_props.scrollArea$use);
+    		if ('scrollArea$class' in $$new_props) $$invalidate(4, scrollArea$class = $$new_props.scrollArea$class);
+    		if ('scrollContent$use' in $$new_props) $$invalidate(5, scrollContent$use = $$new_props.scrollContent$use);
+    		if ('scrollContent$class' in $$new_props) $$invalidate(6, scrollContent$class = $$new_props.scrollContent$class);
+    		if ('$$scope' in $$new_props) $$invalidate(22, $$scope = $$new_props.$$scope);
     	};
 
     	$$self.$capture_state = () => ({
@@ -5961,21 +6375,21 @@ var app = (function () {
     	});
 
     	$$self.$inject_state = $$new_props => {
-    		if ("use" in $$props) $$invalidate(0, use = $$new_props.use);
-    		if ("className" in $$props) $$invalidate(1, className = $$new_props.className);
-    		if ("align" in $$props) $$invalidate(2, align = $$new_props.align);
-    		if ("scrollArea$use" in $$props) $$invalidate(3, scrollArea$use = $$new_props.scrollArea$use);
-    		if ("scrollArea$class" in $$props) $$invalidate(4, scrollArea$class = $$new_props.scrollArea$class);
-    		if ("scrollContent$use" in $$props) $$invalidate(5, scrollContent$use = $$new_props.scrollContent$use);
-    		if ("scrollContent$class" in $$props) $$invalidate(6, scrollContent$class = $$new_props.scrollContent$class);
-    		if ("element" in $$props) $$invalidate(7, element = $$new_props.element);
-    		if ("instance" in $$props) $$invalidate(8, instance = $$new_props.instance);
-    		if ("scrollArea" in $$props) $$invalidate(9, scrollArea = $$new_props.scrollArea);
-    		if ("scrollContent" in $$props) $$invalidate(10, scrollContent = $$new_props.scrollContent);
-    		if ("internalClasses" in $$props) $$invalidate(11, internalClasses = $$new_props.internalClasses);
-    		if ("scrollAreaClasses" in $$props) $$invalidate(12, scrollAreaClasses = $$new_props.scrollAreaClasses);
-    		if ("scrollAreaStyles" in $$props) $$invalidate(13, scrollAreaStyles = $$new_props.scrollAreaStyles);
-    		if ("scrollContentStyles" in $$props) $$invalidate(14, scrollContentStyles = $$new_props.scrollContentStyles);
+    		if ('use' in $$props) $$invalidate(0, use = $$new_props.use);
+    		if ('className' in $$props) $$invalidate(1, className = $$new_props.className);
+    		if ('align' in $$props) $$invalidate(2, align = $$new_props.align);
+    		if ('scrollArea$use' in $$props) $$invalidate(3, scrollArea$use = $$new_props.scrollArea$use);
+    		if ('scrollArea$class' in $$props) $$invalidate(4, scrollArea$class = $$new_props.scrollArea$class);
+    		if ('scrollContent$use' in $$props) $$invalidate(5, scrollContent$use = $$new_props.scrollContent$use);
+    		if ('scrollContent$class' in $$props) $$invalidate(6, scrollContent$class = $$new_props.scrollContent$class);
+    		if ('element' in $$props) $$invalidate(7, element = $$new_props.element);
+    		if ('instance' in $$props) $$invalidate(8, instance = $$new_props.instance);
+    		if ('scrollArea' in $$props) $$invalidate(9, scrollArea = $$new_props.scrollArea);
+    		if ('scrollContent' in $$props) $$invalidate(10, scrollContent = $$new_props.scrollContent);
+    		if ('internalClasses' in $$props) $$invalidate(11, internalClasses = $$new_props.internalClasses);
+    		if ('scrollAreaClasses' in $$props) $$invalidate(12, scrollAreaClasses = $$new_props.scrollAreaClasses);
+    		if ('scrollAreaStyles' in $$props) $$invalidate(13, scrollAreaStyles = $$new_props.scrollAreaStyles);
+    		if ('scrollContentStyles' in $$props) $$invalidate(14, scrollContentStyles = $$new_props.scrollContentStyles);
     	};
 
     	if ($$props && "$$inject" in $$props) {
@@ -6043,6 +6457,7 @@ var app = (function () {
     				scrollTo: 20,
     				getElement: 21
     			},
+    			null,
     			[-1, -1]
     		);
 
@@ -6151,8 +6566,8 @@ var app = (function () {
     	}
     }
 
-    /* node_modules/@smui/tab-bar/TabBar.svelte generated by Svelte v3.37.0 */
-    const file$1 = "node_modules/@smui/tab-bar/TabBar.svelte";
+    /* node_modules/.pnpm/@smui+tab-bar@4.2.0/node_modules/@smui/tab-bar/TabBar.svelte generated by Svelte v3.46.4 */
+    const file$1 = "node_modules/.pnpm/@smui+tab-bar@4.2.0/node_modules/@smui/tab-bar/TabBar.svelte";
 
     function get_each_context$1(ctx, list, i) {
     	const child_ctx = ctx.slice();
@@ -6192,8 +6607,17 @@ var app = (function () {
     			ctx = new_ctx;
 
     			if (default_slot) {
-    				if (default_slot.p && dirty[0] & /*$$scope, tabs*/ 134217732) {
-    					update_slot(default_slot, default_slot_template, ctx, /*$$scope*/ ctx[27], dirty, get_default_slot_changes, get_default_slot_context);
+    				if (default_slot.p && (!current || dirty[0] & /*$$scope, tabs*/ 134217732)) {
+    					update_slot_base(
+    						default_slot,
+    						default_slot_template,
+    						ctx,
+    						/*$$scope*/ ctx[27],
+    						!current
+    						? get_all_dirty_from_scope(/*$$scope*/ ctx[27])
+    						: get_slot_changes(default_slot_template, /*$$scope*/ ctx[27], dirty, get_default_slot_changes),
+    						get_default_slot_context
+    					);
     				}
     			}
     		},
@@ -6310,7 +6734,7 @@ var app = (function () {
     	let current;
     	let mounted;
     	let dispose;
-    	const tabscroller_spread_levels = [prefixFilter(/*$$restProps*/ ctx[10], "tabScroller$")];
+    	const tabscroller_spread_levels = [prefixFilter(/*$$restProps*/ ctx[10], 'tabScroller$')];
 
     	let tabscroller_props = {
     		$$slots: { default: [create_default_slot$1] },
@@ -6328,11 +6752,11 @@ var app = (function () {
     		{
     			class: div_class_value = classMap({
     				[/*className*/ ctx[1]]: true,
-    				"mdc-tab-bar": true
+    				'mdc-tab-bar': true
     			})
     		},
     		{ role: "tablist" },
-    		exclude(/*$$restProps*/ ctx[10], ["tabScroller$"])
+    		exclude(/*$$restProps*/ ctx[10], ['tabScroller$'])
     	];
 
     	let div_data = {};
@@ -6372,7 +6796,7 @@ var app = (function () {
     		},
     		p: function update(ctx, dirty) {
     			const tabscroller_changes = (dirty[0] & /*$$restProps*/ 1024)
-    			? get_spread_update(tabscroller_spread_levels, [get_spread_object(prefixFilter(/*$$restProps*/ ctx[10], "tabScroller$"))])
+    			? get_spread_update(tabscroller_spread_levels, [get_spread_object(prefixFilter(/*$$restProps*/ ctx[10], 'tabScroller$'))])
     			: {};
 
     			if (dirty[0] & /*$$scope, tabs*/ 134217732) {
@@ -6384,10 +6808,10 @@ var app = (function () {
     			set_attributes(div, div_data = get_spread_update(div_levels, [
     				(!current || dirty[0] & /*className*/ 2 && div_class_value !== (div_class_value = classMap({
     					[/*className*/ ctx[1]]: true,
-    					"mdc-tab-bar": true
+    					'mdc-tab-bar': true
     				}))) && { class: div_class_value },
     				{ role: "tablist" },
-    				dirty[0] & /*$$restProps*/ 1024 && exclude(/*$$restProps*/ ctx[10], ["tabScroller$"])
+    				dirty[0] & /*$$restProps*/ 1024 && exclude(/*$$restProps*/ ctx[10], ['tabScroller$'])
     			]));
 
     			if (useActions_action && is_function(useActions_action.update) && dirty[0] & /*use*/ 1) useActions_action.update.call(null, /*use*/ ctx[0]);
@@ -6429,10 +6853,10 @@ var app = (function () {
 
     	let $$restProps = compute_rest_props($$props, omit_props_names);
     	let { $$slots: slots = {}, $$scope } = $$props;
-    	validate_slots("TabBar", slots, ['default']);
+    	validate_slots('TabBar', slots, ['default']);
     	const forwardEvents = forwardEventsBuilder(get_current_component());
     	let { use = [] } = $$props;
-    	let { class: className = "" } = $$props;
+    	let { class: className = '' } = $$props;
     	let { tabs = [] } = $$props;
     	let { key = tab => tab } = $$props;
     	let { focusOnActivate = true } = $$props;
@@ -6446,8 +6870,8 @@ var app = (function () {
     	let tabAccessorMap = {};
     	let tabAccessorWeakMap = new WeakMap();
     	let skipFocus = false;
-    	setContext("SMUI:tab:focusOnActivate", focusOnActivate);
-    	setContext("SMUI:tab:initialActive", active);
+    	setContext('SMUI:tab:focusOnActivate', focusOnActivate);
+    	setContext('SMUI:tab:initialActive', active);
 
     	onMount(() => {
     		$$invalidate(4, instance = new MDCTabBarFoundation({
@@ -6456,7 +6880,7 @@ var app = (function () {
     				getScrollPosition: () => tabScroller.getScrollPosition(),
     				getScrollContentWidth: () => tabScroller.getScrollContentWidth(),
     				getOffsetWidth: () => getElement().offsetWidth,
-    				isRTL: () => getComputedStyle(getElement()).getPropertyValue("direction") === "rtl",
+    				isRTL: () => getComputedStyle(getElement()).getPropertyValue('direction') === 'rtl',
     				setActiveTab: index => {
     					$$invalidate(11, active = tabs[index]);
     					$$invalidate(17, activeIndex = index);
@@ -6483,7 +6907,7 @@ var app = (function () {
     				},
     				getIndexOfTabById: id => tabs.indexOf(id),
     				getTabListLength: () => tabs.length,
-    				notifyTabActivated: index => dispatch(getElement(), "MDCTabBar:activated", { index })
+    				notifyTabActivated: index => dispatch(getElement(), 'MDCTabBar:activated', { index })
     			}));
 
     		instance.init();
@@ -6538,14 +6962,14 @@ var app = (function () {
     	}
 
     	function tabscroller_binding($$value) {
-    		binding_callbacks[$$value ? "unshift" : "push"](() => {
+    		binding_callbacks[$$value ? 'unshift' : 'push'](() => {
     			tabScroller = $$value;
     			$$invalidate(6, tabScroller);
     		});
     	}
 
     	function div_binding($$value) {
-    		binding_callbacks[$$value ? "unshift" : "push"](() => {
+    		binding_callbacks[$$value ? 'unshift' : 'push'](() => {
     			element = $$value;
     			$$invalidate(5, element);
     		});
@@ -6559,15 +6983,15 @@ var app = (function () {
     	$$self.$$set = $$new_props => {
     		$$props = assign(assign({}, $$props), exclude_internal_props($$new_props));
     		$$invalidate(10, $$restProps = compute_rest_props($$props, omit_props_names));
-    		if ("use" in $$new_props) $$invalidate(0, use = $$new_props.use);
-    		if ("class" in $$new_props) $$invalidate(1, className = $$new_props.class);
-    		if ("tabs" in $$new_props) $$invalidate(2, tabs = $$new_props.tabs);
-    		if ("key" in $$new_props) $$invalidate(3, key = $$new_props.key);
-    		if ("focusOnActivate" in $$new_props) $$invalidate(12, focusOnActivate = $$new_props.focusOnActivate);
-    		if ("focusOnProgrammatic" in $$new_props) $$invalidate(13, focusOnProgrammatic = $$new_props.focusOnProgrammatic);
-    		if ("useAutomaticActivation" in $$new_props) $$invalidate(14, useAutomaticActivation = $$new_props.useAutomaticActivation);
-    		if ("active" in $$new_props) $$invalidate(11, active = $$new_props.active);
-    		if ("$$scope" in $$new_props) $$invalidate(27, $$scope = $$new_props.$$scope);
+    		if ('use' in $$new_props) $$invalidate(0, use = $$new_props.use);
+    		if ('class' in $$new_props) $$invalidate(1, className = $$new_props.class);
+    		if ('tabs' in $$new_props) $$invalidate(2, tabs = $$new_props.tabs);
+    		if ('key' in $$new_props) $$invalidate(3, key = $$new_props.key);
+    		if ('focusOnActivate' in $$new_props) $$invalidate(12, focusOnActivate = $$new_props.focusOnActivate);
+    		if ('focusOnProgrammatic' in $$new_props) $$invalidate(13, focusOnProgrammatic = $$new_props.focusOnProgrammatic);
+    		if ('useAutomaticActivation' in $$new_props) $$invalidate(14, useAutomaticActivation = $$new_props.useAutomaticActivation);
+    		if ('active' in $$new_props) $$invalidate(11, active = $$new_props.active);
+    		if ('$$scope' in $$new_props) $$invalidate(27, $$scope = $$new_props.$$scope);
     	};
 
     	$$self.$capture_state = () => ({
@@ -6608,21 +7032,21 @@ var app = (function () {
     	});
 
     	$$self.$inject_state = $$new_props => {
-    		if ("use" in $$props) $$invalidate(0, use = $$new_props.use);
-    		if ("className" in $$props) $$invalidate(1, className = $$new_props.className);
-    		if ("tabs" in $$props) $$invalidate(2, tabs = $$new_props.tabs);
-    		if ("key" in $$props) $$invalidate(3, key = $$new_props.key);
-    		if ("focusOnActivate" in $$props) $$invalidate(12, focusOnActivate = $$new_props.focusOnActivate);
-    		if ("focusOnProgrammatic" in $$props) $$invalidate(13, focusOnProgrammatic = $$new_props.focusOnProgrammatic);
-    		if ("useAutomaticActivation" in $$props) $$invalidate(14, useAutomaticActivation = $$new_props.useAutomaticActivation);
-    		if ("active" in $$props) $$invalidate(11, active = $$new_props.active);
-    		if ("element" in $$props) $$invalidate(5, element = $$new_props.element);
-    		if ("instance" in $$props) $$invalidate(4, instance = $$new_props.instance);
-    		if ("tabScroller" in $$props) $$invalidate(6, tabScroller = $$new_props.tabScroller);
-    		if ("activeIndex" in $$props) $$invalidate(17, activeIndex = $$new_props.activeIndex);
-    		if ("tabAccessorMap" in $$props) $$invalidate(18, tabAccessorMap = $$new_props.tabAccessorMap);
-    		if ("tabAccessorWeakMap" in $$props) $$invalidate(19, tabAccessorWeakMap = $$new_props.tabAccessorWeakMap);
-    		if ("skipFocus" in $$props) skipFocus = $$new_props.skipFocus;
+    		if ('use' in $$props) $$invalidate(0, use = $$new_props.use);
+    		if ('className' in $$props) $$invalidate(1, className = $$new_props.className);
+    		if ('tabs' in $$props) $$invalidate(2, tabs = $$new_props.tabs);
+    		if ('key' in $$props) $$invalidate(3, key = $$new_props.key);
+    		if ('focusOnActivate' in $$props) $$invalidate(12, focusOnActivate = $$new_props.focusOnActivate);
+    		if ('focusOnProgrammatic' in $$props) $$invalidate(13, focusOnProgrammatic = $$new_props.focusOnProgrammatic);
+    		if ('useAutomaticActivation' in $$props) $$invalidate(14, useAutomaticActivation = $$new_props.useAutomaticActivation);
+    		if ('active' in $$props) $$invalidate(11, active = $$new_props.active);
+    		if ('element' in $$props) $$invalidate(5, element = $$new_props.element);
+    		if ('instance' in $$props) $$invalidate(4, instance = $$new_props.instance);
+    		if ('tabScroller' in $$props) $$invalidate(6, tabScroller = $$new_props.tabScroller);
+    		if ('activeIndex' in $$props) $$invalidate(17, activeIndex = $$new_props.activeIndex);
+    		if ('tabAccessorMap' in $$props) $$invalidate(18, tabAccessorMap = $$new_props.tabAccessorMap);
+    		if ('tabAccessorWeakMap' in $$props) $$invalidate(19, tabAccessorWeakMap = $$new_props.tabAccessorWeakMap);
+    		if ('skipFocus' in $$props) skipFocus = $$new_props.skipFocus;
     	};
 
     	if ($$props && "$$inject" in $$props) {
@@ -6716,6 +7140,7 @@ var app = (function () {
     				scrollIntoView: 15,
     				getElement: 16
     			},
+    			null,
     			[-1, -1]
     		);
 
@@ -7923,22 +8348,22 @@ var app = (function () {
         check_empty: check_empty
     });
 
-    /* src/App.svelte generated by Svelte v3.37.0 */
+    /* src/App.svelte generated by Svelte v3.46.4 */
 
     const { Object: Object_1, console: console_1 } = globals;
     const file = "src/App.svelte";
 
     function get_each_context(ctx, list, i) {
     	const child_ctx = ctx.slice();
-    	child_ctx[139] = list[i];
+    	child_ctx[138] = list[i];
     	child_ctx[6] = i;
     	return child_ctx;
     }
 
-    // (1624:2) <Label>
+    // (1572:2) <Label>
     function create_default_slot_2(ctx) {
     	let span;
-    	let t_value = /*tab*/ ctx[141] + "";
+    	let t_value = /*tab*/ ctx[140] + "";
     	let t;
     	let span_class_value;
 
@@ -7947,20 +8372,20 @@ var app = (function () {
     			span = element("span");
     			t = text(t_value);
 
-    			attr_dev(span, "class", span_class_value = "" + (null_to_empty(/*tab*/ ctx[141] === /*active*/ ctx[4]
+    			attr_dev(span, "class", span_class_value = "" + (null_to_empty(/*tab*/ ctx[140] === /*active*/ ctx[4]
     			? "active-tab"
     			: "plain-tab") + " svelte-1b4dyig"));
 
-    			add_location(span, file, 1623, 9, 40690);
+    			add_location(span, file, 1571, 9, 38833);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, span, anchor);
     			append_dev(span, t);
     		},
     		p: function update(ctx, dirty) {
-    			if (dirty[4] & /*tab*/ 131072 && t_value !== (t_value = /*tab*/ ctx[141] + "")) set_data_dev(t, t_value);
+    			if (dirty[4] & /*tab*/ 65536 && t_value !== (t_value = /*tab*/ ctx[140] + "")) set_data_dev(t, t_value);
 
-    			if (dirty[0] & /*active*/ 16 | dirty[4] & /*tab*/ 131072 && span_class_value !== (span_class_value = "" + (null_to_empty(/*tab*/ ctx[141] === /*active*/ ctx[4]
+    			if (dirty[0] & /*active*/ 16 | dirty[4] & /*tab*/ 65536 && span_class_value !== (span_class_value = "" + (null_to_empty(/*tab*/ ctx[140] === /*active*/ ctx[4]
     			? "active-tab"
     			: "plain-tab") + " svelte-1b4dyig"))) {
     				attr_dev(span, "class", span_class_value);
@@ -7975,14 +8400,14 @@ var app = (function () {
     		block,
     		id: create_default_slot_2.name,
     		type: "slot",
-    		source: "(1624:2) <Label>",
+    		source: "(1572:2) <Label>",
     		ctx
     	});
 
     	return block;
     }
 
-    // (1623:3) <Tab {tab}>
+    // (1571:3) <Tab {tab}>
     function create_default_slot_1(ctx) {
     	let label;
     	let current;
@@ -8006,7 +8431,7 @@ var app = (function () {
     		p: function update(ctx, dirty) {
     			const label_changes = {};
 
-    			if (dirty[0] & /*active*/ 16 | dirty[4] & /*$$scope, tab*/ 393216) {
+    			if (dirty[0] & /*active*/ 16 | dirty[4] & /*$$scope, tab*/ 196608) {
     				label_changes.$$scope = { dirty, ctx };
     			}
 
@@ -8030,21 +8455,21 @@ var app = (function () {
     		block,
     		id: create_default_slot_1.name,
     		type: "slot",
-    		source: "(1623:3) <Tab {tab}>",
+    		source: "(1571:3) <Tab {tab}>",
     		ctx
     	});
 
     	return block;
     }
 
-    // (1621:1) <TabBar tabs={['Identify', 'User', 'About Us']} let:tab bind:active>
+    // (1569:1) <TabBar tabs={['Identify', 'User', 'About Us']} let:tab bind:active>
     function create_default_slot(ctx) {
     	let tab;
     	let current;
 
     	tab = new Tab({
     			props: {
-    				tab: /*tab*/ ctx[141],
+    				tab: /*tab*/ ctx[140],
     				$$slots: { default: [create_default_slot_1] },
     				$$scope: { ctx }
     			},
@@ -8061,9 +8486,9 @@ var app = (function () {
     		},
     		p: function update(ctx, dirty) {
     			const tab_changes = {};
-    			if (dirty[4] & /*tab*/ 131072) tab_changes.tab = /*tab*/ ctx[141];
+    			if (dirty[4] & /*tab*/ 65536) tab_changes.tab = /*tab*/ ctx[140];
 
-    			if (dirty[0] & /*active*/ 16 | dirty[4] & /*$$scope, tab*/ 393216) {
+    			if (dirty[0] & /*active*/ 16 | dirty[4] & /*$$scope, tab*/ 196608) {
     				tab_changes.$$scope = { dirty, ctx };
     			}
 
@@ -8087,14 +8512,14 @@ var app = (function () {
     		block,
     		id: create_default_slot.name,
     		type: "slot",
-    		source: "(1621:1) <TabBar tabs={['Identify', 'User', 'About Us']} let:tab bind:active>",
+    		source: "(1569:1) <TabBar tabs={['Identify', 'User', 'About Us']} let:tab bind:active>",
     		ctx
     	});
 
     	return block;
     }
 
-    // (1781:36) 
+    // (1729:36) 
     function create_if_block_8(ctx) {
     	let div;
     	let blockquote0;
@@ -8179,46 +8604,46 @@ var app = (function () {
     			blockquote7 = element("blockquote");
     			blockquote7.textContent = "You may user your distributed identity in any website that will take one.";
     			attr_dev(blockquote0, "class", "svelte-1b4dyig");
-    			add_location(blockquote0, file, 1782, 2, 48081);
+    			add_location(blockquote0, file, 1730, 2, 46236);
     			attr_dev(b0, "class", "svelte-1b4dyig");
-    			add_location(b0, file, 1787, 5, 48311);
+    			add_location(b0, file, 1735, 5, 46466);
     			attr_dev(blockquote1, "class", "svelte-1b4dyig");
-    			add_location(blockquote1, file, 1785, 2, 48136);
+    			add_location(blockquote1, file, 1733, 2, 46291);
     			attr_dev(b1, "class", "svelte-1b4dyig");
-    			add_location(b1, file, 1792, 7, 48435);
+    			add_location(b1, file, 1740, 7, 46590);
     			attr_dev(li0, "class", "svelte-1b4dyig");
-    			add_location(li0, file, 1792, 3, 48431);
+    			add_location(li0, file, 1740, 3, 46586);
     			attr_dev(b2, "class", "svelte-1b4dyig");
-    			add_location(b2, file, 1793, 7, 48511);
+    			add_location(b2, file, 1741, 7, 46666);
     			attr_dev(li1, "class", "svelte-1b4dyig");
-    			add_location(li1, file, 1793, 3, 48507);
+    			add_location(li1, file, 1741, 3, 46662);
     			attr_dev(b3, "class", "svelte-1b4dyig");
-    			add_location(b3, file, 1794, 7, 48630);
+    			add_location(b3, file, 1742, 7, 46785);
     			set_style(b4, "color", "darkseagreen");
     			attr_dev(b4, "class", "svelte-1b4dyig");
-    			add_location(b4, file, 1794, 28, 48651);
+    			add_location(b4, file, 1742, 28, 46806);
     			attr_dev(li2, "class", "svelte-1b4dyig");
-    			add_location(li2, file, 1794, 3, 48626);
+    			add_location(li2, file, 1742, 3, 46781);
     			set_style(ol, "padding-left", "4%");
     			attr_dev(ol, "class", "svelte-1b4dyig");
-    			add_location(ol, file, 1791, 2, 48399);
+    			add_location(ol, file, 1739, 2, 46554);
     			attr_dev(blockquote2, "class", "svelte-1b4dyig");
-    			add_location(blockquote2, file, 1789, 2, 48350);
+    			add_location(blockquote2, file, 1737, 2, 46505);
     			attr_dev(blockquote3, "class", "svelte-1b4dyig");
-    			add_location(blockquote3, file, 1797, 2, 48740);
+    			add_location(blockquote3, file, 1745, 2, 46895);
     			attr_dev(blockquote4, "class", "svelte-1b4dyig");
-    			add_location(blockquote4, file, 1800, 2, 48912);
+    			add_location(blockquote4, file, 1748, 2, 47067);
     			set_style(span, "font-weight", "bold");
     			attr_dev(span, "class", "svelte-1b4dyig");
-    			add_location(span, file, 1804, 2, 49044);
+    			add_location(span, file, 1752, 2, 47199);
     			attr_dev(blockquote5, "class", "svelte-1b4dyig");
-    			add_location(blockquote5, file, 1803, 2, 49029);
+    			add_location(blockquote5, file, 1751, 2, 47184);
     			attr_dev(blockquote6, "class", "svelte-1b4dyig");
-    			add_location(blockquote6, file, 1806, 2, 49178);
+    			add_location(blockquote6, file, 1754, 2, 47333);
     			attr_dev(blockquote7, "class", "svelte-1b4dyig");
-    			add_location(blockquote7, file, 1810, 2, 49524);
+    			add_location(blockquote7, file, 1758, 2, 47679);
     			attr_dev(div, "class", "team_message svelte-1b4dyig");
-    			add_location(div, file, 1781, 1, 48050);
+    			add_location(div, file, 1729, 1, 46205);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -8266,14 +8691,14 @@ var app = (function () {
     		block,
     		id: create_if_block_8.name,
     		type: "if",
-    		source: "(1781:36) ",
+    		source: "(1729:36) ",
     		ctx
     	});
 
     	return block;
     }
 
-    // (1662:33) 
+    // (1610:33) 
     function create_if_block_2(ctx) {
     	let div17;
     	let div10;
@@ -8509,121 +8934,121 @@ var app = (function () {
     			button3 = element("button");
     			button3.textContent = "▲ identity";
     			attr_dev(br0, "class", "svelte-1b4dyig");
-    			add_location(br0, file, 1664, 3, 42054);
+    			add_location(br0, file, 1612, 3, 40197);
     			attr_dev(div0, "class", "top_instructions svelte-1b4dyig");
-    			add_location(div0, file, 1665, 3, 42062);
+    			add_location(div0, file, 1613, 3, 40205);
     			attr_dev(br1, "class", "svelte-1b4dyig");
-    			add_location(br1, file, 1668, 3, 42207);
+    			add_location(br1, file, 1616, 3, 40350);
     			attr_dev(label0, "for", "name");
     			set_style(label0, "display", "inline");
     			attr_dev(label0, "class", "svelte-1b4dyig");
-    			add_location(label0, file, 1670, 4, 42244);
+    			add_location(label0, file, 1618, 4, 40387);
     			attr_dev(input0, "id", "name");
     			attr_dev(input0, "placeholder", "Name");
     			set_style(input0, "display", "inline");
     			attr_dev(input0, "class", "svelte-1b4dyig");
-    			add_location(input0, file, 1672, 4, 42309);
+    			add_location(input0, file, 1620, 4, 40452);
     			attr_dev(input1, "type", "checkbox");
     			set_style(input1, "display", "inline");
     			attr_dev(input1, "class", "svelte-1b4dyig");
-    			add_location(input1, file, 1673, 4, 42391);
+    			add_location(input1, file, 1621, 4, 40534);
     			attr_dev(span0, "class", "svelte-1b4dyig");
-    			add_location(span0, file, 1673, 76, 42463);
+    			add_location(span0, file, 1621, 76, 40606);
     			attr_dev(div1, "class", "inner_div svelte-1b4dyig");
-    			add_location(div1, file, 1669, 3, 42215);
+    			add_location(div1, file, 1617, 3, 40358);
     			attr_dev(div2, "class", "inner_div svelte-1b4dyig");
-    			add_location(div2, file, 1675, 3, 42511);
+    			add_location(div2, file, 1623, 3, 40654);
     			attr_dev(div3, "class", "inner_div svelte-1b4dyig");
-    			add_location(div3, file, 1682, 3, 42899);
+    			add_location(div3, file, 1630, 3, 41042);
     			attr_dev(label1, "for", "self-text");
     			attr_dev(label1, "class", "svelte-1b4dyig");
-    			add_location(label1, file, 1690, 3, 43342);
+    			add_location(label1, file, 1638, 3, 41485);
     			attr_dev(br2, "class", "svelte-1b4dyig");
-    			add_location(br2, file, 1690, 50, 43389);
+    			add_location(br2, file, 1638, 50, 41532);
     			attr_dev(textarea, "id", "self-text");
     			attr_dev(textarea, "placeholder", "Something you would say to anyone about yourself");
     			attr_dev(textarea, "class", "svelte-1b4dyig");
-    			add_location(textarea, file, 1691, 3, 43397);
+    			add_location(textarea, file, 1639, 3, 41540);
     			attr_dev(div4, "class", "inner_div svelte-1b4dyig");
-    			add_location(div4, file, 1689, 3, 43314);
+    			add_location(div4, file, 1637, 3, 41457);
     			attr_dev(div5, "class", "add-profile-div svelte-1b4dyig");
     			set_style(div5, "text-align", "center");
-    			add_location(div5, file, 1693, 3, 43531);
+    			add_location(div5, file, 1641, 3, 41674);
     			attr_dev(b0, "class", "svelte-1b4dyig");
-    			add_location(b0, file, 1707, 6, 44228);
+    			add_location(b0, file, 1655, 6, 42383);
     			attr_dev(div6, "class", "instructor svelte-1b4dyig");
-    			add_location(div6, file, 1706, 5, 44196);
+    			add_location(div6, file, 1654, 5, 42351);
     			set_style(span1, "font-weight", "bolder");
     			set_style(span1, "color", "navy");
     			attr_dev(span1, "class", "svelte-1b4dyig");
-    			add_location(span1, file, 1710, 36, 44410);
+    			add_location(span1, file, 1658, 36, 42565);
     			attr_dev(b1, "class", "svelte-1b4dyig");
-    			add_location(b1, file, 1713, 25, 44694);
+    			add_location(b1, file, 1661, 25, 42849);
     			attr_dev(i0, "class", "svelte-1b4dyig");
-    			add_location(i0, file, 1713, 22, 44691);
+    			add_location(i0, file, 1661, 22, 42846);
     			attr_dev(div7, "class", "instructor svelte-1b4dyig");
-    			add_location(div7, file, 1709, 5, 44348);
+    			add_location(div7, file, 1657, 5, 42503);
     			attr_dev(div8, "class", "instructor svelte-1b4dyig");
-    			add_location(div8, file, 1715, 5, 44781);
+    			add_location(div8, file, 1663, 5, 42936);
     			attr_dev(blockquote0, "class", "svelte-1b4dyig");
-    			add_location(blockquote0, file, 1705, 4, 44178);
+    			add_location(blockquote0, file, 1653, 4, 42333);
     			attr_dev(b2, "class", "svelte-1b4dyig");
-    			add_location(b2, file, 1722, 4, 45120);
+    			add_location(b2, file, 1670, 4, 43275);
     			attr_dev(blockquote1, "class", "svelte-1b4dyig");
-    			add_location(blockquote1, file, 1720, 4, 45018);
+    			add_location(blockquote1, file, 1668, 4, 43173);
     			attr_dev(b3, "class", "svelte-1b4dyig");
-    			add_location(b3, file, 1726, 96, 45409);
+    			add_location(b3, file, 1674, 96, 43564);
     			attr_dev(i1, "class", "svelte-1b4dyig");
-    			add_location(i1, file, 1727, 13, 45447);
+    			add_location(i1, file, 1675, 13, 43602);
     			attr_dev(i2, "class", "svelte-1b4dyig");
-    			add_location(i2, file, 1727, 44, 45478);
+    			add_location(i2, file, 1675, 44, 43633);
     			attr_dev(blockquote2, "class", "svelte-1b4dyig");
-    			add_location(blockquote2, file, 1728, 5, 45577);
+    			add_location(blockquote2, file, 1676, 5, 43732);
     			attr_dev(blockquote3, "class", "svelte-1b4dyig");
-    			add_location(blockquote3, file, 1725, 4, 45300);
+    			add_location(blockquote3, file, 1673, 4, 43455);
     			attr_dev(blockquote4, "class", "svelte-1b4dyig");
-    			add_location(blockquote4, file, 1735, 5, 45904);
+    			add_location(blockquote4, file, 1683, 5, 44059);
     			attr_dev(blockquote5, "class", "svelte-1b4dyig");
-    			add_location(blockquote5, file, 1733, 4, 45831);
+    			add_location(blockquote5, file, 1681, 4, 43986);
     			set_style(span2, "color", "blue");
     			attr_dev(span2, "class", "svelte-1b4dyig");
-    			add_location(span2, file, 1742, 4, 46290);
+    			add_location(span2, file, 1690, 4, 44445);
     			attr_dev(span3, "class", "svelte-1b4dyig");
-    			add_location(span3, file, 1746, 76, 46820);
+    			add_location(span3, file, 1694, 76, 44975);
     			attr_dev(blockquote6, "class", "svelte-1b4dyig");
-    			add_location(blockquote6, file, 1741, 4, 46273);
+    			add_location(blockquote6, file, 1689, 4, 44428);
     			attr_dev(div9, "class", "nice_message svelte-1b4dyig");
-    			add_location(div9, file, 1704, 3, 44147);
+    			add_location(div9, file, 1652, 3, 42302);
     			attr_dev(div10, "class", "signerupper svelte-1b4dyig");
-    			add_location(div10, file, 1663, 2, 42025);
+    			add_location(div10, file, 1611, 2, 40168);
 
-    			attr_dev(span4, "class", span4_class_value = "" + (null_to_empty(/*signup_status*/ ctx[9] === "OK"
+    			attr_dev(span4, "class", span4_class_value = "" + (null_to_empty(/*signup_status*/ ctx[9] === 'OK'
     			? "good-status"
     			: "bad-status") + " svelte-1b4dyig"));
 
-    			add_location(span4, file, 1753, 12, 47024);
+    			add_location(span4, file, 1701, 12, 45179);
     			attr_dev(div11, "class", "signup-status svelte-1b4dyig");
-    			add_location(div11, file, 1752, 3, 46984);
+    			add_location(div11, file, 1700, 3, 45139);
     			attr_dev(button0, "class", "svelte-1b4dyig");
-    			add_location(button0, file, 1768, 6, 47648);
+    			add_location(button0, file, 1716, 6, 45803);
     			attr_dev(button1, "class", "svelte-1b4dyig");
-    			add_location(button1, file, 1769, 6, 47710);
+    			add_location(button1, file, 1717, 6, 45865);
     			attr_dev(div12, "class", "contact_controls svelte-1b4dyig");
-    			add_location(div12, file, 1767, 5, 47611);
+    			add_location(div12, file, 1715, 5, 45766);
     			attr_dev(button2, "class", "svelte-1b4dyig");
-    			add_location(button2, file, 1772, 6, 47832);
+    			add_location(button2, file, 1720, 6, 45987);
     			attr_dev(button3, "class", "svelte-1b4dyig");
-    			add_location(button3, file, 1773, 6, 47900);
+    			add_location(button3, file, 1721, 6, 46055);
     			attr_dev(div13, "class", "contact_controls svelte-1b4dyig");
-    			add_location(div13, file, 1771, 5, 47795);
+    			add_location(div13, file, 1719, 5, 45950);
     			attr_dev(div14, "class", "svelte-1b4dyig");
-    			add_location(div14, file, 1766, 4, 47600);
+    			add_location(div14, file, 1714, 4, 45755);
     			attr_dev(div15, "class", "svelte-1b4dyig");
-    			add_location(div15, file, 1755, 3, 47128);
+    			add_location(div15, file, 1703, 3, 45283);
     			attr_dev(div16, "class", "signerupper svelte-1b4dyig");
-    			add_location(div16, file, 1751, 2, 46955);
+    			add_location(div16, file, 1699, 2, 45110);
     			attr_dev(div17, "class", "signup-grid-container svelte-1b4dyig");
-    			add_location(div17, file, 1662, 1, 41987);
+    			add_location(div17, file, 1610, 1, 40130);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div17, anchor);
@@ -8725,13 +9150,13 @@ var app = (function () {
 
     			if (!mounted) {
     				dispose = [
-    					listen_dev(input0, "input", /*input0_input_handler*/ ctx[50]),
-    					listen_dev(input1, "change", /*input1_change_handler*/ ctx[51]),
-    					listen_dev(textarea, "input", /*textarea_input_handler*/ ctx[56]),
-    					listen_dev(button0, "click", /*clear_identify_form*/ ctx[21], false, false, false),
-    					listen_dev(button1, "click", /*remove_identify_seen_in_form*/ ctx[22], false, false, false),
-    					listen_dev(button2, "click", /*app_download_identity*/ ctx[26], false, false, false),
-    					listen_dev(button3, "click", /*app_upload_identity*/ ctx[25], false, false, false)
+    					listen_dev(input0, "input", /*input0_input_handler*/ ctx[49]),
+    					listen_dev(input1, "change", /*input1_change_handler*/ ctx[50]),
+    					listen_dev(textarea, "input", /*textarea_input_handler*/ ctx[55]),
+    					listen_dev(button0, "click", /*clear_identify_form*/ ctx[20], false, false, false),
+    					listen_dev(button1, "click", /*remove_identify_seen_in_form*/ ctx[21], false, false, false),
+    					listen_dev(button2, "click", /*app_download_identity*/ ctx[25], false, false, false),
+    					listen_dev(button3, "click", /*app_upload_identity*/ ctx[24], false, false, false)
     				];
 
     				mounted = true;
@@ -8788,7 +9213,7 @@ var app = (function () {
 
     			if (dirty[0] & /*signup_status*/ 512) set_data_dev(t48, /*signup_status*/ ctx[9]);
 
-    			if (dirty[0] & /*signup_status*/ 512 && span4_class_value !== (span4_class_value = "" + (null_to_empty(/*signup_status*/ ctx[9] === "OK"
+    			if (dirty[0] & /*signup_status*/ 512 && span4_class_value !== (span4_class_value = "" + (null_to_empty(/*signup_status*/ ctx[9] === 'OK'
     			? "good-status"
     			: "bad-status") + " svelte-1b4dyig"))) {
     				attr_dev(span4, "class", span4_class_value);
@@ -8836,14 +9261,14 @@ var app = (function () {
     		block,
     		id: create_if_block_2.name,
     		type: "if",
-    		source: "(1662:33) ",
+    		source: "(1610:33) ",
     		ctx
     	});
 
     	return block;
     }
 
-    // (1629:1) {#if (active === 'Identify')}
+    // (1577:1) {#if (active === 'Identify')}
     function create_if_block(ctx) {
     	let div1;
     	let t0;
@@ -8878,16 +9303,16 @@ var app = (function () {
     			br2 = element("br");
     			t4 = text("\n\t\t\tMake use of a browser extension to translate your URL into a Web3 style domain.");
     			attr_dev(br0, "class", "svelte-1b4dyig");
-    			add_location(br0, file, 1653, 3, 41707);
+    			add_location(br0, file, 1601, 3, 39850);
     			attr_dev(br1, "class", "svelte-1b4dyig");
-    			add_location(br1, file, 1655, 3, 41795);
+    			add_location(br1, file, 1603, 3, 39938);
     			attr_dev(br2, "class", "svelte-1b4dyig");
-    			add_location(br2, file, 1657, 3, 41847);
+    			add_location(br2, file, 1605, 3, 39990);
     			attr_dev(div0, "class", "front-page-explain svelte-1b4dyig");
-    			add_location(div0, file, 1651, 2, 41617);
+    			add_location(div0, file, 1599, 2, 39760);
     			attr_dev(div1, "class", "splash-if-you-will svelte-1b4dyig");
     			set_style(div1, "height", "fit-content");
-    			add_location(div1, file, 1629, 1, 40833);
+    			add_location(div1, file, 1577, 1, 38976);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div1, anchor);
@@ -8925,14 +9350,14 @@ var app = (function () {
     		block,
     		id: create_if_block.name,
     		type: "if",
-    		source: "(1629:1) {#if (active === 'Identify')}",
+    		source: "(1577:1) {#if (active === 'Identify')}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (1679:4) {:else}
+    // (1627:4) {:else}
     function create_else_block_3(ctx) {
     	let label;
     	let input;
@@ -8947,12 +9372,12 @@ var app = (function () {
     			attr_dev(label, "for", "DOB");
     			set_style(label, "display", "inline");
     			attr_dev(label, "class", "svelte-1b4dyig");
-    			add_location(label, file, 1679, 5, 42736);
+    			add_location(label, file, 1627, 5, 40879);
     			attr_dev(input, "id", "DOB");
     			attr_dev(input, "placeholder", "Date of Birth");
     			set_style(input, "display", "inline");
     			attr_dev(input, "class", "svelte-1b4dyig");
-    			add_location(input, file, 1679, 59, 42790);
+    			add_location(input, file, 1627, 59, 40933);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, label, anchor);
@@ -8960,7 +9385,7 @@ var app = (function () {
     			set_input_value(input, /*DOB*/ ctx[10]);
 
     			if (!mounted) {
-    				dispose = listen_dev(input, "input", /*input_input_handler_1*/ ctx[53]);
+    				dispose = listen_dev(input, "input", /*input_input_handler_1*/ ctx[52]);
     				mounted = true;
     			}
     		},
@@ -8981,14 +9406,14 @@ var app = (function () {
     		block,
     		id: create_else_block_3.name,
     		type: "else",
-    		source: "(1679:4) {:else}",
+    		source: "(1627:4) {:else}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (1677:4) {#if business }
+    // (1625:4) {#if business }
     function create_if_block_7(ctx) {
     	let label;
     	let input;
@@ -9003,12 +9428,12 @@ var app = (function () {
     			attr_dev(label, "for", "DOB");
     			set_style(label, "display", "inline");
     			attr_dev(label, "class", "svelte-1b4dyig");
-    			add_location(label, file, 1677, 5, 42561);
+    			add_location(label, file, 1625, 5, 40704);
     			attr_dev(input, "id", "DOB");
     			attr_dev(input, "placeholder", "Year of Inception");
     			set_style(input, "display", "inline");
     			attr_dev(input, "class", "svelte-1b4dyig");
-    			add_location(input, file, 1677, 73, 42629);
+    			add_location(input, file, 1625, 73, 40772);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, label, anchor);
@@ -9016,7 +9441,7 @@ var app = (function () {
     			set_input_value(input, /*DOB*/ ctx[10]);
 
     			if (!mounted) {
-    				dispose = listen_dev(input, "input", /*input_input_handler*/ ctx[52]);
+    				dispose = listen_dev(input, "input", /*input_input_handler*/ ctx[51]);
     				mounted = true;
     			}
     		},
@@ -9037,14 +9462,14 @@ var app = (function () {
     		block,
     		id: create_if_block_7.name,
     		type: "if",
-    		source: "(1677:4) {#if business }",
+    		source: "(1625:4) {#if business }",
     		ctx
     	});
 
     	return block;
     }
 
-    // (1686:4) {:else}
+    // (1634:4) {:else}
     function create_else_block_2(ctx) {
     	let label;
     	let input;
@@ -9059,12 +9484,12 @@ var app = (function () {
     			attr_dev(label, "for", "POO");
     			set_style(label, "display", "inline");
     			attr_dev(label, "class", "svelte-1b4dyig");
-    			add_location(label, file, 1686, 5, 43125);
+    			add_location(label, file, 1634, 5, 41268);
     			attr_dev(input, "id", "POO");
     			attr_dev(input, "placeholder", "Place of Origin");
     			set_style(input, "display", "inline");
     			attr_dev(input, "class", "svelte-1b4dyig");
-    			add_location(input, file, 1686, 71, 43191);
+    			add_location(input, file, 1634, 71, 41334);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, label, anchor);
@@ -9072,7 +9497,7 @@ var app = (function () {
     			set_input_value(input, /*place_of_origin*/ ctx[11]);
 
     			if (!mounted) {
-    				dispose = listen_dev(input, "input", /*input_input_handler_3*/ ctx[55]);
+    				dispose = listen_dev(input, "input", /*input_input_handler_3*/ ctx[54]);
     				mounted = true;
     			}
     		},
@@ -9093,14 +9518,14 @@ var app = (function () {
     		block,
     		id: create_else_block_2.name,
     		type: "else",
-    		source: "(1686:4) {:else}",
+    		source: "(1634:4) {:else}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (1684:4) {#if business }
+    // (1632:4) {#if business }
     function create_if_block_6(ctx) {
     	let label;
     	let input;
@@ -9115,12 +9540,12 @@ var app = (function () {
     			attr_dev(label, "for", "POO");
     			set_style(label, "display", "inline");
     			attr_dev(label, "class", "svelte-1b4dyig");
-    			add_location(label, file, 1684, 5, 42949);
+    			add_location(label, file, 1632, 5, 41092);
     			attr_dev(input, "id", "POO");
     			attr_dev(input, "placeholder", "Main Office");
     			set_style(input, "display", "inline");
     			attr_dev(input, "class", "svelte-1b4dyig");
-    			add_location(input, file, 1684, 68, 43012);
+    			add_location(input, file, 1632, 68, 41155);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, label, anchor);
@@ -9128,7 +9553,7 @@ var app = (function () {
     			set_input_value(input, /*place_of_origin*/ ctx[11]);
 
     			if (!mounted) {
-    				dispose = listen_dev(input, "input", /*input_input_handler_2*/ ctx[54]);
+    				dispose = listen_dev(input, "input", /*input_input_handler_2*/ ctx[53]);
     				mounted = true;
     			}
     		},
@@ -9149,14 +9574,14 @@ var app = (function () {
     		block,
     		id: create_if_block_6.name,
     		type: "if",
-    		source: "(1684:4) {#if business }",
+    		source: "(1632:4) {#if business }",
     		ctx
     	});
 
     	return block;
     }
 
-    // (1699:4) {:else}
+    // (1647:4) {:else}
     function create_else_block_1(ctx) {
     	let div;
     	let span0;
@@ -9174,16 +9599,16 @@ var app = (function () {
     			span1 = element("span");
     			t2 = text(/*active_cid*/ ctx[0]);
     			attr_dev(span0, "class", "cid-grabber-label svelte-1b4dyig");
-    			add_location(span0, file, 1700, 6, 44004);
+    			add_location(span0, file, 1648, 6, 42159);
     			attr_dev(span1, "class", "cid-grabber svelte-1b4dyig");
-    			add_location(span1, file, 1700, 68, 44066);
+    			add_location(span1, file, 1648, 68, 42221);
 
     			attr_dev(div, "style", div_style_value = /*green*/ ctx[16]
     			? "background-color:rgba(245,255,250,0.9)"
     			: "background-color:rgba(250,250,250,0.3)");
 
     			attr_dev(div, "class", "svelte-1b4dyig");
-    			add_location(div, file, 1699, 5, 43887);
+    			add_location(div, file, 1647, 5, 42042);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -9210,14 +9635,14 @@ var app = (function () {
     		block,
     		id: create_else_block_1.name,
     		type: "else",
-    		source: "(1699:4) {:else}",
+    		source: "(1647:4) {:else}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (1695:4) {#if creation_to_do }
+    // (1643:4) {#if creation_to_do }
     function create_if_block_5(ctx) {
     	let div;
     	let button;
@@ -9233,14 +9658,14 @@ var app = (function () {
     			t = text("Create my Intergalactic Identity.");
     			attr_dev(button, "class", "long_button svelte-1b4dyig");
     			button.disabled = /*creator_disabled*/ ctx[17];
-    			add_location(button, file, 1696, 6, 43736);
+    			add_location(button, file, 1644, 6, 41879);
 
     			attr_dev(div, "style", div_style_value = /*green*/ ctx[16]
     			? "background-color:rgba(245,255,250,0.9)"
     			: "background-color:rgba(250,250,250,0.3)");
 
     			attr_dev(div, "class", "svelte-1b4dyig");
-    			add_location(div, file, 1695, 5, 43619);
+    			add_location(div, file, 1643, 5, 41762);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -9248,7 +9673,7 @@ var app = (function () {
     			append_dev(button, t);
 
     			if (!mounted) {
-    				dispose = listen_dev(button, "click", /*add_profile*/ ctx[20], false, false, false);
+    				dispose = listen_dev(button, "click", create_intergalactic_id, false, false, false);
     				mounted = true;
     			}
     		},
@@ -9274,14 +9699,14 @@ var app = (function () {
     		block,
     		id: create_if_block_5.name,
     		type: "if",
-    		source: "(1695:4) {#if creation_to_do }",
+    		source: "(1643:4) {#if creation_to_do }",
     		ctx
     	});
 
     	return block;
     }
 
-    // (1757:4) {#if creation_to_do }
+    // (1705:4) {#if creation_to_do }
     function create_if_block_4(ctx) {
     	let div;
     	let img;
@@ -9293,21 +9718,21 @@ var app = (function () {
     		c: function create() {
     			div = element("div");
     			img = element("img");
-    			if (img.src !== (img_src_value = /*active_profile_biometric*/ ctx[18])) attr_dev(img, "src", img_src_value);
+    			if (!src_url_equal(img.src, img_src_value = /*active_profile_biometric*/ ctx[18])) attr_dev(img, "src", img_src_value);
     			attr_dev(img, "alt", /*src_biometric_instruct*/ ctx[8]);
     			attr_dev(img, "class", "svelte-1b4dyig");
-    			add_location(img, file, 1758, 5, 47255);
+    			add_location(img, file, 1706, 5, 45410);
     			attr_dev(div, "class", "picture-drop svelte-1b4dyig");
-    			add_location(div, file, 1757, 4, 47164);
+    			add_location(div, file, 1705, 4, 45319);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
     			append_dev(div, img);
-    			/*img_binding*/ ctx[57](img);
+    			/*img_binding*/ ctx[56](img);
 
     			if (!mounted) {
     				dispose = [
-    					listen_dev(div, "drop", /*drop_biometric*/ ctx[24], false, false, false),
+    					listen_dev(div, "drop", /*drop_biometric*/ ctx[23], false, false, false),
     					listen_dev(div, "dragover", dragover_picture, false, false, false)
     				];
 
@@ -9321,7 +9746,7 @@ var app = (function () {
     		},
     		d: function destroy(detaching) {
     			if (detaching) detach_dev(div);
-    			/*img_binding*/ ctx[57](null);
+    			/*img_binding*/ ctx[56](null);
     			mounted = false;
     			run_all(dispose);
     		}
@@ -9331,14 +9756,14 @@ var app = (function () {
     		block,
     		id: create_if_block_4.name,
     		type: "if",
-    		source: "(1757:4) {#if creation_to_do }",
+    		source: "(1705:4) {#if creation_to_do }",
     		ctx
     	});
 
     	return block;
     }
 
-    // (1762:4) {#if !creation_to_do }
+    // (1710:4) {#if !creation_to_do }
     function create_if_block_3(ctx) {
     	let div;
     	let img;
@@ -9350,21 +9775,21 @@ var app = (function () {
     		c: function create() {
     			div = element("div");
     			img = element("img");
-    			if (img.src !== (img_src_value = /*active_profile_image*/ ctx[7])) attr_dev(img, "src", img_src_value);
+    			if (!src_url_equal(img.src, img_src_value = /*active_profile_image*/ ctx[7])) attr_dev(img, "src", img_src_value);
     			attr_dev(img, "alt", /*src_1_name*/ ctx[19]);
     			attr_dev(img, "class", "svelte-1b4dyig");
-    			add_location(img, file, 1763, 5, 47494);
+    			add_location(img, file, 1711, 5, 45649);
     			attr_dev(div, "class", "picture-drop svelte-1b4dyig");
-    			add_location(div, file, 1762, 4, 47405);
+    			add_location(div, file, 1710, 4, 45560);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
     			append_dev(div, img);
-    			/*img_binding_1*/ ctx[58](img);
+    			/*img_binding_1*/ ctx[57](img);
 
     			if (!mounted) {
     				dispose = [
-    					listen_dev(div, "drop", /*drop_picture*/ ctx[23], false, false, false),
+    					listen_dev(div, "drop", /*drop_picture*/ ctx[22], false, false, false),
     					listen_dev(div, "dragover", dragover_picture, false, false, false)
     				];
 
@@ -9372,13 +9797,13 @@ var app = (function () {
     			}
     		},
     		p: function update(ctx, dirty) {
-    			if (dirty[0] & /*active_profile_image*/ 128 && img.src !== (img_src_value = /*active_profile_image*/ ctx[7])) {
+    			if (dirty[0] & /*active_profile_image*/ 128 && !src_url_equal(img.src, img_src_value = /*active_profile_image*/ ctx[7])) {
     				attr_dev(img, "src", img_src_value);
     			}
     		},
     		d: function destroy(detaching) {
     			if (detaching) detach_dev(div);
-    			/*img_binding_1*/ ctx[58](null);
+    			/*img_binding_1*/ ctx[57](null);
     			mounted = false;
     			run_all(dispose);
     		}
@@ -9388,14 +9813,14 @@ var app = (function () {
     		block,
     		id: create_if_block_3.name,
     		type: "if",
-    		source: "(1762:4) {#if !creation_to_do }",
+    		source: "(1710:4) {#if !creation_to_do }",
     		ctx
     	});
 
     	return block;
     }
 
-    // (1644:2) {:else}
+    // (1592:2) {:else}
     function create_else_block(ctx) {
     	let div1;
     	let t0;
@@ -9414,11 +9839,11 @@ var app = (function () {
     			span.textContent = "User";
     			t3 = text(" tab.");
     			attr_dev(span, "class", "svelte-1b4dyig");
-    			add_location(span, file, 1647, 17, 41565);
+    			add_location(span, file, 1595, 17, 39708);
     			attr_dev(div0, "class", "svelte-1b4dyig");
-    			add_location(div0, file, 1646, 3, 41542);
+    			add_location(div0, file, 1594, 3, 39685);
     			attr_dev(div1, "class", "splash-if-you-will svelte-1b4dyig");
-    			add_location(div1, file, 1644, 2, 41456);
+    			add_location(div1, file, 1592, 2, 39599);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div1, anchor);
@@ -9438,14 +9863,14 @@ var app = (function () {
     		block,
     		id: create_else_block.name,
     		type: "else",
-    		source: "(1644:2) {:else}",
+    		source: "(1592:2) {:else}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (1631:2) {#if (known_users.length > 0) }
+    // (1579:2) {#if (known_users.length > 0) }
     function create_if_block_1(ctx) {
     	let div1;
     	let t0;
@@ -9488,20 +9913,20 @@ var app = (function () {
     			}
 
     			attr_dev(span, "class", "svelte-1b4dyig");
-    			add_location(span, file, 1632, 23, 40986);
+    			add_location(span, file, 1580, 23, 39129);
     			attr_dev(br, "class", "svelte-1b4dyig");
-    			add_location(br, file, 1633, 3, 41055);
+    			add_location(br, file, 1581, 3, 39198);
     			attr_dev(select, "size", 10);
     			set_style(select, "text-align", "center");
     			attr_dev(select, "class", "svelte-1b4dyig");
-    			if (/*u_index*/ ctx[6] === void 0) add_render_callback(() => /*select_change_handler*/ ctx[49].call(select));
-    			add_location(select, file, 1636, 4, 41195);
+    			if (/*u_index*/ ctx[6] === void 0) add_render_callback(() => /*select_change_handler*/ ctx[48].call(select));
+    			add_location(select, file, 1584, 4, 39338);
     			attr_dev(div0, "class", "user-options svelte-1b4dyig");
     			set_style(div0, "text-align", "center");
-    			add_location(div0, file, 1635, 3, 41137);
+    			add_location(div0, file, 1583, 3, 39280);
     			set_style(div1, "height", "fit-content");
     			attr_dev(div1, "class", "svelte-1b4dyig");
-    			add_location(div1, file, 1631, 2, 40930);
+    			add_location(div1, file, 1579, 2, 39073);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div1, anchor);
@@ -9522,8 +9947,8 @@ var app = (function () {
 
     			if (!mounted) {
     				dispose = [
-    					listen_dev(select, "change", /*select_change_handler*/ ctx[49]),
-    					listen_dev(select, "click", /*navigate_to_user*/ ctx[27], false, false, false)
+    					listen_dev(select, "change", /*select_change_handler*/ ctx[48]),
+    					listen_dev(select, "click", /*navigate_to_user*/ ctx[26], false, false, false)
     				];
 
     				mounted = true;
@@ -9574,17 +9999,17 @@ var app = (function () {
     		block,
     		id: create_if_block_1.name,
     		type: "if",
-    		source: "(1631:2) {#if (known_users.length > 0) }",
+    		source: "(1579:2) {#if (known_users.length > 0) }",
     		ctx
     	});
 
     	return block;
     }
 
-    // (1638:5) {#each known_users as maybe_user, u_index }
+    // (1586:5) {#each known_users as maybe_user, u_index }
     function create_each_block(ctx) {
     	let option;
-    	let t_value = /*maybe_user*/ ctx[139].name + "";
+    	let t_value = /*maybe_user*/ ctx[138].name + "";
     	let t;
 
     	const block = {
@@ -9594,14 +10019,14 @@ var app = (function () {
     			option.__value = /*u_index*/ ctx[6];
     			option.value = option.__value;
     			attr_dev(option, "class", "svelte-1b4dyig");
-    			add_location(option, file, 1638, 6, 41346);
+    			add_location(option, file, 1586, 6, 39489);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, option, anchor);
     			append_dev(option, t);
     		},
     		p: function update(ctx, dirty) {
-    			if (dirty[0] & /*known_users*/ 8 && t_value !== (t_value = /*maybe_user*/ ctx[139].name + "")) set_data_dev(t, t_value);
+    			if (dirty[0] & /*known_users*/ 8 && t_value !== (t_value = /*maybe_user*/ ctx[138].name + "")) set_data_dev(t, t_value);
     		},
     		d: function destroy(detaching) {
     			if (detaching) detach_dev(option);
@@ -9612,7 +10037,7 @@ var app = (function () {
     		block,
     		id: create_each_block.name,
     		type: "each",
-    		source: "(1638:5) {#each known_users as maybe_user, u_index }",
+    		source: "(1586:5) {#each known_users as maybe_user, u_index }",
     		ctx
     	});
 
@@ -9629,16 +10054,16 @@ var app = (function () {
     	let current;
 
     	function tabbar_active_binding(value) {
-    		/*tabbar_active_binding*/ ctx[48](value);
+    		/*tabbar_active_binding*/ ctx[47](value);
     	}
 
     	let tabbar_props = {
-    		tabs: ["Identify", "User", "About Us"],
+    		tabs: ['Identify', 'User', 'About Us'],
     		$$slots: {
     			default: [
     				create_default_slot,
-    				({ tab }) => ({ 141: tab }),
-    				({ tab }) => [0, 0, 0, 0, tab ? 131072 : 0]
+    				({ tab }) => ({ 140: tab }),
+    				({ tab }) => [0, 0, 0, 0, tab ? 65536 : 0]
     			]
     		},
     		$$scope: { ctx }
@@ -9649,12 +10074,12 @@ var app = (function () {
     	}
 
     	tabbar = new TabBar({ props: tabbar_props, $$inline: true });
-    	binding_callbacks.push(() => bind(tabbar, "active", tabbar_active_binding));
+    	binding_callbacks.push(() => bind(tabbar, 'active', tabbar_active_binding));
 
     	function select_block_type(ctx, dirty) {
-    		if (/*active*/ ctx[4] === "Identify") return create_if_block;
-    		if (/*active*/ ctx[4] === "User") return create_if_block_2;
-    		if (/*active*/ ctx[4] === "About Us") return create_if_block_8;
+    		if (/*active*/ ctx[4] === 'Identify') return create_if_block;
+    		if (/*active*/ ctx[4] === 'User') return create_if_block_2;
+    		if (/*active*/ ctx[4] === 'About Us') return create_if_block_8;
     	}
 
     	let current_block_type = select_block_type(ctx);
@@ -9669,9 +10094,9 @@ var app = (function () {
     			t1 = space();
     			if (if_block) if_block.c();
     			attr_dev(br, "class", "svelte-1b4dyig");
-    			add_location(br, file, 1626, 2, 40795);
+    			add_location(br, file, 1574, 2, 38938);
     			attr_dev(div, "class", "svelte-1b4dyig");
-    			add_location(div, file, 1616, 0, 40469);
+    			add_location(div, file, 1564, 0, 38612);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -9688,7 +10113,7 @@ var app = (function () {
     		p: function update(ctx, dirty) {
     			const tabbar_changes = {};
 
-    			if (dirty[0] & /*active*/ 16 | dirty[4] & /*$$scope, tab*/ 393216) {
+    			if (dirty[0] & /*active*/ 16 | dirty[4] & /*$$scope, tab*/ 196608) {
     				tabbar_changes.$$scope = { dirty, ctx };
     			}
 
@@ -9773,7 +10198,7 @@ var app = (function () {
     	//	percentage w range 
     	let w_p_max = 0.96;
 
-    	let w_p_min = 0.2;
+    	let w_p_min = 0.20;
     	p_range = w_p_max - w_p_min;
     	P = (biggest_w - w) / (biggest_w - smallest_w);
 
@@ -9783,6 +10208,10 @@ var app = (function () {
     	// Setting the current height & width 
     	// to the elements 
     	return { "w": w_scale, "h": h_scale };
+    }
+
+    async function create_intergalactic_id() {
+    	
     }
 
     function dragover_picture(ev) {
@@ -9812,7 +10241,7 @@ var app = (function () {
     	let filteredIndviduals;
     	let filtered_manifest_contact_form_list;
     	let { $$slots: slots = {}, $$scope } = $$props;
-    	validate_slots("App", slots, []);
+    	validate_slots('App', slots, []);
     	let active_profile_image = ""; //"/favicon.png" ; // "/brent-fox-jane-18-b.jpg"
     	let active_profile_biometric = "";
 
@@ -9832,30 +10261,30 @@ var app = (function () {
     	let start_of_messages = 0;
 
     	let messages_per_page = 100;
-    	let prefix = "";
-    	let man_prefix = "";
+    	let prefix = '';
+    	let man_prefix = '';
     	let i = 0;
     	let c_i = 0;
     	let i_i = 0;
     	let p_i = 0;
     	let form_index = 0;
     	let j_cid = false;
-    	let name = "";
-    	let DOB = "";
-    	let place_of_origin = "";
-    	let cool_public_info = "";
+    	let name = '';
+    	let DOB = '';
+    	let place_of_origin = '';
+    	let cool_public_info = '';
     	let business = false;
-    	let biometric_blob = "";
-    	let c_name = "";
-    	let c_DOB = "";
-    	let c_place_of_origin = "";
-    	let c_cool_public_info = "";
+    	let biometric_blob = '';
+    	let c_name = '';
+    	let c_DOB = '';
+    	let c_place_of_origin = '';
+    	let c_cool_public_info = '';
     	let c_business = false;
     	let c_public_key = "testesttesttest";
     	let c_signer_public_key = "testesttesttest";
     	let c_cid = "testesttesttest";
-    	let c_answer_message = "";
-    	let c_biometric_blob = "";
+    	let c_answer_message = '';
+    	let c_biometric_blob = '';
     	let c_empty_fields = false;
     	let today = new Date().toUTCString();
     	let active_user = false;
@@ -9872,12 +10301,12 @@ var app = (function () {
     	let manifest_obj = {};
 
     	let manifest_index = 0;
-    	let man_title = "";
-    	let man_cid = "";
-    	let man_wrapped_key = "";
-    	let man_html = "";
-    	let man_max_preference = 1;
-    	let man_preference = 1;
+    	let man_title = '';
+    	let man_cid = '';
+    	let man_wrapped_key = '';
+    	let man_html = '';
+    	let man_max_preference = 1.0;
+    	let man_preference = 1.0;
 
     	//
     	let man_sel_not_customized = true;
@@ -9892,7 +10321,7 @@ var app = (function () {
     	let biometric_data_el;
 
     	//
-    	let active = "Identify";
+    	let active = 'Identify';
 
     	let prev_active = active;
     	let first_message = 0;
@@ -9921,7 +10350,7 @@ var app = (function () {
     	//
     	let individuals = [
     		{
-    			"name": "Hans Solo",
+    			"name": 'Hans Solo',
     			"DOB": "1000",
     			"place_of_origin": "alpha centauri",
     			"cool_public_info": "He is a Master Jedi",
@@ -9939,7 +10368,7 @@ var app = (function () {
 
     	let inbound_solicitation_messages = [
     		{
-    			"name": "Darth Vadar",
+    			"name": 'Darth Vadar',
     			"user_cid": "869968609",
     			"subject": "Hans Solo is Mean",
     			"date": todays_date,
@@ -9953,7 +10382,7 @@ var app = (function () {
 
     	let inbound_contact_messages = [
     		{
-    			"name": "Hans Solo",
+    			"name": 'Hans Solo',
     			"user_cid": "4504385938",
     			"subject": "Darth Vadier Attacks",
     			"date": todays_date,
@@ -9967,7 +10396,7 @@ var app = (function () {
     	let processed_messages = [];
 
     	let message_selected = {
-    		"name": "Admin",
+    		"name": 'Admin',
     		"subject": "Hello From copious.world",
     		"date": today,
     		"readers": "you",
@@ -9994,51 +10423,51 @@ var app = (function () {
     		$$invalidate(7, active_profile_image = "");
 
     		//
-    		$$invalidate(28, prefix = "");
+    		$$invalidate(27, prefix = '');
 
-    		$$invalidate(29, man_prefix = "");
-    		$$invalidate(30, i = 0);
+    		$$invalidate(28, man_prefix = '');
+    		$$invalidate(29, i = 0);
     		c_i = 0;
     		i_i = 0;
     		p_i = 0;
     		form_index = 0;
 
     		//
-    		$$invalidate(31, c_name = "");
+    		$$invalidate(30, c_name = '');
 
-    		$$invalidate(32, c_DOB = "");
-    		$$invalidate(33, c_place_of_origin = "");
-    		$$invalidate(34, c_cool_public_info = "");
+    		$$invalidate(31, c_DOB = '');
+    		$$invalidate(32, c_place_of_origin = '');
+    		$$invalidate(33, c_cool_public_info = '');
     		c_business = false;
     		c_public_key = "testesttesttest";
     		c_signer_public_key = "testesttesttest";
     		c_cid = "testesttesttest";
-    		c_answer_message = "";
+    		c_answer_message = '';
     		c_empty_fields = false;
 
     		//
     		today = new Date().toUTCString();
 
     		adding_new = false;
-    		$$invalidate(37, manifest_selected_entry = false);
+    		$$invalidate(36, manifest_selected_entry = false);
     		manifest_selected_form = false;
-    		$$invalidate(38, manifest_contact_form_list = [false]);
-    		$$invalidate(39, manifest_obj = {});
-    		$$invalidate(40, manifest_index = 0);
-    		man_title = "";
-    		$$invalidate(41, man_cid = "");
-    		man_wrapped_key = "";
-    		man_html = "";
-    		man_max_preference = 1;
-    		man_preference = 1;
+    		$$invalidate(37, manifest_contact_form_list = [false]);
+    		$$invalidate(38, manifest_obj = {});
+    		$$invalidate(39, manifest_index = 0);
+    		man_title = '';
+    		$$invalidate(40, man_cid = '');
+    		man_wrapped_key = '';
+    		man_html = '';
+    		man_max_preference = 1.0;
+    		man_preference = 1.0;
     		man_encrypted = false;
     		first_message = 0;
     		$$invalidate(16, green = false); // an indicator telling if this user ID is set
     		todays_date = new Date().toLocaleString();
 
-    		$$invalidate(43, individuals = [
+    		$$invalidate(42, individuals = [
     			{
-    				"name": "Hans Solo",
+    				"name": 'Hans Solo',
     				"DOB": "1000",
     				"place_of_origin": "alpha centauri",
     				"cool_public_info": "He is a Master Jedi",
@@ -10055,7 +10484,7 @@ var app = (function () {
 
     		inbound_solicitation_messages = [
     			{
-    				"name": "Darth Vadar",
+    				"name": 'Darth Vadar',
     				"user_cid": "869968609",
     				"subject": "Hans Solo is Mean",
     				"date": todays_date,
@@ -10069,7 +10498,7 @@ var app = (function () {
 
     		inbound_contact_messages = [
     			{
-    				"name": "Hans Solo",
+    				"name": 'Hans Solo',
     				"user_cid": "4504385938",
     				"subject": "Darth Vadier Attacks",
     				"date": todays_date,
@@ -10083,7 +10512,7 @@ var app = (function () {
     		processed_messages = [];
 
     		message_selected = {
-    			"name": "Admin",
+    			"name": 'Admin',
     			"subject": "Hello From copious.world",
     			"date": today,
     			"readers": "you",
@@ -10092,77 +10521,6 @@ var app = (function () {
     		};
 
     		update_selected_form_links();
-    	}
-
-    	async function handle_message(evt) {
-    		let cmd = evt.detail.cmd;
-
-    		switch (cmd) {
-    			case "new-contact":
-    				{
-    					// from display -- sender initiated -- got sender public keys 
-    					// -- send yours automatically since you already accepted
-    					let signer_pk = evt.detail.signer_public_key;
-
-    					let added = await auto_add_contact(evt.detail.cid, signer_pk, true, message_selected);
-    					message_selected.is_in_contacts = added;
-    					break;
-    				}
-    			case "reply":
-    				{
-    					$$invalidate(44, selected.answer_message = true, selected);
-    					message_edit_from_contact = false;
-    					start_floating_window(1);
-    				}
-    			case "view-processed-messages":
-    				{
-    					message_op_category = evt.detail.category;
-    					processed_category = message_op_category;
-    					source_category = message_op_category;
-    					processed_messages = await fetch_category_messages(active_identity, message_op_category);
-    					break;
-    				}
-    			case "move-messages":
-    				{
-    					if (!active_identity) return;
-    					let cat = evt.detail.category;
-    					if (cat === source_category && !(message_op_category === "intros" || message_op_category === "messages")) return;
-    					let user_cid = active_identity.cid;
-
-    					if (active === "Introductions") {
-    						user_cid = active_identity.clear_cid;
-    					}
-
-    					let dst_cid = active_identity.cid;
-    					let business = active_identity.user_info.business;
-
-    					//
-    					// message_edit_list containes message from message_op_category
-    					// they are being sent to cat
-    					//
-    					let src_cat = false;
-
-    					if (message_op_category !== "messages" && message_op_category !== "intros") {
-    						src_cat = message_op_category;
-    					}
-
-    					await message_list_ops(user_cid, dst_cid, "move", cat, business, message_edit_list, src_cat);
-
-    					//
-    					//message_edit_source
-    					let status = remove_from_source_list(message_edit_source, message_edit_list);
-
-    					if (status == false) {
-    						console.log("no message removed");
-    					}
-
-    					break;
-    				}
-    			default:
-    				{
-    					console.log("message cmd not handled");
-    				}
-    		}
     	}
 
     	/*
@@ -10175,7 +10533,7 @@ var app = (function () {
     		//
     		constructor() {
     			this.empty_identity = {
-    				"name": "",
+    				"name": '',
     				"DOB": "",
     				"place_of_origin": "",
     				"cool_public_info": "",
@@ -10346,7 +10704,7 @@ var app = (function () {
     	}
 
     	// ADD PROFILE.....
-    	async function add_profile$1() {
+    	async function add_profile() {
     		//
     		let contact = new Contact(); // contact of self... Stores the same info as a contact plus some special fields for local db
 
@@ -10369,13 +10727,7 @@ var app = (function () {
     			return;
     		}
 
-    		await gen_public_key(user_data); // by ref  // stores keys in DB  // converts biometric to signature (calls protect_hash)
-
-    		try {
-    			$$invalidate(16, green = await add_profile(user_data)); // will fetch the key (it is not riding along yet.)
-    		} catch(e) {
-    			
-    		}
+    		await gen_public_key(user_data, store_user); // by ref  // stores keys in DB  // converts biometric to signature (calls protect_hash)
 
     		//
     		await get_active_users(); // updates login page and initializes the view of this user.
@@ -10410,21 +10762,21 @@ var app = (function () {
     		try {
     			let known_user_lists = await window.get_known_users();
     			$$invalidate(3, known_users = known_user_lists[0]);
-    			$$invalidate(36, known_identities = known_user_lists[1]);
+    			$$invalidate(35, known_identities = known_user_lists[1]);
     		} catch(e) {
     			
     		}
     	}
 
     	function clear_identify_form() {
-    		$$invalidate(1, name = "");
-    		$$invalidate(10, DOB = "");
-    		$$invalidate(11, place_of_origin = "");
-    		$$invalidate(12, cool_public_info = "");
-    		biometric_blob = "";
+    		$$invalidate(1, name = '');
+    		$$invalidate(10, DOB = '');
+    		$$invalidate(11, place_of_origin = '');
+    		$$invalidate(12, cool_public_info = '');
+    		biometric_blob = '';
     		$$invalidate(13, business = false);
     		$$invalidate(2, active_user = false);
-    		$$invalidate(35, active_identity = false);
+    		$$invalidate(34, active_identity = false);
     		$$invalidate(6, u_index = false);
     		adding_new = true;
     	}
@@ -10680,15 +11032,15 @@ var app = (function () {
     	}
 
     	function reset_inputs(individual) {
-    		$$invalidate(31, c_name = individual ? individual.name : "");
-    		$$invalidate(32, c_DOB = individual ? individual.DOB : "");
-    		$$invalidate(33, c_place_of_origin = individual ? individual.place_of_origin : "");
-    		$$invalidate(34, c_cool_public_info = individual ? individual.cool_public_info : "");
-    		c_business = individual ? individual.business : "";
-    		c_public_key = individual ? individual.public_key : "";
-    		c_signer_public_key = individual ? individual.signer_public_key : "";
-    		c_answer_message = individual ? individual.answer_message : "";
-    		c_cid = individual ? individual.cid : "";
+    		$$invalidate(30, c_name = individual ? individual.name : '');
+    		$$invalidate(31, c_DOB = individual ? individual.DOB : '');
+    		$$invalidate(32, c_place_of_origin = individual ? individual.place_of_origin : '');
+    		$$invalidate(33, c_cool_public_info = individual ? individual.cool_public_info : '');
+    		c_business = individual ? individual.business : '';
+    		c_public_key = individual ? individual.public_key : '';
+    		c_signer_public_key = individual ? individual.signer_public_key : '';
+    		c_answer_message = individual ? individual.answer_message : '';
+    		c_cid = individual ? individual.cid : '';
     	}
 
     	let pre_clear_i = 0;
@@ -10820,7 +11172,7 @@ var app = (function () {
     			} // remove from individuals
 
     			contact.extend_contact("cid", cid);
-    			contact.extend_contact("answer_message", "");
+    			contact.extend_contact("answer_message", '');
     			contact.extend_contact("signer_public_key", signer_pk); // only comes in from the intro message...
     			contact.extend_contact("received_keys", true); // If here, then the keys have been received
 
@@ -10843,8 +11195,8 @@ var app = (function () {
     				individuals.push(user_data);
     			}
 
-    			$$invalidate(43, individuals = b);
-    			$$invalidate(30, i = individuals.length - 1);
+    			$$invalidate(42, individuals = b);
+    			$$invalidate(29, i = individuals.length - 1);
 
     			//
     			cid_individuals_map[cid] = user_data;
@@ -10867,13 +11219,13 @@ var app = (function () {
     	}
 
     	async function update_contact() {
-    		$$invalidate(44, selected.name = c_name, selected);
-    		$$invalidate(44, selected.DOB = c_DOB, selected);
-    		$$invalidate(44, selected.place_of_origin = c_place_of_origin, selected);
-    		$$invalidate(44, selected.cool_public_info = c_cool_public_info, selected);
-    		$$invalidate(44, selected.business = c_business, selected);
-    		$$invalidate(44, selected.public_key = c_public_key, selected);
-    		$$invalidate(44, selected.c_signer_public_key = c_signer_public_key, selected);
+    		$$invalidate(43, selected.name = c_name, selected);
+    		$$invalidate(43, selected.DOB = c_DOB, selected);
+    		$$invalidate(43, selected.place_of_origin = c_place_of_origin, selected);
+    		$$invalidate(43, selected.cool_public_info = c_cool_public_info, selected);
+    		$$invalidate(43, selected.business = c_business, selected);
+    		$$invalidate(43, selected.public_key = c_public_key, selected);
+    		$$invalidate(43, selected.c_signer_public_key = c_signer_public_key, selected);
 
     		//
     		let cid = selected.cid;
@@ -10881,7 +11233,7 @@ var app = (function () {
     		delete cid_individuals_map[cid];
     		messages_update_contacts(cid, false);
     		cid = await fetch_contact_cid(selected, c_signer_public_key !== undefined && c_signer_public_key);
-    		$$invalidate(44, selected.cid = cid, selected);
+    		$$invalidate(43, selected.cid = cid, selected);
     		cid_individuals_map[cid] = user_data;
     		messages_update_contacts(cid, true);
 
@@ -10911,9 +11263,9 @@ var app = (function () {
     				}
 
     				if (indivs.length === 0) {
-    					$$invalidate(43, individuals = [empty_identity.identity()]);
+    					$$invalidate(42, individuals = [empty_identity.identity()]);
     				} else {
-    					$$invalidate(43, individuals = indivs);
+    					$$invalidate(42, individuals = indivs);
     				}
 
     				make_individuals_map(contacts_data);
@@ -10939,10 +11291,10 @@ var app = (function () {
     		if (identify && identify.files) {
     			if (identify.files.manifest) {
     				let manifest_cid = identify.files.manifest.cid;
-    				$$invalidate(39, manifest_obj = await fetch_manifest(manifest_cid, identify));
+    				$$invalidate(38, manifest_obj = await fetch_manifest(manifest_cid, identify));
 
     				if (manifest_obj.clear_cid === undefined) {
-    					$$invalidate(39, manifest_obj.clear_cid = identify.clear_cid, manifest_obj);
+    					$$invalidate(38, manifest_obj.clear_cid = identify.clear_cid, manifest_obj);
     				}
 
     				//
@@ -10959,19 +11311,19 @@ var app = (function () {
     				}
 
     				//
-    				$$invalidate(38, manifest_contact_form_list = m_list);
+    				$$invalidate(37, manifest_contact_form_list = m_list);
     			}
     		}
     	}
 
     	function navigate_to_user(e) {
-    		$$invalidate(4, active = "User");
+    		$$invalidate(4, active = 'User');
     	}
 
     	const writable_props = [];
 
     	Object_1.keys($$props).forEach(key => {
-    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console_1.warn(`<App> was created with unknown prop '${key}'`);
+    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== '$$' && key !== 'slot') console_1.warn(`<App> was created with unknown prop '${key}'`);
     	});
 
     	function tabbar_active_binding(value) {
@@ -11020,14 +11372,14 @@ var app = (function () {
     	}
 
     	function img_binding($$value) {
-    		binding_callbacks[$$value ? "unshift" : "push"](() => {
+    		binding_callbacks[$$value ? 'unshift' : 'push'](() => {
     			biometric_data_el = $$value;
     			$$invalidate(15, biometric_data_el);
     		});
     	}
 
     	function img_binding_1($$value) {
-    		binding_callbacks[$$value ? "unshift" : "push"](() => {
+    		binding_callbacks[$$value ? 'unshift' : 'push'](() => {
     			profile_image_el = $$value;
     			$$invalidate(14, profile_image_el);
     		});
@@ -11121,7 +11473,6 @@ var app = (function () {
     		message_edit_list,
     		message_edit_source,
     		reinitialize_user_context,
-    		handle_message,
     		Contact,
     		empty_identity,
     		current_index,
@@ -11138,7 +11489,8 @@ var app = (function () {
     		g_last_inspected_field,
     		check_required_fields,
     		missing_fields,
-    		add_profile: add_profile$1,
+    		create_intergalactic_id,
+    		add_profile,
     		load_user_info,
     		get_active_users,
     		clear_identify_form,
@@ -11169,104 +11521,104 @@ var app = (function () {
     		app_download_identity,
     		fetch_manifest: fetch_manifest$1,
     		navigate_to_user,
-    		filteredIndviduals,
-    		filtered_manifest_contact_form_list
+    		filtered_manifest_contact_form_list,
+    		filteredIndviduals
     	});
 
     	$$self.$inject_state = $$props => {
-    		if ("active_profile_image" in $$props) $$invalidate(7, active_profile_image = $$props.active_profile_image);
-    		if ("active_profile_biometric" in $$props) $$invalidate(18, active_profile_biometric = $$props.active_profile_biometric);
-    		if ("src_1_name" in $$props) $$invalidate(19, src_1_name = $$props.src_1_name);
-    		if ("src_biometric_instruct" in $$props) $$invalidate(8, src_biometric_instruct = $$props.src_biometric_instruct);
-    		if ("active_cid" in $$props) $$invalidate(0, active_cid = $$props.active_cid);
-    		if ("clear_cid" in $$props) clear_cid = $$props.clear_cid;
-    		if ("dir_view" in $$props) dir_view = $$props.dir_view;
-    		if ("signup_status" in $$props) $$invalidate(9, signup_status = $$props.signup_status);
-    		if ("start_of_messages" in $$props) start_of_messages = $$props.start_of_messages;
-    		if ("messages_per_page" in $$props) messages_per_page = $$props.messages_per_page;
-    		if ("prefix" in $$props) $$invalidate(28, prefix = $$props.prefix);
-    		if ("man_prefix" in $$props) $$invalidate(29, man_prefix = $$props.man_prefix);
-    		if ("i" in $$props) $$invalidate(30, i = $$props.i);
-    		if ("c_i" in $$props) c_i = $$props.c_i;
-    		if ("i_i" in $$props) i_i = $$props.i_i;
-    		if ("p_i" in $$props) p_i = $$props.p_i;
-    		if ("form_index" in $$props) form_index = $$props.form_index;
-    		if ("j_cid" in $$props) j_cid = $$props.j_cid;
-    		if ("name" in $$props) $$invalidate(1, name = $$props.name);
-    		if ("DOB" in $$props) $$invalidate(10, DOB = $$props.DOB);
-    		if ("place_of_origin" in $$props) $$invalidate(11, place_of_origin = $$props.place_of_origin);
-    		if ("cool_public_info" in $$props) $$invalidate(12, cool_public_info = $$props.cool_public_info);
-    		if ("business" in $$props) $$invalidate(13, business = $$props.business);
-    		if ("biometric_blob" in $$props) biometric_blob = $$props.biometric_blob;
-    		if ("c_name" in $$props) $$invalidate(31, c_name = $$props.c_name);
-    		if ("c_DOB" in $$props) $$invalidate(32, c_DOB = $$props.c_DOB);
-    		if ("c_place_of_origin" in $$props) $$invalidate(33, c_place_of_origin = $$props.c_place_of_origin);
-    		if ("c_cool_public_info" in $$props) $$invalidate(34, c_cool_public_info = $$props.c_cool_public_info);
-    		if ("c_business" in $$props) c_business = $$props.c_business;
-    		if ("c_public_key" in $$props) c_public_key = $$props.c_public_key;
-    		if ("c_signer_public_key" in $$props) c_signer_public_key = $$props.c_signer_public_key;
-    		if ("c_cid" in $$props) c_cid = $$props.c_cid;
-    		if ("c_answer_message" in $$props) c_answer_message = $$props.c_answer_message;
-    		if ("c_biometric_blob" in $$props) c_biometric_blob = $$props.c_biometric_blob;
-    		if ("c_empty_fields" in $$props) c_empty_fields = $$props.c_empty_fields;
-    		if ("today" in $$props) today = $$props.today;
-    		if ("active_user" in $$props) $$invalidate(2, active_user = $$props.active_user);
-    		if ("active_identity" in $$props) $$invalidate(35, active_identity = $$props.active_identity);
-    		if ("known_users" in $$props) $$invalidate(3, known_users = $$props.known_users);
-    		if ("known_identities" in $$props) $$invalidate(36, known_identities = $$props.known_identities);
-    		if ("u_index" in $$props) $$invalidate(6, u_index = $$props.u_index);
-    		if ("adding_new" in $$props) adding_new = $$props.adding_new;
-    		if ("manifest_selected_entry" in $$props) $$invalidate(37, manifest_selected_entry = $$props.manifest_selected_entry);
-    		if ("manifest_selected_form" in $$props) manifest_selected_form = $$props.manifest_selected_form;
-    		if ("manifest_contact_form_list" in $$props) $$invalidate(38, manifest_contact_form_list = $$props.manifest_contact_form_list);
-    		if ("manifest_obj" in $$props) $$invalidate(39, manifest_obj = $$props.manifest_obj);
-    		if ("manifest_index" in $$props) $$invalidate(40, manifest_index = $$props.manifest_index);
-    		if ("man_title" in $$props) man_title = $$props.man_title;
-    		if ("man_cid" in $$props) $$invalidate(41, man_cid = $$props.man_cid);
-    		if ("man_wrapped_key" in $$props) man_wrapped_key = $$props.man_wrapped_key;
-    		if ("man_html" in $$props) man_html = $$props.man_html;
-    		if ("man_max_preference" in $$props) man_max_preference = $$props.man_max_preference;
-    		if ("man_preference" in $$props) man_preference = $$props.man_preference;
-    		if ("man_sel_not_customized" in $$props) man_sel_not_customized = $$props.man_sel_not_customized;
-    		if ("man_contact_is_default" in $$props) man_contact_is_default = $$props.man_contact_is_default;
-    		if ("man_encrypted" in $$props) man_encrypted = $$props.man_encrypted;
-    		if ("message_edit_from_contact" in $$props) message_edit_from_contact = $$props.message_edit_from_contact;
-    		if ("profile_image_el" in $$props) $$invalidate(14, profile_image_el = $$props.profile_image_el);
-    		if ("biometric_data_el" in $$props) $$invalidate(15, biometric_data_el = $$props.biometric_data_el);
-    		if ("active" in $$props) $$invalidate(4, active = $$props.active);
-    		if ("prev_active" in $$props) $$invalidate(42, prev_active = $$props.prev_active);
-    		if ("first_message" in $$props) first_message = $$props.first_message;
-    		if ("green" in $$props) $$invalidate(16, green = $$props.green);
-    		if ("todays_date" in $$props) todays_date = $$props.todays_date;
-    		if ("filtered_cc_list" in $$props) filtered_cc_list = $$props.filtered_cc_list;
-    		if ("message_op_category" in $$props) message_op_category = $$props.message_op_category;
-    		if ("source_category" in $$props) source_category = $$props.source_category;
-    		if ("processed_category" in $$props) processed_category = $$props.processed_category;
-    		if ("selected_form_link_types" in $$props) selected_form_link_types = $$props.selected_form_link_types;
-    		if ("selected_form_link" in $$props) selected_form_link = $$props.selected_form_link;
-    		if ("individuals" in $$props) $$invalidate(43, individuals = $$props.individuals);
-    		if ("cid_individuals_map" in $$props) cid_individuals_map = $$props.cid_individuals_map;
-    		if ("selected" in $$props) $$invalidate(44, selected = $$props.selected);
-    		if ("inbound_solicitation_messages" in $$props) inbound_solicitation_messages = $$props.inbound_solicitation_messages;
-    		if ("inbound_contact_messages" in $$props) inbound_contact_messages = $$props.inbound_contact_messages;
-    		if ("processed_messages" in $$props) processed_messages = $$props.processed_messages;
-    		if ("message_selected" in $$props) message_selected = $$props.message_selected;
-    		if ("message_edit_list_name" in $$props) message_edit_list_name = $$props.message_edit_list_name;
-    		if ("message_edit_list" in $$props) message_edit_list = $$props.message_edit_list;
-    		if ("message_edit_source" in $$props) message_edit_source = $$props.message_edit_source;
-    		if ("empty_identity" in $$props) $$invalidate(110, empty_identity = $$props.empty_identity);
-    		if ("current_index" in $$props) $$invalidate(45, current_index = $$props.current_index);
-    		if ("creator_disabled" in $$props) $$invalidate(17, creator_disabled = $$props.creator_disabled);
-    		if ("creation_to_do" in $$props) $$invalidate(5, creation_to_do = $$props.creation_to_do);
-    		if ("window_scale" in $$props) window_scale = $$props.window_scale;
-    		if ("edit_popup_scale" in $$props) edit_popup_scale = $$props.edit_popup_scale;
-    		if ("all_window_scales" in $$props) all_window_scales = $$props.all_window_scales;
-    		if ("g_required_user_fields" in $$props) g_required_user_fields = $$props.g_required_user_fields;
-    		if ("g_renamed_user_fields" in $$props) g_renamed_user_fields = $$props.g_renamed_user_fields;
-    		if ("g_last_inspected_field" in $$props) g_last_inspected_field = $$props.g_last_inspected_field;
-    		if ("pre_clear_i" in $$props) pre_clear_i = $$props.pre_clear_i;
-    		if ("filteredIndviduals" in $$props) $$invalidate(46, filteredIndviduals = $$props.filteredIndviduals);
-    		if ("filtered_manifest_contact_form_list" in $$props) $$invalidate(47, filtered_manifest_contact_form_list = $$props.filtered_manifest_contact_form_list);
+    		if ('active_profile_image' in $$props) $$invalidate(7, active_profile_image = $$props.active_profile_image);
+    		if ('active_profile_biometric' in $$props) $$invalidate(18, active_profile_biometric = $$props.active_profile_biometric);
+    		if ('src_1_name' in $$props) $$invalidate(19, src_1_name = $$props.src_1_name);
+    		if ('src_biometric_instruct' in $$props) $$invalidate(8, src_biometric_instruct = $$props.src_biometric_instruct);
+    		if ('active_cid' in $$props) $$invalidate(0, active_cid = $$props.active_cid);
+    		if ('clear_cid' in $$props) clear_cid = $$props.clear_cid;
+    		if ('dir_view' in $$props) dir_view = $$props.dir_view;
+    		if ('signup_status' in $$props) $$invalidate(9, signup_status = $$props.signup_status);
+    		if ('start_of_messages' in $$props) start_of_messages = $$props.start_of_messages;
+    		if ('messages_per_page' in $$props) messages_per_page = $$props.messages_per_page;
+    		if ('prefix' in $$props) $$invalidate(27, prefix = $$props.prefix);
+    		if ('man_prefix' in $$props) $$invalidate(28, man_prefix = $$props.man_prefix);
+    		if ('i' in $$props) $$invalidate(29, i = $$props.i);
+    		if ('c_i' in $$props) c_i = $$props.c_i;
+    		if ('i_i' in $$props) i_i = $$props.i_i;
+    		if ('p_i' in $$props) p_i = $$props.p_i;
+    		if ('form_index' in $$props) form_index = $$props.form_index;
+    		if ('j_cid' in $$props) j_cid = $$props.j_cid;
+    		if ('name' in $$props) $$invalidate(1, name = $$props.name);
+    		if ('DOB' in $$props) $$invalidate(10, DOB = $$props.DOB);
+    		if ('place_of_origin' in $$props) $$invalidate(11, place_of_origin = $$props.place_of_origin);
+    		if ('cool_public_info' in $$props) $$invalidate(12, cool_public_info = $$props.cool_public_info);
+    		if ('business' in $$props) $$invalidate(13, business = $$props.business);
+    		if ('biometric_blob' in $$props) biometric_blob = $$props.biometric_blob;
+    		if ('c_name' in $$props) $$invalidate(30, c_name = $$props.c_name);
+    		if ('c_DOB' in $$props) $$invalidate(31, c_DOB = $$props.c_DOB);
+    		if ('c_place_of_origin' in $$props) $$invalidate(32, c_place_of_origin = $$props.c_place_of_origin);
+    		if ('c_cool_public_info' in $$props) $$invalidate(33, c_cool_public_info = $$props.c_cool_public_info);
+    		if ('c_business' in $$props) c_business = $$props.c_business;
+    		if ('c_public_key' in $$props) c_public_key = $$props.c_public_key;
+    		if ('c_signer_public_key' in $$props) c_signer_public_key = $$props.c_signer_public_key;
+    		if ('c_cid' in $$props) c_cid = $$props.c_cid;
+    		if ('c_answer_message' in $$props) c_answer_message = $$props.c_answer_message;
+    		if ('c_biometric_blob' in $$props) c_biometric_blob = $$props.c_biometric_blob;
+    		if ('c_empty_fields' in $$props) c_empty_fields = $$props.c_empty_fields;
+    		if ('today' in $$props) today = $$props.today;
+    		if ('active_user' in $$props) $$invalidate(2, active_user = $$props.active_user);
+    		if ('active_identity' in $$props) $$invalidate(34, active_identity = $$props.active_identity);
+    		if ('known_users' in $$props) $$invalidate(3, known_users = $$props.known_users);
+    		if ('known_identities' in $$props) $$invalidate(35, known_identities = $$props.known_identities);
+    		if ('u_index' in $$props) $$invalidate(6, u_index = $$props.u_index);
+    		if ('adding_new' in $$props) adding_new = $$props.adding_new;
+    		if ('manifest_selected_entry' in $$props) $$invalidate(36, manifest_selected_entry = $$props.manifest_selected_entry);
+    		if ('manifest_selected_form' in $$props) manifest_selected_form = $$props.manifest_selected_form;
+    		if ('manifest_contact_form_list' in $$props) $$invalidate(37, manifest_contact_form_list = $$props.manifest_contact_form_list);
+    		if ('manifest_obj' in $$props) $$invalidate(38, manifest_obj = $$props.manifest_obj);
+    		if ('manifest_index' in $$props) $$invalidate(39, manifest_index = $$props.manifest_index);
+    		if ('man_title' in $$props) man_title = $$props.man_title;
+    		if ('man_cid' in $$props) $$invalidate(40, man_cid = $$props.man_cid);
+    		if ('man_wrapped_key' in $$props) man_wrapped_key = $$props.man_wrapped_key;
+    		if ('man_html' in $$props) man_html = $$props.man_html;
+    		if ('man_max_preference' in $$props) man_max_preference = $$props.man_max_preference;
+    		if ('man_preference' in $$props) man_preference = $$props.man_preference;
+    		if ('man_sel_not_customized' in $$props) man_sel_not_customized = $$props.man_sel_not_customized;
+    		if ('man_contact_is_default' in $$props) man_contact_is_default = $$props.man_contact_is_default;
+    		if ('man_encrypted' in $$props) man_encrypted = $$props.man_encrypted;
+    		if ('message_edit_from_contact' in $$props) message_edit_from_contact = $$props.message_edit_from_contact;
+    		if ('profile_image_el' in $$props) $$invalidate(14, profile_image_el = $$props.profile_image_el);
+    		if ('biometric_data_el' in $$props) $$invalidate(15, biometric_data_el = $$props.biometric_data_el);
+    		if ('active' in $$props) $$invalidate(4, active = $$props.active);
+    		if ('prev_active' in $$props) $$invalidate(41, prev_active = $$props.prev_active);
+    		if ('first_message' in $$props) first_message = $$props.first_message;
+    		if ('green' in $$props) $$invalidate(16, green = $$props.green);
+    		if ('todays_date' in $$props) todays_date = $$props.todays_date;
+    		if ('filtered_cc_list' in $$props) filtered_cc_list = $$props.filtered_cc_list;
+    		if ('message_op_category' in $$props) message_op_category = $$props.message_op_category;
+    		if ('source_category' in $$props) source_category = $$props.source_category;
+    		if ('processed_category' in $$props) processed_category = $$props.processed_category;
+    		if ('selected_form_link_types' in $$props) selected_form_link_types = $$props.selected_form_link_types;
+    		if ('selected_form_link' in $$props) selected_form_link = $$props.selected_form_link;
+    		if ('individuals' in $$props) $$invalidate(42, individuals = $$props.individuals);
+    		if ('cid_individuals_map' in $$props) cid_individuals_map = $$props.cid_individuals_map;
+    		if ('selected' in $$props) $$invalidate(43, selected = $$props.selected);
+    		if ('inbound_solicitation_messages' in $$props) inbound_solicitation_messages = $$props.inbound_solicitation_messages;
+    		if ('inbound_contact_messages' in $$props) inbound_contact_messages = $$props.inbound_contact_messages;
+    		if ('processed_messages' in $$props) processed_messages = $$props.processed_messages;
+    		if ('message_selected' in $$props) message_selected = $$props.message_selected;
+    		if ('message_edit_list_name' in $$props) message_edit_list_name = $$props.message_edit_list_name;
+    		if ('message_edit_list' in $$props) message_edit_list = $$props.message_edit_list;
+    		if ('message_edit_source' in $$props) message_edit_source = $$props.message_edit_source;
+    		if ('empty_identity' in $$props) $$invalidate(108, empty_identity = $$props.empty_identity);
+    		if ('current_index' in $$props) $$invalidate(44, current_index = $$props.current_index);
+    		if ('creator_disabled' in $$props) $$invalidate(17, creator_disabled = $$props.creator_disabled);
+    		if ('creation_to_do' in $$props) $$invalidate(5, creation_to_do = $$props.creation_to_do);
+    		if ('window_scale' in $$props) window_scale = $$props.window_scale;
+    		if ('edit_popup_scale' in $$props) edit_popup_scale = $$props.edit_popup_scale;
+    		if ('all_window_scales' in $$props) all_window_scales = $$props.all_window_scales;
+    		if ('g_required_user_fields' in $$props) g_required_user_fields = $$props.g_required_user_fields;
+    		if ('g_renamed_user_fields' in $$props) g_renamed_user_fields = $$props.g_renamed_user_fields;
+    		if ('g_last_inspected_field' in $$props) g_last_inspected_field = $$props.g_last_inspected_field;
+    		if ('pre_clear_i' in $$props) pre_clear_i = $$props.pre_clear_i;
+    		if ('filtered_manifest_contact_form_list' in $$props) $$invalidate(45, filtered_manifest_contact_form_list = $$props.filtered_manifest_contact_form_list);
+    		if ('filteredIndviduals' in $$props) $$invalidate(46, filteredIndviduals = $$props.filteredIndviduals);
     	};
 
     	if ($$props && "$$inject" in $$props) {
@@ -11274,7 +11626,7 @@ var app = (function () {
     	}
 
     	$$self.$$.update = () => {
-    		if ($$self.$$.dirty[0] & /*prefix*/ 268435456 | $$self.$$.dirty[1] & /*individuals*/ 4096) {
+    		if ($$self.$$.dirty[0] & /*prefix*/ 134217728 | $$self.$$.dirty[1] & /*individuals*/ 2048) {
     			//
     			// ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
     			$$invalidate(46, filteredIndviduals = prefix
@@ -11285,21 +11637,21 @@ var app = (function () {
     			: individuals);
     		}
 
-    		if ($$self.$$.dirty[0] & /*i*/ 1073741824 | $$self.$$.dirty[1] & /*filteredIndviduals*/ 32768) {
-    			$$invalidate(44, selected = i >= 0
+    		if ($$self.$$.dirty[0] & /*i*/ 536870912 | $$self.$$.dirty[1] & /*filteredIndviduals*/ 32768) {
+    			$$invalidate(43, selected = i >= 0
     			? filteredIndviduals[i]
     			: empty_identity.identity());
     		}
 
-    		if ($$self.$$.dirty[1] & /*selected*/ 8192) {
+    		if ($$self.$$.dirty[1] & /*selected*/ 4096) {
     			reset_inputs(selected);
     		}
 
-    		if ($$self.$$.dirty[0] & /*u_index*/ 64 | $$self.$$.dirty[1] & /*known_identities*/ 32) {
-    			$$invalidate(35, active_identity = known_identities[u_index]);
+    		if ($$self.$$.dirty[0] & /*u_index*/ 64 | $$self.$$.dirty[1] & /*known_identities*/ 16) {
+    			$$invalidate(34, active_identity = known_identities[u_index]);
     		}
 
-    		if ($$self.$$.dirty[1] & /*active_identity, individuals*/ 4112) {
+    		if ($$self.$$.dirty[1] & /*active_identity, individuals*/ 2056) {
     			if (active_identity) {
     				filtered_cc_list = individuals.filter(ident => {
     					if (ident.cid !== active_identity.cid) {
@@ -11317,7 +11669,7 @@ var app = (function () {
     			$$invalidate(2, active_user = known_users[u_index]);
     		}
 
-    		if ($$self.$$.dirty[1] & /*active_identity*/ 16) {
+    		if ($$self.$$.dirty[1] & /*active_identity*/ 8) {
     			$$invalidate(16, green = active_identity
     			? active_identity.stored_externally
     			: false);
@@ -11344,10 +11696,10 @@ var app = (function () {
     			}
     		}
 
-    		if ($$self.$$.dirty[0] & /*u_index*/ 64 | $$self.$$.dirty[1] & /*current_index, active_identity*/ 16400) {
+    		if ($$self.$$.dirty[0] & /*u_index*/ 64 | $$self.$$.dirty[1] & /*current_index, active_identity*/ 8200) {
     			{
     				if (current_index !== u_index) {
-    					$$invalidate(45, current_index = u_index);
+    					$$invalidate(44, current_index = u_index);
     					reinitialize_user_context();
     				}
 
@@ -11357,8 +11709,8 @@ var app = (function () {
     			}
     		}
 
-    		if ($$self.$$.dirty[0] & /*man_prefix*/ 536870912 | $$self.$$.dirty[1] & /*manifest_contact_form_list*/ 128) {
-    			$$invalidate(47, filtered_manifest_contact_form_list = man_prefix
+    		if ($$self.$$.dirty[0] & /*man_prefix*/ 268435456 | $$self.$$.dirty[1] & /*manifest_contact_form_list*/ 64) {
+    			$$invalidate(45, filtered_manifest_contact_form_list = man_prefix
     			? manifest_contact_form_list.filter(man_contact => {
     					const name = `${man_contact.name}`;
     					return name.toLowerCase().startsWith(man_prefix.toLowerCase());
@@ -11366,26 +11718,26 @@ var app = (function () {
     			: manifest_contact_form_list);
     		}
 
-    		if ($$self.$$.dirty[1] & /*filtered_manifest_contact_form_list, manifest_index, manifest_selected_entry, manifest_obj, man_cid*/ 67392) {
+    		if ($$self.$$.dirty[1] & /*filtered_manifest_contact_form_list, manifest_index, manifest_selected_entry, manifest_obj, man_cid*/ 17312) {
     			{
-    				$$invalidate(37, manifest_selected_entry = filtered_manifest_contact_form_list[manifest_index]);
+    				$$invalidate(36, manifest_selected_entry = filtered_manifest_contact_form_list[manifest_index]);
 
     				if (manifest_selected_entry !== undefined && manifest_selected_entry) {
     					manifest_selected_form = manifest_selected_entry.html;
     					man_title = manifest_selected_entry.info;
     					man_max_preference = manifest_obj.max_preference;
     					man_preference = manifest_selected_entry.preference;
-    					$$invalidate(41, man_cid = manifest_selected_entry.cid);
+    					$$invalidate(40, man_cid = manifest_selected_entry.cid);
     					man_contact_is_default = man_cid === manifest_obj.default_contact_form;
     				}
     			}
     		}
 
-    		if ($$self.$$.dirty[1] & /*c_name, c_DOB, c_place_of_origin, c_cool_public_info*/ 15) {
+    		if ($$self.$$.dirty[0] & /*c_name*/ 1073741824 | $$self.$$.dirty[1] & /*c_DOB, c_place_of_origin, c_cool_public_info*/ 7) {
     			c_empty_fields = !c_name || c_name.length == 0 || (!c_DOB || c_DOB.length == 0) || (!c_place_of_origin || c_place_of_origin.length == 0) || c_cool_public_info.length == 0;
     		}
 
-    		if ($$self.$$.dirty[0] & /*active*/ 16 | $$self.$$.dirty[1] & /*prev_active*/ 2048) {
+    		if ($$self.$$.dirty[0] & /*active*/ 16 | $$self.$$.dirty[1] & /*prev_active*/ 1024) {
     			{
     				if (prev_active !== active) {
     					message_edit_list = [];
@@ -11398,7 +11750,7 @@ var app = (function () {
     					}
     				}
 
-    				$$invalidate(42, prev_active = active);
+    				$$invalidate(41, prev_active = active);
     			}
     		}
 
@@ -11437,7 +11789,6 @@ var app = (function () {
     		creator_disabled,
     		active_profile_biometric,
     		src_1_name,
-    		add_profile$1,
     		clear_identify_form,
     		remove_identify_seen_in_form,
     		drop_picture,
@@ -11463,8 +11814,8 @@ var app = (function () {
     		individuals,
     		selected,
     		current_index,
-    		filteredIndviduals,
     		filtered_manifest_contact_form_list,
+    		filteredIndviduals,
     		tabbar_active_binding,
     		select_change_handler,
     		input0_input_handler,
@@ -11482,7 +11833,7 @@ var app = (function () {
     class App extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance, create_fragment, safe_not_equal, {}, [-1, -1, -1, -1, -1]);
+    		init(this, options, instance, create_fragment, safe_not_equal, {}, null, [-1, -1, -1, -1, -1]);
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
@@ -11502,5 +11853,5 @@ var app = (function () {
 
     return app;
 
-}());
+})();
 //# sourceMappingURL=bundle.js.map
