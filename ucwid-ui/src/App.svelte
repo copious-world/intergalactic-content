@@ -5,7 +5,6 @@
 	import TabBar from '@smui/tab-bar';
 	import { onMount } from 'svelte';
 	//
-	import * as ipfs_profiles from './ipfs_profile_proxy.js'
 	import * as utils from './utilities.js'
 
 	let active_profile_image = ""; //"/favicon.png" ; // "/brent-fox-jane-18-b.jpg"
@@ -14,8 +13,8 @@
 	let src_1_name = "Drop a picture here"
 	let src_biometric_instruct = "Drop binary biometric file here"
 	//
-	let active_cid = ""
-	let clear_cid = ""
+	let active_cwid = ""
+	let clear_cwid = ""
 	let dir_view = false
 
 	let signup_status = "OK"
@@ -31,7 +30,6 @@
 	let p_i = 0;
 	let form_index = 0
 
-	let j_cid = false
 
 	let name = ''
 	let DOB = ''
@@ -47,7 +45,7 @@
 	let c_business = false
 	let c_public_key = "testesttesttest"
 	let c_signer_public_key = "testesttesttest"
-	let c_cid = "testesttesttest"
+	let c_cwid = "testesttesttest"
 	let c_answer_message = ''
 	let c_biometric_blob = ''
 
@@ -70,7 +68,7 @@
 	let manifest_obj = {}
 	let manifest_index = 0
 	let man_title = ''
-	let man_cid = ''
+	let man_cwid = ''
 	let man_wrapped_key = ''
 	let man_html = ''
 	let man_max_preference = 1.0
@@ -82,12 +80,6 @@
 	//
 	let man_encrypted = false
 
-	let message_edit_from_contact = false
-
-	let profile_image_el
-	let biometric_data_el
-
-	//
 	let active = 'Identify';
 	let prev_active = active
 	let first_message = 0
@@ -106,11 +98,11 @@
 	let selected_form_link_types = {
 		"business" : {
 			"link" : "latest-contact",
-			"from_cid" : "QmTfD2LyTy8WGgdUkKE1Z1vAfb6HwNgmZA5kMaFAiy4fuz"
+			"from_cwid" : "QmTfD2LyTy8WGgdUkKE1Z1vAfb6HwNgmZA5kMaFAiy4fuz"
 		},
 		"profile" : {
 			"link" : "latest-contact",
-			"from_cid" : "QmTfD2LyTy8WGgdUkKE1Z1vAfb6HwNgmZA5kMaFAiy4fuz"
+			"from_cwid" : "QmTfD2LyTy8WGgdUkKE1Z1vAfb6HwNgmZA5kMaFAiy4fuz"
 		}
 	}
 
@@ -119,16 +111,16 @@
 
 	//
 	let individuals = [
-		{ "name": 'Hans Solo', "DOB" : "1000", "place_of_origin" : "alpha centauri", "cool_public_info" : "He is a Master Jedi", "business" : false, "public_key" : "testesttesttest", "signer_public_key" : "ha ha ha ha ha ha ha ", "cid" : "4504385938", "answer_message" : "", "biometric" : "53535" }
+		{ "name": 'Hans Solo', "DOB" : "1000", "place_of_origin" : "alpha centauri", "cool_public_info" : "He is a Master Jedi", "business" : false, "public_key" : "testesttesttest", "signer_public_key" : "ha ha ha ha ha ha ha ", "cwid" : "4504385938", "answer_message" : "", "biometric" : "53535" }
 	];
 
-	let cid_individuals_map = {}
+	let cwid_individuals_map = {}
 
 	let selected = individuals[0]
 
-	let inbound_solicitation_messages = [ { "name": 'Darth Vadar', "user_cid" : "869968609", "subject" : "Hans Solo is Mean", "date" : todays_date, "readers" : "luke,martha,chewy", "business" : false, "public_key" : false, "message" : "this is a message 4" , "reply_with" : "default"} ]
+	let inbound_solicitation_messages = [ { "name": 'Darth Vadar', "user_cwid" : "869968609", "subject" : "Hans Solo is Mean", "date" : todays_date, "readers" : "luke,martha,chewy", "business" : false, "public_key" : false, "message" : "this is a message 4" , "reply_with" : "default"} ]
 	let inbound_contact_messages = [
-		{ "name": 'Hans Solo', "user_cid" : "4504385938", "subject" : "Darth Vadier Attacks", "date" : todays_date, "readers" : "joe,jane,harry", "business" : false, "public_key" : false, "message" : "this is a message 1" }
+		{ "name": 'Hans Solo', "user_cwid" : "4504385938", "subject" : "Darth Vadier Attacks", "date" : todays_date, "readers" : "joe,jane,harry", "business" : false, "public_key" : false, "message" : "this is a message 1" }
 	]
 
 
@@ -143,8 +135,8 @@
 	let message_edit_source = false
 
 	function reinitialize_user_context() {
-		active_cid = ""
-		clear_cid = ""
+		active_cwid = ""
+		clear_cwid = ""
 		dir_view = false
 		signup_status = "OK"
 	//
@@ -168,34 +160,22 @@
 		c_business = false
 		c_public_key = "testesttesttest"
 		c_signer_public_key = "testesttesttest"
-		c_cid = "testesttesttest"
+		c_cwid = "testesttesttest"
 		c_answer_message = ''
 		c_empty_fields = false
 		//
 		today = (new Date()).toUTCString()
 		adding_new = false
-		manifest_selected_entry = false
-		manifest_selected_form = false
-		manifest_contact_form_list = [false]
-		manifest_obj = {}
-		manifest_index = 0
-		man_title = ''
-		man_cid = ''
-		man_wrapped_key = ''
-		man_html = ''
-		man_max_preference = 1.0
-		man_preference = 1.0
-		man_encrypted = false
-		first_message = 0
+
 		green = false     // an indicator telling if this user ID is set
 		todays_date = (new Date()).toLocaleString()
 		individuals = [
-			{ "name": 'Hans Solo', "DOB" : "1000", "place_of_origin" : "alpha centauri", "cool_public_info" : "He is a Master Jedi", "business" : false, "public_key" : "testesttesttest", "signer_public_key" : "ha ha ha ha ha ha ha ", "cid" : "4504385938", "answer_message" : "", "biometric" : "53535" }
+			{ "name": 'Hans Solo', "DOB" : "1000", "place_of_origin" : "alpha centauri", "cool_public_info" : "He is a Master Jedi", "business" : false, "public_key" : "testesttesttest", "signer_public_key" : "ha ha ha ha ha ha ha ", "cwid" : "4504385938", "answer_message" : "", "biometric" : "53535" }
 		];
-		cid_individuals_map = {}
+		cwid_individuals_map = {}
 		inbound_solicitation_messages = [ { 
 			"name": 'Darth Vadar', 
-			"user_cid" : "869968609", 
+			"user_cwid" : "869968609", 
 			"subject" : "Hans Solo is Mean", 
 			"date" : todays_date, 
 			"readers" : "luke,martha,chewy", 
@@ -204,14 +184,12 @@
 			"message" : "this is a message 4",
 			"reply_with" : "default" } ]
 		inbound_contact_messages = [
-			{ "name": 'Hans Solo', "user_cid" : "4504385938", "subject" : "Darth Vadier Attacks", "date" : todays_date, "readers" : "joe,jane,harry", "business" : false, "public_key" : false, "message" : "this is a message 1" }
+			{ "name": 'Hans Solo', "user_cwid" : "4504385938", "subject" : "Darth Vadier Attacks", "date" : todays_date, "readers" : "joe,jane,harry", "business" : false, "public_key" : false, "message" : "this is a message 1" }
 		]
 
 		processed_messages = []
 
 		message_selected = { "name": 'Admin', "subject" : "Hello From copious.world", "date" : today, "readers" : "you", "business" : false, "public_key" : false }
-
-		update_selected_form_links()
 	}
 
 	/*
@@ -315,7 +293,7 @@
 
 	$: if ( active_identity ) {
 		filtered_cc_list = individuals.filter(ident => {
-			if ( ident.cid !== active_identity.cid ) {
+			if ( ident.cwid !== active_identity.cwid ) {
 				return true
 			}
 			return false
@@ -371,9 +349,9 @@
 			man_title = manifest_selected_entry.info
 			man_max_preference = manifest_obj.max_preference
 			man_preference = manifest_selected_entry.preference
-			man_cid = manifest_selected_entry.cid
+			man_cwid = manifest_selected_entry.cwid
 
-			man_contact_is_default = ( man_cid === manifest_obj.default_contact_form)
+			man_contact_is_default = ( man_cwid === manifest_obj.default_contact_form)
 		}
 	}
 
@@ -402,11 +380,11 @@
 	let creation_to_do = false
 	$: {
 		creation_to_do = ( (u_index === false) || (active_user && (active_user.biometric === undefined)) )
-		if ( (typeof active_cid === "string") && (active_cid.length === 0) ) {
+		if ( (typeof active_cwid === "string") && (active_cwid.length === 0) ) {
 			creation_to_do = true
 		}
 		creator_disabled = !creation_to_do
-		console.log(active_cid)
+		console.log(active_cwid)
 	}
 
 	let window_scale = { "w" : 0.4, "h" : 0.8 }
@@ -481,21 +459,6 @@
 		await get_active_users()  // updates login page and initializes the view of this user.
 	})
 
-	async function update_selected_form_link(type) {
-		let form_link = selected_form_link_types[type]
-		if ( !(form_link.from_cid) ) {
-			let template_name = form_link.link
-			let cid = await ipfs_profiles.get_named_contact_template_cid(template_name,type)
-			form_link.from_cid = cid
-		}
-	}
-
-
-	async function update_selected_form_links() {
-		await update_selected_form_link("profile")
-		await update_selected_form_link("business")
-	}
-
 
 // PROFILE  PROFILE  PROFILE  PROFILE  PROFILE  PROFILE  PROFILE 
 // PROFILE  PROFILE  PROFILE  PROFILE  PROFILE  PROFILE  PROFILE 
@@ -530,12 +493,6 @@
 	}
 
 	async function create_intergalactic_id() {
-
-	}
-
-	// ADD PROFILE.....
-	async function add_profile() {
-		//
 		let contact = new Contact()		// contact of self... Stores the same info as a contact plus some special fields for local db
 		contact.set(name,DOB,place_of_origin,cool_public_info,business,false,false,biometric_blob)
 		//
@@ -553,39 +510,25 @@
 
 		await gen_public_key(user_data,store_user) // by ref  // stores keys in DB  // converts biometric to signature (calls protect_hash)
 		try {
-			// green = // await ipfs_profiles.add_profile(user_data)  // will fetch the key (it is not riding along yet.)
+			green = await add_user_locally(user_data)  // will fetch the key (it is not riding along yet.)
 		} catch (e) {
 		}
 		//
 		await get_active_users()  // updates login page and initializes the view of this user.
 		u_index = (known_users.length - 1)	// user was added to the end...
-		//
 	}
 
 
 	async function load_user_info(identity) {
-		active_cid = identity.cid
-		clear_cid = identity.clear_cid
-
-		await fix_keys(identity)
-
-		await fetch_contacts(identity)
+		active_cwid = identity.cwid			// changes to a ucwid
+		clear_cwid = identity.clear_cwid
 		//
-		fetch_messages(identity)
-		fetch_manifest(identity)
-
+		await fix_keys(identity)
+		//
 		if ( identity.profile_image ) {
-			let img_cid = identity.profile_image
-			active_profile_image = await ipfs_profiles.load_blob_as_url(img_cid)
+			let img_cwid = identity.profile_image
+			active_profile_image = await window.load_blob_as_url(img_cwid)
 		}
-
-		/*
-		let manifest_cid = identity.files.cid
-		let contacts_cid = identity.files.cid
-
-		let dir_contact_pages_cid = identity.dirs.cid
-		let dir_spool_cid = identity.dirs.cid
-		*/
 	}
 
 	async function get_active_users() {
@@ -632,9 +575,10 @@
 			if ( identity ) {
 				active_profile_image = blob64
 				//
-				let fcid = await ipfs_profiles.upload_data_file(fname,blob64)
-				if ( fcid ) {
-					identity.profile_image = fcid
+				//				use window injected methods to store images in th IndexedDB record of the user
+				let fcwid = await user_info_add_picture(fname,blob64)
+				if ( fcwid ) {
+					identity.profile_image = fcwid
 					await update_identity(identity)
 				}
 			}
@@ -665,200 +609,8 @@
 // MESSAGES MESSAGES MESSAGES MESSAGES MESSAGES MESSAGES MESSAGES MESSAGES MESSAGES MESSAGES
 // MESSAGES MESSAGES MESSAGES MESSAGES MESSAGES MESSAGES MESSAGES MESSAGES MESSAGES MESSAGES
 
-
-	
-
 	// ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
-
-
-	function clear_checks(pattern,n) {
-		let i = 0
-		let el = false
-		do {
-			let el_id = `${pattern}${i}`
-			el = document.getElementById(el_id)
-			if ( el ) {
-				el.checked = false
-			}
-			i++
-		} while ( el )
-	}
-
-
-	function remove_from_source_list(m_source,m_changed) {
-		//
-		let op_list = []
-		if ( active == "Messages" ) {
-			op_list = inbound_contact_messages
-			if ( m_source !== op_list ) return false;
-		} else if ( active == "Introductions" ) {
-			op_list = inbound_solicitation_messages
-			if ( m_source !== op_list ) return false;
-		} else {
-			op_list = processed_messages
-			if ( m_source !== op_list ) return false;
-		}
-		//
-		let changed_list = op_list.filter(m_el => {
-			let cid = m_el.f_cid
-			if ( cid ) {
-				if ( m_changed.indexOf(cid) >= 0 ) return false
-			}
-			return true
-		})
-		//
-		if ( active === "Messages" ) {
-			inbound_contact_messages  = changed_list
-			clear_checks("doop-m_contact_",changed_list.length)
-		} else if ( active === "Introductions" ) {
-			inbound_solicitation_messages  = changed_list
-			clear_checks("doop-m_intro_",changed_list.length)
-		} else {
-			processed_messages  = changed_list
-			clear_checks("doop-m_category_",changed_list.length)
-		}
-		//
-	}
-
-	async function fetch_messages(identify) {
-		if ( identify ) {
-			let all_inbound_messages = await ipfs_profiles.get_message_files(identify,start_of_messages,messages_per_page)
-			inbound_contact_messages = all_inbound_messages[0]
-			inbound_solicitation_messages = all_inbound_messages[1]
-
-			if ( inbound_contact_messages === false ) {
-				inbound_contact_messages = []
-			}
-			if ( inbound_solicitation_messages === false ) {
-				inbound_solicitation_messages = []
-			}
-			//
-			await check_contacts(inbound_contact_messages,false)
-			let auto_responses = await check_contacts(inbound_solicitation_messages,true)
-			inbound_solicitation_messages = inbound_solicitation_messages.filter(m => {
-				return (auto_responses.indexOf(m) < 0)
-			})
-		}
-	}
-	
-	async function fetch_category_messages(identify,op_category) {
-		if ( identify ) {
-			let start = start_of_messages ? start_of_messages : 0
-			let count = messages_per_page ? messages_per_page : 100
-			let inbound_messages = await ipfs_profiles.get_categorized_message_files(identify,op_category,start,count)
-			return inbound_messages
-		}
-	}
-
-	
-	function messages_update_contacts(cid,bval) {
-		if ( Array.isArray(inbound_contact_messages) ) {
-			for ( let m of inbound_contact_messages ) {
-				if ( m.user_cid === cid ) {
-					m.is_in_contacts = bval
-				}
-			}
-		}
-		if ( Array.isArray(inbound_contact_messages) ) {
-			for ( let m of inbound_solicitation_messages ) {
-				if ( m.user_cid === cid ) {
-					m.is_in_contacts = bval
-				}
-			}
-		}
-	}
-
-// CONTACTS CONTACTS CONTACTS CONTACTS CONTACTS CONTACTS CONTACTS CONTACTS
-// CONTACTS CONTACTS CONTACTS CONTACTS CONTACTS CONTACTS CONTACTS CONTACTS
-
-	function make_individuals_map(indivs_map) {
-		if ( Array.isArray(indivs_map) ) {
-			cid_individuals_map = {}
-			for ( let indiv of indivs_map ) {
-				if ( indiv && (typeof indiv !== "string") ) {
-					cid_individuals_map[indiv.cid] = indiv
-				}
-			}
-		} else {
-			cid_individuals_map = Object.assign(cid_individuals_map,indivs_map)
-		}
-		window.set_contact_map(cid_individuals_map)
-	}
-
-	async function check_contacts(message_list,clear) {
-		let removals = []
-		if ( Array.isArray(message_list) ) {
-			for ( let m of message_list ) { 
-				// This will be false -- 
-				// the introduction will supply the sender (from) cid for the keyed path.
-				let is = (cid_individuals_map[m.user_cid] !== undefined)
-				m.is_in_contacts = is
-				//
-				if ( is && clear ) {
-					let c = cid_individuals_map[m.user_cid]
-					let do_update = await check_for_auto_update(c,m)
-					if ( do_update ) {
-						if ( c.public_key && c.signer_public_key ) {
-							let contact = contact_wrapper(c)
-							if ( contact ) {
-								await respond_to_intro(m,contact)
-							}
-						} else {
-							auto_add_contact(m.user_cid,m.signer_public_key,c.must_send_keys,m)
-							removals.push(m)
-						}
-					}
-				} else if ( clear ) {
-					if ( m.response_acceptance ) {
-						auto_add_contact(m.user_cid,m.signer_public_key,false,m)
-						removals.push(m)
-					}
-				}
-			}
-		}
-		return removals
-	}
-
 	//
-	async function check_for_auto_update(c,m) {
-		//
-		if ( c.must_send_keys === undefined ) return false
-		//
-		if ( !(c.received_keys) ) {
-			if ( c.public_key && c.signer_public_key ) {
-				c.received_keys = true
-				await update_contact()
-				return false
-			}
-			let cid = m.user_cid
-			if ( cid ) {
-				if ( active_identity.introductions ) {
-					let intros = active_identity.introductions
-					if ( intros.indexOf(cid) >= 0 ) {
-						return true
-					}
-				} else return true // let "received_keys" make the decision.
-			}
-		} else {
-			if ( c.must_send_keys ) {
-				if ( c.public_key && c.signer_public_key ) {
-					return true
-				}
-			}
-		}
-		//
-		return false
-	}
-
-	//
-	async function get_contact_info(cid) {
-		let user_info = await ipfs_profiles.fetch_contact_info(cid)
-		if ( !user_info ) {
-			alert("get_contact_info: user does not exist")
-		}
-		return user_info
-	}
-
 
 	function reset_inputs(individual) {
 		c_name = individual ? individual.name : '';
@@ -869,200 +621,7 @@
 		c_public_key = individual ? individual.public_key : '';
 		c_signer_public_key = individual ? individual.signer_public_key : '';
 		c_answer_message = individual ? individual.answer_message : '';
-		c_cid = individual ? individual.cid : '';
-	}
-
-	let pre_clear_i = 0
-
-	function exising_contact(contact) {
-		//
-		for ( let cid in cid_individuals_map ) {
-			let user_info = cid_individuals_map[cid]
-			if ( contact.match(user_info) ) {
-				return cid
-			}
-		}
-		//
-		return false
-	}
-
-	async function respond_to_intro(msg,contact) {
-		//
-		if ( !(contact) ) return
-		//
-		let identify = active_identity
-		if ( identify ) {
-			let message = Object.assign({},msg)   // make a special automatic message. ...
-			//
-			message.user_cid = identify.cid
-			message.public_key = identify.user_info.public_key
-			message.signer_public_key = identify.user_info.signer_public_key
-			message.date = Date.now()
-			message.business = business
-			message.response_acceptance = true
-			message.attachments = [ msg.user_cid ] //[msg.public_key,msg.signer_public_key]
-			//
-			let i_cid = await ipfs_profiles.send_introduction(contact.clear_identity(),identify,message)
-			if ( i_cid ) {
-				contact.extend_contact("must_send_keys",false)  // only comes in from the intro message...
-				await update_contact_page()
-
-				if ( identify.introductions === undefined ) {
-					identify.introductions = []
-				}
-				identify.introductions.push(i_cid)
-				update_identity(identify)
-			}
-		}
-		//
-	}
-
-	async function warn_spoofing(msg,contact) {
-		let identify = active_identity
-		if ( identify ) {
-			//
-			let message = Object.assign({},msg)   // make a special automatic message. ...
-			//
-			message.user_cid = identify.cid
-			message.public_key = identify.user_info.public_key
-			message.signer_public_key = identify.user_info.signer_public_key
-			message.date = Date.now()
-			message.business = business
-			message.response_acceptance = true
-			message.attachments = []
-			message.subject = "You received a spurious introduction."
-			message.message = `Someone faking my identity sent you a message pretending to be me. Watch out for this user cid: ${msg.user_cid}`
-			//
-			await ipfs_profiles.send_introduction(contact.clear_identity(),identify,message)
-		}
-	}
-
-	async function update_contact_page() {
-		let identify = active_identity  // write to client user dir
-		if ( identify ) {
-			let update_cid = await ipfs_profiles.update_contacts_to_ipfs(identify,business,cid_individuals_map)
-			identify.files.contacts.cid = update_cid
-			await update_identity(identify)
-			await get_active_users()
-		}
-	}
-
-
-	function contact_wrapper(contact_info) {
-		let cid = contact_info.cid
-		if ( cid ) {
-			//
-			let contact = new Contact()
-			contact.copy(contact_info)
-			return contact
-		}
-		return false
-	}
-
-	// auto_add_contact
-	// cid -- came in the message ... this is the sender private path cid.
-	// signer_pk is passed.... assuming identity is made by one key -- but it could be two keys, wrapper and signer
-	// if approving a contact, then do_response is true, and a message is sent back automatically with the public keys of the current user.
-	async function auto_add_contact(cid,signer_pk,do_response,msg) {
-		//
-		// use the private path cid pull in public wrapper key from here.
-		let contact_info = await get_contact_info(cid) 
-		//
-		if ( contact_info ) {
-			//
-			let origin_cid = msg.attachments[0]  // should be a cid there
-			let a_cid = active_identity.cid
-			//
-			let contact = new Contact()
-			contact.copy(contact_info)
-			let old_cid = exising_contact(contact)
-			if ( old_cid !== false ) {
-				delete cid_individuals_map[old_cid]
-				// remove from individuals
-			}
-			contact.extend_contact("cid",cid)
-			contact.extend_contact("answer_message",'')
-			contact.extend_contact("signer_public_key",signer_pk)	// only comes in from the intro message...
-			contact.extend_contact("received_keys",true)			// If here, then the keys have been received
-			if ( origin_cid &&  (origin_cid !== a_cid) ) {
-				//
-				await warn_spoofing(msg,contact)
-				return
-				//
-			}
-			//
-			let user_data = contact.identity()
-			//
-			let b = individuals
-			if ( individuals[0] === empty_identity.identity() ) {
-				b[0] = user_data
-			} else {
-				individuals.push(user_data);
-			}
-			individuals = b
-			i = individuals.length - 1;
-			//
-			cid_individuals_map[cid] = user_data
-			messages_update_contacts(cid,false)
-			//
-			if ( do_response ) {  // When adding a contact from an introduction, send public keys to sender, who does have these keys - yet...
-				await respond_to_intro(msg,contact)
-				contact.extend_contact("must_send_keys",false)  // only comes in from the intro message...
-			}
-			await update_contact_page()
-			return true
-		}
-		return false
-	}
-
-
-	async function update_contact() {
-		selected.name = c_name;
-		selected.DOB = c_DOB;
-		selected.place_of_origin = c_place_of_origin;
-		selected.cool_public_info = c_cool_public_info;
-		selected.business = c_business;
-		selected.public_key = c_public_key;
-		selected.c_signer_public_key = c_signer_public_key
-		//
-		let cid = selected.cid
-		delete cid_individuals_map[cid]
-		messages_update_contacts(cid,false)
-		cid = await ipfs_profiles.fetch_contact_cid(selected,((c_signer_public_key !==undefined) && c_signer_public_key))
-		selected.cid = cid
-		cid_individuals_map[cid] = user_data
-		messages_update_contacts(cid,true)
-		//
-		await update_contact_page()
-		//
-	}
-
-	async function fetch_contacts(identify) {
-		if ( identify && identify.files ) {
-			if ( identify.files.contacts ) {
-				let contacts_cid = identify.files.contacts.cid
-				let contacts_data = await ipfs_profiles.fetch_contacts(contacts_cid,identify)
-				let indivs = []
-				if ( Array.isArray(contacts_data) ) {
-					indivs = contacts_data.filter(el => {
-						let t = (typeof el === "object") && (typeof el !== "string") && (el !== false)
-						return t
-					})
-				} else {
-					for ( let ky in contacts_data ) {
-						if ( typeof ky === "string" ) {  // make sure this is a cid string
-							indivs.push(contacts_data[ky])
-						}
-					}
-				}
-				if ( indivs.length === 0 ) {
-					individuals = [ empty_identity.identity() ]
-				} else {
-					individuals = indivs
-				}
-				make_individuals_map(contacts_data)
-			}
-		}
+		c_cwid = individual ? individual.cwid : '';
 	}
 
 
@@ -1079,33 +638,6 @@
 		}
 	}
 
-
-	// ---- ---- ---- ---- ---- ---- ----
-
-	async function fetch_manifest(identify) {
-		if ( identify && identify.files ) {
-			if ( identify.files.manifest ) {
-				let manifest_cid = identify.files.manifest.cid
-				manifest_obj = await ipfs_profiles.fetch_manifest(manifest_cid,identify)
-				if ( manifest_obj.clear_cid === undefined ) {
-					manifest_obj.clear_cid = identify.clear_cid
-				}
-				//
-				let m_list = []
-				if ( Array.isArray(manifest_obj.custom_contact_forms) ) {
-					m_list = manifest_obj.custom_contact_forms
-				} else {
-					for ( let ky in manifest_obj.custom_contact_forms ) {
-						let mm = manifest_obj.custom_contact_forms[ky]
-						mm.cid = ky
-						m_list.push(mm)
-					}
-				}
-				//
-				manifest_contact_form_list = m_list
-			}
-		}
-	}
 
 
 	function navigate_to_user(e) {
@@ -1414,7 +946,7 @@
 		overflow:auto;
 	}
 
-	#man_cid {
+	#man_cwid {
 		font-size:smaller;
 		min-width:100%;
 		font-weight:bold;
@@ -1544,12 +1076,12 @@
 		color:navy;
 	}
 
-	.cid-grabber {
+	.cwid-grabber {
 		font-weight:bolder;
 		color:navy;
 	}
 
-	.cid-grabber-label {
+	.cwid-grabber-label {
 		font-weight:600;
 		color:rgb(50, 148, 50);
 		font-style: oblique;
@@ -1646,7 +1178,7 @@
 					</div>
 				{:else}
 					<div style = { green ? "background-color:rgba(245,255,250,0.9)" : "background-color:rgba(250,250,250,0.3)" } >
-						<span class="cid-grabber-label">Your custom id number:</span> <span class="cid-grabber">{active_cid}</span>
+						<span class="cwid-grabber-label">Your custom id number:</span> <span class="cwid-grabber">{active_cwid}</span>
 					</div>
 				{/if}
 			</div>

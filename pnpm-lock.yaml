@@ -1,0 +1,27 @@
+lockfileVersion: 5.3
+
+specifiers:
+  crypto-wraps: ^1.1.1
+  ucwid: ^0.2.5
+
+dependencies:
+  crypto-wraps: 1.1.1
+  ucwid: 0.2.5
+
+packages:
+
+  /crypto-wraps/1.1.1:
+    resolution: {integrity: sha512-RBp7Ka9G5ws2Xiw88R4fW3N7Ine/Fo1dZQmYV+VHMOfjXCjBSim1Xo3A2FBN3m2TCszaqFF/3pbHdsE4BJOAKQ==}
+    dev: false
+
+  /cwid/1.0.2:
+    resolution: {integrity: sha512-mAymu1HM2VCd+PEZh+faoUw0s9ryfatjds32TZYJAD3T28iox6vvVTwhy6SLyLMWgQopFSOUDxRSCRzjfnYTIw==}
+    dev: false
+
+  /ucwid/0.2.5:
+    resolution: {integrity: sha512-Cu4aYrAlEZDSGulsp3xHkf4idybAxRxf88wlzDVoUXBs8cTNznMB0PFnnewlY0Z4IrDRCHCPBHNnDWIxau72Ew==}
+    requiresBuild: true
+    dependencies:
+      crypto-wraps: 1.1.1
+      cwid: 1.0.2
+    dev: false

@@ -1,0 +1,28 @@
+{
+  "name": "intergalactic-content",
+  "version": "1.0.0",
+  "description": "Content that is uniquely identifiable and independent of assignment to storage medium.",
+  "main": "index.js",
+  "scripts": {
+    "test": "node tests/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/copious-world/intergalactic-content.git"
+  },
+  "keywords": [
+    "crypto",
+    "hash",
+    "classification"
+  ],
+  "author": "R. Leddy",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/copious-world/intergalactic-content/issues"
+  },
+  "homepage": "https://github.com/copious-world/intergalactic-content#readme",
+  "dependencies": {
+    "crypto-wraps": "^1.1.1",
+    "ucwid": "^0.2.5"
+  }
+}
