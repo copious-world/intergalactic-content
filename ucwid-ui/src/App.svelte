@@ -6,6 +6,7 @@
 	import { onMount } from 'svelte';
 	//
 	import * as utils from './utilities.js'
+	import * as igid from "../public/intergalactic-content/IGID.js"
 
 	let active_profile_image = ""; //"/favicon.png" ; // "/brent-fox-jane-18-b.jpg"
 	let active_profile_biometric = ""
@@ -508,9 +509,10 @@
 			return;
 		}
 
-		await gen_public_key(user_data,store_user) // by ref  // stores keys in DB  // converts biometric to signature (calls protect_hash)
+		await gen_public_key(user_data,window.store_user) // by ref  // stores keys in DB  // converts biometric to signature (calls protect_hash)
 		try {
-			green = await add_user_locally(user_data)  // will fetch the key (it is not riding along yet.)
+			let id_packet = igid.user_keys(user_data,window.store_user)
+			green = await window.add_user_locally(id_packet)  // will fetch the key (it is not riding along yet.)
 		} catch (e) {
 		}
 		//
@@ -559,7 +561,7 @@
 		if ( index >= 0 ) {
 			known_users = [...known_users.slice(0, index), ...known_users.slice(index + 1)];
 			u_index = Math.min(u_index, known_users.length - 1);
-			await unstore_user(identity)
+			await window.unstore_user(identity)
 		}
 	}
 

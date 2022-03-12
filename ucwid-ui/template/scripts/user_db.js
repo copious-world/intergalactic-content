@@ -2,6 +2,27 @@
 // ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
 // ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
 
+
+
+
+
+/*
+// user_data
+{
+    "name_key" : name_key,
+    "name": '',
+    "DOB" : "",
+    "place_of_origin" : "", 
+    "cool_public_info" : "", 
+    "business" : false, 
+    "public_key" : false,
+    "signer_public_key" : false,
+    "biometric" : false
+}
+*/
+
+
+
 // // // 
 function get_known_users() {
     //
@@ -193,6 +214,26 @@ async function finalize_user_identity(u_info,identity_files) {
     return p
 }
 
+
+
+
+async function add_user_locally(id_packet) {
+    //
+/*
+    let id_packet = {
+        "user" : user_data,
+        "keys" : keys,
+        "original_cwid" : key_id_pair[0],
+        "ucwid" :  key_id_pair[1]
+    }
+*/
+    //
+    return true
+}
+
+
+
+
 // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // 
 //		update_identity
 //
@@ -271,10 +312,6 @@ function identity_from_user(user_info) {
     return p
 }
 
-
-async function add_user_locally(user_data) {
-    //
-}
 
 
 var downloader_url = null
