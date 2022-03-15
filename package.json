@@ -23,6 +23,7 @@
   "homepage": "https://github.com/copious-world/intergalactic-content#readme",
   "dependencies": {
     "crypto-wraps": "^1.1.1",
-    "ucwid": "^0.2.5"
+    "roll-right": "^0.0.1",
+    "ucwid": "^0.2.6"
   }
 }

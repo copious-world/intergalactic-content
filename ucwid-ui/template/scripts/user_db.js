@@ -2,8 +2,11 @@
 // ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
 // ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
 
-
-
+const WAPP_DB_NAME = "wapp_contacts"
+const WAPP_USERID_STORE = 'wapp_users'
+const DB_VERSION = 1
+//
+var g_galactic_db = null
 
 
 /*
@@ -26,8 +29,8 @@
 // // // 
 function get_known_users() {
     //
-    let transaction = g_galactic_db.transaction(PROMAIL_USERID_STORE, "readwrite");
-    let userStore = transaction.objectStore(PROMAIL_USERID_STORE);
+    let transaction = g_galactic_db.transaction(WAPP_USERID_STORE, "readwrite");
+    let userStore = transaction.objectStore(WAPP_USERID_STORE);
     let user_list = []
     let identity_list = []
     let p = new Promise((resolve,reject) => {
@@ -70,7 +73,7 @@ async function pc_init_database() {
     // request an open of DB
     let p = new Promise((resolve,reject) => {
         //
-        let request = window.indexedDB.open(CONTACT_DB_NAME, DB_VERSION);
+        let request = window.indexedDB.open(WAPP_DB_NAME, DB_VERSION);
         //
         request.onerror = (event) => {
             alert("This web app will not store recorded audio without the use of computer storage.")
@@ -91,7 +94,7 @@ async function pc_init_database() {
             let db = event.target.result;
             //
             try {
-                let userStore = db.createObjectStore(PROMAIL_USERID_STORE, { autoIncrement : false, keyPath: 'name_key' });  // supposed to be just one
+                let userStore = db.createObjectStore(WAPP_USERID_STORE, { autoIncrement : false, keyPath: 'name_key' });  // supposed to be just one
                 userStore.createIndex("name_key", "name_key", { unique: true });
             } catch (e) {
             }
@@ -127,8 +130,8 @@ function value_fallback(value) {
 function unstore_user(identity) {
     let name_key = identity.name_key
     if ( !name_key ) return(false)
-    let transaction = g_galactic_db.transaction(PROMAIL_USERID_STORE, "readwrite");
-    let userStore = transaction.objectStore(PROMAIL_USERID_STORE);
+    let transaction = g_galactic_db.transaction(WAPP_USERID_STORE, "readwrite");
+    let userStore = transaction.objectStore(WAPP_USERID_STORE);
     let p = new Promise((resolve,reject) => {
         let nameIndex = userStore.index('name_key');
         nameIndex.openCursor().onsuccess = (event) => {
@@ -154,8 +157,8 @@ function store_user(user_information,privates) {
     let name_key = name_key_of(user_information)
     if ( !name_key ) return(false)
     //
-    let transaction = g_galactic_db.transaction(PROMAIL_USERID_STORE, "readwrite");
-    let userStore = transaction.objectStore(PROMAIL_USERID_STORE);
+    let transaction = g_galactic_db.transaction(WAPP_USERID_STORE, "readwrite");
+    let userStore = transaction.objectStore(WAPP_USERID_STORE);
     //
     let store_u_i = Object.assign({},user_information)
     //
@@ -202,8 +205,8 @@ async function finalize_user_identity(u_info,identity_files) {
     storage_obj.files = value_fallback(value_fallback(identity_files.dir_data).files)
     storage_obj.stored_externally =  (ucwid.length > 0)
     //
-    let transaction = g_galactic_db.transaction(PROMAIL_USERID_STORE, "readwrite");
-    let userStore = transaction.objectStore(PROMAIL_USERID_STORE);
+    let transaction = g_galactic_db.transaction(WAPP_USERID_STORE, "readwrite");
+    let userStore = transaction.objectStore(WAPP_USERID_STORE);
     //
     let p = new Promise((resolve,reject) => {
         const updateUserRequest =  userStore.put(storage_obj)           // information create by 
@@ -258,8 +261,8 @@ async function update_identity(identity) {
         if ( identity.messages ) {
             storage_obj.messages = identity.messages
         }
-        let transaction = g_galactic_db.transaction(PROMAIL_USERID_STORE, "readwrite");
-        let userStore = transaction.objectStore(PROMAIL_USERID_STORE);
+        let transaction = g_galactic_db.transaction(WAPP_USERID_STORE, "readwrite");
+        let userStore = transaction.objectStore(WAPP_USERID_STORE);
         //
         let p = new Promise((resolve,reject) => {
             const updateUserRequest =  userStore.put(storage_obj)           // information create by 
@@ -275,8 +278,8 @@ async function update_identity(identity) {
 
 async function restore_identity(identity) {
     try {
-        let transaction = g_galactic_db.transaction(PROMAIL_USERID_STORE, "readwrite");
-        let userStore = transaction.objectStore(PROMAIL_USERID_STORE);
+        let transaction = g_galactic_db.transaction(WAPP_USERID_STORE, "readwrite");
+        let userStore = transaction.objectStore(WAPP_USERID_STORE);
         //
         let p = new Promise((resolve,reject) => {
             const updateUserRequest =  userStore.put(identity)           // information create by 
@@ -293,8 +296,8 @@ function identity_from_user(user_info) {
     let name_key = name_key_of(user_info)
     if ( !name_key ) return(false)
     //
-    let transaction = g_galactic_db.transaction(PROMAIL_USERID_STORE, "readwrite");
-    let userStore = transaction.objectStore(PROMAIL_USERID_STORE);
+    let transaction = g_galactic_db.transaction(WAPP_USERID_STORE, "readwrite");
+    let userStore = transaction.objectStore(WAPP_USERID_STORE);
     //
     let p = new Promise((resolve,reject) => {
         let nameIndex = userStore.index('name_key');

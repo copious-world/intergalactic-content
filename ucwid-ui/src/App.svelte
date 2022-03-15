@@ -1,5 +1,8 @@
 <!-- https://eugenkiss.github.io/7guis/tasks#crud -->
 <script>
+	//	GOAL : create_intergalactic_id
+	//		 :		allow user interaction, local DB fucntion, etc. to allow *create_intergalactic_id*
+	//	SUPPORT ACTION : 		use a service to create a web page at the URL for the user...
 	//
 	import Tab, { Label } from '@smui/tab';
 	import TabBar from '@smui/tab-bar';
@@ -7,6 +10,7 @@
 	//
 	import * as utils from './utilities.js'
 	import * as igid from "../public/intergalactic-content/IGID.js"
+	import * as human_page from 'human-page'
 
 	let active_profile_image = ""; //"/favicon.png" ; // "/brent-fox-jane-18-b.jpg"
 	let active_profile_biometric = ""
@@ -493,7 +497,15 @@
 		return(message);
 	}
 
+
+
+
+	//   create_intergalactic_id
+	//								BUTTON ACTION
+	//   							CREATE THE INTERGALACTIC ID
 	async function create_intergalactic_id() {
+		///
+		// USER DATA STRUCTURE
 		let contact = new Contact()		// contact of self... Stores the same info as a contact plus some special fields for local db
 		contact.set(name,DOB,place_of_origin,cool_public_info,business,false,false,biometric_blob)
 		//
@@ -501,23 +513,30 @@
 		contact.extend_contact("form_link",selected_form_link)
 		contact.extend_contact("answer_message","")
 		//
-		let user_data = contact.identity()
+		let user_data = contact.identity()		// user data structure complete
 		//
+		// CHECK THAT THE FIELDS ARE FILLED -- make the picture part of this requirement (temporary store needed)
 		signup_status = "OK"
 		if ( !check_required_fields(user_data,g_required_user_fields) ) {
 			signup_status = missing_fields("creating contact page",g_renamed_user_fields,business)
 			return;
 		}
 
-		await gen_public_key(user_data,window.store_user) // by ref  // stores keys in DB  // converts biometric to signature (calls protect_hash)
+		// DB ACTION - store the user record with the keys that will be used by associated services
+		//
 		try {
 			let id_packet = igid.user_keys(user_data,window.store_user)
 			green = await window.add_user_locally(id_packet)  // will fetch the key (it is not riding along yet.)
 		} catch (e) {
 		}
 		//
+		// DB ACTION ACCESS AFTER STORE -- also keep the display of local users (those who share the device)
 		await get_active_users()  // updates login page and initializes the view of this user.
 		u_index = (known_users.length - 1)	// user was added to the end...
+		//
+		if ( green ) {			// human_page is a node module providing the separate use case for making the user owned frame page.
+			await human_page.inialize_user_resources(id_packet,window.update_user)
+		}
 	}
 
 

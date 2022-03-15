@@ -1,4 +1,4 @@
-import UCWID from "ucwid/lib/UCWID";
+import UCWID from "ucwid";
 import crypto_wraps from "crypto-wraps"
 
 
@@ -22,8 +22,7 @@ import crypto_wraps from "crypto-wraps"
 
 function user_data_normalizer(user_data_str_json) {
     let normed_data = user_data_str_json
-
-
+    // //
     return normed_data
 }
 

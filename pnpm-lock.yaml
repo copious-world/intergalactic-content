@@ -2,11 +2,13 @@ lockfileVersion: 5.3
 
 specifiers:
   crypto-wraps: ^1.1.1
-  ucwid: ^0.2.5
+  roll-right: ^0.0.1
+  ucwid: ^0.2.6
 
 dependencies:
   crypto-wraps: 1.1.1
-  ucwid: 0.2.5
+  roll-right: 0.0.1
+  ucwid: 0.2.6
 
 packages:
 
@@ -18,10 +20,16 @@ packages:
     resolution: {integrity: sha512-mAymu1HM2VCd+PEZh+faoUw0s9ryfatjds32TZYJAD3T28iox6vvVTwhy6SLyLMWgQopFSOUDxRSCRzjfnYTIw==}
     dev: false
 
-  /ucwid/0.2.5:
-    resolution: {integrity: sha512-Cu4aYrAlEZDSGulsp3xHkf4idybAxRxf88wlzDVoUXBs8cTNznMB0PFnnewlY0Z4IrDRCHCPBHNnDWIxau72Ew==}
+  /roll-right/0.0.1:
+    resolution: {integrity: sha512-OrzpFKoFZzNoY5CBcGLD+9LHCvps+GBZDDdvLxH6mElqkpnY4EDoUAaNu7VT3/MBCEIn24ZsCmS06EALMSObRA==}
+    hasBin: true
+    dev: false
+
+  /ucwid/0.2.6:
+    resolution: {integrity: sha512-wxfDuWFAwwTxRpHDh22lz0I7Kq8nXDDhngAbjVUP23Ot7DfYvk04buKTP/wqkDgDW4AodHK/AXR9RyEBK80faw==}
     requiresBuild: true
     dependencies:
       crypto-wraps: 1.1.1
       cwid: 1.0.2
+      ucwid: 'link:'
     dev: false
