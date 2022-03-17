@@ -57,18 +57,32 @@
             },
             "intergalactic-explain.html" : "1",
             "script" : {
+                "crypto-global.js" : 1,
                 "script/flexy_items_A-top.js" : 1,
                 "pc_location.js" : 1,
-                "common.js" : 2,
-                "app-dir/base_string.js" : 2,
-                "app-dir/crypto-hash.js" : 1,
-                "app-dir/crypto-wraps.js" : 1,
+                "common.js" :  {
+                    "version" : 1,
+                    "include" : ["ext_of_file", "clonify", "launch_simple_link"],
+                    "exclude" : false
+                },
+                "app-dir/base_string.js" : {
+                    "version" : 1,
+                    "transforms" : "windowize"
+                },
+                "app-dir/crypto-hash.js" :  {
+                    "version" : 1,
+                    "transforms" : "windowize"
+                },
+                "app-dir/crypto-wraps.js" :  {
+                    "version" : 1,
+                    "transforms" : "windowize"
+                },
                 "one_table_db.js" : 1,
                 "file_ops.js" : 1,
                 "field_checks.js" : 3,
                 "https_checks.js" : 4,
                 "post_fetch.js" : {
-                    "order" : 14,
+                    "version" : 1,
                     "include" : ["postData"],
                     "exclude" : false
                 },

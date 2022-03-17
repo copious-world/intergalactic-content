@@ -1,15 +1,11 @@
+// MODULE: CRYPTO WRAPS (modularized)
 //
 
 import {to_base64_from_uint8array,from_base64_to_uint8array} from "./crypto-hash.js";
 
-if ( window.g_crypto === undefined ) {
-    window.g_crypto = window.crypto ? window.crypto.subtle : null
-    if ( g_crypto === null  ) {
-      alert("No cryptography support in this browser. To claim ownership of assets, please use another browser.")
-    }
-    
-}
 
+
+//$>>	gen_nonce
 /*
 // gen_nonce
 // Parameters: optional parameter
@@ -31,7 +27,7 @@ export function gen_nonce(input_bits) {
 	}
 }
 
-
+//$>>	gen_cipher_key
 /*
 // gen_cipher_key
 //    -- generates an AES key "AES-CBC",256 for encrypting and decrypting
@@ -55,6 +51,7 @@ export async function gen_cipher_key() {
 }
 
 
+//$>>	pc_keypair_promise
 //>--
 // pc_keypair_promise
 // Parameters: no parameters
@@ -74,6 +71,7 @@ export function pc_keypair_promise() {  // return
 //-
 
 
+//$>>	axiom_keypair_promise
 //>--
 // axiom_keypair_promise
 // Parameters: no parameters
@@ -92,6 +90,7 @@ export function axiom_keypair_promise() {
 }
 
 
+//$>>	pc_wrapper_keypair_promise
 //>--
 // pc_wrapper_keypair_promise
 // Parameters: no parameters
@@ -113,6 +112,7 @@ export function pc_wrapper_keypair_promise() {  // return
 //--<
 
 
+//$>>	aes_encryptor
 /*
 // aes_encryptor
 // Parameters:  
@@ -138,6 +138,7 @@ export async function aes_encryptor(encodable,aes_key,nonce) {
 }
 
 
+//$>>	aes_decipher_message
 /*
 // aes_decipher_message
 // Parameters:  
@@ -164,7 +165,7 @@ export async function aes_decipher_message(message,aes_key,nonce) {
 // 
 
 
-
+//$>>	galactic_user_starter_keys
 /*
 // galactic_user_starter_keys
 // Parameters: no parameters or (optional) a selector parameter
@@ -264,7 +265,7 @@ export async function galactic_user_starter_keys(selector) {
 
 
 
-
+//$>>	protect_hash
 /*
 // protect_hash
 // Parameters: 
@@ -294,6 +295,7 @@ export async function protect_hash(priv_keys,aes_key,nonce,string_to_be_signed) 
 }
 
 
+//$>>	verify_protected
 /*
 // verify_protected
 // Parameters: 
@@ -330,6 +332,8 @@ export async function verify_protected(string_that_was_signed,encrypted_sig,pub_
 	return false
 }
 
+
+//$>>	gen_public_key
 /*
 // gen_public_key
 // Parameters:
@@ -359,6 +363,8 @@ export async function gen_public_key(info,store_info) {
 	if ( store_info ) store_info(info,privates)
 }
 
+
+//$>>	unwrapped_aes_key
 /*
 //>--
 // unwrapped_aes_key
@@ -391,6 +397,7 @@ export async function unwrapped_aes_key(wrapped_aes,unwrapper_key) {
 //--<
 
 
+//$>>	derive_aes_key
 /*
 //>--
 // derive_aes_key
@@ -418,6 +425,7 @@ export function derive_aes_key(remote_pub_key_buffer,local_private) {
 }
 
 
+//$>>	key_wrapper
 /*
 // key_wrapper
 // Parameters:
@@ -459,6 +467,7 @@ export async function key_wrapper(key_to_wrap,pub_wrapper_key) {
 }
 
 
+//$>>	key_unwrapper
 /*
 // key_unwrapper
 // Parameters:
@@ -489,7 +498,7 @@ export async function key_unwrapper(wrapped_key,piv_wrapper_key) {
 
 
 
-
+//$>>	derive_key
 /*
 // derive_key
 // Parameters:
@@ -520,7 +529,7 @@ export async function derive_key(sender_public_key,piv_axiom_key) {
 
 
 
-
+//$>>	aes_to_str
 /*
 // aes_to_str 
 // Parameters: 
@@ -546,6 +555,8 @@ export async function aes_to_str(aes_key,transport_type) {
 	}
 }
 
+
+//$>>	importAESKey
 /*
 // importAESKey
 // Parameters:
@@ -568,6 +579,8 @@ function importAESKey(rawKey,transport_type) {
   );
 }
 
+
+//$>>	aes_from_str
 /*
 // aes_from_str
 // Parameters:
@@ -595,6 +608,7 @@ export async function aes_from_str(aes_key_str,transport_type) {
 }
 
 
+//$>>	key_signer
 /*
 // key_signer
 // Parameters:
@@ -637,6 +651,7 @@ export async function key_signer(data_to_sign,priv_signer_key) {
 }
 
 
+//$>>	verifier
 /*
 // verifier
 // Parameters:
@@ -680,7 +695,7 @@ export async function verifier(was_signed_data,signature,signer_pub_key) {
 	return false
 }
 
-
+//$>>	encipher_message
 /*
 // encipher_message
 // Parameters:
@@ -705,6 +720,7 @@ export async function encipher_message(message,aes_key,nonce) {
 // 
 
 
+//$>>	decipher_message
 /*
 // decipher_message
 // Parameters:
@@ -732,6 +748,7 @@ export async function decipher_message(message,wrapped_key,priv_key,nonce) {
 // 
 
 
+//$>>	derived_decipher_message
 /*
 // derived_decipher_message
 // Parameters:
@@ -759,32 +776,31 @@ export async function derived_decipher_message(message,remote_public,priv_key,no
 //
 
 
-// ----------------------------  allow certain methods to be global (up to the application to call)
-export function windowize_crypto_wraps() {
-  //
-	window.gen_nonce = gen_nonce
-	window.aes_encryptor = aes_encryptor
-	window.aes_decipher_message = aes_decipher_message
-	window.pc_keypair_promise = pc_keypair_promise
-	window.pc_wrapper_keypair_promise = pc_wrapper_keypair_promise
-	window.axiom_keypair_promise = axiom_keypair_promise
-	//
-	window.galactic_user_starter_keys = galactic_user_starter_keys
-	//
-	window.gen_cipher_key = gen_cipher_key
-	window.protect_hash = protect_hash
-	window.verify_protected = verify_protected
-	window.gen_public_key = gen_public_key
-	window.unwrapped_aes_key = unwrapped_aes_key
-	window.derive_key = derive_key
-	window.aes_to_str = aes_to_str
-	window.aes_from_str = aes_from_str
-	window.key_wrapper = key_wrapper
-	window.key_unwrapper = key_unwrapper
-	window.key_signer = key_signer
-	window.verifier = verifier
-	window.encipher_message = encipher_message
-	window.decipher_message = decipher_message
-	window.derived_decipher_message = derived_decipher_message
-  //
-}
+
+//$$EXPORTABLE::
+/*
+gen_nonce
+gen_cipher_key
+pc_keypair_promise
+axiom_keypair_promise
+pc_wrapper_keypair_promise
+aes_encryptor
+aes_decipher_message
+galactic_user_starter_keys
+protect_hash
+verify_protected
+gen_public_key
+unwrapped_aes_key
+derive_aes_key
+key_wrapper
+key_unwrapper
+derive_key
+aes_to_str
+importAESKey
+aes_from_str
+key_signer
+verifier
+encipher_message
+decipher_message
+derived_decipher_message
+*/

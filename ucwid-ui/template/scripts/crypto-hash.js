@@ -1,28 +1,11 @@
-//
+// MODULE: CRYPTO HASH (modularized)
+
+// >> import
 import * as base64 from "../modules/base64.js";
 
-if ( window.g_crypto === undefined ) {
-    window.g_crypto = window.crypto ? window.crypto.subtle : null
-    if ( g_crypto === null  ) {
-      alert("No cryptography support in this browser. To claim ownership of assets, please use another browser.")
-    }
-    
-}
-
-
-export function buffer_from_cvs_array(number_els) {
-	let els = number_els.split(',').map(el => parseInt(el))
-	let buf = new Uint8Array(els)
-	return buf
-}
-
-export function buffer_from_b64_csv(b64_number_els) {
-	let numbers = atob(b64_number_els)
-	return buffer_from_cvs_array(numbers)
-}
-// ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
-
-
+//<<
+//windowize>> base64 = window
+//$>>	do_hash_buffer
 async function do_hash_buffer(text) {
     const encoder = new TextEncoder();
     const data = encoder.encode(text);
@@ -30,42 +13,50 @@ async function do_hash_buffer(text) {
     return hash
 }
 
+//$>>	do_hash
 export async function do_hash(text) {
     let buffer = await do_hash_buffer(text)
     const hashArray = Array.from(new Uint8Array(buffer));
     return base64.bytesToBase64(hashArray)
 }
 
+//$>>	from_hash
 export function from_hash(base64text) {
     let bytes = base64.base64ToBytes(base64text)
     return bytes
 }
 
+//$>>	to_base64
 export function to_base64(text) {
     return base64.base64encode(text)
 }
 
+//$>>	from_base64
 export function from_base64(base64text) {
     let bytesAsText = base64.base64decode(base64text)
     return bytesAsText
 }
 
-
-
+//$>>	from_base64_to_uint8array
 export function from_base64_to_uint8array(base64text) {
     while ( base64text.length %4 ) base64text += '='
     return base64.base64ToBytes(base64text)
 }
 
+//$>>	to_base64_from_uint8array
 export function to_base64_from_uint8array(a_uint8Array) {
     let b = base64.bytesToBase64(a_uint8Array)
     b = b.replace(/\=/g,'')
     return b
 }
 
-
-// ----------------------------  allow certain methods to be global (up to the application to call)
-export function windowize_crypto_hash() {
-    window.do_hash = do_hash
-}
-
+//$$EXPORTABLE::
+/*
+do_hash_buffer
+do_hash
+from_hash
+to_base64
+from_base64
+from_base64_to_uint8array
+to_base64_from_uint8array
+*/

@@ -1,4 +1,7 @@
 
+// MODULE: USER WINDOW_APP (windowized)
+//
+
 // temporarily using pc_ prefix. There is a wv_ in a file "recorder.html"  that is for wave. This is for profile contacts.
 // Later, these all should be wrapped in a class that handles generic use cases..
 // Currently, this improper usage is contained in this file...
