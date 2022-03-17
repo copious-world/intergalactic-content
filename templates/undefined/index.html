@@ -1,0 +1,2763 @@
+<!doctype html>
+<html>
+<head>
+	
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="author" content="$AUTHOR" />
+<meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+<meta id="theme-color" name="theme-color" content="#452770">
+
+<link rel="canonical" href="{{canonical}}">
+
+<title>{{pageTitle}}</title>
+<meta name="description" content="{{pageDescription}}">
+
+
+	
+	<link rel='icon' type='image/png' href='./favicon.png'>
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,600,700" />
+	<link rel='stylesheet' href='./global.css'>
+	<link rel='stylesheet' href='./build/bundle.css'>
+
+	<script defer src='./build/bundle.js'></script>
+</head>
+<style>
+
+/*csslint important:false*/
+
+body {
+	height: 100%;
+}
+
+/**
+* Always hide an element when it has the `hidden` HTML attribute.
+*/
+
+.hidden,
+[hidden] {
+	display: none !important;
+}
+
+/**
+* Add this class to an image to make it fit within it's fluid parent wrapper while maintaining
+* aspect ratio.
+*/
+.pure-img {
+	max-width: 100%;
+	height: auto;
+	display: block;
+}
+
+
+.fitMenuLower {
+	width: 95%;
+	height: 50%;
+	margin-left:0px;
+	margin-right:0px;
+	padding: 8px;
+	margin-top:8px;
+	background: -webkit-linear-gradient(to right, white, #FAFAFF);
+	background: linear-gradient(to right, white, #FAFAFF );
+	margin-left: 10px;
+}
+
+#squashMenu:hover {
+	border: 1px solid rgb(230,230,240,0.4);
+	padding-top:4px;
+	background-color: #EFEFEF;
+}
+
+#squashMenuContainer {
+	position:absolute;
+	visibility:hidden;
+	top : 0; left : 0;
+	height:100%;
+	width: 55%;
+	z-index:100;
+	border: rgba(252, 190, 190, 0.4) 2px solid;
+	background-color: white;
+}
+
+#thankyou_box {
+	position:absolute;
+	visibility:hidden;
+	top : 25%; left : 25%;
+	height:50%;
+	width: 50%;
+	z-index:150;
+	border: rgba(100, 5, 5, 0.6) 2px solid;
+	background-color: lightgoldenrodyellow;
+	overflow: auto;
+}
+
+button {
+	cursor: pointer;
+	font-size: 101%;
+	font-weight: bold;
+	color: darkblue;
+	margin: 2px;
+	width:120px;
+}
+
+button:hover {
+	background-color : #CACAFF;
+	color: darkred;
+}
+
+
+body {
+	border: 1px solid black;
+	
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
+
+@media screen and (orientation: portrait) {
+	#mainNav {
+		width: 100%;
+	}
+}
+
+@media screen and (orientation: landscape) {
+	#mainNav {
+		width: 100%;
+	}
+}
+
+main {
+	border-left: solid 3px navy;
+	border-top: solid 1px #8833BB;
+	padding : 4px;
+}
+
+#mainNav {
+	font-family: 'Montserrat', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+	font-weight: 700;
+	text-transform: uppercase;
+	background: blue;
+	border-left: solid 3px navy;
+	border-top: solid 3px navy;
+	border-bottom: solid 3px rgba(252,252,255,0.7);
+	min-height: 90px;
+	padding: 20px;
+	background: -webkit-linear-gradient(to left, rgba(242, 242, 210, 0.3), white);
+	background: linear-gradient(to left, rgba(242, 242, 210, 0.3), white );
+	
+}
+
+#mainNav table {
+	padding-left: 3%;
+}
+
+#mainNav  table  a:focus { outline: none; }
+#mainNav  table  .navbar-brand {
+	font-size: 1.1rem;
+	color: white;
+}
+
+#mainNav  table  .navbar-brand.active, #mainNav .navbar-brand:active, #mainNav .navbar-brand:focus, #mainNav .navbar-brand:hover {
+	color: white;
+}
+
+#mainNav  table  .navbar-nav {
+	letter-spacing: 1px; }
+
+#mainNav  table  .navbar-nav li.nav-item {
+	display:inline;
+}
+
+#mainNav  table  .navbar-nav li.nav-item a.nav-link {
+	color: darkgreen;
+	text-decoration: none;
+	vertical-align: top;
+	padding-right: 10px;
+}
+
+#mainNav  table  .navbar-nav li.nav-item a.nav-link:hover {
+	color: #18BC9C;
+	outline: none;
+	
+}
+
+#mainNav  table  .navbar-nav a.nav-text {
+	background-color : rgba(242,222,255,0.6);
+	border-radius: 25px;
+	margin-bottom: 9px;
+	margin-right: 6px;
+	white-space: nowrap;
+}
+
+#mainNav  table  .navbar-nav li.nav-item a.nav-link:active, #mainNav .navbar-nav li.nav-item a.nav-link:focus { color: white; }
+
+.footer-list li {
+	list-style-type: none;
+}
+
+.footer-list li a:hover { color: gold; }
+
+footer {
+	padding:10px;
+	background: -webkit-linear-gradient(to left, rgba(252,252,255,0.5), #fffbe2 );
+	background: linear-gradient(to left, rgba(252,252,255,0.5), #fffbe2  );
+	text-align: center;
+	font-size: 0.85em;
+}
+
+footer a {
+	text-decoration:none;
+	color:darkgreen;
+	font-weight:bold;
+	font-style: italic;
+}
+
+.copiouslink:hover {
+	fill:navy;
+}
+.copiouslink {
+	fill:black;
+}
+
+* {margin: 0; padding: 0; box-sizing: border-box}
+
+.PhIOtjDr_0 {
+	fill:none;
+	stroke:#1c1448;
+	stroke-width:4.59875107;
+	stroke-miterlimit:4;
+	stroke-dasharray: 2948 2950;
+	stroke-dashoffset: 2949;
+	animation: PhIOtjDr_draw 6666ms ease-in forwards;
+}
+
+@keyframes PhIOtjDr_draw {
+	100% {stroke-dashoffset: 0}
+}
+
+@keyframes PhIOtjDr_fade {
+	0% {stroke-opacity: 1}
+	97.1830985915493% {stroke-opacity: 1}
+	100% {stroke-opacity: 0}
+}
+
+label {
+	font-weight:bold;
+	color:darkgreen;
+	width:35%;
+}
+
+.error-message {
+	visibility:hidden;
+	width:75%;
+	font-weight:bolder;
+	color:red;
+	background-color:white;
+	border: solid 1px orange;
+	padding:2px;
+	margin:3px;
+}
+
+/* The Close Button */
+.close {
+	color: white;
+	float: right;
+	font-size: 18px;
+	font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+	color: #000;
+	text-decoration: none;
+	cursor: pointer;
+}
+
+/* Add Animation */
+@-webkit-keyframes slideIn {
+	from {bottom: -300px; opacity: 0}
+	to {bottom: 0; opacity: 1}
+}
+
+@keyframes slideIn {
+	from {bottom: -300px; opacity: 0}
+	to {top: 0; opacity: 1}
+}
+
+@-webkit-keyframes fadeIn {
+	from {opacity: 0}
+	to {opacity: 1}
+}
+
+@keyframes fadeIn {
+	from {opacity: 0}
+	to {opacity: 1}
+}
+
+.no-view-file-field {
+	display: none;
+	visibility: hidden;
+}
+
+h2 {
+	text-transform: capitalize;
+	color:#4ca85c;
+	font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
+
+
+#active-user-title {
+	font-size: 95%;
+	font-style: oblique;
+	font-weight: bold;
+	margin: 2%;
+	color: goldenrod;
+}
+</style>
+<script>
+	var g_siteURL = window.location.host;
+	var g_finalizers = []
+	var g_loginStateViewHolders = {}
+</script>
+<body>
+
+<nav id="mainNav">
+	<table style="width:100%">
+		<tr>
+			<td style="width:62;height:63">
+				<a class="nav-link" href="/"  target="{{canonical}}-again" >
+					{{{svgLogo.content}}}
+				</a>
+			</td>
+			<td>
+				<ul class="navbar-nav">
+					<li class="nav-item">
+						<a class="nav-link" href="{{relatedAsset.link}}" target="{{relatedAsset.name}}" >
+							{{{relatedAsset.content}}}
+						</a>
+					</li>
+					<li id="squashMenu"   class="nav-item" style="visibility:hidden;cursor:pointer" onmousedown="menuHandler(this)" onmouseup="releaseMenu(this)">
+						$file::mushroom-menu-icon.svg<<
+					</li>
+				</ul>
+			</td>
+			<td style="text-align: center;">
+				<h2>{{{intergalactic.content}}}</h2> 
+				<span id="active-user-title">ucwid</span>  :: ----
+			</td>
+			<td>
+				&nbsp;
+			</td>
+		</tr>
+	</table>
+</nav>
+
+	<main id='app-main'>
+	
+	</main>
+	<div style="visibility: hidden;">
+		<a id='identity-download-link' href = "" >identity download</a>
+		<input class="no-view-file-field" type="file" id="drop-click-file_loader" />
+	</div>
+
+<footer>
+	<ul class="footer-list">
+		<li>
+			<a href="{{canonical}}" target="{{canonical}}-again">copyright &copy; {{copyRightYear}} {{companyShortLink}}</a>
+			<span class="status-style" id="page-error-message">status: good</span>
+		</li>
+	</ul>
+</footer>
+
+</body>
+</html>
+<script type="module" >
+	import * as UCWID from "./UCWID"
+	UCWID.windowize()
+</script>
+<script>
+
+
+
+function set_user_title(u_name) {
+	let el = document.getElementById('active-user-title')
+	if ( el  && u_name && (typeof u_name === "string") ) {
+		el.innerHTML = u_name
+	}
+}
+
+// ---- ---- ---- ---- ---- ----  ---- ---- ---- ---- ---- ----  ---- ---- ---- ---- ---- ----  ---- ---- ---- ---- ---- ----
+// ---- ---- ---- ---- ---- ----  ---- ---- ---- ---- ---- ----  ---- ---- ---- ---- ---- ----  ---- ---- ---- ---- ---- ----
+
+
+
+
+
+//$>>	pc_getLocation
+
+function pc_getLocation() {
+    if (navigator.geolocation) {
+      let loc_display = document.getElementById("wv-geo-location");
+      navigator.geolocation.watchPosition((position) => {  // watch position updates location at a system defined interval
+        if ( loc_display ) loc_display.innerHTML = `${position.coords.latitude},${position.coords.longitude}`
+        g_pc_current_locaion = { "latitude" : position.coords.latitude, "longitude" : position.coords.longitude }  // clone
+        pc_update_geo_location(g_pc_current_locaion)
+      });
+    } else { 
+      alert("Geolocation is not supported by this browser.");
+    }
+  }
+  
+  
+
+
+
+//$EXPORTABLE::
+/*
+pc_getLocation
+*/
+
+
+//$>>	ext_of_file
+function ext_of_file(file_name) {
+	let idx = file_name.lastIndexOf('.')
+	let ext = file_name.substr(idx+1)
+	return ext
+}
+
+//$>>	clonify
+function clonify(obj) {
+	if ( typeof obj === 'string' ) return(obj)
+	try {
+		let out = JSON.parse(JSON.stringify(obj))
+		return(out)
+	} catch(e) {
+		return(null)
+	}
+}
+
+//$>>	addscript
+// attach a script to a DOM element
+window._script_added_cout = 0
+const MAX_SCRIPTS_ADDED = 1
+
+function remove_last_appended_script_child(whereScipt) {
+	if ( whereScipt ) {
+		let n = whereScipt.childNodes.length
+		if ( n > 0 ) {
+			let child = whereScipt.childNodes[n-1]
+			// check that it is a script....
+			if ( child.type === 'text/javascript' ) {
+				whereScipt.removeChild(child)
+			}
+		}
+	}
+}
+
+// attach a script to a DOM element
+function addscript(script,whereScipt,remove_old) {
+	var scriptEl = document.createElement('script');
+	scriptEl.type = 'text/javascript';
+	scriptEl.text = script;
+	if ( typeof whereScipt === "string" ) {
+		whereScipt = document.getElementById(whereScipt)
+		if ( whereScipt ) {
+			window._script_added_cout++
+			if ( MAX_SCRIPTS_ADDED <= window._script_added_cout ) {
+				remove_last_appended_script_child(whereScipt)
+			}
+			whereScipt.appendChild(scriptEl);
+		}
+	}
+}
+
+
+//$>>	addstyle
+function addstyle(script) {
+    var styleEl = document.createElement('style');
+    styleEl.type = 'text/css';
+    styleEl.text = script;
+    let whereScript = document.getElementsByTagName('head')
+    if ( whereScript && whereScript.length ) {
+        whereScript[0].appendChild(styleEl);
+    }
+}
+
+//$>>	launch_simple_link
+//                                                  <<depends>> errorMessage
+function launch_simple_link(default_url,window_name) {
+	let launched = window.open(`https://${default_url}/`,window_name)
+	if ( !launched ) {
+		errorMessage(`could not open window or tab for link ${default_url}`)
+	}
+}
+
+
+
+//$EXPORTABLE::
+/*
+gen_nonce
+ext_of_file
+clonify
+addscript
+addstyle,
+launch_simple_link
+*/
+
+
+
+//>--
+export function hex_fromArrayOfBytes(arrayOfBytes) {
+    const hexstr = arrayOfBytes.map(b => b.toString(16).padStart(2, '0')).join('');
+    return(hexstr)
+}
+//--<
+
+//>--
+export function hex_fromTypedArray(byteArray){
+    let arrayOfBytes = Array.from(byteArray)
+    return(hex_fromArrayOfBytes(arrayOfBytes))
+}
+//--<
+
+
+
+//>--
+export function hex_fromByteArray(byteArray){
+    return hex_fromTypedArray(ArrayOfBytes_toByteArray(byteArray))
+}
+//--<
+
+
+//>--
+export function hex_toArrayOfBytes(hexString) {
+    let result = [];
+    for ( let i = 0; i < hexString.length; i += 2 ) {
+      result.push(parseInt(hexString.substr(i, 2), 16));
+    }
+    return result;
+}
+//--<
+
+//>--
+export function ArrayOfBytes_toByteArray(arrayOfBytes) {
+    let byteArray = new Uint8Array(arrayOfBytes)
+    return(byteArray)
+}
+//--<
+
+//>--
+export function hex_toByteArray(hexstr) {
+    let aob = hex_toArrayOfBytes(hexstr)
+    return ArrayOfBytes_toByteArray(aob)
+}
+//--<
+
+//>--
+export function bufferToArrayBufferCycle(buffer) {
+  var ab = new ArrayBuffer(buffer.length);
+  var view = new Uint8Array(ab);
+  for (var i = 0; i < buffer.length; ++i) {
+      view[i] = buffer[i];
+  }
+  return ab;
+}
+//--<
+
+export function string_from_buffer(bytes) {
+	let s = ""
+	let n = bytes.length
+	for ( let i = 0; i < n; i++ ) {
+		let c_code = bytes[i]
+		s += String.fromCharCode(c_code)
+	}
+	return s
+}
+
+export function buffer_from_cvs_array(number_els) {
+	let els = number_els.split(',').map(el => parseInt(el))
+	let buf = new Uint8Array(els)
+	return buf
+}
+
+export function buffer_from_b64_csv(b64_number_els) {
+	let numbers = atob(b64_number_els)
+	return buffer_from_cvs_array(numbers)
+}
+
+
+
+
+//$>>	not_https_switch
+// switch to HTTPS before doing any ops that may require a data exchange
+function not_https_switch() {
+	if (location.protocol !== 'https:') {           // start from a secure page
+		alert("Switching to a secure version of this page in 1sec.")
+		setTimeout(()=> {location.replace(`https:${location.href.substring(location.protocol.length)}`)},1000)
+		return(true)
+	}
+	return(false)
+}
+
+
+//$>>	getCookie
+// simple check on cookies, searching by ';' delimited string with the cookie name at the start of the trimmed line.
+function getCookie(cname) {  // modified from w3school
+	var name = cname + "=";
+	var ca = document.cookie.split(';');
+	for(let i = 0; i < ca.length; i++) {
+		var c = ca[i];
+		if ( typeof c === 'string' ) {
+			c = c.trim()
+			if (c.indexOf(name) == 0) {
+				return c.substring(name.length);
+			}
+		}
+	}
+	return "";
+}
+
+
+
+//$EXPORTABLE::
+/*
+not_https_switch
+getCookie
+*/
+
+
+
+//
+import * as base64 from "../modules/base64.js";
+
+if ( window.g_crypto === undefined ) {
+    window.g_crypto = window.crypto ? window.crypto.subtle : null
+    if ( g_crypto === null  ) {
+      alert("No cryptography support in this browser. To claim ownership of assets, please use another browser.")
+    }
+    
+}
+
+
+export function buffer_from_cvs_array(number_els) {
+	let els = number_els.split(',').map(el => parseInt(el))
+	let buf = new Uint8Array(els)
+	return buf
+}
+
+export function buffer_from_b64_csv(b64_number_els) {
+	let numbers = atob(b64_number_els)
+	return buffer_from_cvs_array(numbers)
+}
+// ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
+
+
+async function do_hash_buffer(text) {
+    const encoder = new TextEncoder();
+    const data = encoder.encode(text);
+    const hash = await g_crypto.digest('SHA-256', data);
+    return hash
+}
+
+export async function do_hash(text) {
+    let buffer = await do_hash_buffer(text)
+    const hashArray = Array.from(new Uint8Array(buffer));
+    return base64.bytesToBase64(hashArray)
+}
+
+export function from_hash(base64text) {
+    let bytes = base64.base64ToBytes(base64text)
+    return bytes
+}
+
+export function to_base64(text) {
+    return base64.base64encode(text)
+}
+
+export function from_base64(base64text) {
+    let bytesAsText = base64.base64decode(base64text)
+    return bytesAsText
+}
+
+
+
+export function from_base64_to_uint8array(base64text) {
+    while ( base64text.length %4 ) base64text += '='
+    return base64.base64ToBytes(base64text)
+}
+
+export function to_base64_from_uint8array(a_uint8Array) {
+    let b = base64.bytesToBase64(a_uint8Array)
+    b = b.replace(/\=/g,'')
+    return b
+}
+
+
+// ----------------------------  allow certain methods to be global (up to the application to call)
+export function windowize_crypto_hash() {
+    window.do_hash = do_hash
+}
+
+
+
+
+//
+
+import {to_base64_from_uint8array,from_base64_to_uint8array} from "./crypto-hash.js";
+
+if ( window.g_crypto === undefined ) {
+    window.g_crypto = window.crypto ? window.crypto.subtle : null
+    if ( g_crypto === null  ) {
+      alert("No cryptography support in this browser. To claim ownership of assets, please use another browser.")
+    }
+    
+}
+
+/*
+// gen_nonce
+// Parameters: optional parameter
+// 	--	no parameter case
+// 	--	generate a random vaue -- return it as string
+// 	--	parameter (optional) : A base64url string that is at least 16 bytes
+//		-- returns the the first bytes as a base64url string (for deriving an IV from data) Not random
+// 
+// Returns a nonce as a base64url string representing 16 bytes = 128 bits
+*/
+export function gen_nonce(input_bits) {
+	if ( input_bits === undefined ) {
+		let random = window.crypto.getRandomValues(new Uint8Array(16))
+		return to_base64_from_uint8array(random)
+	} else {
+		let bytes = from_base64_to_uint8array(input_bits)
+		bytes = bytes.subarray(0, 16)
+		return to_base64_from_uint8array(bytes)
+	}
+}
+
+
+/*
+// gen_cipher_key
+//    -- generates an AES key "AES-CBC",256 for encrypting and decrypting
+// Returns: aes_key as a CryptoKey structure (see crypto.subtle.generateKey)
+*/
+export async function gen_cipher_key() {
+	//
+	try {
+		let aes_key = g_crypto.generateKey({
+												name: "AES-CBC",
+												length: 256
+											},
+											true,
+											["encrypt", "decrypt"]
+										)	
+
+		return aes_key
+	} catch(e){}
+	//
+	return false
+}
+
+
+//>--
+// pc_keypair_promise
+// Parameters: no parameters
+// Returns: a Promise that resolves to an elliptic curve key using P-384 with sign and verify privileges
+//  -- 
+export function pc_keypair_promise() {  // return 
+    // Generate a local public/private key pair
+    let p =  g_crypto.generateKey({
+            'name': "ECDSA",
+            'namedCurve': "P-384"
+        },
+        true,
+        ["sign", "verify"]
+    )
+    return p  // promise
+}
+//-
+
+
+//>--
+// axiom_keypair_promise
+// Parameters: no parameters
+// Returns: a Promise that resolve to an elliptic curve key using P-384 with cipher key derivation privileges. Allows for deriving AES 256 cipher key
+//  -- 
+export function axiom_keypair_promise() {
+    // Generate a local public/private key pair
+    let p =  g_crypto.generateKey({
+            'name': "ECDSA",
+            'namedCurve': "P-384"
+        },
+        true,
+        ["deriveKey"]
+    )
+    return p  // promise
+}
+
+
+//>--
+// pc_wrapper_keypair_promise
+// Parameters: no parameters
+// Returns: a Promise that resolves to an RSA-OAEP key modulus 4096 hash to SHA-256 with wrapKey and unwrapKey privileges
+//  -- 
+export function pc_wrapper_keypair_promise() {  // return 
+    // Generate a local public/private key pair
+    let p =  g_crypto.generateKey({
+            name: "RSA-OAEP",
+            modulusLength: 4096, //can be 1024, 2048, or 4096
+            publicExponent: new Uint8Array([0x01, 0x00, 0x01]),
+            hash: { name: "SHA-256" }, //can be "SHA-1", "SHA-256", "SHA-384", or "SHA-512"
+        },
+        true,
+        ["wrapKey","unwrapKey"]
+    )
+    return p  // promise
+}
+//--<
+
+
+/*
+// aes_encryptor
+// Parameters:  
+//        		encodable -  a string
+//   			aes_key - aes_key as CryptoKey
+//				nonce - random (gen_nonce) passed as a uint8Array
+// Returns: The enciphered text ArrayBuffer
+*/
+export async function aes_encryptor(encodable,aes_key,nonce) {
+
+	let enc = new TextEncoder();
+	let clear_buf =  enc.encode(encodable);
+	let iv = nonce
+
+    let ciphertext = await g_crypto.encrypt({
+												name: "AES-CBC",
+												iv
+											},
+											aes_key,
+											clear_buf
+										);
+	return ciphertext
+}
+
+
+/*
+// aes_decipher_message
+// Parameters:  
+//  			message -  as a uint8Array
+//				aes_key - aes key as CryptoKey
+//				nonce - random (gen_nonce) passed as a uint8Array
+// Returns: clear text
+*/
+export async function aes_decipher_message(message,aes_key,nonce) {
+	let iv = nonce
+    let decrypted = await g_crypto.decrypt({
+												name: "AES-CBC",
+												iv
+											},
+											aes_key,
+											message
+										);
+	//
+	let dec = new TextDecoder()
+	let clear = dec.decode(decrypted)
+	return clear
+}
+//
+// 
+
+
+
+/*
+// galactic_user_starter_keys
+// Parameters: no parameters or (optional) a selector parameter
+// 
+// Optional parameters values:  "wrapper", "signer"  
+//								Purpose:  produce only the selected key pair
+//    make a priv/pub key pair.
+// Return: an object containing all key pairs
+//
+	let key_info = {
+		"pk_str" : pub_key_str,
+		"priv_key" : priv_key_str,
+		"signer_pk_str"  : sign_pub_key_str,
+		"signer_priv_key" : sign_priv_key_str
+		"axiom_pk_str" : axiom_pub_key_str,
+		"axiom_priv_key" : axiom_priv_key_str		
+	}
+//
+*/
+export async function galactic_user_starter_keys(selector) {
+	//
+	let pub_key_str = false
+	let priv_key_str = false
+	if ( (selector === undefined) || (selector === "wrapper") ) {
+		// Generate a local public/private key pair WRAPPER
+		let keypair = await pc_wrapper_keypair_promise()
+		// ---- ---- ---- ----
+		let pub_key = keypair.publicKey
+		let priv_key = keypair.privateKey
+		// ---- ---- ---- ----                                      // g_nonce_buffer - space to use
+		let exported = await g_crypto.exportKey("jwk",pub_key);
+		pub_key_str = JSON.stringify(exported)
+
+		let priv_exported = await g_crypto.exportKey("jwk",priv_key);
+		priv_key_str =  JSON.stringify(priv_exported);
+	}
+
+	let sign_pub_key_str = false
+	let sign_priv_key_str = false
+	if ( (selector === undefined) || (selector === "signer") ) {
+		// Generate a local public/private key pair SIGNER
+		let signer_pair = await pc_keypair_promise()
+
+		let signer_pub_key = signer_pair.publicKey
+		let signer_priv_key = signer_pair.privateKey
+
+		let sign_exported = await g_crypto.exportKey("jwk",signer_pub_key);
+		sign_pub_key_str = JSON.stringify(sign_exported)
+
+		let sign_priv_exported = await g_crypto.exportKey("jwk",signer_priv_key);
+		sign_priv_key_str =  JSON.stringify(sign_priv_exported);
+	}
+
+
+	let axiom_pub_key_str = false
+	let axiom_priv_key_str = false
+	if ( (selector === undefined) || (selector === "derive") ) {
+		// Generate a local public/private key pair SIGNER
+		let axiom_pair = await axiom_keypair_promise()
+
+		let axiom_pub_key = axiom_pair.publicKey
+		let axiom_priv_key = axiom_pair.privateKey
+
+		let axiom_exported = await g_crypto.exportKey("jwk",axiom_pub_key);
+		axiom_pub_key_str = JSON.stringify(axiom_exported)
+
+		let axiom_priv_exported = await g_crypto.exportKey("jwk",axiom_priv_key);
+		axiom_priv_key_str =  JSON.stringify(axiom_priv_exported);
+	}
+	
+	//
+	let key_info = {
+		"pk_str" : pub_key_str,
+		"priv_key" : priv_key_str,
+		"signer_pk_str"  : sign_pub_key_str,
+		"signer_priv_key" : sign_priv_key_str,
+		"axiom_pk_str" : axiom_pub_key_str,
+		"axiom_priv_key" : axiom_priv_key_str
+	}
+
+	if ( key_info.pk_str === false ) {
+		delete key_info.pk_str
+		delete key_info.priv_key
+	}
+	if ( key_info.signer_pk_str === false ) {
+		delete key_info.signer_pk_str
+		delete key_info.signer_priv_key
+	}
+	if ( key_info.axiom_pk_str === false ) {
+		delete key_info.axiom_pk_str
+		delete key_info.axiom_priv_key
+	}
+
+	return(key_info)
+}
+
+
+
+
+
+/*
+// protect_hash
+// Parameters: 
+//          -- priv_keys - structure containing private keys for signing {priv_keys.signer_priv_key}
+//          -- aes_key - aes key as CryptoKey
+//          -- nonce - base64url encoded uint8Array
+//          -- string_to_be_signed
+// wrap a hash of the biomarker -- done before server create identity operation 
+// Returns: As the toString of a Uint8Array  (commad delimited entries, csv)
+*/
+
+export async function protect_hash(priv_keys,aes_key,nonce,string_to_be_signed) {
+	//
+	try {
+		let priv_signer_key = priv_keys.signer_priv_key
+		let sig_txt = await key_signer(string_to_be_signed,priv_signer_key)
+		let iv_nonce = from_base64_to_uint8array(nonce)
+		let cipher_sig = await aes_encryptor(sig_txt,aes_key,iv_nonce)
+		//
+		let cipher_sig_buf = new Uint8Array(cipher_sig)
+		return to_base64_from_uint8array(cipher_sig_buf)
+	} catch (e) {
+	  console.log(e)
+	  return false
+	}
+	//
+}
+
+
+/*
+// verify_protected
+// Parameters: 
+//          -- string_that_was_signed - (just the string as is)
+//			-- encrypted_sig - the signature returned by protect_hash
+//          -- aes_key - aes key as CryptoKey
+//			-- pub_keys - An object containing public keys {pub_keys.signer_pk_str}
+//          -- nonce - base64url encoded uint8Array
+//          -- string_to_be_signed
+// wrap a hash of the biomarker -- done before server create identity operation 
+// Returns: As the toString of a Uint8Array  (commad delimited entries, csv)
+*/
+
+export async function verify_protected(string_that_was_signed,encrypted_sig,pub_keys,aes_key,nonce) {
+	try {
+		let signer_pk_str = pub_keys.signer_pk_str
+		let iv_nonce = from_base64_to_uint8array(nonce)
+		let cipher_sig = await from_base64_to_uint8array(encrypted_sig)
+		let clear_sig =  await g_crypto.decrypt({
+													name: "AES-CBC",
+													iv  : iv_nonce
+												},
+												aes_key,
+												cipher_sig
+											);
+		const decoder = new TextDecoder();
+		let sig_txt = decoder.decode(clear_sig);
+		//
+		let verified = await verifier(string_that_was_signed,sig_txt,signer_pk_str)
+		return verified
+	} catch (e) {
+		console.log(e)
+	}
+	return false
+}
+
+/*
+// gen_public_key
+// Parameters:
+//     		-- info - an info object (javascript object) which gain fields info.public_key and info.signer_public_key
+//                      optionally provides a field info.biometric, which will be signed and signature will be put into this field
+//       	-- store_info - a method taking two parameters (info,privates)  privates is the Object created in this method
+*/
+export async function gen_public_key(info,store_info) {
+	let keys = await galactic_user_starter_keys()
+	//
+	info.public_key = keys.pk_str		// user info is the basis for creating a user cid the public key is part of it
+	info.signer_public_key = keys.signer_pk_str
+	//
+	let aes_key = await gen_cipher_key()
+	let storable_key = await aes_to_str(aes_key) 
+	let nonce = gen_nonce()
+	//
+	let privates = {		// private keys will be stored locally, and may offloadded from the browser at the user's discretion.
+		'priv_key' : keys.priv_key,
+		'signer_priv_key' : keys.signer_priv_key,
+		'signature_protect' : {
+			"key" : storable_key,
+			"nonce" : nonce
+		}
+	}
+	info.biometric = await protect_hash(privates,aes_key,nonce,info.biometric)
+	if ( store_info ) store_info(info,privates)
+}
+
+/*
+//>--
+// unwrapped_aes_key
+// Parameters: 
+//            -- wrapped_aes : as a buffer containing a jwk formatted key
+//            -- unwrapper_key : as a buffer the result of importing the key
+// Returns: aes_key as a CryptoKey structure (see crypto.subtle.generateKey) with encrypte and decrypt permissions
+*/
+export async function unwrapped_aes_key(wrapped_aes,unwrapper_key) {
+  let unwrapped_aes = await g_crypto.unwrapKey(
+        "jwk", // same as wrapped
+        wrapped_aes, //the key you want to unwrap
+        unwrapper_key, //the private key with "unwrapKey" usage flag
+        {   //these are the wrapping key's algorithm options
+            name: "RSA-OAEP",
+            modulusLength: 4096, //can be 1024, 2048, or 4096
+            publicExponent: new Uint8Array([0x01, 0x00, 0x01]),
+            hash: { name: "SHA-256" }, //can be "SHA-1", "SHA-256", "SHA-384", or "SHA-512"
+        },
+        {   //this what you want the wrapped key to become (same as when wrapping)
+            name: "AES-CBC",
+            length: 256
+        },
+        true, //whether the key is extractable (i.e. can be used in exportKey)
+        ["encrypt", "decrypt"] //the usages you want the unwrapped key to have
+      )
+  //
+  return unwrapped_aes
+}
+//--<
+
+
+/*
+//>--
+// derive_aes_key
+// Parameters: 
+//            -- sender_pub_key_buffer : as a buffer containing a jwk formatted key
+//            -- local_private : as a buffer the result of importing the key
+// Returns: aes_key as a CryptoKey structure (see crypto.subtle.generateKey) with encrypte and decrypt permissions
+*/
+export function derive_aes_key(remote_pub_key_buffer,local_private) {
+	let derived_aes = await g_crypto.deriveKey(
+	  {
+		name: "ECDH",
+		public: remote_pub_key_buffer
+	  },
+	  local_private,
+	  {
+		name: "AES-CBC",
+		length: 256
+	  },
+	  false,
+	  ["encrypt", "decrypt"]
+	);
+
+	return derived_aes
+}
+
+
+/*
+// key_wrapper
+// Parameters:
+//        -- key_to_wrap  as Cryptokey
+//        -- pub_wrapper_key :  the public wrapper key (for instance a receiver key) as jwk in JSON parseable string
+// Returns: the wrapped key in a string that can be sent
+*/
+export async function key_wrapper(key_to_wrap,pub_wrapper_key) {
+	try {
+		let wrapper_jwk = JSON.parse(pub_wrapper_key)
+		let wrapper = await g_crypto.importKey(
+				"jwk",
+				wrapper_jwk,
+				{   //these are the wrapping key's algorithm options
+					name: "RSA-OAEP",
+					modulusLength: 4096, //can be 1024, 2048, or 4096
+					publicExponent: new Uint8Array([0x01, 0x00, 0x01]),
+					hash: { name: "SHA-256" }, //can be "SHA-1", "SHA-256", "SHA-384", or "SHA-512"
+				},
+				true,
+				["wrapKey"]
+		);
+
+		let wrapped_key = await g_crypto.wrapKey(
+											"jwk",
+											key_to_wrap,
+											wrapper,
+											{   //these are the wrapping key's algorithm options
+												name: "RSA-OAEP"
+											}
+										);
+		let type8 = new Uint8Array(wrapped_key)
+		let tranportable = to_base64_from_uint8array(type8)
+		return tranportable
+	} catch(e) {
+		console.log(e)
+	}
+	return false
+}
+
+
+/*
+// key_unwrapper
+// Parameters:
+//        -- wrapped_key : as base64url encoded uint8array for passing to unwrapped_aes_key
+//        -- piv_wrapper_key :  the private key (for instance a sender key) as a JSON.parseable string representing jwk
+// Returns: the unwrapped key in a string that can be sent
+*/
+export async function key_unwrapper(wrapped_key,piv_wrapper_key) {
+	let wrapper_jwk = JSON.parse(piv_wrapper_key)
+	let unwrapper = await g_crypto.importKey(
+			"jwk",
+			wrapper_jwk,
+			{   //these are the wrapping key's algorithm options
+				name: "RSA-OAEP",
+				modulusLength: 4096, //can be 1024, 2048, or 4096
+				publicExponent: new Uint8Array([0x01, 0x00, 0x01]),
+				hash: { name: "SHA-256" }, //can be "SHA-1", "SHA-256", "SHA-384", or "SHA-512"
+			},
+			true,
+			["unwrapKey"]
+	);
+	
+	// wrapped_key
+	let wrapped_aes = from_base64_to_uint8array(wrapped_key)
+	let aes_key = await unwrapped_aes_key(wrapped_aes,unwrapper)
+	return aes_key
+}
+
+
+
+
+/*
+// derive_key
+// Parameters:
+//        -- sender_public_key : as base64url encoded uint8array representation of a ECDH public key with derivation privileges.
+//        -- piv_axiom_key :  the private key (for instance a sender key) as a JSON.parseable string representing jwk
+// Returns: the unwrapped key in a string that can be sent
+*/
+export async function derive_key(sender_public_key,piv_axiom_key) {
+	let axiom_jwk = JSON.parse(piv_axiom_key)
+	let local_private = await g_crypto.importKey(
+			"jwk",
+			axiom_jwk,
+			{   //these are the wrapping key's algorithm options
+				name: "RSA-OAEP",
+				modulusLength: 4096, //can be 1024, 2048, or 4096
+				publicExponent: new Uint8Array([0x01, 0x00, 0x01]),
+				hash: { name: "SHA-256" }, //can be "SHA-1", "SHA-256", "SHA-384", or "SHA-512"
+			},
+			true,
+			["deriveKey"]
+	);
+	
+	// wrapped_key
+	let sender_pub_key_buffer = from_base64_to_uint8array(sender_public_key)
+	let aes_key = await derive_aes_key(sender_pub_key_buffer,local_private)
+	return aes_key
+}
+
+
+
+
+/*
+// aes_to_str 
+// Parameters: 
+        -- aes_key - as Cryptokey
+        -- transport_type :  can be "jwk" or "raw"
+  Export an AES secret key given an ArrayBuffer containing the raw bytes.
+// Returns: the export key JSON.stringify if 'jwk' ||  base64url Uint8Array if 'raw'
+*/
+export async function aes_to_str(aes_key,transport_type) {
+	switch ( transport_type ) {
+		case "jwk" : {
+			const exported = await g_crypto.exportKey("jwk", aes_key);
+			let key_str = JSON.stringify(exported)
+			return key_str
+		}
+		case "raw" :
+		default: {
+			const exported = await g_crypto.exportKey("raw", aes_key);
+			const exportedKeyBuffer = new Uint8Array(exported);
+			let key_str = to_base64_from_uint8array(exportedKeyBuffer)
+			return key_str
+		}
+	}
+}
+
+/*
+// importAESKey
+// Parameters:
+//        -- rawKey 
+//        -- transport_type :  can be "jwk" or "raw"
+// Returns:  a Promise   (await this function) resolves to a CryptoKey representing the secret key
+  Import an AES secret key from an ArrayBuffer containing the raw bytes.
+  Takes an ArrayBuffer string containing the bytes.
+*/
+function importAESKey(rawKey,transport_type) {
+  return g_crypto.importKey(
+		transport_type,
+		rawKey,
+		{
+			name: "AES-CBC",
+			length: 256
+		},
+		true,
+		["encrypt", "decrypt"]
+  );
+}
+
+/*
+// aes_from_str
+// Parameters:
+//        -- aes_key_str  : 	the export key JSON.stringify if 'jwk' 
+//        -- transport_type :  can be "jwk" or "raw" ||  base64url Uint8Array if 'raw'
+// Returns:  the aes_key Cryptokey the result of import
+*/
+export async function aes_from_str(aes_key_str,transport_type) {
+	switch ( transport_type ) {
+		case "jwk" : {
+			try {
+				let key_obj = JSON.parse(aes_key_str)
+				let key = await importAESKey(key_obj,"jwk")
+				return key
+			} catch (e) {}
+			break;
+		}
+		case "raw" :
+		default: {
+			let buf = from_base64_to_uint8array(aes_key_str)
+			let key = await importAESKey(buf,"raw")
+			return key
+		}
+	}
+}
+
+
+/*
+// key_signer
+// Parameters:
+//        -- data_to_sign  as a string 
+//        -- priv_signer_key :  the private key (for instance a sender key) for signing 
+//                              passed as a string that can be JSON.parserd into a jwk format
+// Returns: the a base64url string containing the signature
+*/
+export async function key_signer(data_to_sign,priv_signer_key) {
+	try {
+		let signer_jwk = JSON.parse(priv_signer_key)
+		let signer = await g_crypto.importKey(
+				"jwk",
+				signer_jwk,
+				{
+					'name': "ECDSA",
+					'namedCurve': "P-384"
+				},
+				true,
+				["sign"]
+		);
+
+		let enc = new TextEncoder();
+		let signable = enc.encode(data_to_sign);
+		let signature = await g_crypto.sign({
+												name: "ECDSA",
+												hash: {name: "SHA-384"},
+											},
+											signer,
+											signable
+										);
+
+		let type8 = new Uint8Array(signature)
+		let tranportable = to_base64_from_uint8array(type8)
+		return tranportable
+	} catch(e) {
+		console.log(e)
+	}
+	return false
+}
+
+
+/*
+// verifier
+// Parameters:
+//		-- was_signed_data : as a string that was originially passed to key_signer
+//		-- signature : the a base64url string containing the signature
+//		-- signer_pub_key :  the public key (for instance a sender key) for verification  
+//                           passed as a string that can be JSON.parserd into a jwk format
+// Returns: bool
+*/
+export async function verifier(was_signed_data,signature,signer_pub_key) {
+	try {
+		let signer_jwk = JSON.parse(signer_pub_key)
+		let verifier = await g_crypto.importKey(
+				"jwk",
+				signer_jwk,
+				{
+					'name': "ECDSA",
+					'namedCurve': "P-384"
+				},
+				true,
+				["verify"]
+		);
+		//
+		let enc = new TextEncoder();
+		let verifiable = enc.encode(was_signed_data);
+
+		let sig_bytes = from_base64_to_uint8array(signature)
+
+		let result = await g_crypto.verify({
+											name: "ECDSA",
+											hash: {name: "SHA-384"},
+										},
+										verifier,
+										sig_bytes,
+										verifiable
+									);
+		return result
+	}  catch(e) {
+		console.log(e)
+	}
+	return false
+}
+
+
+/*
+// encipher_message
+// Parameters:
+//        -- message :  a text string
+//        -- aes_key :  as CryptoKey
+//        -- nonce : as a string storing a buffer base64url
+// Returns: a base64url encoding of the enciphered buffer
+*/
+export async function encipher_message(message,aes_key,nonce) {
+	try {
+		if ( aes_key ) {
+			let iv_nonce = from_base64_to_uint8array(nonce)
+			let enciphered = await aes_encryptor(message,aes_key,iv_nonce)
+			let b8a = new Uint8Array(enciphered)
+			return to_base64_from_uint8array(b8a)
+		}
+	} catch(e) {
+		console.log(e)
+	}
+	return false
+}
+// 
+
+
+/*
+// decipher_message
+// Parameters:
+//        -- message :  as a string storing a buffer formatted as csv of the entries
+//        -- wrapped_key :  wrapped aes key 
+//                          passed as a string that can be JSON.parsed into a jwk format object
+//        -- priv_key : the private key for unwrapping
+//        -- nonce : as a string storing a buffer base64url
+// Returns: The clear string or false if it cannot be decrypted
+*/
+export async function decipher_message(message,wrapped_key,priv_key,nonce) {
+	try {
+		let aes_key = await key_unwrapper(wrapped_key,priv_key)
+		if ( aes_key ) {
+			let iv_nonce = from_base64_to_uint8array(nonce)
+			let buffer = from_base64_to_uint8array(message)
+			let clear = await aes_decipher_message(buffer,aes_key,iv_nonce)
+			return clear
+		}
+	} catch(e) {
+		console.log(e)
+	}
+	return false
+}
+// 
+
+
+/*
+// derived_decipher_message
+// Parameters:
+//        -- message :  base64url encoded string returned from encipher
+//        -- remote_public : a pubic key for ECDH P-384 key encryption 
+//                          passed as a string that can be JSON.parsed into a jwk format object
+//        -- priv_key : the private key forming the local counterpart to the sender_public key.
+//        -- nonce : as a string storing a buffer base64url
+// Returns: The clear string or false if it cannot be decrypted
+*/
+export async function derived_decipher_message(message,remote_public,priv_key,nonce) {
+	try {
+		let aes_key = await derive_key(remote_public,priv_key)
+		if ( aes_key ) {
+			let iv_nonce = from_base64_to_uint8array(nonce)
+			let buffer = from_base64_to_uint8array(message)
+			let clear = await aes_decipher_message(buffer,aes_key,iv_nonce)
+			return clear
+		}
+	} catch(e) {
+		console.log(e)
+	}
+	return false
+}
+//
+
+
+// ----------------------------  allow certain methods to be global (up to the application to call)
+export function windowize_crypto_wraps() {
+  //
+	window.gen_nonce = gen_nonce
+	window.aes_encryptor = aes_encryptor
+	window.aes_decipher_message = aes_decipher_message
+	window.pc_keypair_promise = pc_keypair_promise
+	window.pc_wrapper_keypair_promise = pc_wrapper_keypair_promise
+	window.axiom_keypair_promise = axiom_keypair_promise
+	//
+	window.galactic_user_starter_keys = galactic_user_starter_keys
+	//
+	window.gen_cipher_key = gen_cipher_key
+	window.protect_hash = protect_hash
+	window.verify_protected = verify_protected
+	window.gen_public_key = gen_public_key
+	window.unwrapped_aes_key = unwrapped_aes_key
+	window.derive_key = derive_key
+	window.aes_to_str = aes_to_str
+	window.aes_from_str = aes_from_str
+	window.key_wrapper = key_wrapper
+	window.key_unwrapper = key_unwrapper
+	window.key_signer = key_signer
+	window.verifier = verifier
+	window.encipher_message = encipher_message
+	window.decipher_message = decipher_message
+	window.derived_decipher_message = derived_decipher_message
+  //
+}
+
+
+
+// ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
+
+//>>  AppDBWrapper
+
+
+// In the following line, you should include the prefixes of implementations you want to test.
+window.indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB;
+// DON'T use "var indexedDB = ..." if you're not in a function.
+// Moreover, you may need references to some window.IDB* objects:
+window.IDBTransaction = window.IDBTransaction || window.webkitIDBTransaction || window.msIDBTransaction || {READ_WRITE: "readwrite"}; // This line should only be needed if it is needed to support the object's constants for older browsers
+window.IDBKeyRange = window.IDBKeyRange || window.webkitIDBKeyRange || window.msIDBKeyRange;
+// (Mozilla has never prefixed these objects, so we don't need window.mozIDB*)
+
+
+
+/*
+
+// autoIncrement set to true  (for this special case DB use )
+
+DB_VERSION
+DATA_STORE
+describe_data
+
+*/
+
+
+function warn(str) {
+    //
+}
+
+
+// a session is a project...
+// a session object (sessionObject) is stored in the DB and may contain parts of data
+// part_id identifies a part of the data (e.g. a layer or a component)
+
+class AppDBWrapper {
+
+    constructor(name,conf) {
+        this._can_process_db = true
+        if ( !(window.indexedDB) ) {
+            this._can_process_db = false
+            console.log("Your browser doesn't support a stable version of IndexedDB. Such and such feature will not be available.");
+        }
+        //
+        let self = this
+        // DATA_STORE
+        // DB_VERSION
+        // describe_data
+        if ( conf ) {
+            for ( let ky in conf ) {
+                self[ky] = conf[ky]
+            }    
+        }
+        //
+        this.db = false
+        this.current_session_name = 'none'
+        this._session_name_list = []
+        this.name = name
+        //
+    }
+
+
+    set session_name(name) {
+        this.current_session_name = name
+    }
+
+    get session_name() {
+        return this.current_session_name
+    }
+
+    get name_list() {
+        return this._session_name_list
+    }
+
+    // // // // // // // // // // // // // // // // // // // // // // // // // // // // 
+
+    init_database() {
+        //
+        if ( !(this._can_process_db) ) return false
+        let self = this
+        let db_name = this.name
+        //
+        let p = new Promise((resolve,reject) => {
+
+            let request = window.indexedDB.open(db_name, this.DB_VERSION);
+            //
+            // <-- onerror
+            request.onerror = (event) => {
+                alert(`This web app will not store ${this.describe_data} without the use of computer storage.`)
+            };
+            
+            // <-- onsuccess
+            request.onsuccess = (event) => {
+                //
+                let db = event.target.result;
+                db.onerror = (event) => {
+                    console.log("Database error: " + event.target.error);
+                    reject(event.target.error)
+                };
+                //
+                self.db = db;
+                resolve(db)
+            }
+
+            // <-- onupgradeneeded
+            request.onupgradeneeded = (event) => {
+                //
+                let db = event.target.result;
+                //
+                try {
+                    let sessionObjectStore = db.createObjectStore(this.DATA_STORE, { autoIncrement : true });
+                    sessionObjectStore.createIndex("name", "name", { unique: true });
+                    sessionObjectStore.createIndex("sess_date_time", "sess_date_time", { unique: true });
+                } catch (e) {
+                }
+            //
+            };
+        })  // end of promise
+        //
+        return p
+    }
+
+
+    // // // // // // // // // // // // // // // // // // // // // // // // // // // // 
+
+    //      load_name_list
+    // -- 
+    load_name_list() {
+        if ( !(this.db) ) return
+        //
+        let transaction = this.db.transaction(this.DATA_STORE, "readonly");
+        let dataStore = transaction ? transaction.objectStore(this.DATA_STORE) : false
+        //
+        if ( !(dataStore) ) return false
+        let p = new Promise((resolve,reject) => {
+            this._session_name_list = []
+            let myIndex = dataStore.index('name');
+            myIndex.openCursor().onsuccess = (event) => {
+                let cursor = event.target.result;
+                if ( cursor ) {
+                    this._session_name_list.push(cursor.value.name)
+                    cursor.continue();
+                } else {
+                    this.application_update_session_name_selections(this.current_session_name,this._session_name_list)
+                    resolve(true)
+                }
+            }
+        })
+        //
+        return p
+    }
+
+    // _apply_find_by_name
+    //  -- a generic that calls success_callback when an element matches the index, or not_found_callback otherwise.
+    //
+    _apply_find_by_name(sess_name, store, success_callback, not_found_callback) {
+        let nameIndex = store.index('name');
+        nameIndex.get(sess_name).onsuccess = (evt) => {
+            let value = evt.target.result;
+            if ( value ) {
+                if ( success_callback ) success_callback(value,nameIndex);
+            } else {
+                if ( not_found_callback ) not_found_callback();
+            }
+        };
+    }
+
+    // _add_session_to_db
+    //  -- adds the session object to the db, sets up the basic fields... 
+    //
+    _add_session_to_db(dataStore,application_op,part_id) {
+        //
+        let sessionObj = {
+            'name' : this.current_session_name,
+            'sess_date_time' : '' + Date.now(),
+            'data' : { },
+            'hashes' : { },
+            'edit_order' : []
+        }
+        //
+        if ( part_id ) sessionObj.edit_order.push(part_id)
+        //
+        if ( (application_op !== undefined) && (typeof application_op === 'function') ) {
+            application_op(sessionObj)
+        }
+        let request = dataStore.add(sessionObj);
+        return request
+    }
+  
+
+    // // // // // // // // // // // // // // // // // // // // // // // // // // // // 
+
+    // add_data -- 
+    //  Parameters: blob_data -- data stored as part of the session
+    //              session id could be a layer....
+    add_data(blob_data,part_id) {
+        if ( !(this._can_process_db) ) return false
+        if ( !(this.db) ) {
+          console.log(`db not initialized :: AppDBWrapper.add_data`)
+          return;
+        }
+        //
+        let transaction = this.db.transaction(this.DATA_STORE, "readwrite");
+        if ( !(transaction) ) return false
+        let dataStore = transaction.objectStore(this.DATA_STORE);
+        if ( !(dataStore) ) return false
+
+        let p = new Promise((resolve,reject) => {
+            let self = this
+            // update_list_callback
+            let update_list_callback = (value,dbIndex) => {     // if found update
+                if ( !dbIndex || (typeof value === "undefined") ) {
+                    resolve(false)
+                    return;
+                }
+                let keyRangeValue = IDBKeyRange.only(value.name);
+                dbIndex.openCursor(keyRangeValue).onsuccess = (event) => {
+                    let cursor = event.target.result;
+                    if ( cursor ) {
+                        // existing session 
+                        let sessionObj = cursor.value
+                        //
+                        let blob_url = (typeof blob_data === 'string') ? blob_data : URL.createObjectURL(blob_data);
+                        // map_id = part_id
+                        // store revised data
+                        sessionObj.data[part_id] = blob_data
+                        // make sure the structure has been set up if not already
+                        if ( sessionObj.hashes[part_id] === undefined ) {
+                            sessionObj.hashes[part_id] = {}
+                        }
+                        if ( sessionObj.hashes[part_id].op_history === undefined ) {
+                            sessionObj.hashes[part_id].op_history = []
+                        }
+                        // record the order in which sessions (layers) have been edited
+                        sessionObj.edit_order.push(part_id)
+                        //
+                        // update IndexedDB
+                        const request = cursor.update(sessionObj);
+                        request.onsuccess = async () => {
+                            try {
+                                self.application_data_update(blob_url,part_id,blob_data)  // application handling of data e.g visual rep
+                            } catch (e) {
+                                console.log(e)
+                            } finally {
+                                resolve(true)
+                            }
+                        };
+
+                        request.onerror = (event) => {
+                            resolve(false)
+                        }
+                        //
+                    } else {
+                        resolve(false)
+                    }
+                }
+            }
+            // add_new_callback
+            let add_new_callback = () => {          // if not found add a new one
+                //
+                let blob_url = (typeof blob_data === 'string') ? blob_data : URL.createObjectURL(blob_data);
+                //
+                let application_op = (sessionObj) => {
+                    //
+                    sessionObj.data[part_id] = blob_data
+                    if ( sessionObj.hashes[part_id] === undefined ) {
+                        sessionObj.hashes[part_id] = {}
+                    }
+                    sessionObj.hashes[part_id].op_history = []
+                    //
+                } 
+                //
+                let request = self._add_session_to_db(dataStore,application_op,part_id)
+                if ( request ) {
+                    request.onsuccess = (event) => {
+                        self.application_data_update(blob_url,part_id,blob_data)  // application handling of data e.g visual rep
+                        resolve(true)
+                    };
+                    request.onerror = (event) => {
+                        resolve(false)
+                    }
+                }
+                //
+            }
+            //
+            this._apply_find_by_name(this.current_session_name, dataStore, update_list_callback, add_new_callback)    
+        })
+        //
+        return p
+    }
+
+
+    //  remove_data: 
+    //      Parameters: part_id -- remove a sections of the data kept by the session named sess_name
+    //                  sess_name -- A session or separate project or publication...
+    //
+    remove_data(part_id,sess_name) {
+        //
+        if ( !(this._can_process_db) ) return false
+        //
+        if ( this.db === null ) {
+          console.log("db not initialized :: remove_audio_data")
+          return false;
+        }
+        //
+        let transaction = this.db.transaction(this.DATA_STORE, "readwrite");
+        if ( !(transaction) ) return false
+        let dataStore = transaction.objectStore(this.DATA_STORE);
+        if ( !(dataStore) ) return false
+        //
+
+        let p = new Promise((resolve,reject) => {
+            // remove_from_list_callback
+            let remove_from_list_callback = async (value,dbIndex) => {
+                let keyRangeValue = IDBKeyRange.only(value.name);
+                dbIndex.openCursor(keyRangeValue).onsuccess = (event) => {
+                    let cursor = event.target.result;
+                    if ( cursor ) {
+                        let sessionObj = cursor.value
+                        delete sessionObj.data[part_id]
+                        //
+                        const request = cursor.update(sessionObj);
+                        request.onsuccess = async () => {
+                            //  item has been removed
+                            console.log(`deleted ${part_id}`)
+                            await this.app_secure_total_session(sess_name)
+                            resolve(true)
+                        };
+                        //
+                        request.onerror = (e) => {
+                            resolve(false)
+                        }
+                    }
+                    resolve(false)
+                }
+            }
+
+            // not_found_callback 
+            let not_found_callback = () => {
+                warn(`The session ${sess_name} is not in the database`)
+                resolve(false)
+            }
+
+            this._apply_find_by_name(sess_name, dataStore, remove_from_list_callback, not_found_callback)
+        })
+
+        return p
+    }
+      
+    //  remove_data: 
+    //      Parameters: part_id -- remove a sections of the data kept by the session named sess_name
+    //                  sess_name -- A session or separate project or publication...
+    //
+    get_data(part_id,sess_name) {
+        //
+        if ( !(this._can_process_db) ) return false
+        //
+        if ( this.db === null ) {
+          console.log("db not initialized :: remove_audio_data")
+          return false;
+        }
+        //
+        let transaction = this.db.transaction(this.DATA_STORE, "readwrite");
+        if ( !(transaction) ) return false
+        let dataStore = transaction.objectStore(this.DATA_STORE);
+        if ( !(dataStore) ) return false
+        //
+
+        let p = new Promise((resolve,reject) => {
+            // remove_from_list_callback
+            let get_from_list_callback = async (value,dbIndex) => {
+                let keyRangeValue = IDBKeyRange.only(value.name);
+                dbIndex.openCursor(keyRangeValue).onsuccess = (event) => {
+                    let cursor = event.target.result;
+                    if ( cursor ) {
+                        let sessionObj = cursor.value
+                        let value =  sessionObj.data[part_id]
+                        if ( value === undefined ) {
+                            resolve(false)
+                        } else {
+                            resolve(value)
+                        }
+                    }
+                    resolve(false)
+                }
+            }
+        
+            // not_found_callback 
+            let not_found_callback = () => {
+                warn(`The session ${sess_name} is not in the database`)
+                resolve(false)
+            }
+        
+            this._apply_find_by_name(sess_name, dataStore, get_from_list_callback, not_found_callback)
+        })
+
+        return p
+    }
+      
+ 
+    // // // // // // // // // // // // // // // // // // // // // // // // // // // // 
+
+    //  get_session: 
+    //      Parameters: sess_name -- A session or separate project or publication...
+    //  Returns the object controlling all the data within the session.
+    get_session(sess_name) {
+        //
+        if ( !(this._can_process_db) ) return false
+        //
+        if ( this.db === null ) {
+          console.log("db not initialized :: get_data")
+          return false;
+        }
+        //
+        let transaction = this.db.transaction(this.DATA_STORE, "readwrite");
+        if ( !(transaction) ) return false
+        let dataStore = transaction.objectStore(this.DATA_STORE);
+        if ( !(dataStore) ) return false
+        //
+        let p = new Promise((resolve,reject) => {
+          //
+          // get_elem_callback
+          let get_elem_callback = (value,dbIndex) => {          // element.name == sess_name exists
+            //
+            let keyRangeValue = IDBKeyRange.only(value.name);
+            //
+            dbIndex.openCursor(keyRangeValue).onsuccess = (event) => {
+              let cursor = event.target.result;
+              if ( cursor ) {
+                let sessionObj = cursor.value
+                resolve(sessionObj)
+              } else {
+                reject(null)
+              }
+            }
+          }
+          //
+          // not_found_callback
+          let not_found_callback = () => {                       // element.name == sess_name  NOT FOUND
+            reject(null)
+          }
+          //
+          this._apply_find_by_name(sess_name, dataStore, get_elem_callback, not_found_callback)
+        })
+        //
+        return p
+    }
+
+     
+    //  delete_session: 
+    //      Parameters: sess_name -- A session or separate project or publication...
+    //
+    delete_session(sess_name) {
+        //
+        if ( !(this._can_process_db) ) return false
+
+        if ( sess_name !== 'none ') {
+            if ( this.db === null ) {
+                console.log("db not initialized :: delete_session")
+                return false;
+            }
+            //
+            let transaction = this.db.transaction(this.DATA_STORE, "readwrite");
+            if ( !(transaction) ) return false
+            let dataStore = transaction.objectStore(this.DATA_STORE);
+            if ( !(dataStore) ) return false
+        
+            let p = new Promise((resolve,reject) => {
+                // delete_from_list_callback
+                let delete_from_list_callback = (value,dbIndex) => {
+                    //
+                    let keyRangeValue = IDBKeyRange.only(value.name);
+                    //
+                    dbIndex.openCursor(keyRangeValue).onsuccess = (event) => {
+                        let cursor = event.target.result;
+                        if ( cursor ) {
+                            let request = cursor.delete();
+                            request.onsuccess = () => {
+                                this.current_session_name = 'none'   /// here last
+                                this.load_name_list()
+                                this.application_revise_current_session(this.current_session_name)
+                                resolve(true)
+                            };
+                        }
+                        resolve(false)
+                    }
+                }
+                //
+                let not_found_callback = () => {
+                    warn(`The session ${sess_name} is not in the database`)
+                    resolve(false)
+                }
+                //
+                this._apply_find_by_name(sess_name, dataStore, delete_from_list_callback, not_found_callback)    
+            })
+            //
+            return p
+        }
+        return false
+    }
+
+
+    // // // // // // // // // // // // // // // // // // // // // // // // // // // // 
+
+    application_data_update(blob_url,part_id,blob_data) {
+        // implemented by derived method (override)
+    }
+
+    async app_secure_total_session(sess_name) {
+         // implemented by derived method (override)
+    }
+
+    application_revise_current_session(sess_name) {
+        // implemented by derived method (override)
+    }
+
+    application_update_session_name_selections(sess_name,name_list) {
+
+    }
+
+}
+
+
+
+
+//$EXPORTABLE::
+/*
+AppDBWrapper
+*/
+
+
+
+
+//$>>	get_file_from_file_element
+// called in response to a file selection through the system file browser
+//
+function get_file_from_file_element(file_el) {
+	let p = new Promise((resolve,reject) => {
+		let file_el = document.getElementById(file_el)
+		file_el.addEventListener('change',(ev) => {
+			//
+			let file = file_el.files[0]
+			let mtype = file.type
+			if ( ext_of_file(file.name) === 'json' ) {
+				let reader = new FileReader();
+				if ( mtype === 'application/json' ) {
+					reader.onload = (e) => {
+						resolve(e.target.result)
+					};
+					reader.readAsText(file);
+				}
+			}
+			//
+		})
+		file_el.click()
+	})
+	//
+	return p
+}
+
+
+//$>>	generic_downloader
+function generic_downloader(dataStr) {
+	let downloadlink = document.getElementById("identity-download-link")
+	if ( !(downloadlink) ) return false
+	try {
+		let mime_type = dataStr.substring(dataStr.indexOf(":")+1, dataStr.indexOf(";"))
+		//
+		let ext = mime_type.split('/')[1]
+		//
+		downloadlink.setAttribute("href",     dataStr     );
+		downloadlink.setAttribute("download", (`untitled.${ext}`) );
+		downloadlink.click();
+	} catch (e) {}
+}
+
+
+
+//$EXPORTABLE::
+/*
+get_file
+generic_downloader
+*/
+
+
+
+// ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
+// ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
+
+const WAPP_DB_NAME = "wapp_contacts"
+const WAPP_USERID_STORE = 'wapp_users'
+const DB_VERSION = 1
+//
+var g_galactic_db = null
+
+
+/*
+// user_data
+{
+    "name_key" : name_key,
+    "name": '',
+    "DOB" : "",
+    "place_of_origin" : "", 
+    "cool_public_info" : "", 
+    "business" : false, 
+    "public_key" : false,
+    "signer_public_key" : false,
+    "biometric" : false
+}
+*/
+
+
+
+// // // 
+function get_known_users() {
+    //
+    let transaction = g_galactic_db.transaction(WAPP_USERID_STORE, "readwrite");
+    let userStore = transaction.objectStore(WAPP_USERID_STORE);
+    let user_list = []
+    let identity_list = []
+    let p = new Promise((resolve,reject) => {
+        let nameIndex = userStore.index('name_key');
+        nameIndex.openCursor().onsuccess = (event) => {
+            let cursor = event.target.result;
+            if ( cursor ) {
+                let identity = cursor.value
+                identity_list.push(identity)
+                user_list.push(identity.user_info)
+                cursor.continue();
+            } else {
+                resolve([user_list,identity_list])
+            }
+        };
+    })
+    //
+    return p
+}
+
+
+
+function identity_fn(data) {
+    return data
+}
+
+let g_contacts = {}
+function set_contact_map(contacts_map) {
+    g_contacts = contacts_map
+}
+
+function contact_from_ucwid(user_ucwid) {
+    let c = g_contacts[user_ucwid]
+    return c
+}
+
+
+// DATABASE
+async function pc_init_database() {
+    // request an open of DB
+    let p = new Promise((resolve,reject) => {
+        //
+        let request = window.indexedDB.open(WAPP_DB_NAME, DB_VERSION);
+        //
+        request.onerror = (event) => {
+            alert("This web app will not store recorded audio without the use of computer storage.")
+        };
+        request.onsuccess = (event) => {
+            //
+            let db = event.target.result;
+            db.onerror = (event) => {
+                console.log("Database error: " + event.target.error);
+                reject(event.target.error)
+            };
+            //
+            g_galactic_db = db;
+            resolve(db)
+        }
+
+        request.onupgradeneeded = (event) => {
+            let db = event.target.result;
+            //
+            try {
+                let userStore = db.createObjectStore(WAPP_USERID_STORE, { autoIncrement : false, keyPath: 'name_key' });  // supposed to be just one
+                userStore.createIndex("name_key", "name_key", { unique: true });
+            } catch (e) {
+            }
+            //
+        };
+    })
+    //
+    return p
+};
+
+
+
+// store_user_key
+//    called when the user info is created by user_keys ... see pc_ask_create_user
+//
+
+
+
+function name_key_of(user_info) {
+    if ( (user_info.name === undefined) || (user_info.DOB === undefined) ) {
+        return false
+    }
+    let name_key = `${user_info.name}-${user_info.DOB}`
+    return name_key
+}
+
+function value_fallback(value) {
+    let vv = value ? value : ""
+    return vv
+}
+
+
+function unstore_user(identity) {
+    let name_key = identity.name_key
+    if ( !name_key ) return(false)
+    let transaction = g_galactic_db.transaction(WAPP_USERID_STORE, "readwrite");
+    let userStore = transaction.objectStore(WAPP_USERID_STORE);
+    let p = new Promise((resolve,reject) => {
+        let nameIndex = userStore.index('name_key');
+        nameIndex.openCursor().onsuccess = (event) => {
+            let keyRangeValue = IDBKeyRange.only(name_key);
+            nameIndex.openCursor(keyRangeValue).onsuccess = (event) => {
+                var cursor = event.target.result;
+                if ( cursor ) {
+                    const request = cursor.delete();
+                    request.onsuccess = () => {
+                        resolve(true)
+                    };
+                }
+            }
+        }
+    })
+    //
+    return p
+}
+
+
+function store_user(user_information,privates) {
+    //
+    let name_key = name_key_of(user_information)
+    if ( !name_key ) return(false)
+    //
+    let transaction = g_galactic_db.transaction(WAPP_USERID_STORE, "readwrite");
+    let userStore = transaction.objectStore(WAPP_USERID_STORE);
+    //
+    let store_u_i = Object.assign({},user_information)
+    //
+    let storage_obj = {		// prepare a data structure to store data made by this app's ipfs gateway
+        "name_key" : name_key,
+        "user_info" : store_u_i,
+        "ucwid" : '',
+        "dirs" :  '',
+        "files" :  '',
+        "stored_externally" : false
+    }
+    //
+    if ( privates.priv_key ) {
+        storage_obj.priv_key = privates.priv_key
+    }
+    //
+    if ( privates.signer_priv_key ) {
+        storage_obj.signer_priv_key = privates.signer_priv_key
+    }
+    //
+    if ( privates.signature_protect ) {
+        storage_obj.signature_protect = privates.signature_protect
+    }
+    //
+    userStore.put(storage_obj)           // information create by 
+    return(true)
+}
+
+// finalize_user_identity
+// Once the application gets its user ucwid's, it calls finalize_user_identity 
+// and this function stores the user values in the identity object in indexedDB.
+//
+async function finalize_user_identity(u_info,identity_files) {
+    //
+// "id" : ucwid with key,
+// "clear_id" : ucwid without key,
+// "dir_data" : user directory structure
+    //
+    let storage_obj = await identity_from_user(u_info)
+    //
+    let ucwid = value_fallback(identity_files.id)
+    storage_obj.ucwid = ucwid
+    storage_obj.dirs = value_fallback(value_fallback(identity_files.dir_data).dirs)
+    storage_obj.files = value_fallback(value_fallback(identity_files.dir_data).files)
+    storage_obj.stored_externally =  (ucwid.length > 0)
+    //
+    let transaction = g_galactic_db.transaction(WAPP_USERID_STORE, "readwrite");
+    let userStore = transaction.objectStore(WAPP_USERID_STORE);
+    //
+    let p = new Promise((resolve,reject) => {
+        const updateUserRequest =  userStore.put(storage_obj)           // information create by 
+        updateUserRequest.onsuccess = () => {
+            resolve(true)
+        };
+    })
+    return p
+}
+
+
+
+
+async function add_user_locally(id_packet) {
+    //
+/*
+    let id_packet = {
+        "user" : user_data,
+        "keys" : keys,
+        "original_cwid" : key_id_pair[0],
+        "ucwid" :  key_id_pair[1]
+    }
+*/
+    //
+    return true
+}
+
+
+
+
+// // // // // // // // // // // // // // // // // // // // // // // // // // // // // // 
+//		update_identity
+//
+async function update_identity(identity) {
+    try {
+        let u_info = identity.user_info
+        let storage_obj = await identity_from_user(u_info)
+        for ( let ky in storage_obj ) {
+            if ( (ky == "dirs") || (ky === "files") ) {
+                storage_obj[ky] = identity[ky]
+            }
+        }
+        if ( identity.profile_image ) {
+            storage_obj.profile_image = identity.profile_image
+        }
+        if ( identity.asset_keys ) {
+            storage_obj.asset_keys = Object.assign({},identity.asset_keys)
+        }
+        if ( identity.introductions ) {
+            storage_obj.introductions = identity.introductions
+        }
+        if ( identity.messages ) {
+            storage_obj.messages = identity.messages
+        }
+        let transaction = g_galactic_db.transaction(WAPP_USERID_STORE, "readwrite");
+        let userStore = transaction.objectStore(WAPP_USERID_STORE);
+        //
+        let p = new Promise((resolve,reject) => {
+            const updateUserRequest =  userStore.put(storage_obj)           // information create by 
+            updateUserRequest.onsuccess = () => {
+                resolve(true)
+            };
+        })
+        return p
+    } catch (e) {
+    }
+}
+
+
+async function restore_identity(identity) {
+    try {
+        let transaction = g_galactic_db.transaction(WAPP_USERID_STORE, "readwrite");
+        let userStore = transaction.objectStore(WAPP_USERID_STORE);
+        //
+        let p = new Promise((resolve,reject) => {
+            const updateUserRequest =  userStore.put(identity)           // information create by 
+            updateUserRequest.onsuccess = () => {
+                resolve(true)
+            };
+        })
+        return p
+    } catch (e) {
+    }
+}
+
+function identity_from_user(user_info) {
+    let name_key = name_key_of(user_info)
+    if ( !name_key ) return(false)
+    //
+    let transaction = g_galactic_db.transaction(WAPP_USERID_STORE, "readwrite");
+    let userStore = transaction.objectStore(WAPP_USERID_STORE);
+    //
+    let p = new Promise((resolve,reject) => {
+        let nameIndex = userStore.index('name_key');
+        nameIndex.openCursor().onsuccess = (event) => {
+            let keyRangeValue = IDBKeyRange.only(name_key);
+            nameIndex.openCursor(keyRangeValue).onsuccess = (event) => {
+                var cursor = event.target.result;
+                if ( cursor ) {
+                    resolve(cursor.value)
+                }
+            }
+        }
+    })
+    //
+    return p
+}
+
+
+
+var downloader_url = null
+async function download_identity(user_info,remove) {
+    //
+    let downloadlink = document.getElementById("identity-download-link")
+    if ( !(downloadlink) ) return false
+    try {
+        //
+        let identity = await identity_from_user(user_info)
+        let download_str = JSON.stringify(identity,null,4)
+
+        let dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(download_str);
+
+        let ext = ".json"
+        let fname = identity.name_key
+
+        downloadlink.setAttribute("href",     dataStr     );
+        downloadlink.setAttribute("download", (fname + ext) );
+        downloadlink.click();
+        //
+        if ( remove ) {
+            await unstore_user(identity)
+        }
+    } catch (e) {}
+}
+
+
+
+
+async function upload_identity() {
+    let identity_str = await get_file()
+    let identity = JSON.parse(identity_str)
+    await restore_identity(identity)
+    return identity
+}
+
+
+function get_file() {
+    get_file_from_file_element(`drop-click-file_loader`)
+}
+
+
+
+async function user_info_add_picture(fname,blob64) {
+    // 
+}
+
+async function load_blob_as_url(img_ucwid) {
+    //
+}
+
+
+// ---- ---- ---- ---- ---- 
+
+
+//$>>	postData
+// //
+//  call fetch with method POST tyr to help with parameters..  If data is FromData set do_stringify to false
+//  default content type 'application/json'
+//  User 'cors', Default cres = omit, If ctype == 'multipart/form-data' be sure to use FormData -- lets fetch set content type.
+//  RETURNS: parsed JSON object or an empty object. ... Check for fields
+//
+async function postData(url = '', data = {}, creds = 'omit', do_stringify = true,ctype) {
+	let content_type = 'application/json'
+	if ( ctype !== undefined ) {
+		content_type = ctype            // ctype is content type
+	}
+	let options = {
+		method: 'POST', // *GET, POST, PUT, DELETE, etc.
+		mode: 'cors', // no-cors, *cors, same-origin
+		cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+		credentials: creds, // include, *same-origin, omit
+		headers: {
+			'Content-Type': content_type
+		},
+		redirect: 'follow', // manual, *follow, error
+		referrerPolicy: 'no-referrer', // no-referrer, *client
+		body: (do_stringify ? JSON.stringify(data)  : data)	// body data type must match "Content-Type" header
+	}
+
+	if ( ctype === 'multipart/form-data') {
+		delete options.headers['Content-Type']  // content type will be set automatically with a boundary
+	}
+
+	// Default options are marked with *
+	const response = await fetch(url, options);
+	if ( response.ok == false ) {
+		console.log(response.status + ': ' + response.statusText)
+		return {}
+	} else {
+		return await response.json(); // parses JSON response into native JavaScript objects
+	}
+}
+
+
+//$EXPORTABLE::
+/*
+fetchEndPoint
+fetchUrl
+postData
+*/
+
+
+
+//  === ---------------------------------------  === ---------------------------------------  === --------------------------------------- 
+// CAPTCHA
+// -- -- -- -- -- -- -- -- -- -- -- -- --  -- -- -- -- -- -- -- -- -- -- -- -- --  -- -- -- -- -- -- -- -- -- -- -- -- --  -- -- -- -- -- 
+
+
+//$>>	captchaCheck
+//                                          <<var-depends>> g_CurContainer
+
+
+var g_currenCaptchaTOKEN = null; 	// delivered by the authorization handler, which maps this interaction to a session.
+var g_captaFinalResolution = null;  // will be a function for completing a captcha
+
+async function captchaCheck(callBack) {
+	//
+	let captchaGuessField = g_CurContainer.captch_input
+	if ( captchaGuessField ) {
+		let captchaVal = captchaGuessField.value;
+		if ( captchaVal && captchaVal.length && g_currenCaptchaTOKEN ) {
+			//
+			let port = g_CurContainer.auth_port
+			port = !(port) ? '' : ( port.length ? `:${port}`   : '')
+			//
+			try {
+				let url = `${location.protocol}//${g_siteURL}${port}/{{auth_path}}/secondary/transition`
+				let data = { 'captcha_val' : captchaVal, 'token' : g_currenCaptchaTOKEN }
+				let resp = await postData(url, data)
+				if ( resp.OK === "true" ) {
+						if ( g_captaFinalResolution !== null ) {
+							g_captaFinalResolution(1)
+						}
+				} else {
+						if ( g_captaFinalResolution !== null ) {
+							g_captaFinalResolution(2,"captcha does not match: try again")
+						}
+				}
+			} catch (e) {
+				console.log(e.message)
+			}
+		}
+	}
+	//
+}
+
+
+
+//$>>	doCaptcha
+
+function captchaPromises() {
+	return new Promise((resolve,reject) => {
+							g_captaFinalResolution = (a,b) => {
+								//
+								if ( a === 1 ) {
+									resolve(true);
+								} else if ( a == 2 ) {
+									resolve(b)
+								} else if ( a == 3 ) {
+									reject(-1)
+								}
+							}
+						})
+}
+
+
+async function doCaptcha(port,proxyPath) {
+	//
+	if (g_CurContainer ) g_CurContainer.switchCaptchaDisplay(true)
+	else {
+		throw new Error("Current container undefined in doCaptcha")
+	}
+	//
+	try {
+		port = !(port) ? '' : ( port.length ? `:${port}`   : '')
+			//
+		let endpoint = `${location.protocol}//${g_siteURL}${port}/${proxyPath}/transition/captcha`
+		let captchaObject = await postData(endpoint)
+		if ( (captchaObject.type == "transition") && (captchaObject.OK == 'true') )  {
+			let svgText = decodeURIComponent(captchaObject.elements.captcha)
+			let captchaPlacement = g_CurContainer.where_captcha
+			if ( captchaPlacement ) {
+				captchaPlacement.innerHTML = svgText
+				g_currenCaptchaTOKEN = captchaObject.transition.token
+				g_CurContainer.captch_input.value = ''
+			}
+			//
+			return await captchaPromises();  // wait for user interaction to finish else 
+		} else {
+			g_CurContainer.formErrorMessage("captcha service not available")
+		}
+	} catch (e) {
+		console.log(e.message)  // page level error may be needed
+	}
+}
+
+//$>>	setupCaptchaClose
+//                                          <<var-depends>> g_CurContainer,g_captaFinalResolution
+// Get the <span> element that closes the modal
+function setupCaptchaClose() {
+	let closerList = document.getElementsByClassName("close");
+	let n = closerList.length
+	for ( let i = 0; i < n; i++ ) {
+		let span = closerList[i]
+		span.onclick = function() {
+			if ( g_CurContainer ) g_CurContainer.switchCaptchaDisplay(false)
+			if ( g_captaFinalResolution ) g_captaFinalResolution(3)
+		}
+	}
+}
+
+
+
+
+
+//$EXPORTABLE::
+/*
+captchaCheck
+doCaptcha
+setupCaptchaClose
+*/
+
+//
+
+
+// Wrapper for captcha ...
+
+
+//$>>	processUI_captchaService
+
+var g_ComponentErrorsActivated = false
+var g_CurContainer = null
+
+
+async function processUI_captchaService(handlerDefsValidator,calcAppDataDB,completionaAction,failureAction) {
+	//
+	g_ComponentErrorsActivated = true	// will be processing errors, etc. some selective behavior permitted
+	g_CurContainer = handlerDefsValidator
+	//
+	if ( g_CurContainer && g_CurContainer.checkFormValid() ) {
+		try {
+			// CAPTCH PROCESSING 
+			let captchaResult = await doCaptcha('','{{auth_path}}')   // the captcha has to be processed first.
+			// CAPTCH RESULT 
+			if ( captchaResult === true ) {
+				if ( g_currenCaptchaTOKEN ) {
+					let data = await calcAppDataDB()		// calcAppDataDB
+					if ( data ) {
+						try {
+							let resp = await postData(g_CurContainer.service_url, data,'include')
+							if ( resp.OK === "true" ) {
+								g_currenCaptchaTOKEN = null;     // check for duplicates
+								if ( completionaAction ) await completionaAction(resp);
+							} else {
+								g_CurContainer.formErrorMessage(`${g_CurContainer.failure_msg_prefix}: ${resp.reason}`)
+								if ( failureAction ) failureAction(resp)
+							}
+						} catch (e) {
+							g_CurContainer.formErrorMessage(`${g_CurContainer.failure_msg_prefix}: ${e.message}`)
+							if ( failureAction ) failureAction(resp)
+						}
+					} else {
+						g_CurContainer.formErrorMessage(`${g_CurContainer.failure_msg_prefix}: ${e.message}`)
+						if ( failureAction ) failureAction(resp)
+					}
+				}
+			} else {
+				if ( captchaResult !== false ) {
+					g_CurContainer.switchCaptchaDisplay(false)
+					if ( captchaResult !== undefined ) {
+						g_CurContainer.formErrorMessage(captchaResult)
+					} else {
+						g_CurContainer.formErrorMessage("Web service not responding.")
+					}
+				}
+			}
+		} catch(e) {
+			console.log(e.message)
+		}
+	} else {
+		if ( g_CurContainer === undefined ) {
+			throw new Error("The current container is not defined in processUI_captchaService.")
+		}
+	}
+}
+
+
+
+//$EXPORTABLE::
+/*
+processUI_captchaService
+*/
+
+//  === ---------------------------------------  === ---------------------------------------  === --------------------------------------- 
+
+
+
+// temporarily using pc_ prefix. There is a wv_ in a file "recorder.html"  that is for wave. This is for profile contacts.
+// Later, these all should be wrapped in a class that handles generic use cases..
+// Currently, this improper usage is contained in this file...
+
+
+function hide_thankyou_box(theBox) {
+	theBox.style.visibility = "hidden"
+	theBox.style.display = "none";
+	theBox.style.zIndex = 0
+}
+
+function show_thankyou_box(msg) {
+	let theBox = document.querySelector("#thankyou_box")
+	if ( theBox ) {
+		if ( msg ) {
+			let mbox = document.querySelector("#thankyou_box-message")
+			if ( mbox ) mbox.innerHTML = msg
+
+		}
+		theBox.style.display = "block";
+		theBox.style.visibility = "visible"
+		theBox.style.zIndex = 2000
+	}
+}
+
+//  === ---------------------------------------  === ---------------------------------------  === --------------------------------------- 
+
+hide_box('error-box')
+hide_box('success-box')
+
+//  === ---------------------------------------  === ---------------------------------------  === --------------------------------------- 
+
+// // // ----------------- // // // ----------------- // // // -----------------
+// // // ----------------- // // // ----------------- // // // -----------------
+
+// initial validation application is contact
+g_CurContainer = null // will be initilialized within the finalizers
+
+// EXTRA STUFF for some gracefull clicing
+var the_thankyou_box = document.getElementById("thankyou_box");
+
+// Get the <span> element that closes the modal
+function setupCaptchaClose() {
+	let closerList = document.getElementsByClassName("close");
+	let n = closerList.length
+	for ( let i = 0; i < n; i++ ) {
+		let span = closerList[i]
+		span.onclick = function() {
+			if ( g_CurContainer ) g_CurContainer.switchCaptchaDisplay(false)
+			if ( g_captaFinalResolution ) g_captaFinalResolution(3)
+		}
+	}
+}
+
+
+async function startup() {
+	await pc_init_database()
+	not_https_switch()
+}
+
+
+// independent floating box..
+
+
+</script>
