@@ -4,7 +4,7 @@
 import * as base64 from "../modules/base64.js";
 
 //<<
-//windowize>> base64 = window
+//windowize>>let base64 = window
 //$>>	do_hash_buffer
 async function do_hash_buffer(text) {
     const encoder = new TextEncoder();

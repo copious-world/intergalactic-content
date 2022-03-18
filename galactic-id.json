@@ -65,6 +65,10 @@
                     "include" : ["ext_of_file", "clonify", "launch_simple_link"],
                     "exclude" : false
                 },
+                "app-dir/base64.js" : {
+                    "version" : 1,
+                    "transforms" : "windowize"
+                },
                 "app-dir/base_string.js" : {
                     "version" : 1,
                     "transforms" : "windowize"
