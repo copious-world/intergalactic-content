@@ -11,5 +11,6 @@
     "local" : {
         "client/IGID" : "/public/intergalactic-content/IGID.js"
     },
-    "alpha" :  "galactic-id.json"
+    "alpha" :  "galactic-id.json",
+    "beta" :  "galactic-display.json"
 }
