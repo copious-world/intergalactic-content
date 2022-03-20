@@ -1,16 +1,18 @@
 {
-    "pnpm" : {
-        "file" : "package.json",
-        "dependencies" : [
-            "crypto-wraps",
-            "ucwid"
-        ]
-    },
-    "github" : {
-    },
-    "local" : {
-        "client/IGID" : "/public/intergalactic-content/IGID.js"
-    },
     "alpha" :  "galactic-id.json",
-    "beta" :  "galactic-display.json"
+    "beta" :  "galactic-display.json",
+    "gather" : {
+        "pnpm" : {
+            "file" : "package.json",
+            "dependencies" : [
+                "crypto-wraps",
+                "ucwid"
+            ]
+        },
+        "github" : {
+        },
+        "local" : {
+            "client/IGID" : "/public/intergalactic-content/IGID.js"
+        }
+    }
 }
