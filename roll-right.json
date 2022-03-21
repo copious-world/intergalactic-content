@@ -3,10 +3,12 @@
     "beta" :  "galactic-display.json",
     "gather" : {
         "pnpm" : {
+            "out_dir" : "./ucwid-ui/template/scripts",
             "file" : "package.json",
             "dependencies" : [
                 "crypto-wraps",
-                "ucwid"
+                "ucwid",
+                ["cwid","ucwid"]
             ]
         },
         "github" : {
