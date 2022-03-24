@@ -10,7 +10,6 @@
 	//
 	import * as utils from './utilities.js'
 	import * as igid from "../public/intergalactic-content/IGID.js"
-	import * as human_page from 'human-page'
 
 	let active_profile_image = ""; //"/favicon.png" ; // "/brent-fox-jane-18-b.jpg"
 	let active_profile_biometric = ""
@@ -535,7 +534,7 @@
 		u_index = (known_users.length - 1)	// user was added to the end...
 		//
 		if ( green ) {			// human_page is a node module providing the separate use case for making the user owned frame page.
-			await human_page.inialize_user_resources(id_packet,window.update_user)
+			await inialize_user_resources(id_packet)
 		}
 	}
 

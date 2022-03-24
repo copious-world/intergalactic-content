@@ -6,6 +6,17 @@
 // Later, these all should be wrapped in a class that handles generic use cases..
 // Currently, this improper usage is contained in this file...
 
+async function inialize_user_resources(identity) {
+	let url = "https://www.of-this.world/intake"
+
+	let public_component = identity.public_component
+
+	let respose = await postData(url,public_component)
+	if ( respose.status === "OK" ) {
+		identity.human_frame = respose.frame_data
+		if ( g_human_user_storage ) await g_human_user_storage.update_user(identity)
+	}
+}
 
 function hide_thankyou_box(theBox) {
 	theBox.style.visibility = "hidden"

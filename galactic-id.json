@@ -81,6 +81,14 @@
                     "version" : 1,
                     "transforms" : "windowize"
                 },
+                "app-dir/cwid.js" :  {
+                    "version" : 1,
+                    "transforms" : "windowize"
+                },
+                "app-dir/ucwid.js" :  {
+                    "version" : 1,
+                    "transforms" : "windowize"
+                },
                 "one_table_db.js" : 1,
                 "file_ops.js" : 1,
                 "field_checks.js" : 3,

@@ -1,6 +1,6 @@
 {
     "business_url" : "copious.world",
-    "template" : "[app-local]/template/index.html",
+    "template" : "[app-top]/templates/$$target/index.html",
     "out_dir" : "[app-local]/public",
     "scripts_dir" : "default",
     "static_artifacts" : "[websites]/$$target/static",
@@ -14,6 +14,7 @@
         "[alphas]" : "[github]/alphas",
         "[alpha-copious]" : "[github]/alphas/alpha-copious",
         "[github]" : "~/Documents/GitHub",
+        "[app-top]" : "[github]/universal-content/intergalactic-content",
         "[app-local]" : "[github]/universal-content/intergalactic-content/ucwid-ui"
     },
     "ext_default_dir" : {

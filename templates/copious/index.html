@@ -372,22 +372,8 @@ h2 {
 
 </body>
 </html>
-<script type="module" >
-	import * as UCWID from "./UCWID"
-	UCWID.windowize()
-</script>
 <script>
 
-
-
-function set_user_title(u_name) {
-	let el = document.getElementById('active-user-title')
-	if ( el  && u_name && (typeof u_name === "string") ) {
-		el.innerHTML = u_name
-	}
-}
-
-// ---- ---- ---- ---- ---- ----  ---- ---- ---- ---- ---- ----  ---- ---- ---- ---- ---- ----  ---- ---- ---- ---- ---- ----
 // ---- ---- ---- ---- ---- ----  ---- ---- ---- ---- ---- ----  ---- ---- ---- ---- ---- ----  ---- ---- ---- ---- ---- ----
 
 
@@ -502,6 +488,58 @@ not_https_switch
 getCookie
 */
 
+
+
+// MODULE: POST FETCH (windowized)
+
+//$>>	postData
+// //
+//  call fetch with method POST tyr to help with parameters..  If data is FromData set do_stringify to false
+//  default content type 'application/json'
+//  User 'cors', Default cres = omit, If ctype == 'multipart/form-data' be sure to use FormData -- lets fetch set content type.
+//  RETURNS: parsed JSON object or an empty object. ... Check for fields
+//
+async function postData(url = '', data = {}, creds = 'omit', do_stringify = true,ctype) {
+	let content_type = 'application/json'
+	if ( ctype !== undefined ) {
+		content_type = ctype            // ctype is content type
+	}
+	let options = {
+		method: 'POST', // *GET, POST, PUT, DELETE, etc.
+		mode: 'cors', // no-cors, *cors, same-origin
+		cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+		credentials: creds, // include, *same-origin, omit
+		headers: {
+			'Content-Type': content_type
+		},
+		redirect: 'follow', // manual, *follow, error
+		referrerPolicy: 'no-referrer', // no-referrer, *client
+		body: (do_stringify ? JSON.stringify(data)  : data)	// body data type must match "Content-Type" header
+	}
+
+	if ( ctype === 'multipart/form-data') {
+		delete options.headers['Content-Type']  // content type will be set automatically with a boundary
+	}
+
+	// Default options are marked with *
+	const response = await fetch(url, options);
+	if ( response.ok == false ) {
+		console.log(response.status + ': ' + response.statusText)
+		return {}
+	} else {
+		return await response.json(); // parses JSON response into native JavaScript objects
+	}
+}
+
+
+//$EXPORTABLE::
+/*
+fetchEndPoint
+fetchUrl
+postData
+*/
+
+// ---- ---- ---- ---- ---- 
 
 
 // MODULE: base64 (windowized)
@@ -1543,6 +1581,487 @@ function windowize_crypto_wraps() {
 
 
 
+//
+// MODULE: CRYPTO WRAPS (windowized)
+
+const HASH_SEP = '!'
+
+// >> import
+//modularize>> import * as base64 from "../modules/base64.js";
+//modularize>> import * as base64 from "../modules/base_string.js";
+//<<
+
+
+//$>>	fetch_tables
+let formats = false;
+let multibase = false;
+
+async function fetch_tables() {
+
+    formats = await fetch('../assets/formats.json')
+    .then(response => response.json());
+
+    multibase = await fetch('../assets/multibase.json')
+        .then(response => response.json());
+
+    return true
+}
+
+setTimeout(fetch_tables,0)
+
+
+//$>>	do_hash_buffer
+async function do_hash_buffer(text) {
+    const encoder = new TextEncoder();
+    const data = encoder.encode(text);
+    const hash = await g_crypto.digest('SHA-256', data);
+    return hash
+}
+
+//$>>	do_hash
+async function do_hash(text) {
+    let buffer = await do_hash_buffer(text)
+    const hashArray = Array.from(new Uint8Array(buffer));
+    return base64.bytesToBase64(hashArray)
+}
+
+//$>>	to_base64
+function to_base64(text) {
+    return base64.base64encode(text)
+}
+
+//$>>	from_base64
+function from_base64(base64text) {
+    let bytesAsText = base64.base64decode(base64text)
+    return bytesAsText
+}
+
+
+// https://docs.ipfs.io/concepts/content-addressing/
+// -- https://github.com/multiformats/multicodec/blob/master/table.csv
+// MULTI BASE FOR IPFS Support 
+// u = no padding
+// U = with padding
+/*
+
+function do_hash (text) {
+    const hash = crypto.createHash('sha256');
+    hash.update(text);
+    let ehash = hash.digest('base64');
+    ehash = ehash.replace(/=/g, "").replace(/\+/g, "-").replace(/\//g, "_");
+    return(ehash)
+}
+
+
+sha2-256	multihash	0x12	permanent	
+sha2-512	multihash	0x13	permanent	
+sha3-512	multihash	0x14	permanent	
+sha3-384	multihash	0x15	permanent	
+sha3-256	multihash	0x16	permanent	
+sha3-224	multihash	0x17	permanent	
+
+// does not start with Qm, so it is v1.
+
+let cidV1 = 'u' +  encode( 0x55 | 0x12 |  256  encoded 256 bytes...) 
+
+
+base64url - cidv1 - raw - (sha2-256 : 256 : 6E6FF7950A36187A801613426E858DCE686CD7D7E3C0FC42EE0330072D245C95)
+
+multibase - version - multicodec - multihash (name : size : digest in hex)
+
+*/
+
+
+//$>>	CWID
+
+const _do_hash = do_hash
+
+class CWID {
+
+    constructor() {
+        this.version = '01'
+        this.size = 256/8
+        this.hash_code = formats ? formats["sha2-256"].code.substr(2) : '12'
+        this.base = 'base64url'
+        this.base_code = multibase ? multibase['base64url'].code : 'u'
+        this.data_type = 'raw'
+        this.type_code = formats ? formats[this.data_type].code.substr(2) : '55'
+        this._descriptor = false
+        this.tables_promised = false
+        this.select_base(this.base)
+    }
+
+    correct_base(base) {
+        if ( base === 'hex') return 'base16'
+        else if ( base === 'oct' ) return 'base8'
+        return base
+    }
+
+    async select_base(base) {
+        if ( this.tables_promised !== false ) {
+            await this.tables_promised
+            this.tables_promised = false
+        }
+        if ( multibase === false ) {
+            this.tables_promised = new Promise((resolve,reject) => {
+                setTimeout(async () => {
+                    let b = await fetch_tables()
+                    resolve(b)
+                },0)    
+            })
+        } else {
+            base = this.correct_base(base)
+            this.base = base
+            this.base_code = multibase[base].code
+            this._descriptor = false
+            this.descriptor()    
+        }
+    }
+
+    _descriptor_in_base() {
+        if ( this.base !== 'base16' ) {
+            switch ( this.base ) {
+                case 'base64url': {
+                    let AoB = base_string.hex_toByteArray(this._descriptor)
+                    let descr = base64.bytesToBase64(AoB)
+                    this._descriptor = descr.replace(/\=+/g,'')
+                    break;
+                }
+                case 'base64' :
+                default: {
+                    let AoB = base_string.hex_toByteArray(this._descriptor)
+                    this._descriptor = base64.bytesToBase64(AoB,true)
+                    break;
+                }
+            }
+        }
+        return this._descriptor
+    }
+
+    async _hash_of_sha(text,base) {
+        if ( !(base) ) base = 'base64url'
+        if ( base === 'base64url' ) {
+            let hh = await _do_hash(text)
+            return hh.replace(/\=+/g,'')
+        } else if ( base === 'hex' || base === 'base16' ) {
+            let b64 = await do_hash_buffer(text)
+            return base_string.hex_fromTypedArray(new Uint8Array(b64))
+        } else {
+            return  await _do_hash(text)
+        }
+    }
+
+    descriptor() {
+        if ( this._descriptor ) {
+            return this._descriptor
+        }
+        let dstr = this.version.toString(16)
+        dstr += this.type_code
+        dstr += this.hash_code
+        dstr += this.size.toString(16)
+        this._descriptor = dstr
+        dstr = this._descriptor_in_base()
+        return dstr
+    }
+
+    async cwid(text) {
+        let hh = await this._hash_of_sha(text,this.base)
+        let code = this.descriptor()
+        let _cwid = this.base_code + code + HASH_SEP + hh
+        return _cwid
+    }
+
+    hash_from_cwid(cwid) {
+        let parts = cwid.split(HASH_SEP)
+        return(parts[1])
+    }
+
+    hash_buffer_from_cwid(cwid) {
+        let base = cwid[0]
+        let hh = this.hash_from_cwid(cwid)
+        let ua8 = false
+        if ( base === 'u' ) {
+            while ( hh.length % 4 ) hh += '='
+            ua8 = base64.base64ToBytes(hh)
+        } else if ( base === 'f' ) {
+            ua8 = base_string.hex_toByteArray(hh)
+        }
+        return ua8
+    }
+
+
+    _hex_parts_to_CWID(prefix,rest) {
+        let preBuf = base_string.hex_toByteArray(prefix)
+        let tailBuf = base_string.hex_toByteArray(rest)
+        prefix = base64.bytesToBase64(preBuf)
+        prefix = prefix.replace(/\=+/g,'')
+        rest = base64.bytesToBase64(tailBuf)
+        rest = rest.replace(/\=+/g,'')
+        let cwid = 'u' + prefix + HASH_SEP + rest
+        return cwid
+    }
+
+    _base64_parts_to_hex_CWID(prefix,rest) {
+        while ( prefix.length % 4 ) prefix += '='
+        while ( rest.length % 4 ) rest += '='
+        let preBuf = base64.base64ToBytes(prefix)
+        let tailBuf = base64.base64ToBytes(rest)
+        prefix = base_string.hex_fromByteArray(preBuf)
+        rest = base_string.hex_fromByteArray(tailBuf)
+        let cwid = 'f' + prefix + HASH_SEP + rest
+        return cwid
+    }
+
+
+    change_base(cwid,to) {
+        let from = cwid[0]
+        let code = cwid.substr(1)
+        if ( from === to ) {
+            return cwid
+        }
+        switch(from) {
+            case 'f' : {
+                if ( to === 'u' ) to = 'base64url'
+                if ( (to !== 'base64') && (to !== 'base64url') ) {
+                    console.log("only support from hex-to-base64<type>")
+                    return false
+                }
+                let [prefix,rest] = code.split(HASH_SEP)
+                return this._hex_parts_to_CWID(prefix,rest)
+            }
+            case 'u': {
+                if ( from === 'u' ) from = 'base64url'
+                if ( to === 'f' ) to = 'hex'
+                if ( (to !== 'base16') && (to !== 'hex') ) {
+                    console.log("only support from hex-to-base64<type>")
+                    return false
+                }
+                let [prefix,rest] = code.split(HASH_SEP)
+                return this._base64_parts_to_hex_CWID(prefix,rest)
+            }
+        }
+        return false
+    }
+
+    async ipfs_cid(text) {
+        if ( this.base === 'base16' ) {
+            let _cwid = await this.cwid(text)
+            _cwid = _cwid.replace(HASH_SEP,'')
+            return _cwid
+        } else if ( (this.base === 'base64') || (this.base === 'base64url') ) {
+            let _cwid = await this.cwid(text)
+            this.select_base('base64url')
+            return this.cwid_to_cid(_cwid)
+        } else {
+            let backup_base = this.base
+            this.select_base('base16')
+            let _cwid = await this.cwid(text)
+            _cwid = _cwid.replace(HASH_SEP,'')
+            this.select_base(backup_base)
+            return _cwid
+        }
+    }
+
+    ipfs_cid_to_cwid(cid) {
+        let code = cid[0]
+        let bytes = cid.substr(1)
+        let cwid = ''
+        switch (code) {
+            case 'f' : {
+                let prefix = bytes.substr(0,8)
+                let rest  = bytes.substr(8)
+                cwid = 'f' + prefix + '!' + rest
+                break
+            }
+            case 'u' : {
+                let buf = base64.base64ToBytes(bytes)
+                let hexstr = base_string.hex_fromByteArray(buf)
+                let prefix = hexstr.substr(0,8)
+                let rest  = hexstr.substr(8)
+                cwid = this._hex_parts_to_CWID(prefix,rest)
+                break
+            }
+            default : {
+                return false
+            }
+        }
+        return cwid
+    }
+
+    cwid_to_cid(cwid) {
+        let parts = cwid.split(HASH_SEP)
+        let p = parts[0].substr(1)
+        while ( p.length % 4 ) p += '='
+        parts[0] = base64.base64ToBytes(p)
+        p = parts[1]
+        while ( p.length % 4 ) p += '='
+        parts[1] = base64.base64ToBytes(p)
+        var bytes = new Uint8Array([
+            ...parts[0],
+            ...parts[1]
+        ]);
+        let cid = base64.bytesToBase64(bytes)
+        cid = this.base_code + cid
+        return cid
+    }
+
+}
+
+
+
+//$EXPORTABLE::
+/*
+fetch_tables
+do_hash_buffer
+do_hash
+to_base64
+from_base64
+CWID
+*/
+
+
+
+
+
+
+
+
+
+export class UCWID {
+    //
+    constructor(conf) {
+        //
+        this.cwid_service = new CWID()
+        //
+        this.key_pack = false
+        this.normalizer_wait = false
+        this.normalizer_promise = false
+        if ( (conf === undefined) || (conf.normalizer === undefined) ) {
+            this.normalizer_wait = true
+            let p = new Promise((resolve,reject) => {
+                (async () => {
+                    const moduleSpecifier = './normalizers/unity.js';
+                    const module = await import(moduleSpecifier)
+                    const Normal = module.Unity
+                    this.normalizer = new Normal(conf)
+                    this.normalizer_wait = false
+                    resolve(true)
+                })();
+            })
+            this.normalizer_promise = p 
+        } else {
+            if ( typeof conf.normalizer === 'string' ) {
+                this.normalizer_wait = true
+                let p = new Promise((resolve,reject) => {
+                    (async () => {
+                        const moduleSpecifier = conf.normalize;
+                        const module = await import(moduleSpecifier)
+                        const Normal = module[conf.class_name]
+                        this.normalizer = new Normal(conf)
+                        this.normalizer_wait = false
+                        resolve(true)
+                    })();
+                })
+                this.normalizer_promise = p 
+            } else if ( typeof this.normalizer === "function" ) {
+                this.normalizer = conf.normalizer(conf)
+            }
+        }
+        if ( (conf === undefined) || (conf._wrapper_key === undefined) ) {
+            this.key_wait = true
+            this.key_promise = new Promise((resolve,reject) => {
+                (async () => { await this.provide_keys(); this.key_wait = false; resolve(true) })()
+            })
+        } else {
+            this.key_wait = false
+            this._wrapper_key = conf._wrapper_key
+        }
+    }
+
+    wait_for_normalizer() {
+        return [this.normalizer_wait, this.normalizer_promise]
+    }
+
+    wait_for_key() {
+        return [this.key_wait, this.key_promise]
+    }
+
+    key_package() {
+        return this.key_pack
+    }
+
+    //
+    async provide_keys() {
+        let key_pack = await cwraps.galactic_user_starter_keys("wrapper")
+        this._wrapper_key = key_pack.pk_str
+        this.key_pack = key_pack
+        return key_pack
+    }
+
+    set wrapper_key(wkey) {
+        this._wrapper_key = wkey
+    }
+
+    get wrapper_key() {
+        return this._wrapper_key
+    }
+
+    async ucwid_constructor(clear_cwid,crypto_cwid) {
+        let ucwid_packet = {
+            "clear_cwid" : clear_cwid,
+            "crypto_cwid" : crypto_cwid
+        }
+        let n_version = this.normalizer.version()
+        let pack_str = JSON.stringify(ucwid_packet)
+        let packet_cwid = await this.cwid_service.cwid(pack_str)
+        let u_cwid = n_version + '!' + packet_cwid
+        return [u_cwid,ucwid_packet]     
+    }
+
+    //
+    async ucwid(data) {
+        //
+        let normalize = false
+        let buf_as_str = false 
+
+        if ( typeof data === "string" ) {
+            normalize = true
+            buf_as_str = atob(data)
+            data = this.normalizer.normalize(data)
+        } else { //make them the same until there is a method for digital normalization...
+            buf_as_str = to_base64_from_uint8array(data)
+            data = buf_as_str
+        }
+
+        // clear ID
+        let clear_cwid = await this.cwid_service.cwid(data)
+        let c_cwid_hash = clear_cwid.split('!')[1]
+console.log(c_cwid_hash)
+        // crypto ID
+        let nonce = cwraps.gen_nonce(c_cwid_hash)
+console.log(nonce)
+        let aes_key = await cwraps.gen_cipher_key()
+        let cipher_text = await cwraps.encipher_message(buf_as_str,aes_key,nonce)
+        let crypto_cwid = await this.cwid_service.cwid(cipher_text)
+        //
+        // UCWID formation
+        let wrapped_key = await cwraps.key_wrapper(aes_key,this._wrapper_key)
+        //
+        let [u_cwid,ucwid_packet] = await this.ucwid_constructor(clear_cwid,crypto_cwid)
+        //
+        return { "ucwid" : u_cwid, "info" : {
+                                                "ucwid_packet" : ucwid_packet,
+                                                "wrapped_key" : wrapped_key,
+                                                "nonce" : nonce,
+                                                "cipher_text" : cipher_text,
+                                                "type_original" : normalize ? "string" : "buffer"
+                                            }}
+    }
+}
+
+
+
+
 // MODULE: ONE TABLE(windowized)
 
 // ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
@@ -2134,6 +2653,8 @@ get_file
 generic_downloader
 */
 
+//  === ---------------------------------------  === ---------------------------------------  === --------------------------------------- 
+
 
 
 // ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
@@ -2681,59 +3202,12 @@ fix_keys
 */
 
 
-// ---- ---- ---- ---- ---- 
-
-
-// MODULE: POST FETCH (windowized)
-
-//$>>	postData
-// //
-//  call fetch with method POST tyr to help with parameters..  If data is FromData set do_stringify to false
-//  default content type 'application/json'
-//  User 'cors', Default cres = omit, If ctype == 'multipart/form-data' be sure to use FormData -- lets fetch set content type.
-//  RETURNS: parsed JSON object or an empty object. ... Check for fields
-//
-async function postData(url = '', data = {}, creds = 'omit', do_stringify = true,ctype) {
-	let content_type = 'application/json'
-	if ( ctype !== undefined ) {
-		content_type = ctype            // ctype is content type
-	}
-	let options = {
-		method: 'POST', // *GET, POST, PUT, DELETE, etc.
-		mode: 'cors', // no-cors, *cors, same-origin
-		cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
-		credentials: creds, // include, *same-origin, omit
-		headers: {
-			'Content-Type': content_type
-		},
-		redirect: 'follow', // manual, *follow, error
-		referrerPolicy: 'no-referrer', // no-referrer, *client
-		body: (do_stringify ? JSON.stringify(data)  : data)	// body data type must match "Content-Type" header
-	}
-
-	if ( ctype === 'multipart/form-data') {
-		delete options.headers['Content-Type']  // content type will be set automatically with a boundary
-	}
-
-	// Default options are marked with *
-	const response = await fetch(url, options);
-	if ( response.ok == false ) {
-		console.log(response.status + ': ' + response.statusText)
-		return {}
-	} else {
-		return await response.json(); // parses JSON response into native JavaScript objects
+function set_user_title(u_name) {
+	let el = document.getElementById('active-user-title')
+	if ( el  && u_name && (typeof u_name === "string") ) {
+		el.innerHTML = u_name
 	}
 }
-
-
-//$EXPORTABLE::
-/*
-fetchEndPoint
-fetchUrl
-postData
-*/
-
-//  === ---------------------------------------  === ---------------------------------------  === --------------------------------------- 
 
 
 
