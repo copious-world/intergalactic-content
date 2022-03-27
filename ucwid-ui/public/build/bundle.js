@@ -7233,934 +7233,6 @@ var app = (function () {
     	}
     }
 
-    // ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
-    const CONTACTS = 'contacts';
-    const MANIFEST  = 'manifest';
-    const TOPICS = 'topics';
-
-    const CURRENT_PRIVATE_MESSAGE_VERSION = 1.2;
-    const SIG_REQUIRED = false;
-
-
-    var alert_error = (msg) => {
-        alert(msg);
-        console.log(new Error("stack"));
-    };
-
-    function set_alert_error_handler(fn) {
-        if ( typeof fn === 'function' ) {
-            alert_error = fn;
-        }
-    }
-
-
-    // // https://www.copious.world/interplanetary-contact
-    var g_profile_port = '';   // 6111
-    function correct_server(srvr) {
-        if ( srvr.indexOf(':5') > 0 ) {
-            srvr = srvr.replace('5111','6111');   /// CHANGE ...        
-        }
-        return srvr
-    }
-
-    var g_stem_prefix = 'interplanetary-contact/contact/';   // by service...
-
-
-    // -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- --------
-    // ASSETS
-
-
-    async function fetch_asset(topics_cid,identity,btype,asset) {  // specifically from this user
-        //
-        let user_cid = identity.cid;
-        //
-        let srver = location.host;
-        srver = correct_server(srver);
-        //
-        let prot = location.protocol;  // prot for (prot)ocol
-
-        btype = btype ? true : false;
-        
-        let data_stem = `${g_stem_prefix}get-asset/${asset}`;
-        let sp = '//';
-        let post_data = {
-            "btype" : btype,
-            "user_cid" : user_cid,
-            "cid" : topics_cid
-        };
-        let search_result = await postData(`${prot}${sp}${srver}/${data_stem}`, post_data);
-        if ( search_result ) {
-            if ( search_result.status === "OK" ) {
-                let data = search_result[asset];
-                if ( typeof data === 'string' ) {
-                    let decryptor = await window.user_decryption(identity,asset);      // user user cid to get the decryptor...
-                    if ( decryptor !== undefined ) {
-                        try {
-                            data = await decryptor(data);        // decryption
-                        } catch (e) {
-                        }
-                    }
-                    if ( data ) {
-                        try {
-                            let data_obj = JSON.parse(data);
-                            return data_obj
-                        } catch (e) {
-                            return [false,data]
-                        }
-                    }    
-                } else {
-                    return data
-                }
-            }
-        } else {
-            return [false,search_result]
-        }
-    }
-
-
-    async function fetch_contacts(contacts_cid,identity,btype) {  // specifically from this user
-        return await fetch_asset(contacts_cid,identity,btype,CONTACTS)
-    }
-
-    async function fetch_manifest(manifest_cid,identity,btype) {  // specifically from this user
-        return await fetch_asset(manifest_cid,identity,btype,MANIFEST)
-    }
-
-    async function fetch_topics(topics_cid,identity,btype) {  // specifically from this user
-        return await fetch_asset(topics_cid,identity,btype,TOPICS)
-    }
-
-
-    // -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- --------
-    // ASSETS
-
-
-    async function update_asset_to_ipfs(asset,identity,is_business,contents) {
-        let user_cid = identity.cid;
-        let srver = location.host;
-        srver = correct_server(srver);
-        //
-        if ( typeof contents !== 'string' ) {
-            contents = JSON.stringify(contents);
-        }
-        let encryptor = await window.user_encryption(identity,asset);
-        let encoded_contents = contents;
-        if ( encryptor !== undefined ) {        // encryption
-            encoded_contents = await encryptor(contents);
-        }
-        //
-        let prot = location.protocol;  // prot for (prot)ocol
-        let data_stem = `${g_stem_prefix}put-asset/${asset}`;
-        let sp = '//';
-        let post_data = {
-            "cid" : user_cid,
-            "business" : is_business,
-            "contents" : encoded_contents
-        };
-        let result = await postData(`${prot}${sp}${srver}/${data_stem}`, post_data);
-        if ( result.status === "OK" ) {
-            return result.update_cid
-        }
-        return false
-    }
-
-
-    async function update_contacts_to_ipfs(identity,is_business,contents) {
-        return await update_asset_to_ipfs(CONTACTS,identity,is_business,contents)
-    }
-
-    async function update_manifest_to_ipfs(identity,is_business,contents) {
-        return await update_asset_to_ipfs(MANIFEST,identity,is_business,contents)
-    }
-
-    async function update_topics_to_ipfs(identity,is_business,contents) {
-        return await update_asset_to_ipfs(TOPICS,identity,is_business,contents)
-    }
-
-    // // contact page
-    // -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- --------
-
-    //
-    // fetch_contact_page
-    //
-    async function fetch_contact_page(identity,business,asset,contact_cid) {  // specifically from this user
-        let srver = location.host;
-        srver = correct_server(srver);
-        //
-        let prot = location.protocol;  // prot for (prot)ocol
-        let data_stem = `${g_stem_prefix}get-contact-page/${asset}`;     // asset as parameter
-        let sp = '//';
-
-        let post_data = {
-            "cid" : contact_cid,     //
-            "business" : business
-        };
-        let search_result = await postData(`${prot}${sp}${srver}/${data_stem}`, post_data);
-        if ( search_result ) {
-            let contact_form = search_result.contact;
-            let decryptor = window.user_decryption(identity,asset);
-            if ( decryptor !== undefined ) {
-                try {
-                    contact_form = await decryptor(contact_form);
-                } catch (e) {
-                }
-            }
-            if ( contact_form ) {
-                if ( typeof contact_form === "string" ) {
-                    let data_obj = JSON.parse(contact_form);
-                    try {
-                        return data_obj
-                    } catch (e) {
-                    }
-                } else {
-                    return contact_form
-                }
-            }
-        }
-        return false
-    }
-
-    // // 
-    // -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- --------
-
-    let g_user_fields = ["name", "DOB", "place_of_origin", "cool_public_info", "business", "public_key", "signer_public_key", "biometric"];
-    // not checking for "cid" for most cases...
-    async function add_profile(u_info) {
-        let user_info = Object.assign(u_info);
-        //
-        for ( let field of g_user_fields ) {
-            if ( user_info[field] === undefined ) {
-                if ( field ===  "public_key" ) {
-                    let p_key = get_user_public_wrapper_key(`${user_info.name}-${user_info.DOB}`);   // out of DB (index.html)
-                    if ( p_key ) {
-                        user_info.public_key = p_key;
-                        continue
-                    }
-                }
-                if ( field ===  "signer_public_key" ) {
-                    let p_key = get_user_public_signer_key(`${user_info.name}-${user_info.DOB}`);   // out of DB (index.html)
-                    if ( p_key ) {
-                        user_info.signer_public_key = p_key;
-                        continue
-                    }
-                }
-                alert_error("undefined field " + field);
-                return
-            }
-        }
-        if ( user_info.cid !== undefined ) {        // remove reference to a cid when adding a new profile...
-            delete user_info.cid;
-        }
-        let srver = location.host;
-        srver = correct_server(srver);
-        //
-        let prot = location.protocol;  // prot for (prot)ocol
-        let data_stem = `${g_stem_prefix}add/profile`;
-        let sp = '//';
-        let post_data = user_info;
-        let result = await postData(`${prot}${sp}${srver}/${data_stem}`, post_data);
-        if ( result.status === "OK" ) {
-            let ipfs_identity = result.data;
-            if ( typeof ipfs_identity.dir_data === 'string' ) {
-                ipfs_identity.dir_data = JSON.parse(ipfs_identity.dir_data);
-            }
-            // "id" : cid with key,
-            // "clear_id" : cid without key,
-            // "dir_data" : user directory structure
-            u_info.cid = ipfs_identity.id;
-            await finalize_user_identity(u_info,ipfs_identity);
-            return true
-        }
-        return false
-    }
-
-
-    async function fetch_contact_cid(someones_info,clear) {  // a user,, not the owner of the manifest, most likely a recipients
-        let user_info = Object.assign({},someones_info); 
-        for ( let field of g_user_fields ) {
-            if ( user_info[field] === undefined ) {
-                if ( (field === "public_key") && clear ) {
-                    delete user_info.public_key;
-                    continue;
-                }
-                if ( (field === "signer_public_key") && clear ) {
-                    delete user_info.signer_public_key;
-                    continue;
-                }
-                if ( (field === "biometric")  && clear ) {     // when wrapping a key use the recipients public wrapper key
-                    // delete public_key key from messages that are introductions, etc. (this is used for the clear user directory id)
-                    delete user_info.biometric;            
-                    continue
-                }
-                alert_error("undefined field " + field);
-                return
-            }
-        }
-        let srver = location.host;
-        srver = correct_server(srver);
-        //
-        let prot = location.protocol;  // prot for (prot)ocol
-        let data_stem = `${g_stem_prefix}get/user-cid`;
-        let sp = '//';
-        let post_data = user_info;
-        let result = await postData(`${prot}${sp}${srver}/${data_stem}`, post_data);
-        if ( result.status === "OK" ) {
-            let cid = result.cid;
-            return cid
-        }
-        return false
-    }
-
-    async function fetch_cid_json(jcid) {
-        if ( jcid === undefined ) return false
-        //
-        let data_stem = `${g_stem_prefix}get/json-cid/${jcid}`;
-        let result = await fetchEndPoint(data_stem,g_profile_port);
-        if ( result.status === "OK" ) {
-            let json_str = result.json_str;
-            if ( typeof json_str === "string" ) {
-                try {
-                    displayable = JSON.parse(json_str);
-                    return displayable
-                } catch (e) {}    
-            } else {
-                return json_str
-            }
-        }
-        return false
-    }
-
-
-
-
-    async function fetch_contact_info(cid) {  // a user,, not the owner of the manifest, most likely a recipients
-        let srver = location.host;
-        srver = correct_server(srver);
-        //
-        let prot = location.protocol;  // prot for (prot)ocol
-        let data_stem = `${g_stem_prefix}get/user-info`;
-        let sp = '//';
-        let post_data = {
-            "cid" : cid
-        };
-        let result = await postData(`${prot}${sp}${srver}/${data_stem}`, post_data);
-        if ( result.status === "OK" ) {
-            let user_info = result.user_info;
-            return user_info
-        }
-        return false
-    }
-
-
-
-
-    async function get_dir(identity,clear) {
-        //
-        let user_info = identity.user_info;
-        for ( let field of g_user_fields ) {
-            if ( user_info[field] === undefined ) {
-                if ( (field === "public_key")  && !(clear) ) {
-                    let p_key = get_user_public_wrapper_key(`${user_info.name}-${user_info.DOB}`);
-                    if ( p_key ) {
-                        user_info[field] = p_key;
-                        continue
-                    }
-                }
-                if ( (field === "signer_public_key")  && !(clear) ) {
-                    //continue
-                    let p_key = get_user_public_signer_key(`${user_info.name}-${user_info.DOB}`);
-                    if ( p_key ) {
-                       user_info[field] = p_key;
-                       continue
-                    }
-                }
-                alert_error("undefined field " + field);
-                return
-            }
-        }
-        //
-        if ( clear ) {
-            delete user_info.public_key; 
-        }
-        //
-        let srver = location.host;
-        srver = correct_server(srver);
-        //
-        let prot = location.protocol;  // prot for (prot)ocol
-        let data_stem = `${g_stem_prefix}dir`;
-        let sp = '//';
-        let post_data = user_info;
-        post_data.cid = identity.cid;
-        let result = await postData(`${prot}${sp}${srver}/${data_stem}`, post_data);
-        if ( result.status === "OK" ) {
-            let dir_tree = result.data;
-            try {
-                dir_tree = JSON.parse(dir_tree);
-                return dir_tree
-            } catch (e) {}
-        }
-        return false
-    }
-    async function send_kind_of_message(m_path,recipient_info,identity,message,clear) {
-        //
-        let user_info = identity.user_info;  // from sender == user_info
-        // assume that user info has been properly formed and ready to act as recipient
-        //
-        // make sure that 
-        let recipient = Object.assign({},recipient_info);
-        for ( let field of g_user_fields ) {
-            if ( (field === "public_key")  && clear ) {     // when wrapping a key use the recipients public wrapper key
-                // delete public_key key from messages that are introductions, etc. (this is used for the clear user directory id)
-                delete recipient_info.public_key;            
-                continue
-            }
-            if ( (field === "signer_public_key")  && clear ) {     // when wrapping a key use the recipients public wrapper key
-                // delete public_key key from messages that are introductions, etc. (this is used for the clear user directory id)
-                delete recipient_info.signer_public_key;            
-                continue
-            }
-            if ( (field === "biometric")  && clear ) {     // when wrapping a key use the recipients public wrapper key
-                // delete public_key key from messages that are introductions, etc. (this is used for the clear user directory id)
-                delete recipient_info.biometric;            
-                continue
-            }
-            if ( recipient[field] === undefined ) {
-                alert_error("undefined field " + field);
-                return
-            }
-        }
-
-        let sendable_message = Object.assign({},message);
-        //
-        let user_cid = identity.cid;
-        sendable_message.user_cid = user_cid;    // cid of from  (should have been set)
-                                                            // the recipient will wrap key with this (so refresh his memory)
-        if ( clear ) {
-            sendable_message.public_key = user_info.public_key;
-            sendable_message.signer_public_key = user_info.signer_public_key;  // send the signature key in the intro (just this once)
-            // the id of the clear directory ignores the key.
-            // the identity of established contact messages requires the public key (so it stays for not clear)
-            delete recipient.public_key;  // this has to do with the identiy and the directory where introductions go.
-            delete recipient.signer_public_key;  // and this. Clear identity does not use keys
-        } else  {
-            //
-            if ( sendable_message.when === undefined ) sendable_message.when = Date.now();
-            if ( sendable_message.date === undefined ) sendable_message.date = (new Date(message.date)).toISOString();
-            if ( sendable_message.name === undefined ) sendable_message.name = user_info.name;       // from
-
-            // should have been set in the interface ... but can still catch this here.
-            sendable_message.public_key = user_info.public_key;  // basically says we know the recipient (we have talked)
-            sendable_message.nonce = message.nonce;  // for AES CBC...
-            //
-            // CAN'T PROCEED WITHOUT A KEY
-            //
-            let key_to_wrap = await window.gen_cipher_key();  /// this will be an AES KEY, new each time.
-            if ( key_to_wrap === undefined || !(key_to_wrap) ) {
-                alert_error("could not get key ");
-                alert("no cipher key");
-                return
-            } else {
-                //
-                sendable_message.message = JSON.stringify(message);  // STRINGIFY
-                //
-                let encryptor = await window.user_encryption(identity,"message");  // encryptor may vary by user... assuming more than one in indexedDB
-                let encoded_contents = sendable_message.message; 
-                if ( encryptor !== undefined ) {
-                    let aes_key = key_to_wrap;                   // ENCRYPT
-                    encoded_contents = await encryptor(encoded_contents,aes_key,sendable_message.nonce);  // CBC starting with nonce...
-                }
-                sendable_message.message = encoded_contents;     // ENCODED
-                //
-                // WRAP the key just used with the public wrapper key of the recipient (got the key via introduction...)
-                sendable_message.wrapped_key = await window.key_wrapper(key_to_wrap,recipient.public_key);
-                // SIGN the wrapped key using the sender's private signer key (receiver should already have public signature...)
-                sendable_message.signature = await window.key_signer(sendable_message.wrapped_key,identity.signer_priv_key);
-                //
-                delete sendable_message.subject;
-                delete sendable_message.readers;
-            }
-
-            sendable_message.version = CURRENT_PRIVATE_MESSAGE_VERSION;
-        }
-        //
-        let srver = location.host;
-        srver = correct_server(srver);
-        //
-        let prot = location.protocol;  // prot for (prot)ocol
-        let data_stem = `${g_stem_prefix}${m_path}`;
-        let sp = '//';
-        let post_data = {
-            "receiver" : recipient,
-            "message" : sendable_message
-        };
-        let result = await postData(`${prot}${sp}${srver}/${data_stem}`, post_data);
-        if ( result.status === "OK" ) {
-            let m_cid = result.message_cid;
-            return m_cid
-        }
-        return false
-    }
-
-    /*
-    if ( !(introduction) && encrypting ) {
-        if ( encrypting ) {
-            message = {
-                "name" : active_identity.user_info.name,
-                "user_cid" : active_identity.cid
-            }
-            let [wrapped, aes_key] = get_wrapped_aes_key(public_key)  // recipient's public wrapper key
-            message.wrapped_key = wrapped
-            message.ctext = get_encipherd_message(JSON.stringify(message_object),aes_key)
-        }
-    }
-    */
-
-
-    async function send_message(recipient_info,identity,message) {
-        let m_path = 'send/message';
-        let result = await send_kind_of_message(m_path,recipient_info,identity,message,false);
-        return result
-    }
-
-
-    async function send_introduction(recipient_info,identity,message) {
-        let m_path = 'send/introduction';
-        let result = await send_kind_of_message(m_path,recipient_info,identity,message,true);
-        return result
-    }
-
-
-    async function send_topic(recipient_info,identity,message) {
-        let m_path = '/send/topic';
-        let result = await send_kind_of_message(m_path,recipient_info,identity,message,false);
-        return result
-    }
-
-
-    async function send_topic_offer(recipient_info,identity,message) {
-        let m_path = '/send/topic_offer';
-        let result = await send_kind_of_message(m_path,recipient_info,identity,message,true);
-        return result
-    }
-
-    // -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- --------
-
-    async function* message_decryptor(messages,identity) {
-        let priv_key = identity.priv_key;
-        for ( let message of messages ) {
-            if ( message.version && (message.version > 1.0) ) {
-                let wrapped_key = message.wrapped_key;
-                try {
-                    let signature = message.signature;
-                    if ( signature || SIG_REQUIRED ) {
-                        if ( !signature ) continue
-                        let user_cid = message.user_cid;
-                        let contact = contact_from_cid(user_cid);
-                        let signer_pub_key = contact.signer_public_key;
-                        //
-                        let ok = await window.verifier(wrapped_key,signature,signer_pub_key);
-                        if ( !(ok) ) continue
-                    }
-                    let clear_m = await window.decipher_message(message.message,wrapped_key,priv_key,message.nonce);
-                    if ( clear_m !== false ) {
-                        message.message = JSON.parse(clear_m);
-                    } else {
-                        continue
-                    }
-                } catch (e) {}
-            }
-            yield message;
-        }
-    }
-
-    async function clarify_message(messages,identity) {
-        let clear_messages = [];
-        try {
-            for await (let message of message_decryptor(messages,identity) ) {
-                try {
-                    let cmessage = false;
-                    if ( typeof message.message === "string" ) {
-                        cmessage = JSON.parse(message.message);
-                    } else {
-                        cmessage = message.message;
-                    }
-                    if ( message.f_cid ) {
-                        cmessage.f_cid =  message.f_cid;
-                    }
-                    clear_messages.push(cmessage);
-                } catch (e) {
-                    //clear_messages.push(message)
-                }
-            }
-        } catch (e) {
-            console.log('caught', e);
-        }
-        return(clear_messages)
-    }
-
-    // get_spool_files
-    //  ---- identity - sender's information...
-    //  ---- spool_select - the name of a spool, e.g. 'spool' 'deleted', 'read', 'events', etc.
-    //  ---- clear -- WHICH PATHWAY -- use either the 'clear' cid path (no keys, no encryption) or use the key based message pathway, cid
-    //  ---- offset -- offset into the dirctory list (paging)
-    //  ---- count -- max per page
-    //
-    async function get_spool_files(identity,spool_select,clear,offset,count) {
-        //
-        let cid = identity.cid;
-        if ( clear ) {
-            cid = identity.clear_cid;
-        }
-        if ( cid === undefined ) return false
-        //
-        let srver = location.host;
-        srver = correct_server(srver);
-        //
-        let prot = location.protocol;  // prot for (prot)ocol
-        let data_stem = `${g_stem_prefix}get-spool`;
-        let sp = '//';
-        let post_data = {
-            'cid' : cid,
-            'spool' : spool_select,  // false for introduction
-            'business' : identity.user_info.business,
-            'offset' : offset,
-            'count' : count
-        };
-        let result = await postData(`${prot}${sp}${srver}/${data_stem}`, post_data);
-        if ( result.status === "OK" ) {
-            let messages = result.data;
-            let cid_list = result.cid_list;
-            try {
-                if ( Array.isArray(messages) ) {
-                    messages = messages.map((msg,index) => {
-                        if ( typeof msg === "string" ) {
-                            try {
-                                let obj = JSON.parse(msg);
-                                if ( cid_list ) {
-                                    obj.f_cid = cid_list[index];
-                                }
-                                return obj
-                            } catch(e) {
-                                return msg
-                            }
-                        }
-                    });
-                } else if ( typeof messages === 'string' ) {
-                    messages = JSON.parse(messages);
-                }
-                if ( !clear ) {
-                    messages = await clarify_message(messages,identity);
-                }
-                return messages
-            } catch (e) {}
-        }
-        return false
-    }
-
-
-    async function get_special_files(identity,op_category,offset,count) {
-        //
-        return await get_spool_files(identity,op_category,false,offset,count)
-        //
-    }
-
-
-    async function get_message_files(identity,offset,count) {
-        // picks up both clear and encrypted messages...
-        //
-        // expected_messages -- decrypted messages from the key based identity
-        let expected_messages = await get_spool_files(identity,true,false,offset,count);
-        //
-        // solicitations -- message sent by those who don't have the receiver's public keys 
-        let solicitations = await get_spool_files(identity,true,true,offset,count);
-        //
-        return [expected_messages,solicitations]
-    }
-
-    async function get_topic_files(identity,offset,count) {
-        let expected_messages = await get_spool_files(identity,false,false,offset,count);
-        let solicitations = await get_spool_files(identity,false,true,offset,count);
-        return [expected_messages,solicitations]
-    }
-
-    async function get_categorized_message_files(identity,op_category,offset,count) {
-        let expected_messages = await get_special_files(identity,op_category,offset,count);
-        return expected_messages
-    }
-
-
-    // -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- --------
-    //
-    //  PUBLIC TEMPLATES AVAILABLE FROM DESIGNERS....
-    //
-
-
-    async function get_template_list(offset,count,category,btype) {
-        //
-        if ( category === undefined ) {
-            category = 'any';
-        }
-        //
-        let srver = location.host;
-        srver = correct_server(srver);
-        //
-        let prot = location.protocol;  // prot for (prot)ocol
-        let data_stem = `${g_stem_prefix}template-list/${category}`;
-        let sp = '//';
-        let post_data = {
-            'category' : category,
-            'business_types' : btype ? "business" : "profile",
-            'start' : offset,
-            'count' : count
-        };
-        let result = await postData(`${prot}${sp}${srver}/${data_stem}`, post_data);
-        if ( result.status === "OK" ) {
-            let t_list = result.templates;
-            try {
-                t_list = JSON.parse(t_list);
-                return t_list
-            } catch (e) {}
-        }
-        return false
-    }
-
-
-
-    async function get_contact_template(template_cid) {
-        //
-        let data_stem = `${g_stem_prefix}get/template-cid/${template_cid}`;
-        let result = await fetchEndPoint(data_stem,g_profile_port);
-        if ( result.status === "OK" ) {
-            let contact_template = result.template;
-            if ( typeof contact_template === "string" ) {
-                try {
-                    contact_template = JSON.parse(contact_template);
-                    return contact_template
-                } catch (e) {}    
-            } else {
-                return contact_template
-            }
-        }
-        return false
-    }
-
-
-    async function get_named_contact_template(template_name,biz) {
-        //
-        let biz_t = biz ? "business" : "profile";
-        let data_stem = `${g_stem_prefix}get/template-name/${biz_t}/${template_name}`;
-        let result = await fetchEndPoint(data_stem,g_profile_port);
-        if ( result.status === "OK" ) {
-            let contact_template = result.data;
-            try {
-                t_list = JSON.parse(contact_template);
-                return contact_template
-            } catch (e) {}
-        }
-        return false
-    }
-
-
-
-    async function get_named_contact_template_cid(template_name,biz) {
-        let data_stem = `${g_stem_prefix}get/template-cid-from-name/${biz}/${template_name}`;
-        let result = await fetchEndPoint(data_stem,g_profile_port);
-        if ( result.status === "OK" ) {
-            let cid = result.cid;
-            return cid
-        }
-        return false
-    }
-
-
-    async function put_contact_template(name,data) {
-        //
-        let srver = location.host;
-        srver = correct_server(srver);
-        //
-        if ( typeof data !== 'string' ) {
-            data = JSON.stringify(data);
-        }
-        //
-        let prot = location.protocol;  // prot for (prot)ocol
-        let data_stem = `${g_stem_prefix}put/template`;
-        let sp = '//';
-        let post_data = {
-            'name' : name,
-            'uri_encoded_json' : encodeURIComponent(data)
-        };
-        let result = await postData(`${prot}${sp}${srver}/${data_stem}`, post_data);
-        if ( result.status === "OK" ) {
-            let t_cid = result.template_cid;
-            return t_cid
-        }
-        return false
-    }
-
-    // -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- --------
-    //
-
-    async function message_list_ops(user_cid,dst_cid,op,param,biz_t,message_list,src_cat) {
-        //
-        let srver = location.host;
-        srver = correct_server(srver);
-        //
-        let prot = location.protocol;  // prot for (prot)ocol
-        let data_stem = `${g_stem_prefix}message-list-op/${op}`;
-        let sp = '//';
-        let post_data = {
-            'user_cid' : user_cid,
-            'dst_cid' : dst_cid,
-            'param' : param,
-            'business' : biz_t,
-            'message_list' : message_list.join(',')
-        };
-        if ( src_cat ) {
-            post_data.source_category = src_cat;
-        }
-        let result = await postData(`${prot}${sp}${srver}/${data_stem}`, post_data);
-        if ( result.status === "OK" ) {
-            let t_cid = result.template_cid;
-            return t_cid
-        }
-        return false
-    }
-
-
-    // -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- --------
-    //
-
-    const CHUNK_SIZE = 1000000;
-    // upload_data_file
-    async function upload_data_file(name,blob64) {
-        //
-        let srver = location.host;
-        srver = correct_server(srver);
-        //
-        let prot = location.protocol;  // prot for (prot)ocol
-        let data_stem = `${g_stem_prefix}put/blob`;
-        let sp = '//';
-        let len = blob64.length;
-        let post_data = {
-            "name" : name,
-            "tstamp" : Date.now(),
-            "offset" : 0,
-            "chunk" : "",
-            "end" : false
-        };
-        for ( let i = 0; i < len; i += CHUNK_SIZE ) {
-            let chunk = blob64.substr(i,CHUNK_SIZE);
-            post_data.chunk = chunk;
-            post_data.offset = i;
-            if ( (i + CHUNK_SIZE ) > len ) {
-                post_data.end = true;
-            }
-            let result = await postData(`${prot}${sp}${srver}/${data_stem}`, post_data);
-            if ( result.status === "OK" ) {
-                if ( result.end_of_data ) {
-                    let f_cid = result.cid;
-                    return f_cid    
-                }
-            }
-        }
-
-        return false
-        //
-    }
-
-
-
-
-    async function load_blob_as_url(blob_cid) {
-        let srver = location.host;
-        srver = correct_server(srver);
-        //
-        let prot = location.protocol;  // prot for (prot)ocol
-        let data_stem = `${g_stem_prefix}get/blob`;
-        let sp = '//';
-        let post_data = {
-            "cid" : blob_cid
-        };
-        let result = await postData(`${prot}${sp}${srver}/${data_stem}`, post_data);
-        if ( result.status === "OK" ) {
-            let data = result.data;
-            return data    
-        }
-        //
-        return false
-    }
-
-
-    // -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- -------- --------
-    //
-
-
-    // dont_store_html
-    function dont_store_html(manifest_obj) {
-        //
-        let cc_forms = manifest_obj.custom_contact_forms;
-        //
-        let cids = [];
-        let cid_map = {};
-        if ( Array.isArray(cc_forms) ) {
-            for ( let entry of cc_forms ) {
-                delete entry.html;
-                let cid = entry.cid;
-                if ( entry.preference === undefined ) {
-                    entry.preference = 1.0;
-                }
-                cids.push(entry.cid);
-                cid_map[cid] = entry;
-            }
-        } else {
-            cid_map = cc_forms;
-            for ( let cid in cc_forms ) {
-                let entry = cc_forms[cid];
-                delete entry.html;
-                entry.cid = cid;
-                cids.push(cid);
-            }
-        }
-
-        manifest_obj.custom_contact_forms = cid_map;
-        manifest_obj.sorted_cids = cids.sort((a,b) => {
-            return(cid_map[a].preference - cid_map[b].preference)
-        });
-    }
-
-    var ipfs_profiles = /*#__PURE__*/Object.freeze({
-        __proto__: null,
-        set_alert_error_handler: set_alert_error_handler,
-        fetch_contacts: fetch_contacts,
-        fetch_manifest: fetch_manifest,
-        fetch_topics: fetch_topics,
-        update_contacts_to_ipfs: update_contacts_to_ipfs,
-        update_manifest_to_ipfs: update_manifest_to_ipfs,
-        update_topics_to_ipfs: update_topics_to_ipfs,
-        fetch_contact_page: fetch_contact_page,
-        add_profile: add_profile,
-        fetch_contact_cid: fetch_contact_cid,
-        fetch_cid_json: fetch_cid_json,
-        fetch_contact_info: fetch_contact_info,
-        get_dir: get_dir,
-        send_message: send_message,
-        send_introduction: send_introduction,
-        send_topic: send_topic,
-        send_topic_offer: send_topic_offer,
-        get_message_files: get_message_files,
-        get_topic_files: get_topic_files,
-        get_categorized_message_files: get_categorized_message_files,
-        get_template_list: get_template_list,
-        get_contact_template: get_contact_template,
-        get_named_contact_template: get_named_contact_template,
-        get_named_contact_template_cid: get_named_contact_template_cid,
-        put_contact_template: put_contact_template,
-        message_list_ops: message_list_ops,
-        upload_data_file: upload_data_file,
-        load_blob_as_url: load_blob_as_url,
-        dont_store_html: dont_store_html
-    });
-
     function subst(str,value,match_list) {
         for ( let mm of match_list ) {
             str = str.replace(mm[0],value);
@@ -8348,6 +7420,64 @@ var app = (function () {
         check_empty: check_empty
     });
 
+    /*
+    // user_data
+    {
+        "name_key" : name_key,
+        "name": '',
+        "DOB" : "",
+        "place_of_origin" : "", 
+        "cool_public_info" : "", 
+        "business" : false, 
+        "public_key" : false,
+        "signer_public_key" : false,
+        "biometric" : false
+    }
+    */
+
+
+
+    function user_data_normalizer(user_data_str_json) {
+        let normed_data = user_data_str_json;
+        // //
+        return normed_data
+    }
+
+
+    async function create_ID(user_data,wrapper_key) {
+
+        let ucwid_service = new UCWID({ "normalizer" : user_data_normalizer, "_wrapper_key" : wrapper_key });
+     
+        if ( await ucwid_service.wait_for_key() ) {
+            let data_as_str = JSON.stringify(user_data);
+            let ucwid = await ucwid_service.ucwid(data_as_str);
+            return [ucwid.ucwid_packet.crypto_cwid,ucwid]
+        }
+
+        return []
+
+    }
+
+
+    async function user_keys(user_data,store_info) {
+        let keys = await crypto_wraps.gen_public_key(user_data,store_info);
+        let wrapper_key = keys.pk_str;
+        let key_id_pair = await create_ID(user_data,wrapper_key);
+        let operational_user_info = {
+            "user" : user_data,
+            "keys" : keys,
+            "original_cwid" : key_id_pair[0],
+            "ucwid" :  key_id_pair[1]
+        };
+        return operational_user_info
+    }
+
+    var igid = /*#__PURE__*/Object.freeze({
+        __proto__: null,
+        create_ID: create_ID,
+        user_keys: user_keys
+    });
+
     /* src/App.svelte generated by Svelte v3.46.4 */
 
     const { Object: Object_1, console: console_1 } = globals;
@@ -8355,15 +7485,15 @@ var app = (function () {
 
     function get_each_context(ctx, list, i) {
     	const child_ctx = ctx.slice();
-    	child_ctx[119] = list[i];
+    	child_ctx[116] = list[i];
     	child_ctx[6] = i;
     	return child_ctx;
     }
 
-    // (1140:2) <Label>
+    // (1128:2) <Label>
     function create_default_slot_2(ctx) {
     	let span;
-    	let t_value = /*tab*/ ctx[121] + "";
+    	let t_value = /*tab*/ ctx[118] + "";
     	let t;
     	let span_class_value;
 
@@ -8372,22 +7502,22 @@ var app = (function () {
     			span = element("span");
     			t = text(t_value);
 
-    			attr_dev(span, "class", span_class_value = "" + (null_to_empty(/*tab*/ ctx[121] === /*active*/ ctx[4]
+    			attr_dev(span, "class", span_class_value = "" + (null_to_empty(/*tab*/ ctx[118] === /*active*/ ctx[4]
     			? "active-tab"
-    			: "plain-tab") + " svelte-1b4dyig"));
+    			: "plain-tab") + " svelte-qwk4tx"));
 
-    			add_location(span, file, 1139, 9, 26697);
+    			add_location(span, file, 1127, 9, 26707);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, span, anchor);
     			append_dev(span, t);
     		},
     		p: function update(ctx, dirty) {
-    			if (dirty[3] & /*tab*/ 268435456 && t_value !== (t_value = /*tab*/ ctx[121] + "")) set_data_dev(t, t_value);
+    			if (dirty[3] & /*tab*/ 33554432 && t_value !== (t_value = /*tab*/ ctx[118] + "")) set_data_dev(t, t_value);
 
-    			if (dirty[0] & /*active*/ 16 | dirty[3] & /*tab*/ 268435456 && span_class_value !== (span_class_value = "" + (null_to_empty(/*tab*/ ctx[121] === /*active*/ ctx[4]
+    			if (dirty[0] & /*active*/ 16 | dirty[3] & /*tab*/ 33554432 && span_class_value !== (span_class_value = "" + (null_to_empty(/*tab*/ ctx[118] === /*active*/ ctx[4]
     			? "active-tab"
-    			: "plain-tab") + " svelte-1b4dyig"))) {
+    			: "plain-tab") + " svelte-qwk4tx"))) {
     				attr_dev(span, "class", span_class_value);
     			}
     		},
@@ -8400,14 +7530,14 @@ var app = (function () {
     		block,
     		id: create_default_slot_2.name,
     		type: "slot",
-    		source: "(1140:2) <Label>",
+    		source: "(1128:2) <Label>",
     		ctx
     	});
 
     	return block;
     }
 
-    // (1139:3) <Tab {tab}>
+    // (1127:3) <Tab {tab}>
     function create_default_slot_1(ctx) {
     	let label;
     	let current;
@@ -8431,7 +7561,7 @@ var app = (function () {
     		p: function update(ctx, dirty) {
     			const label_changes = {};
 
-    			if (dirty[0] & /*active*/ 16 | dirty[3] & /*$$scope, tab*/ 805306368) {
+    			if (dirty[0] & /*active*/ 16 | dirty[3] & /*$$scope, tab*/ 100663296) {
     				label_changes.$$scope = { dirty, ctx };
     			}
 
@@ -8455,21 +7585,21 @@ var app = (function () {
     		block,
     		id: create_default_slot_1.name,
     		type: "slot",
-    		source: "(1139:3) <Tab {tab}>",
+    		source: "(1127:3) <Tab {tab}>",
     		ctx
     	});
 
     	return block;
     }
 
-    // (1137:1) <TabBar tabs={['Identify', 'User', 'About Us']} let:tab bind:active>
+    // (1125:1) <TabBar tabs={['Identify', 'User', 'About Us']} let:tab bind:active>
     function create_default_slot(ctx) {
     	let tab;
     	let current;
 
     	tab = new Tab({
     			props: {
-    				tab: /*tab*/ ctx[121],
+    				tab: /*tab*/ ctx[118],
     				$$slots: { default: [create_default_slot_1] },
     				$$scope: { ctx }
     			},
@@ -8486,9 +7616,9 @@ var app = (function () {
     		},
     		p: function update(ctx, dirty) {
     			const tab_changes = {};
-    			if (dirty[3] & /*tab*/ 268435456) tab_changes.tab = /*tab*/ ctx[121];
+    			if (dirty[3] & /*tab*/ 33554432) tab_changes.tab = /*tab*/ ctx[118];
 
-    			if (dirty[0] & /*active*/ 16 | dirty[3] & /*$$scope, tab*/ 805306368) {
+    			if (dirty[0] & /*active*/ 16 | dirty[3] & /*$$scope, tab*/ 100663296) {
     				tab_changes.$$scope = { dirty, ctx };
     			}
 
@@ -8512,14 +7642,14 @@ var app = (function () {
     		block,
     		id: create_default_slot.name,
     		type: "slot",
-    		source: "(1137:1) <TabBar tabs={['Identify', 'User', 'About Us']} let:tab bind:active>",
+    		source: "(1125:1) <TabBar tabs={['Identify', 'User', 'About Us']} let:tab bind:active>",
     		ctx
     	});
 
     	return block;
     }
 
-    // (1297:36) 
+    // (1285:36) 
     function create_if_block_8(ctx) {
     	let div;
     	let blockquote0;
@@ -8603,47 +7733,47 @@ var app = (function () {
     			t24 = space();
     			blockquote7 = element("blockquote");
     			blockquote7.textContent = "You may user your distributed identity in any website that will take one.";
-    			attr_dev(blockquote0, "class", "svelte-1b4dyig");
-    			add_location(blockquote0, file, 1298, 2, 34100);
-    			attr_dev(b0, "class", "svelte-1b4dyig");
-    			add_location(b0, file, 1303, 5, 34330);
-    			attr_dev(blockquote1, "class", "svelte-1b4dyig");
-    			add_location(blockquote1, file, 1301, 2, 34155);
-    			attr_dev(b1, "class", "svelte-1b4dyig");
-    			add_location(b1, file, 1308, 7, 34454);
-    			attr_dev(li0, "class", "svelte-1b4dyig");
-    			add_location(li0, file, 1308, 3, 34450);
-    			attr_dev(b2, "class", "svelte-1b4dyig");
-    			add_location(b2, file, 1309, 7, 34530);
-    			attr_dev(li1, "class", "svelte-1b4dyig");
-    			add_location(li1, file, 1309, 3, 34526);
-    			attr_dev(b3, "class", "svelte-1b4dyig");
-    			add_location(b3, file, 1310, 7, 34649);
+    			attr_dev(blockquote0, "class", "svelte-qwk4tx");
+    			add_location(blockquote0, file, 1286, 2, 34113);
+    			attr_dev(b0, "class", "svelte-qwk4tx");
+    			add_location(b0, file, 1291, 5, 34343);
+    			attr_dev(blockquote1, "class", "svelte-qwk4tx");
+    			add_location(blockquote1, file, 1289, 2, 34168);
+    			attr_dev(b1, "class", "svelte-qwk4tx");
+    			add_location(b1, file, 1296, 7, 34467);
+    			attr_dev(li0, "class", "svelte-qwk4tx");
+    			add_location(li0, file, 1296, 3, 34463);
+    			attr_dev(b2, "class", "svelte-qwk4tx");
+    			add_location(b2, file, 1297, 7, 34543);
+    			attr_dev(li1, "class", "svelte-qwk4tx");
+    			add_location(li1, file, 1297, 3, 34539);
+    			attr_dev(b3, "class", "svelte-qwk4tx");
+    			add_location(b3, file, 1298, 7, 34662);
     			set_style(b4, "color", "darkseagreen");
-    			attr_dev(b4, "class", "svelte-1b4dyig");
-    			add_location(b4, file, 1310, 28, 34670);
-    			attr_dev(li2, "class", "svelte-1b4dyig");
-    			add_location(li2, file, 1310, 3, 34645);
+    			attr_dev(b4, "class", "svelte-qwk4tx");
+    			add_location(b4, file, 1298, 28, 34683);
+    			attr_dev(li2, "class", "svelte-qwk4tx");
+    			add_location(li2, file, 1298, 3, 34658);
     			set_style(ol, "padding-left", "4%");
-    			attr_dev(ol, "class", "svelte-1b4dyig");
-    			add_location(ol, file, 1307, 2, 34418);
-    			attr_dev(blockquote2, "class", "svelte-1b4dyig");
-    			add_location(blockquote2, file, 1305, 2, 34369);
-    			attr_dev(blockquote3, "class", "svelte-1b4dyig");
-    			add_location(blockquote3, file, 1313, 2, 34759);
-    			attr_dev(blockquote4, "class", "svelte-1b4dyig");
-    			add_location(blockquote4, file, 1316, 2, 34931);
+    			attr_dev(ol, "class", "svelte-qwk4tx");
+    			add_location(ol, file, 1295, 2, 34431);
+    			attr_dev(blockquote2, "class", "svelte-qwk4tx");
+    			add_location(blockquote2, file, 1293, 2, 34382);
+    			attr_dev(blockquote3, "class", "svelte-qwk4tx");
+    			add_location(blockquote3, file, 1301, 2, 34772);
+    			attr_dev(blockquote4, "class", "svelte-qwk4tx");
+    			add_location(blockquote4, file, 1304, 2, 34944);
     			set_style(span, "font-weight", "bold");
-    			attr_dev(span, "class", "svelte-1b4dyig");
-    			add_location(span, file, 1320, 2, 35063);
-    			attr_dev(blockquote5, "class", "svelte-1b4dyig");
-    			add_location(blockquote5, file, 1319, 2, 35048);
-    			attr_dev(blockquote6, "class", "svelte-1b4dyig");
-    			add_location(blockquote6, file, 1322, 2, 35197);
-    			attr_dev(blockquote7, "class", "svelte-1b4dyig");
-    			add_location(blockquote7, file, 1326, 2, 35543);
-    			attr_dev(div, "class", "team_message svelte-1b4dyig");
-    			add_location(div, file, 1297, 1, 34069);
+    			attr_dev(span, "class", "svelte-qwk4tx");
+    			add_location(span, file, 1308, 2, 35076);
+    			attr_dev(blockquote5, "class", "svelte-qwk4tx");
+    			add_location(blockquote5, file, 1307, 2, 35061);
+    			attr_dev(blockquote6, "class", "svelte-qwk4tx");
+    			add_location(blockquote6, file, 1310, 2, 35210);
+    			attr_dev(blockquote7, "class", "svelte-qwk4tx");
+    			add_location(blockquote7, file, 1314, 2, 35556);
+    			attr_dev(div, "class", "team_message svelte-qwk4tx");
+    			add_location(div, file, 1285, 1, 34082);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -8691,14 +7821,14 @@ var app = (function () {
     		block,
     		id: create_if_block_8.name,
     		type: "if",
-    		source: "(1297:36) ",
+    		source: "(1285:36) ",
     		ctx
     	});
 
     	return block;
     }
 
-    // (1178:33) 
+    // (1166:33) 
     function create_if_block_2(ctx) {
     	let div17;
     	let div10;
@@ -8793,7 +7923,7 @@ var app = (function () {
     	let dispose;
 
     	function select_block_type_2(ctx, dirty) {
-    		if (/*business*/ ctx[13]) return create_if_block_7;
+    		if (/*business*/ ctx[15]) return create_if_block_7;
     		return create_else_block_3;
     	}
 
@@ -8801,7 +7931,7 @@ var app = (function () {
     	let if_block0 = current_block_type(ctx);
 
     	function select_block_type_3(ctx, dirty) {
-    		if (/*business*/ ctx[13]) return create_if_block_6;
+    		if (/*business*/ ctx[15]) return create_if_block_6;
     		return create_else_block_2;
     	}
 
@@ -8912,7 +8042,7 @@ var app = (function () {
     			div11 = element("div");
     			t47 = text("status: ");
     			span4 = element("span");
-    			t48 = text(/*signup_status*/ ctx[9]);
+    			t48 = text(/*signup_status*/ ctx[11]);
     			t49 = space();
     			div15 = element("div");
     			if (if_block3) if_block3.c();
@@ -8933,122 +8063,122 @@ var app = (function () {
     			t57 = space();
     			button3 = element("button");
     			button3.textContent = "▲ identity";
-    			attr_dev(br0, "class", "svelte-1b4dyig");
-    			add_location(br0, file, 1180, 3, 28061);
-    			attr_dev(div0, "class", "top_instructions svelte-1b4dyig");
-    			add_location(div0, file, 1181, 3, 28069);
-    			attr_dev(br1, "class", "svelte-1b4dyig");
-    			add_location(br1, file, 1184, 3, 28214);
+    			attr_dev(br0, "class", "svelte-qwk4tx");
+    			add_location(br0, file, 1168, 3, 28071);
+    			attr_dev(div0, "class", "top_instructions svelte-qwk4tx");
+    			add_location(div0, file, 1169, 3, 28079);
+    			attr_dev(br1, "class", "svelte-qwk4tx");
+    			add_location(br1, file, 1172, 3, 28224);
     			attr_dev(label0, "for", "name");
     			set_style(label0, "display", "inline");
-    			attr_dev(label0, "class", "svelte-1b4dyig");
-    			add_location(label0, file, 1186, 4, 28251);
+    			attr_dev(label0, "class", "svelte-qwk4tx");
+    			add_location(label0, file, 1174, 4, 28261);
     			attr_dev(input0, "id", "name");
     			attr_dev(input0, "placeholder", "Name");
     			set_style(input0, "display", "inline");
-    			attr_dev(input0, "class", "svelte-1b4dyig");
-    			add_location(input0, file, 1188, 4, 28316);
+    			attr_dev(input0, "class", "svelte-qwk4tx");
+    			add_location(input0, file, 1176, 4, 28326);
     			attr_dev(input1, "type", "checkbox");
     			set_style(input1, "display", "inline");
-    			attr_dev(input1, "class", "svelte-1b4dyig");
-    			add_location(input1, file, 1189, 4, 28398);
-    			attr_dev(span0, "class", "svelte-1b4dyig");
-    			add_location(span0, file, 1189, 76, 28470);
-    			attr_dev(div1, "class", "inner_div svelte-1b4dyig");
-    			add_location(div1, file, 1185, 3, 28222);
-    			attr_dev(div2, "class", "inner_div svelte-1b4dyig");
-    			add_location(div2, file, 1191, 3, 28518);
-    			attr_dev(div3, "class", "inner_div svelte-1b4dyig");
-    			add_location(div3, file, 1198, 3, 28906);
+    			attr_dev(input1, "class", "svelte-qwk4tx");
+    			add_location(input1, file, 1177, 4, 28408);
+    			attr_dev(span0, "class", "svelte-qwk4tx");
+    			add_location(span0, file, 1177, 76, 28480);
+    			attr_dev(div1, "class", "inner_div svelte-qwk4tx");
+    			add_location(div1, file, 1173, 3, 28232);
+    			attr_dev(div2, "class", "inner_div svelte-qwk4tx");
+    			add_location(div2, file, 1179, 3, 28528);
+    			attr_dev(div3, "class", "inner_div svelte-qwk4tx");
+    			add_location(div3, file, 1186, 3, 28916);
     			attr_dev(label1, "for", "self-text");
-    			attr_dev(label1, "class", "svelte-1b4dyig");
-    			add_location(label1, file, 1206, 3, 29349);
-    			attr_dev(br2, "class", "svelte-1b4dyig");
-    			add_location(br2, file, 1206, 50, 29396);
+    			attr_dev(label1, "class", "svelte-qwk4tx");
+    			add_location(label1, file, 1194, 3, 29359);
+    			attr_dev(br2, "class", "svelte-qwk4tx");
+    			add_location(br2, file, 1194, 50, 29406);
     			attr_dev(textarea, "id", "self-text");
     			attr_dev(textarea, "placeholder", "Something you would say to anyone about yourself");
-    			attr_dev(textarea, "class", "svelte-1b4dyig");
-    			add_location(textarea, file, 1207, 3, 29404);
-    			attr_dev(div4, "class", "inner_div svelte-1b4dyig");
-    			add_location(div4, file, 1205, 3, 29321);
-    			attr_dev(div5, "class", "add-profile-div svelte-1b4dyig");
+    			attr_dev(textarea, "class", "svelte-qwk4tx");
+    			add_location(textarea, file, 1195, 3, 29414);
+    			attr_dev(div4, "class", "inner_div svelte-qwk4tx");
+    			add_location(div4, file, 1193, 3, 29331);
+    			attr_dev(div5, "class", "add-profile-div svelte-qwk4tx");
     			set_style(div5, "text-align", "center");
-    			add_location(div5, file, 1209, 3, 29538);
-    			attr_dev(b0, "class", "svelte-1b4dyig");
-    			add_location(b0, file, 1223, 6, 30247);
-    			attr_dev(div6, "class", "instructor svelte-1b4dyig");
-    			add_location(div6, file, 1222, 5, 30215);
+    			add_location(div5, file, 1197, 3, 29548);
+    			attr_dev(b0, "class", "svelte-qwk4tx");
+    			add_location(b0, file, 1211, 6, 30260);
+    			attr_dev(div6, "class", "instructor svelte-qwk4tx");
+    			add_location(div6, file, 1210, 5, 30228);
     			set_style(span1, "font-weight", "bolder");
     			set_style(span1, "color", "navy");
-    			attr_dev(span1, "class", "svelte-1b4dyig");
-    			add_location(span1, file, 1226, 36, 30429);
-    			attr_dev(b1, "class", "svelte-1b4dyig");
-    			add_location(b1, file, 1229, 25, 30713);
-    			attr_dev(i0, "class", "svelte-1b4dyig");
-    			add_location(i0, file, 1229, 22, 30710);
-    			attr_dev(div7, "class", "instructor svelte-1b4dyig");
-    			add_location(div7, file, 1225, 5, 30367);
-    			attr_dev(div8, "class", "instructor svelte-1b4dyig");
-    			add_location(div8, file, 1231, 5, 30800);
-    			attr_dev(blockquote0, "class", "svelte-1b4dyig");
-    			add_location(blockquote0, file, 1221, 4, 30197);
-    			attr_dev(b2, "class", "svelte-1b4dyig");
-    			add_location(b2, file, 1238, 4, 31139);
-    			attr_dev(blockquote1, "class", "svelte-1b4dyig");
-    			add_location(blockquote1, file, 1236, 4, 31037);
-    			attr_dev(b3, "class", "svelte-1b4dyig");
-    			add_location(b3, file, 1242, 96, 31428);
-    			attr_dev(i1, "class", "svelte-1b4dyig");
-    			add_location(i1, file, 1243, 13, 31466);
-    			attr_dev(i2, "class", "svelte-1b4dyig");
-    			add_location(i2, file, 1243, 44, 31497);
-    			attr_dev(blockquote2, "class", "svelte-1b4dyig");
-    			add_location(blockquote2, file, 1244, 5, 31596);
-    			attr_dev(blockquote3, "class", "svelte-1b4dyig");
-    			add_location(blockquote3, file, 1241, 4, 31319);
-    			attr_dev(blockquote4, "class", "svelte-1b4dyig");
-    			add_location(blockquote4, file, 1251, 5, 31923);
-    			attr_dev(blockquote5, "class", "svelte-1b4dyig");
-    			add_location(blockquote5, file, 1249, 4, 31850);
+    			attr_dev(span1, "class", "svelte-qwk4tx");
+    			add_location(span1, file, 1214, 36, 30442);
+    			attr_dev(b1, "class", "svelte-qwk4tx");
+    			add_location(b1, file, 1217, 25, 30726);
+    			attr_dev(i0, "class", "svelte-qwk4tx");
+    			add_location(i0, file, 1217, 22, 30723);
+    			attr_dev(div7, "class", "instructor svelte-qwk4tx");
+    			add_location(div7, file, 1213, 5, 30380);
+    			attr_dev(div8, "class", "instructor svelte-qwk4tx");
+    			add_location(div8, file, 1219, 5, 30813);
+    			attr_dev(blockquote0, "class", "svelte-qwk4tx");
+    			add_location(blockquote0, file, 1209, 4, 30210);
+    			attr_dev(b2, "class", "svelte-qwk4tx");
+    			add_location(b2, file, 1226, 4, 31152);
+    			attr_dev(blockquote1, "class", "svelte-qwk4tx");
+    			add_location(blockquote1, file, 1224, 4, 31050);
+    			attr_dev(b3, "class", "svelte-qwk4tx");
+    			add_location(b3, file, 1230, 96, 31441);
+    			attr_dev(i1, "class", "svelte-qwk4tx");
+    			add_location(i1, file, 1231, 13, 31479);
+    			attr_dev(i2, "class", "svelte-qwk4tx");
+    			add_location(i2, file, 1231, 44, 31510);
+    			attr_dev(blockquote2, "class", "svelte-qwk4tx");
+    			add_location(blockquote2, file, 1232, 5, 31609);
+    			attr_dev(blockquote3, "class", "svelte-qwk4tx");
+    			add_location(blockquote3, file, 1229, 4, 31332);
+    			attr_dev(blockquote4, "class", "svelte-qwk4tx");
+    			add_location(blockquote4, file, 1239, 5, 31936);
+    			attr_dev(blockquote5, "class", "svelte-qwk4tx");
+    			add_location(blockquote5, file, 1237, 4, 31863);
     			set_style(span2, "color", "blue");
-    			attr_dev(span2, "class", "svelte-1b4dyig");
-    			add_location(span2, file, 1258, 4, 32309);
-    			attr_dev(span3, "class", "svelte-1b4dyig");
-    			add_location(span3, file, 1262, 76, 32839);
-    			attr_dev(blockquote6, "class", "svelte-1b4dyig");
-    			add_location(blockquote6, file, 1257, 4, 32292);
-    			attr_dev(div9, "class", "nice_message svelte-1b4dyig");
-    			add_location(div9, file, 1220, 3, 30166);
-    			attr_dev(div10, "class", "signerupper svelte-1b4dyig");
-    			add_location(div10, file, 1179, 2, 28032);
+    			attr_dev(span2, "class", "svelte-qwk4tx");
+    			add_location(span2, file, 1246, 4, 32322);
+    			attr_dev(span3, "class", "svelte-qwk4tx");
+    			add_location(span3, file, 1250, 76, 32852);
+    			attr_dev(blockquote6, "class", "svelte-qwk4tx");
+    			add_location(blockquote6, file, 1245, 4, 32305);
+    			attr_dev(div9, "class", "nice_message svelte-qwk4tx");
+    			add_location(div9, file, 1208, 3, 30179);
+    			attr_dev(div10, "class", "signerupper svelte-qwk4tx");
+    			add_location(div10, file, 1167, 2, 28042);
 
-    			attr_dev(span4, "class", span4_class_value = "" + (null_to_empty(/*signup_status*/ ctx[9] === 'OK'
+    			attr_dev(span4, "class", span4_class_value = "" + (null_to_empty(/*signup_status*/ ctx[11] === 'OK'
     			? "good-status"
-    			: "bad-status") + " svelte-1b4dyig"));
+    			: "bad-status") + " svelte-qwk4tx"));
 
-    			add_location(span4, file, 1269, 12, 33043);
-    			attr_dev(div11, "class", "signup-status svelte-1b4dyig");
-    			add_location(div11, file, 1268, 3, 33003);
-    			attr_dev(button0, "class", "svelte-1b4dyig");
-    			add_location(button0, file, 1284, 6, 33667);
-    			attr_dev(button1, "class", "svelte-1b4dyig");
-    			add_location(button1, file, 1285, 6, 33729);
-    			attr_dev(div12, "class", "contact_controls svelte-1b4dyig");
-    			add_location(div12, file, 1283, 5, 33630);
-    			attr_dev(button2, "class", "svelte-1b4dyig");
-    			add_location(button2, file, 1288, 6, 33851);
-    			attr_dev(button3, "class", "svelte-1b4dyig");
-    			add_location(button3, file, 1289, 6, 33919);
-    			attr_dev(div13, "class", "contact_controls svelte-1b4dyig");
-    			add_location(div13, file, 1287, 5, 33814);
-    			attr_dev(div14, "class", "svelte-1b4dyig");
-    			add_location(div14, file, 1282, 4, 33619);
-    			attr_dev(div15, "class", "svelte-1b4dyig");
-    			add_location(div15, file, 1271, 3, 33147);
-    			attr_dev(div16, "class", "signerupper svelte-1b4dyig");
-    			add_location(div16, file, 1267, 2, 32974);
-    			attr_dev(div17, "class", "signup-grid-container svelte-1b4dyig");
-    			add_location(div17, file, 1178, 1, 27994);
+    			add_location(span4, file, 1257, 12, 33056);
+    			attr_dev(div11, "class", "signup-status svelte-qwk4tx");
+    			add_location(div11, file, 1256, 3, 33016);
+    			attr_dev(button0, "class", "svelte-qwk4tx");
+    			add_location(button0, file, 1272, 6, 33680);
+    			attr_dev(button1, "class", "svelte-qwk4tx");
+    			add_location(button1, file, 1273, 6, 33742);
+    			attr_dev(div12, "class", "contact_controls svelte-qwk4tx");
+    			add_location(div12, file, 1271, 5, 33643);
+    			attr_dev(button2, "class", "svelte-qwk4tx");
+    			add_location(button2, file, 1276, 6, 33864);
+    			attr_dev(button3, "class", "svelte-qwk4tx");
+    			add_location(button3, file, 1277, 6, 33932);
+    			attr_dev(div13, "class", "contact_controls svelte-qwk4tx");
+    			add_location(div13, file, 1275, 5, 33827);
+    			attr_dev(div14, "class", "svelte-qwk4tx");
+    			add_location(div14, file, 1270, 4, 33632);
+    			attr_dev(div15, "class", "svelte-qwk4tx");
+    			add_location(div15, file, 1259, 3, 33160);
+    			attr_dev(div16, "class", "signerupper svelte-qwk4tx");
+    			add_location(div16, file, 1255, 2, 32987);
+    			attr_dev(div17, "class", "signup-grid-container svelte-qwk4tx");
+    			add_location(div17, file, 1166, 1, 28004);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div17, anchor);
@@ -9066,7 +8196,7 @@ var app = (function () {
     			set_input_value(input0, /*name*/ ctx[1]);
     			append_dev(div1, t6);
     			append_dev(div1, input1);
-    			input1.checked = /*business*/ ctx[13];
+    			input1.checked = /*business*/ ctx[15];
     			append_dev(div1, span0);
     			append_dev(div10, t8);
     			append_dev(div10, div2);
@@ -9080,7 +8210,7 @@ var app = (function () {
     			append_dev(div4, br2);
     			append_dev(div4, t12);
     			append_dev(div4, textarea);
-    			set_input_value(textarea, /*cool_public_info*/ ctx[12]);
+    			set_input_value(textarea, /*cool_public_info*/ ctx[14]);
     			append_dev(div10, t13);
     			append_dev(div10, div5);
     			if_block2.m(div5, null);
@@ -9150,9 +8280,9 @@ var app = (function () {
 
     			if (!mounted) {
     				dispose = [
-    					listen_dev(input0, "input", /*input0_input_handler*/ ctx[50]),
-    					listen_dev(input1, "change", /*input1_change_handler*/ ctx[51]),
-    					listen_dev(textarea, "input", /*textarea_input_handler*/ ctx[56]),
+    					listen_dev(input0, "input", /*input0_input_handler*/ ctx[47]),
+    					listen_dev(input1, "change", /*input1_change_handler*/ ctx[48]),
+    					listen_dev(textarea, "input", /*textarea_input_handler*/ ctx[53]),
     					listen_dev(button0, "click", /*clear_identify_form*/ ctx[21], false, false, false),
     					listen_dev(button1, "click", /*remove_identify_seen_in_form*/ ctx[22], false, false, false),
     					listen_dev(button2, "click", /*app_download_identity*/ ctx[26], false, false, false),
@@ -9167,8 +8297,8 @@ var app = (function () {
     				set_input_value(input0, /*name*/ ctx[1]);
     			}
 
-    			if (dirty[0] & /*business*/ 8192) {
-    				input1.checked = /*business*/ ctx[13];
+    			if (dirty[0] & /*business*/ 32768) {
+    				input1.checked = /*business*/ ctx[15];
     			}
 
     			if (current_block_type === (current_block_type = select_block_type_2(ctx)) && if_block0) {
@@ -9195,8 +8325,8 @@ var app = (function () {
     				}
     			}
 
-    			if (dirty[0] & /*cool_public_info*/ 4096) {
-    				set_input_value(textarea, /*cool_public_info*/ ctx[12]);
+    			if (dirty[0] & /*cool_public_info*/ 16384) {
+    				set_input_value(textarea, /*cool_public_info*/ ctx[14]);
     			}
 
     			if (current_block_type_2 === (current_block_type_2 = select_block_type_4(ctx)) && if_block2) {
@@ -9211,11 +8341,11 @@ var app = (function () {
     				}
     			}
 
-    			if (dirty[0] & /*signup_status*/ 512) set_data_dev(t48, /*signup_status*/ ctx[9]);
+    			if (dirty[0] & /*signup_status*/ 2048) set_data_dev(t48, /*signup_status*/ ctx[11]);
 
-    			if (dirty[0] & /*signup_status*/ 512 && span4_class_value !== (span4_class_value = "" + (null_to_empty(/*signup_status*/ ctx[9] === 'OK'
+    			if (dirty[0] & /*signup_status*/ 2048 && span4_class_value !== (span4_class_value = "" + (null_to_empty(/*signup_status*/ ctx[11] === 'OK'
     			? "good-status"
-    			: "bad-status") + " svelte-1b4dyig"))) {
+    			: "bad-status") + " svelte-qwk4tx"))) {
     				attr_dev(span4, "class", span4_class_value);
     			}
 
@@ -9261,14 +8391,14 @@ var app = (function () {
     		block,
     		id: create_if_block_2.name,
     		type: "if",
-    		source: "(1178:33) ",
+    		source: "(1166:33) ",
     		ctx
     	});
 
     	return block;
     }
 
-    // (1145:1) {#if (active === 'Identify')}
+    // (1133:1) {#if (active === 'Identify')}
     function create_if_block(ctx) {
     	let div1;
     	let t0;
@@ -9302,17 +8432,17 @@ var app = (function () {
     			t3 = text("\n\t\t\tSet up your personal URL and frame page.\n\t\t\t");
     			br2 = element("br");
     			t4 = text("\n\t\t\tMake use of a browser extension to translate your URL into a Web3 style domain.");
-    			attr_dev(br0, "class", "svelte-1b4dyig");
-    			add_location(br0, file, 1169, 3, 27714);
-    			attr_dev(br1, "class", "svelte-1b4dyig");
-    			add_location(br1, file, 1171, 3, 27802);
-    			attr_dev(br2, "class", "svelte-1b4dyig");
-    			add_location(br2, file, 1173, 3, 27854);
-    			attr_dev(div0, "class", "front-page-explain svelte-1b4dyig");
-    			add_location(div0, file, 1167, 2, 27624);
-    			attr_dev(div1, "class", "splash-if-you-will svelte-1b4dyig");
+    			attr_dev(br0, "class", "svelte-qwk4tx");
+    			add_location(br0, file, 1157, 3, 27724);
+    			attr_dev(br1, "class", "svelte-qwk4tx");
+    			add_location(br1, file, 1159, 3, 27812);
+    			attr_dev(br2, "class", "svelte-qwk4tx");
+    			add_location(br2, file, 1161, 3, 27864);
+    			attr_dev(div0, "class", "front-page-explain svelte-qwk4tx");
+    			add_location(div0, file, 1155, 2, 27634);
+    			attr_dev(div1, "class", "splash-if-you-will svelte-qwk4tx");
     			set_style(div1, "height", "fit-content");
-    			add_location(div1, file, 1145, 1, 26840);
+    			add_location(div1, file, 1133, 1, 26850);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div1, anchor);
@@ -9350,14 +8480,14 @@ var app = (function () {
     		block,
     		id: create_if_block.name,
     		type: "if",
-    		source: "(1145:1) {#if (active === 'Identify')}",
+    		source: "(1133:1) {#if (active === 'Identify')}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (1195:4) {:else}
+    // (1183:4) {:else}
     function create_else_block_3(ctx) {
     	let label;
     	let input;
@@ -9371,27 +8501,27 @@ var app = (function () {
     			input = element("input");
     			attr_dev(label, "for", "DOB");
     			set_style(label, "display", "inline");
-    			attr_dev(label, "class", "svelte-1b4dyig");
-    			add_location(label, file, 1195, 5, 28743);
+    			attr_dev(label, "class", "svelte-qwk4tx");
+    			add_location(label, file, 1183, 5, 28753);
     			attr_dev(input, "id", "DOB");
     			attr_dev(input, "placeholder", "Date of Birth");
     			set_style(input, "display", "inline");
-    			attr_dev(input, "class", "svelte-1b4dyig");
-    			add_location(input, file, 1195, 59, 28797);
+    			attr_dev(input, "class", "svelte-qwk4tx");
+    			add_location(input, file, 1183, 59, 28807);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, label, anchor);
     			insert_dev(target, input, anchor);
-    			set_input_value(input, /*DOB*/ ctx[10]);
+    			set_input_value(input, /*DOB*/ ctx[12]);
 
     			if (!mounted) {
-    				dispose = listen_dev(input, "input", /*input_input_handler_1*/ ctx[53]);
+    				dispose = listen_dev(input, "input", /*input_input_handler_1*/ ctx[50]);
     				mounted = true;
     			}
     		},
     		p: function update(ctx, dirty) {
-    			if (dirty[0] & /*DOB*/ 1024 && input.value !== /*DOB*/ ctx[10]) {
-    				set_input_value(input, /*DOB*/ ctx[10]);
+    			if (dirty[0] & /*DOB*/ 4096 && input.value !== /*DOB*/ ctx[12]) {
+    				set_input_value(input, /*DOB*/ ctx[12]);
     			}
     		},
     		d: function destroy(detaching) {
@@ -9406,14 +8536,14 @@ var app = (function () {
     		block,
     		id: create_else_block_3.name,
     		type: "else",
-    		source: "(1195:4) {:else}",
+    		source: "(1183:4) {:else}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (1193:4) {#if business }
+    // (1181:4) {#if business }
     function create_if_block_7(ctx) {
     	let label;
     	let input;
@@ -9427,27 +8557,27 @@ var app = (function () {
     			input = element("input");
     			attr_dev(label, "for", "DOB");
     			set_style(label, "display", "inline");
-    			attr_dev(label, "class", "svelte-1b4dyig");
-    			add_location(label, file, 1193, 5, 28568);
+    			attr_dev(label, "class", "svelte-qwk4tx");
+    			add_location(label, file, 1181, 5, 28578);
     			attr_dev(input, "id", "DOB");
     			attr_dev(input, "placeholder", "Year of Inception");
     			set_style(input, "display", "inline");
-    			attr_dev(input, "class", "svelte-1b4dyig");
-    			add_location(input, file, 1193, 73, 28636);
+    			attr_dev(input, "class", "svelte-qwk4tx");
+    			add_location(input, file, 1181, 73, 28646);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, label, anchor);
     			insert_dev(target, input, anchor);
-    			set_input_value(input, /*DOB*/ ctx[10]);
+    			set_input_value(input, /*DOB*/ ctx[12]);
 
     			if (!mounted) {
-    				dispose = listen_dev(input, "input", /*input_input_handler*/ ctx[52]);
+    				dispose = listen_dev(input, "input", /*input_input_handler*/ ctx[49]);
     				mounted = true;
     			}
     		},
     		p: function update(ctx, dirty) {
-    			if (dirty[0] & /*DOB*/ 1024 && input.value !== /*DOB*/ ctx[10]) {
-    				set_input_value(input, /*DOB*/ ctx[10]);
+    			if (dirty[0] & /*DOB*/ 4096 && input.value !== /*DOB*/ ctx[12]) {
+    				set_input_value(input, /*DOB*/ ctx[12]);
     			}
     		},
     		d: function destroy(detaching) {
@@ -9462,14 +8592,14 @@ var app = (function () {
     		block,
     		id: create_if_block_7.name,
     		type: "if",
-    		source: "(1193:4) {#if business }",
+    		source: "(1181:4) {#if business }",
     		ctx
     	});
 
     	return block;
     }
 
-    // (1202:4) {:else}
+    // (1190:4) {:else}
     function create_else_block_2(ctx) {
     	let label;
     	let input;
@@ -9483,27 +8613,27 @@ var app = (function () {
     			input = element("input");
     			attr_dev(label, "for", "POO");
     			set_style(label, "display", "inline");
-    			attr_dev(label, "class", "svelte-1b4dyig");
-    			add_location(label, file, 1202, 5, 29132);
+    			attr_dev(label, "class", "svelte-qwk4tx");
+    			add_location(label, file, 1190, 5, 29142);
     			attr_dev(input, "id", "POO");
     			attr_dev(input, "placeholder", "Place of Origin");
     			set_style(input, "display", "inline");
-    			attr_dev(input, "class", "svelte-1b4dyig");
-    			add_location(input, file, 1202, 71, 29198);
+    			attr_dev(input, "class", "svelte-qwk4tx");
+    			add_location(input, file, 1190, 71, 29208);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, label, anchor);
     			insert_dev(target, input, anchor);
-    			set_input_value(input, /*place_of_origin*/ ctx[11]);
+    			set_input_value(input, /*place_of_origin*/ ctx[13]);
 
     			if (!mounted) {
-    				dispose = listen_dev(input, "input", /*input_input_handler_3*/ ctx[55]);
+    				dispose = listen_dev(input, "input", /*input_input_handler_3*/ ctx[52]);
     				mounted = true;
     			}
     		},
     		p: function update(ctx, dirty) {
-    			if (dirty[0] & /*place_of_origin*/ 2048 && input.value !== /*place_of_origin*/ ctx[11]) {
-    				set_input_value(input, /*place_of_origin*/ ctx[11]);
+    			if (dirty[0] & /*place_of_origin*/ 8192 && input.value !== /*place_of_origin*/ ctx[13]) {
+    				set_input_value(input, /*place_of_origin*/ ctx[13]);
     			}
     		},
     		d: function destroy(detaching) {
@@ -9518,14 +8648,14 @@ var app = (function () {
     		block,
     		id: create_else_block_2.name,
     		type: "else",
-    		source: "(1202:4) {:else}",
+    		source: "(1190:4) {:else}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (1200:4) {#if business }
+    // (1188:4) {#if business }
     function create_if_block_6(ctx) {
     	let label;
     	let input;
@@ -9539,27 +8669,27 @@ var app = (function () {
     			input = element("input");
     			attr_dev(label, "for", "POO");
     			set_style(label, "display", "inline");
-    			attr_dev(label, "class", "svelte-1b4dyig");
-    			add_location(label, file, 1200, 5, 28956);
+    			attr_dev(label, "class", "svelte-qwk4tx");
+    			add_location(label, file, 1188, 5, 28966);
     			attr_dev(input, "id", "POO");
     			attr_dev(input, "placeholder", "Main Office");
     			set_style(input, "display", "inline");
-    			attr_dev(input, "class", "svelte-1b4dyig");
-    			add_location(input, file, 1200, 68, 29019);
+    			attr_dev(input, "class", "svelte-qwk4tx");
+    			add_location(input, file, 1188, 68, 29029);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, label, anchor);
     			insert_dev(target, input, anchor);
-    			set_input_value(input, /*place_of_origin*/ ctx[11]);
+    			set_input_value(input, /*place_of_origin*/ ctx[13]);
 
     			if (!mounted) {
-    				dispose = listen_dev(input, "input", /*input_input_handler_2*/ ctx[54]);
+    				dispose = listen_dev(input, "input", /*input_input_handler_2*/ ctx[51]);
     				mounted = true;
     			}
     		},
     		p: function update(ctx, dirty) {
-    			if (dirty[0] & /*place_of_origin*/ 2048 && input.value !== /*place_of_origin*/ ctx[11]) {
-    				set_input_value(input, /*place_of_origin*/ ctx[11]);
+    			if (dirty[0] & /*place_of_origin*/ 8192 && input.value !== /*place_of_origin*/ ctx[13]) {
+    				set_input_value(input, /*place_of_origin*/ ctx[13]);
     			}
     		},
     		d: function destroy(detaching) {
@@ -9574,14 +8704,14 @@ var app = (function () {
     		block,
     		id: create_if_block_6.name,
     		type: "if",
-    		source: "(1200:4) {#if business }",
+    		source: "(1188:4) {#if business }",
     		ctx
     	});
 
     	return block;
     }
 
-    // (1215:4) {:else}
+    // (1203:4) {:else}
     function create_else_block_1(ctx) {
     	let div;
     	let span0;
@@ -9597,18 +8727,18 @@ var app = (function () {
     			span0.textContent = "Your custom id number:";
     			t1 = space();
     			span1 = element("span");
-    			t2 = text(/*active_cid*/ ctx[0]);
-    			attr_dev(span0, "class", "cid-grabber-label svelte-1b4dyig");
-    			add_location(span0, file, 1216, 6, 30023);
-    			attr_dev(span1, "class", "cid-grabber svelte-1b4dyig");
-    			add_location(span1, file, 1216, 68, 30085);
+    			t2 = text(/*active_cwid*/ ctx[0]);
+    			attr_dev(span0, "class", "cwid-grabber-label svelte-qwk4tx");
+    			add_location(span0, file, 1204, 6, 30033);
+    			attr_dev(span1, "class", "cwid-grabber svelte-qwk4tx");
+    			add_location(span1, file, 1204, 69, 30096);
 
     			attr_dev(div, "style", div_style_value = /*green*/ ctx[16]
     			? "background-color:rgba(245,255,250,0.9)"
     			: "background-color:rgba(250,250,250,0.3)");
 
-    			attr_dev(div, "class", "svelte-1b4dyig");
-    			add_location(div, file, 1215, 5, 29906);
+    			attr_dev(div, "class", "svelte-qwk4tx");
+    			add_location(div, file, 1203, 5, 29916);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -9618,7 +8748,7 @@ var app = (function () {
     			append_dev(span1, t2);
     		},
     		p: function update(ctx, dirty) {
-    			if (dirty[0] & /*active_cid*/ 1) set_data_dev(t2, /*active_cid*/ ctx[0]);
+    			if (dirty[0] & /*active_cwid*/ 1) set_data_dev(t2, /*active_cwid*/ ctx[0]);
 
     			if (dirty[0] & /*green*/ 65536 && div_style_value !== (div_style_value = /*green*/ ctx[16]
     			? "background-color:rgba(245,255,250,0.9)"
@@ -9635,14 +8765,14 @@ var app = (function () {
     		block,
     		id: create_else_block_1.name,
     		type: "else",
-    		source: "(1215:4) {:else}",
+    		source: "(1203:4) {:else}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (1211:4) {#if creation_to_do }
+    // (1199:4) {#if creation_to_do }
     function create_if_block_5(ctx) {
     	let div;
     	let button;
@@ -9656,16 +8786,16 @@ var app = (function () {
     			div = element("div");
     			button = element("button");
     			t = text("Create my Intergalactic Identity.");
-    			attr_dev(button, "class", "long_button svelte-1b4dyig");
+    			attr_dev(button, "class", "long_button svelte-qwk4tx");
     			button.disabled = /*creator_disabled*/ ctx[17];
-    			add_location(button, file, 1212, 6, 29743);
+    			add_location(button, file, 1200, 6, 29753);
 
     			attr_dev(div, "style", div_style_value = /*green*/ ctx[16]
     			? "background-color:rgba(245,255,250,0.9)"
     			: "background-color:rgba(250,250,250,0.3)");
 
-    			attr_dev(div, "class", "svelte-1b4dyig");
-    			add_location(div, file, 1211, 5, 29626);
+    			attr_dev(div, "class", "svelte-qwk4tx");
+    			add_location(div, file, 1199, 5, 29636);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -9699,14 +8829,14 @@ var app = (function () {
     		block,
     		id: create_if_block_5.name,
     		type: "if",
-    		source: "(1211:4) {#if creation_to_do }",
+    		source: "(1199:4) {#if creation_to_do }",
     		ctx
     	});
 
     	return block;
     }
 
-    // (1273:4) {#if creation_to_do }
+    // (1261:4) {#if creation_to_do }
     function create_if_block_4(ctx) {
     	let div;
     	let img;
@@ -9719,16 +8849,16 @@ var app = (function () {
     			div = element("div");
     			img = element("img");
     			if (!src_url_equal(img.src, img_src_value = /*active_profile_biometric*/ ctx[18])) attr_dev(img, "src", img_src_value);
-    			attr_dev(img, "alt", /*src_biometric_instruct*/ ctx[8]);
-    			attr_dev(img, "class", "svelte-1b4dyig");
-    			add_location(img, file, 1274, 5, 33274);
-    			attr_dev(div, "class", "picture-drop svelte-1b4dyig");
-    			add_location(div, file, 1273, 4, 33183);
+    			attr_dev(img, "alt", /*src_biometric_instruct*/ ctx[10]);
+    			attr_dev(img, "class", "svelte-qwk4tx");
+    			add_location(img, file, 1262, 5, 33287);
+    			attr_dev(div, "class", "picture-drop svelte-qwk4tx");
+    			add_location(div, file, 1261, 4, 33196);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
     			append_dev(div, img);
-    			/*img_binding*/ ctx[57](img);
+    			/*img_binding*/ ctx[54](img);
 
     			if (!mounted) {
     				dispose = [
@@ -9740,13 +8870,13 @@ var app = (function () {
     			}
     		},
     		p: function update(ctx, dirty) {
-    			if (dirty[0] & /*src_biometric_instruct*/ 256) {
-    				attr_dev(img, "alt", /*src_biometric_instruct*/ ctx[8]);
+    			if (dirty[0] & /*src_biometric_instruct*/ 1024) {
+    				attr_dev(img, "alt", /*src_biometric_instruct*/ ctx[10]);
     			}
     		},
     		d: function destroy(detaching) {
     			if (detaching) detach_dev(div);
-    			/*img_binding*/ ctx[57](null);
+    			/*img_binding*/ ctx[54](null);
     			mounted = false;
     			run_all(dispose);
     		}
@@ -9756,14 +8886,14 @@ var app = (function () {
     		block,
     		id: create_if_block_4.name,
     		type: "if",
-    		source: "(1273:4) {#if creation_to_do }",
+    		source: "(1261:4) {#if creation_to_do }",
     		ctx
     	});
 
     	return block;
     }
 
-    // (1278:4) {#if !creation_to_do }
+    // (1266:4) {#if !creation_to_do }
     function create_if_block_3(ctx) {
     	let div;
     	let img;
@@ -9777,15 +8907,15 @@ var app = (function () {
     			img = element("img");
     			if (!src_url_equal(img.src, img_src_value = /*active_profile_image*/ ctx[7])) attr_dev(img, "src", img_src_value);
     			attr_dev(img, "alt", /*src_1_name*/ ctx[19]);
-    			attr_dev(img, "class", "svelte-1b4dyig");
-    			add_location(img, file, 1279, 5, 33513);
-    			attr_dev(div, "class", "picture-drop svelte-1b4dyig");
-    			add_location(div, file, 1278, 4, 33424);
+    			attr_dev(img, "class", "svelte-qwk4tx");
+    			add_location(img, file, 1267, 5, 33526);
+    			attr_dev(div, "class", "picture-drop svelte-qwk4tx");
+    			add_location(div, file, 1266, 4, 33437);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
     			append_dev(div, img);
-    			/*img_binding_1*/ ctx[58](img);
+    			/*img_binding_1*/ ctx[55](img);
 
     			if (!mounted) {
     				dispose = [
@@ -9803,7 +8933,7 @@ var app = (function () {
     		},
     		d: function destroy(detaching) {
     			if (detaching) detach_dev(div);
-    			/*img_binding_1*/ ctx[58](null);
+    			/*img_binding_1*/ ctx[55](null);
     			mounted = false;
     			run_all(dispose);
     		}
@@ -9813,14 +8943,14 @@ var app = (function () {
     		block,
     		id: create_if_block_3.name,
     		type: "if",
-    		source: "(1278:4) {#if !creation_to_do }",
+    		source: "(1266:4) {#if !creation_to_do }",
     		ctx
     	});
 
     	return block;
     }
 
-    // (1160:2) {:else}
+    // (1148:2) {:else}
     function create_else_block(ctx) {
     	let div1;
     	let t0;
@@ -9838,12 +8968,12 @@ var app = (function () {
     			span = element("span");
     			span.textContent = "User";
     			t3 = text(" tab.");
-    			attr_dev(span, "class", "svelte-1b4dyig");
-    			add_location(span, file, 1163, 17, 27572);
-    			attr_dev(div0, "class", "svelte-1b4dyig");
-    			add_location(div0, file, 1162, 3, 27549);
-    			attr_dev(div1, "class", "splash-if-you-will svelte-1b4dyig");
-    			add_location(div1, file, 1160, 2, 27463);
+    			attr_dev(span, "class", "svelte-qwk4tx");
+    			add_location(span, file, 1151, 17, 27582);
+    			attr_dev(div0, "class", "svelte-qwk4tx");
+    			add_location(div0, file, 1150, 3, 27559);
+    			attr_dev(div1, "class", "splash-if-you-will svelte-qwk4tx");
+    			add_location(div1, file, 1148, 2, 27473);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div1, anchor);
@@ -9863,14 +8993,14 @@ var app = (function () {
     		block,
     		id: create_else_block.name,
     		type: "else",
-    		source: "(1160:2) {:else}",
+    		source: "(1148:2) {:else}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (1147:2) {#if (known_users.length > 0) }
+    // (1135:2) {#if (known_users.length > 0) }
     function create_if_block_1(ctx) {
     	let div1;
     	let t0;
@@ -9912,21 +9042,21 @@ var app = (function () {
     				each_blocks[i].c();
     			}
 
-    			attr_dev(span, "class", "svelte-1b4dyig");
-    			add_location(span, file, 1148, 23, 26993);
-    			attr_dev(br, "class", "svelte-1b4dyig");
-    			add_location(br, file, 1149, 3, 27062);
+    			attr_dev(span, "class", "svelte-qwk4tx");
+    			add_location(span, file, 1136, 23, 27003);
+    			attr_dev(br, "class", "svelte-qwk4tx");
+    			add_location(br, file, 1137, 3, 27072);
     			attr_dev(select, "size", 10);
     			set_style(select, "text-align", "center");
-    			attr_dev(select, "class", "svelte-1b4dyig");
-    			if (/*u_index*/ ctx[6] === void 0) add_render_callback(() => /*select_change_handler*/ ctx[49].call(select));
-    			add_location(select, file, 1152, 4, 27202);
-    			attr_dev(div0, "class", "user-options svelte-1b4dyig");
+    			attr_dev(select, "class", "svelte-qwk4tx");
+    			if (/*u_index*/ ctx[6] === void 0) add_render_callback(() => /*select_change_handler*/ ctx[46].call(select));
+    			add_location(select, file, 1140, 4, 27212);
+    			attr_dev(div0, "class", "user-options svelte-qwk4tx");
     			set_style(div0, "text-align", "center");
-    			add_location(div0, file, 1151, 3, 27144);
+    			add_location(div0, file, 1139, 3, 27154);
     			set_style(div1, "height", "fit-content");
-    			attr_dev(div1, "class", "svelte-1b4dyig");
-    			add_location(div1, file, 1147, 2, 26937);
+    			attr_dev(div1, "class", "svelte-qwk4tx");
+    			add_location(div1, file, 1135, 2, 26947);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div1, anchor);
@@ -9947,7 +9077,7 @@ var app = (function () {
 
     			if (!mounted) {
     				dispose = [
-    					listen_dev(select, "change", /*select_change_handler*/ ctx[49]),
+    					listen_dev(select, "change", /*select_change_handler*/ ctx[46]),
     					listen_dev(select, "click", /*navigate_to_user*/ ctx[27], false, false, false)
     				];
 
@@ -9999,17 +9129,17 @@ var app = (function () {
     		block,
     		id: create_if_block_1.name,
     		type: "if",
-    		source: "(1147:2) {#if (known_users.length > 0) }",
+    		source: "(1135:2) {#if (known_users.length > 0) }",
     		ctx
     	});
 
     	return block;
     }
 
-    // (1154:5) {#each known_users as maybe_user, u_index }
+    // (1142:5) {#each known_users as maybe_user, u_index }
     function create_each_block(ctx) {
     	let option;
-    	let t_value = /*maybe_user*/ ctx[119].name + "";
+    	let t_value = /*maybe_user*/ ctx[116].name + "";
     	let t;
 
     	const block = {
@@ -10018,15 +9148,15 @@ var app = (function () {
     			t = text(t_value);
     			option.__value = /*u_index*/ ctx[6];
     			option.value = option.__value;
-    			attr_dev(option, "class", "svelte-1b4dyig");
-    			add_location(option, file, 1154, 6, 27353);
+    			attr_dev(option, "class", "svelte-qwk4tx");
+    			add_location(option, file, 1142, 6, 27363);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, option, anchor);
     			append_dev(option, t);
     		},
     		p: function update(ctx, dirty) {
-    			if (dirty[0] & /*known_users*/ 8 && t_value !== (t_value = /*maybe_user*/ ctx[119].name + "")) set_data_dev(t, t_value);
+    			if (dirty[0] & /*known_users*/ 8 && t_value !== (t_value = /*maybe_user*/ ctx[116].name + "")) set_data_dev(t, t_value);
     		},
     		d: function destroy(detaching) {
     			if (detaching) detach_dev(option);
@@ -10037,7 +9167,7 @@ var app = (function () {
     		block,
     		id: create_each_block.name,
     		type: "each",
-    		source: "(1154:5) {#each known_users as maybe_user, u_index }",
+    		source: "(1142:5) {#each known_users as maybe_user, u_index }",
     		ctx
     	});
 
@@ -10054,7 +9184,7 @@ var app = (function () {
     	let current;
 
     	function tabbar_active_binding(value) {
-    		/*tabbar_active_binding*/ ctx[48](value);
+    		/*tabbar_active_binding*/ ctx[45](value);
     	}
 
     	let tabbar_props = {
@@ -10062,8 +9192,8 @@ var app = (function () {
     		$$slots: {
     			default: [
     				create_default_slot,
-    				({ tab }) => ({ 121: tab }),
-    				({ tab }) => [0, 0, 0, tab ? 268435456 : 0]
+    				({ tab }) => ({ 118: tab }),
+    				({ tab }) => [0, 0, 0, tab ? 33554432 : 0]
     			]
     		},
     		$$scope: { ctx }
@@ -10093,10 +9223,10 @@ var app = (function () {
     			br = element("br");
     			t1 = space();
     			if (if_block) if_block.c();
-    			attr_dev(br, "class", "svelte-1b4dyig");
-    			add_location(br, file, 1142, 2, 26802);
-    			attr_dev(div, "class", "svelte-1b4dyig");
-    			add_location(div, file, 1132, 0, 26476);
+    			attr_dev(br, "class", "svelte-qwk4tx");
+    			add_location(br, file, 1130, 2, 26812);
+    			attr_dev(div, "class", "svelte-qwk4tx");
+    			add_location(div, file, 1120, 0, 26486);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -10113,7 +9243,7 @@ var app = (function () {
     		p: function update(ctx, dirty) {
     			const tabbar_changes = {};
 
-    			if (dirty[0] & /*active*/ 16 | dirty[3] & /*$$scope, tab*/ 805306368) {
+    			if (dirty[0] & /*active*/ 16 | dirty[3] & /*$$scope, tab*/ 100663296) {
     				tabbar_changes.$$scope = { dirty, ctx };
     			}
 
@@ -10221,6 +9351,8 @@ var app = (function () {
     	validate_slots('App', slots, []);
     	let active_profile_image = ""; //"/favicon.png" ; // "/brent-fox-jane-18-b.jpg"
     	let active_profile_biometric = "";
+    	let profile_image_el;
+    	let biometric_data_el;
 
     	//
     	let src_1_name = "Drop a picture here";
@@ -10228,9 +9360,9 @@ var app = (function () {
     	let src_biometric_instruct = "Drop binary biometric file here";
 
     	//
-    	let active_cid = "";
+    	let active_cwid = "";
 
-    	let clear_cid = "";
+    	let clear_cwid = "";
     	let dir_view = false;
     	let signup_status = "OK";
 
@@ -10258,7 +9390,7 @@ var app = (function () {
     	let c_business = false;
     	let c_public_key = "testesttesttest";
     	let c_signer_public_key = "testesttesttest";
-    	let c_cid = "testesttesttest";
+    	let c_cwid = "testesttesttest";
     	let c_answer_message = '';
     	let c_biometric_blob = '';
     	let c_empty_fields = false;
@@ -10278,7 +9410,7 @@ var app = (function () {
 
     	let manifest_index = 0;
     	let man_title = '';
-    	let man_cid = '';
+    	let man_cwid = '';
     	let man_wrapped_key = '';
     	let man_html = '';
     	let man_max_preference = 1.0;
@@ -10292,13 +9424,7 @@ var app = (function () {
     	//
     	let man_encrypted = false;
 
-    	let message_edit_from_contact = false;
-    	let profile_image_el;
-    	let biometric_data_el;
-
-    	//
     	let active = 'Identify';
-
     	let prev_active = active;
     	let first_message = 0;
     	let green = false; // an indicator telling if this user ID is set
@@ -10313,11 +9439,11 @@ var app = (function () {
     	let selected_form_link_types = {
     		"business": {
     			"link": "latest-contact",
-    			"from_cid": "QmTfD2LyTy8WGgdUkKE1Z1vAfb6HwNgmZA5kMaFAiy4fuz"
+    			"from_cwid": "QmTfD2LyTy8WGgdUkKE1Z1vAfb6HwNgmZA5kMaFAiy4fuz"
     		},
     		"profile": {
     			"link": "latest-contact",
-    			"from_cid": "QmTfD2LyTy8WGgdUkKE1Z1vAfb6HwNgmZA5kMaFAiy4fuz"
+    			"from_cwid": "QmTfD2LyTy8WGgdUkKE1Z1vAfb6HwNgmZA5kMaFAiy4fuz"
     		}
     	};
 
@@ -10333,19 +9459,19 @@ var app = (function () {
     			"business": false,
     			"public_key": "testesttesttest",
     			"signer_public_key": "ha ha ha ha ha ha ha ",
-    			"cid": "4504385938",
+    			"cwid": "4504385938",
     			"answer_message": "",
     			"biometric": "53535"
     		}
     	];
 
-    	let cid_individuals_map = {};
+    	let cwid_individuals_map = {};
     	let selected = individuals[0];
 
     	let inbound_solicitation_messages = [
     		{
     			"name": 'Darth Vadar',
-    			"user_cid": "869968609",
+    			"user_cwid": "869968609",
     			"subject": "Hans Solo is Mean",
     			"date": todays_date,
     			"readers": "luke,martha,chewy",
@@ -10359,7 +9485,7 @@ var app = (function () {
     	let inbound_contact_messages = [
     		{
     			"name": 'Hans Solo',
-    			"user_cid": "4504385938",
+    			"user_cwid": "4504385938",
     			"subject": "Darth Vadier Attacks",
     			"date": todays_date,
     			"readers": "joe,jane,harry",
@@ -10385,10 +9511,10 @@ var app = (function () {
     	let message_edit_source = false;
 
     	function reinitialize_user_context() {
-    		$$invalidate(0, active_cid = "");
-    		clear_cid = "";
+    		$$invalidate(0, active_cwid = "");
+    		clear_cwid = "";
     		dir_view = false;
-    		$$invalidate(9, signup_status = "OK");
+    		$$invalidate(11, signup_status = "OK");
 
     		//
     		start_of_messages = 0;
@@ -10417,7 +9543,7 @@ var app = (function () {
     		c_business = false;
     		c_public_key = "testesttesttest";
     		c_signer_public_key = "testesttesttest";
-    		c_cid = "testesttesttest";
+    		c_cwid = "testesttesttest";
     		c_answer_message = '';
     		c_empty_fields = false;
 
@@ -10425,23 +9551,10 @@ var app = (function () {
     		today = new Date().toUTCString();
 
     		adding_new = false;
-    		$$invalidate(37, manifest_selected_entry = false);
-    		manifest_selected_form = false;
-    		$$invalidate(38, manifest_contact_form_list = [false]);
-    		$$invalidate(39, manifest_obj = {});
-    		$$invalidate(40, manifest_index = 0);
-    		man_title = '';
-    		$$invalidate(41, man_cid = '');
-    		man_wrapped_key = '';
-    		man_html = '';
-    		man_max_preference = 1.0;
-    		man_preference = 1.0;
-    		man_encrypted = false;
-    		first_message = 0;
     		$$invalidate(16, green = false); // an indicator telling if this user ID is set
     		todays_date = new Date().toLocaleString();
 
-    		$$invalidate(43, individuals = [
+    		$$invalidate(40, individuals = [
     			{
     				"name": 'Hans Solo',
     				"DOB": "1000",
@@ -10450,18 +9563,18 @@ var app = (function () {
     				"business": false,
     				"public_key": "testesttesttest",
     				"signer_public_key": "ha ha ha ha ha ha ha ",
-    				"cid": "4504385938",
+    				"cwid": "4504385938",
     				"answer_message": "",
     				"biometric": "53535"
     			}
     		]);
 
-    		cid_individuals_map = {};
+    		cwid_individuals_map = {};
 
     		inbound_solicitation_messages = [
     			{
     				"name": 'Darth Vadar',
-    				"user_cid": "869968609",
+    				"user_cwid": "869968609",
     				"subject": "Hans Solo is Mean",
     				"date": todays_date,
     				"readers": "luke,martha,chewy",
@@ -10475,7 +9588,7 @@ var app = (function () {
     		inbound_contact_messages = [
     			{
     				"name": 'Hans Solo',
-    				"user_cid": "4504385938",
+    				"user_cwid": "4504385938",
     				"subject": "Darth Vadier Attacks",
     				"date": todays_date,
     				"readers": "joe,jane,harry",
@@ -10495,8 +9608,6 @@ var app = (function () {
     			"business": false,
     			"public_key": false
     		};
-
-    		update_selected_form_links();
     	}
 
     	/*
@@ -10625,21 +9736,6 @@ var app = (function () {
     		await get_active_users(); // updates login page and initializes the view of this user.
     	});
 
-    	async function update_selected_form_link(type) {
-    		let form_link = selected_form_link_types[type];
-
-    		if (!form_link.from_cid) {
-    			let template_name = form_link.link;
-    			let cid = await get_named_contact_template_cid(template_name, type);
-    			form_link.from_cid = cid;
-    		}
-    	}
-
-    	async function update_selected_form_links() {
-    		await update_selected_form_link("profile");
-    		await update_selected_form_link("business");
-    	}
-
     	// PROFILE  PROFILE  PROFILE  PROFILE  PROFILE  PROFILE  PROFILE 
     	// PROFILE  PROFILE  PROFILE  PROFILE  PROFILE  PROFILE  PROFILE 
     	let g_required_user_fields = ["name", "DOB", "place_of_origin", "cool_public_info", "biometric"];
@@ -10679,8 +9775,14 @@ var app = (function () {
     		return message;
     	}
 
+    	//   create_intergalactic_id
+    	//								BUTTON ACTION
+    	//   							CREATE THE INTERGALACTIC ID
     	async function create_intergalactic_id() {
+    		///
+    		// USER DATA STRUCTURE
     		let contact = new Contact(); // contact of self... Stores the same info as a contact plus some special fields for local db
+
     		contact.set(name, DOB, place_of_origin, cool_public_info, business, false, false, biometric_blob);
 
     		//
@@ -10690,41 +9792,46 @@ var app = (function () {
     		contact.extend_contact("answer_message", "");
 
     		//
-    		let user_data = contact.identity();
+    		let user_data = contact.identity(); // user data structure complete
 
     		//
-    		$$invalidate(9, signup_status = "OK");
+    		// CHECK THAT THE FIELDS ARE FILLED -- make the picture part of this requirement (temporary store needed)
+    		$$invalidate(11, signup_status = "OK");
 
     		if (!check_required_fields(user_data, g_required_user_fields)) {
-    			$$invalidate(9, signup_status = missing_fields("creating contact page", g_renamed_user_fields, business));
+    			$$invalidate(11, signup_status = missing_fields("creating contact page", g_renamed_user_fields, business));
     			return;
     		}
 
-    		await gen_public_key(user_data, store_user); // by ref  // stores keys in DB  // converts biometric to signature (calls protect_hash)
-
+    		// DB ACTION - store the user record with the keys that will be used by associated services
+    		//
     		try {
-    			$$invalidate(16, green = await add_user_locally(user_data)); // will fetch the key (it is not riding along yet.)
+    			let id_packet = user_keys(user_data, window.public_store_user);
+    			let human_window = await inialize_user_resources(id_packet);
+    			$$invalidate(16, green = await window.add_user_to_human_url(human_window, id_packet)); // will fetch the key (it is not riding along yet.)
+    			await window.add_public_user(window.opener_window, id_packet.publc_info);
     		} catch(e) {
     			
     		}
 
     		//
+    		// DB ACTION ACCESS AFTER STORE -- also keep the display of local users (those who share the device)
     		await get_active_users(); // updates login page and initializes the view of this user.
 
     		$$invalidate(6, u_index = known_users.length - 1); // user was added to the end...
-    	}
+    	} //
 
     	async function load_user_info(identity) {
-    		$$invalidate(0, active_cid = identity.cid); // changes to a ucwid
-    		clear_cid = identity.clear_cid;
+    		$$invalidate(0, active_cwid = identity.cwid); // changes to a ucwid
+    		clear_cwid = identity.clear_cwid;
 
     		//
     		await fix_keys(identity);
 
     		//
     		if (identity.profile_image) {
-    			let img_cid = identity.profile_image;
-    			$$invalidate(7, active_profile_image = await window.load_blob_as_url(img_cid));
+    			let img_cwid = identity.profile_image;
+    			$$invalidate(7, active_profile_image = await window.load_blob_as_url(img_cwid));
     		}
     	}
 
@@ -10740,11 +9847,11 @@ var app = (function () {
 
     	function clear_identify_form() {
     		$$invalidate(1, name = '');
-    		$$invalidate(10, DOB = '');
-    		$$invalidate(11, place_of_origin = '');
-    		$$invalidate(12, cool_public_info = '');
+    		$$invalidate(12, DOB = '');
+    		$$invalidate(13, place_of_origin = '');
+    		$$invalidate(14, cool_public_info = '');
     		biometric_blob = '';
-    		$$invalidate(13, business = false);
+    		$$invalidate(15, business = false);
     		$$invalidate(2, active_user = false);
     		$$invalidate(35, active_identity = false);
     		$$invalidate(6, u_index = false);
@@ -10758,7 +9865,7 @@ var app = (function () {
     		if (index >= 0) {
     			$$invalidate(3, known_users = [...known_users.slice(0, index), ...known_users.slice(index + 1)]);
     			$$invalidate(6, u_index = Math.min(u_index, known_users.length - 1));
-    			await unstore_user(identity);
+    			await window.unstore_user(identity);
     		}
     	}
 
@@ -10780,10 +9887,10 @@ var app = (function () {
 
     				//
     				//				use window injected methods to store images in th IndexedDB record of the user
-    				let fcid = await user_info_add_picture(fname, blob64);
+    				let fcwid = await user_info_add_picture(fname, blob64);
 
-    				if (fcid) {
-    					identity.profile_image = fcid;
+    				if (fcwid) {
+    					identity.profile_image = fcwid;
     					await update_identity(identity);
     				}
     			}
@@ -10800,7 +9907,7 @@ var app = (function () {
     			let items = ev.dataTransfer.items ? ev.dataTransfer.items : false;
     			let [fname, blob64] = await drop(items, files);
     			biometric_blob = blob64;
-    			$$invalidate(8, src_biometric_instruct = "Biometric has been dropped.");
+    			$$invalidate(10, src_biometric_instruct = "Biometric has been dropped.");
     		} catch(e) {
     			console.log(e); //
     		}
@@ -10819,7 +9926,7 @@ var app = (function () {
     		c_public_key = individual ? individual.public_key : '';
     		c_signer_public_key = individual ? individual.signer_public_key : '';
     		c_answer_message = individual ? individual.answer_message : '';
-    		c_cid = individual ? individual.cid : '';
+    		c_cwid = individual ? individual.cwid : '';
     	}
 
     	async function app_upload_identity() {
@@ -10862,45 +9969,45 @@ var app = (function () {
 
     	function input1_change_handler() {
     		business = this.checked;
-    		((($$invalidate(13, business), $$invalidate(2, active_user)), $$invalidate(3, known_users)), $$invalidate(6, u_index));
+    		((($$invalidate(15, business), $$invalidate(2, active_user)), $$invalidate(3, known_users)), $$invalidate(6, u_index));
     	}
 
     	function input_input_handler() {
     		DOB = this.value;
-    		((($$invalidate(10, DOB), $$invalidate(2, active_user)), $$invalidate(3, known_users)), $$invalidate(6, u_index));
+    		((($$invalidate(12, DOB), $$invalidate(2, active_user)), $$invalidate(3, known_users)), $$invalidate(6, u_index));
     	}
 
     	function input_input_handler_1() {
     		DOB = this.value;
-    		((($$invalidate(10, DOB), $$invalidate(2, active_user)), $$invalidate(3, known_users)), $$invalidate(6, u_index));
+    		((($$invalidate(12, DOB), $$invalidate(2, active_user)), $$invalidate(3, known_users)), $$invalidate(6, u_index));
     	}
 
     	function input_input_handler_2() {
     		place_of_origin = this.value;
-    		((($$invalidate(11, place_of_origin), $$invalidate(2, active_user)), $$invalidate(3, known_users)), $$invalidate(6, u_index));
+    		((($$invalidate(13, place_of_origin), $$invalidate(2, active_user)), $$invalidate(3, known_users)), $$invalidate(6, u_index));
     	}
 
     	function input_input_handler_3() {
     		place_of_origin = this.value;
-    		((($$invalidate(11, place_of_origin), $$invalidate(2, active_user)), $$invalidate(3, known_users)), $$invalidate(6, u_index));
+    		((($$invalidate(13, place_of_origin), $$invalidate(2, active_user)), $$invalidate(3, known_users)), $$invalidate(6, u_index));
     	}
 
     	function textarea_input_handler() {
     		cool_public_info = this.value;
-    		((($$invalidate(12, cool_public_info), $$invalidate(2, active_user)), $$invalidate(3, known_users)), $$invalidate(6, u_index));
+    		((($$invalidate(14, cool_public_info), $$invalidate(2, active_user)), $$invalidate(3, known_users)), $$invalidate(6, u_index));
     	}
 
     	function img_binding($$value) {
     		binding_callbacks[$$value ? 'unshift' : 'push'](() => {
     			biometric_data_el = $$value;
-    			$$invalidate(15, biometric_data_el);
+    			$$invalidate(9, biometric_data_el);
     		});
     	}
 
     	function img_binding_1($$value) {
     		binding_callbacks[$$value ? 'unshift' : 'push'](() => {
     			profile_image_el = $$value;
-    			$$invalidate(14, profile_image_el);
+    			$$invalidate(8, profile_image_el);
     		});
     	}
 
@@ -10909,14 +10016,16 @@ var app = (function () {
     		Label: CommonLabel,
     		TabBar,
     		onMount,
-    		ipfs_profiles,
     		utils,
+    		igid,
     		active_profile_image,
     		active_profile_biometric,
+    		profile_image_el,
+    		biometric_data_el,
     		src_1_name,
     		src_biometric_instruct,
-    		active_cid,
-    		clear_cid,
+    		active_cwid,
+    		clear_cwid,
     		dir_view,
     		signup_status,
     		start_of_messages,
@@ -10941,7 +10050,7 @@ var app = (function () {
     		c_business,
     		c_public_key,
     		c_signer_public_key,
-    		c_cid,
+    		c_cwid,
     		c_answer_message,
     		c_biometric_blob,
     		c_empty_fields,
@@ -10958,7 +10067,7 @@ var app = (function () {
     		manifest_obj,
     		manifest_index,
     		man_title,
-    		man_cid,
+    		man_cwid,
     		man_wrapped_key,
     		man_html,
     		man_max_preference,
@@ -10966,9 +10075,6 @@ var app = (function () {
     		man_sel_not_customized,
     		man_contact_is_default,
     		man_encrypted,
-    		message_edit_from_contact,
-    		profile_image_el,
-    		biometric_data_el,
     		active,
     		prev_active,
     		first_message,
@@ -10981,7 +10087,7 @@ var app = (function () {
     		selected_form_link_types,
     		selected_form_link,
     		individuals,
-    		cid_individuals_map,
+    		cwid_individuals_map,
     		selected,
     		inbound_solicitation_messages,
     		inbound_contact_messages,
@@ -11000,8 +10106,6 @@ var app = (function () {
     		edit_popup_scale,
     		all_window_scales,
     		popup_size,
-    		update_selected_form_link,
-    		update_selected_form_links,
     		g_required_user_fields,
     		g_renamed_user_fields,
     		g_last_inspected_field,
@@ -11026,12 +10130,14 @@ var app = (function () {
     	$$self.$inject_state = $$props => {
     		if ('active_profile_image' in $$props) $$invalidate(7, active_profile_image = $$props.active_profile_image);
     		if ('active_profile_biometric' in $$props) $$invalidate(18, active_profile_biometric = $$props.active_profile_biometric);
+    		if ('profile_image_el' in $$props) $$invalidate(8, profile_image_el = $$props.profile_image_el);
+    		if ('biometric_data_el' in $$props) $$invalidate(9, biometric_data_el = $$props.biometric_data_el);
     		if ('src_1_name' in $$props) $$invalidate(19, src_1_name = $$props.src_1_name);
-    		if ('src_biometric_instruct' in $$props) $$invalidate(8, src_biometric_instruct = $$props.src_biometric_instruct);
-    		if ('active_cid' in $$props) $$invalidate(0, active_cid = $$props.active_cid);
-    		if ('clear_cid' in $$props) clear_cid = $$props.clear_cid;
+    		if ('src_biometric_instruct' in $$props) $$invalidate(10, src_biometric_instruct = $$props.src_biometric_instruct);
+    		if ('active_cwid' in $$props) $$invalidate(0, active_cwid = $$props.active_cwid);
+    		if ('clear_cwid' in $$props) clear_cwid = $$props.clear_cwid;
     		if ('dir_view' in $$props) dir_view = $$props.dir_view;
-    		if ('signup_status' in $$props) $$invalidate(9, signup_status = $$props.signup_status);
+    		if ('signup_status' in $$props) $$invalidate(11, signup_status = $$props.signup_status);
     		if ('start_of_messages' in $$props) start_of_messages = $$props.start_of_messages;
     		if ('messages_per_page' in $$props) messages_per_page = $$props.messages_per_page;
     		if ('prefix' in $$props) $$invalidate(28, prefix = $$props.prefix);
@@ -11042,10 +10148,10 @@ var app = (function () {
     		if ('p_i' in $$props) p_i = $$props.p_i;
     		if ('form_index' in $$props) form_index = $$props.form_index;
     		if ('name' in $$props) $$invalidate(1, name = $$props.name);
-    		if ('DOB' in $$props) $$invalidate(10, DOB = $$props.DOB);
-    		if ('place_of_origin' in $$props) $$invalidate(11, place_of_origin = $$props.place_of_origin);
-    		if ('cool_public_info' in $$props) $$invalidate(12, cool_public_info = $$props.cool_public_info);
-    		if ('business' in $$props) $$invalidate(13, business = $$props.business);
+    		if ('DOB' in $$props) $$invalidate(12, DOB = $$props.DOB);
+    		if ('place_of_origin' in $$props) $$invalidate(13, place_of_origin = $$props.place_of_origin);
+    		if ('cool_public_info' in $$props) $$invalidate(14, cool_public_info = $$props.cool_public_info);
+    		if ('business' in $$props) $$invalidate(15, business = $$props.business);
     		if ('biometric_blob' in $$props) biometric_blob = $$props.biometric_blob;
     		if ('c_name' in $$props) $$invalidate(31, c_name = $$props.c_name);
     		if ('c_DOB' in $$props) $$invalidate(32, c_DOB = $$props.c_DOB);
@@ -11054,7 +10160,7 @@ var app = (function () {
     		if ('c_business' in $$props) c_business = $$props.c_business;
     		if ('c_public_key' in $$props) c_public_key = $$props.c_public_key;
     		if ('c_signer_public_key' in $$props) c_signer_public_key = $$props.c_signer_public_key;
-    		if ('c_cid' in $$props) c_cid = $$props.c_cid;
+    		if ('c_cwid' in $$props) c_cwid = $$props.c_cwid;
     		if ('c_answer_message' in $$props) c_answer_message = $$props.c_answer_message;
     		if ('c_biometric_blob' in $$props) c_biometric_blob = $$props.c_biometric_blob;
     		if ('c_empty_fields' in $$props) c_empty_fields = $$props.c_empty_fields;
@@ -11067,11 +10173,11 @@ var app = (function () {
     		if ('adding_new' in $$props) adding_new = $$props.adding_new;
     		if ('manifest_selected_entry' in $$props) $$invalidate(37, manifest_selected_entry = $$props.manifest_selected_entry);
     		if ('manifest_selected_form' in $$props) manifest_selected_form = $$props.manifest_selected_form;
-    		if ('manifest_contact_form_list' in $$props) $$invalidate(38, manifest_contact_form_list = $$props.manifest_contact_form_list);
-    		if ('manifest_obj' in $$props) $$invalidate(39, manifest_obj = $$props.manifest_obj);
-    		if ('manifest_index' in $$props) $$invalidate(40, manifest_index = $$props.manifest_index);
+    		if ('manifest_contact_form_list' in $$props) $$invalidate(93, manifest_contact_form_list = $$props.manifest_contact_form_list);
+    		if ('manifest_obj' in $$props) $$invalidate(94, manifest_obj = $$props.manifest_obj);
+    		if ('manifest_index' in $$props) $$invalidate(95, manifest_index = $$props.manifest_index);
     		if ('man_title' in $$props) man_title = $$props.man_title;
-    		if ('man_cid' in $$props) $$invalidate(41, man_cid = $$props.man_cid);
+    		if ('man_cwid' in $$props) $$invalidate(38, man_cwid = $$props.man_cwid);
     		if ('man_wrapped_key' in $$props) man_wrapped_key = $$props.man_wrapped_key;
     		if ('man_html' in $$props) man_html = $$props.man_html;
     		if ('man_max_preference' in $$props) man_max_preference = $$props.man_max_preference;
@@ -11079,11 +10185,8 @@ var app = (function () {
     		if ('man_sel_not_customized' in $$props) man_sel_not_customized = $$props.man_sel_not_customized;
     		if ('man_contact_is_default' in $$props) man_contact_is_default = $$props.man_contact_is_default;
     		if ('man_encrypted' in $$props) man_encrypted = $$props.man_encrypted;
-    		if ('message_edit_from_contact' in $$props) message_edit_from_contact = $$props.message_edit_from_contact;
-    		if ('profile_image_el' in $$props) $$invalidate(14, profile_image_el = $$props.profile_image_el);
-    		if ('biometric_data_el' in $$props) $$invalidate(15, biometric_data_el = $$props.biometric_data_el);
     		if ('active' in $$props) $$invalidate(4, active = $$props.active);
-    		if ('prev_active' in $$props) $$invalidate(42, prev_active = $$props.prev_active);
+    		if ('prev_active' in $$props) $$invalidate(39, prev_active = $$props.prev_active);
     		if ('first_message' in $$props) first_message = $$props.first_message;
     		if ('green' in $$props) $$invalidate(16, green = $$props.green);
     		if ('todays_date' in $$props) todays_date = $$props.todays_date;
@@ -11093,9 +10196,9 @@ var app = (function () {
     		if ('processed_category' in $$props) processed_category = $$props.processed_category;
     		if ('selected_form_link_types' in $$props) selected_form_link_types = $$props.selected_form_link_types;
     		if ('selected_form_link' in $$props) selected_form_link = $$props.selected_form_link;
-    		if ('individuals' in $$props) $$invalidate(43, individuals = $$props.individuals);
-    		if ('cid_individuals_map' in $$props) cid_individuals_map = $$props.cid_individuals_map;
-    		if ('selected' in $$props) $$invalidate(44, selected = $$props.selected);
+    		if ('individuals' in $$props) $$invalidate(40, individuals = $$props.individuals);
+    		if ('cwid_individuals_map' in $$props) cwid_individuals_map = $$props.cwid_individuals_map;
+    		if ('selected' in $$props) $$invalidate(41, selected = $$props.selected);
     		if ('inbound_solicitation_messages' in $$props) inbound_solicitation_messages = $$props.inbound_solicitation_messages;
     		if ('inbound_contact_messages' in $$props) inbound_contact_messages = $$props.inbound_contact_messages;
     		if ('processed_messages' in $$props) processed_messages = $$props.processed_messages;
@@ -11103,8 +10206,8 @@ var app = (function () {
     		if ('message_edit_list_name' in $$props) message_edit_list_name = $$props.message_edit_list_name;
     		if ('message_edit_list' in $$props) message_edit_list = $$props.message_edit_list;
     		if ('message_edit_source' in $$props) message_edit_source = $$props.message_edit_source;
-    		if ('empty_identity' in $$props) $$invalidate(108, empty_identity = $$props.empty_identity);
-    		if ('current_index' in $$props) $$invalidate(45, current_index = $$props.current_index);
+    		if ('empty_identity' in $$props) $$invalidate(107, empty_identity = $$props.empty_identity);
+    		if ('current_index' in $$props) $$invalidate(42, current_index = $$props.current_index);
     		if ('creator_disabled' in $$props) $$invalidate(17, creator_disabled = $$props.creator_disabled);
     		if ('creation_to_do' in $$props) $$invalidate(5, creation_to_do = $$props.creation_to_do);
     		if ('window_scale' in $$props) window_scale = $$props.window_scale;
@@ -11113,8 +10216,8 @@ var app = (function () {
     		if ('g_required_user_fields' in $$props) g_required_user_fields = $$props.g_required_user_fields;
     		if ('g_renamed_user_fields' in $$props) g_renamed_user_fields = $$props.g_renamed_user_fields;
     		if ('g_last_inspected_field' in $$props) g_last_inspected_field = $$props.g_last_inspected_field;
-    		if ('filtered_manifest_contact_form_list' in $$props) $$invalidate(46, filtered_manifest_contact_form_list = $$props.filtered_manifest_contact_form_list);
-    		if ('filteredIndviduals' in $$props) $$invalidate(47, filteredIndviduals = $$props.filteredIndviduals);
+    		if ('filtered_manifest_contact_form_list' in $$props) $$invalidate(43, filtered_manifest_contact_form_list = $$props.filtered_manifest_contact_form_list);
+    		if ('filteredIndviduals' in $$props) $$invalidate(44, filteredIndviduals = $$props.filteredIndviduals);
     	};
 
     	if ($$props && "$$inject" in $$props) {
@@ -11122,10 +10225,10 @@ var app = (function () {
     	}
 
     	$$self.$$.update = () => {
-    		if ($$self.$$.dirty[0] & /*prefix*/ 268435456 | $$self.$$.dirty[1] & /*individuals*/ 4096) {
+    		if ($$self.$$.dirty[0] & /*prefix*/ 268435456 | $$self.$$.dirty[1] & /*individuals*/ 512) {
     			//
     			// ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
-    			$$invalidate(47, filteredIndviduals = prefix
+    			$$invalidate(44, filteredIndviduals = prefix
     			? individuals.filter(individual => {
     					const name = `${individual.name}`;
     					return name.toLowerCase().startsWith(prefix.toLowerCase());
@@ -11133,13 +10236,13 @@ var app = (function () {
     			: individuals);
     		}
 
-    		if ($$self.$$.dirty[0] & /*i*/ 1073741824 | $$self.$$.dirty[1] & /*filteredIndviduals*/ 65536) {
-    			$$invalidate(44, selected = i >= 0
+    		if ($$self.$$.dirty[0] & /*i*/ 1073741824 | $$self.$$.dirty[1] & /*filteredIndviduals*/ 8192) {
+    			$$invalidate(41, selected = i >= 0
     			? filteredIndviduals[i]
     			: empty_identity.identity());
     		}
 
-    		if ($$self.$$.dirty[1] & /*selected*/ 8192) {
+    		if ($$self.$$.dirty[1] & /*selected*/ 1024) {
     			reset_inputs(selected);
     		}
 
@@ -11147,10 +10250,10 @@ var app = (function () {
     			$$invalidate(35, active_identity = known_identities[u_index]);
     		}
 
-    		if ($$self.$$.dirty[1] & /*active_identity, individuals*/ 4112) {
+    		if ($$self.$$.dirty[1] & /*active_identity, individuals*/ 528) {
     			if (active_identity) {
     				filtered_cc_list = individuals.filter(ident => {
-    					if (ident.cid !== active_identity.cid) {
+    					if (ident.cwid !== active_identity.cwid) {
     						return true;
     					}
 
@@ -11183,19 +10286,19 @@ var app = (function () {
     			{
     				if (active_user !== undefined && active_user) {
     					$$invalidate(1, name = active_user.name);
-    					$$invalidate(10, DOB = active_user.DOB);
-    					$$invalidate(11, place_of_origin = active_user.place_of_origin);
-    					$$invalidate(12, cool_public_info = active_user.cool_public_info);
-    					$$invalidate(13, business = active_user.business);
+    					$$invalidate(12, DOB = active_user.DOB);
+    					$$invalidate(13, place_of_origin = active_user.place_of_origin);
+    					$$invalidate(14, cool_public_info = active_user.cool_public_info);
+    					$$invalidate(15, business = active_user.business);
     					adding_new = false;
     				}
     			}
     		}
 
-    		if ($$self.$$.dirty[0] & /*u_index*/ 64 | $$self.$$.dirty[1] & /*current_index, active_identity*/ 16400) {
+    		if ($$self.$$.dirty[0] & /*u_index*/ 64 | $$self.$$.dirty[1] & /*current_index, active_identity*/ 2064) {
     			{
     				if (current_index !== u_index) {
-    					$$invalidate(45, current_index = u_index);
+    					$$invalidate(42, current_index = u_index);
     					reinitialize_user_context();
     				}
 
@@ -11205,8 +10308,8 @@ var app = (function () {
     			}
     		}
 
-    		if ($$self.$$.dirty[0] & /*man_prefix*/ 536870912 | $$self.$$.dirty[1] & /*manifest_contact_form_list*/ 128) {
-    			$$invalidate(46, filtered_manifest_contact_form_list = man_prefix
+    		if ($$self.$$.dirty[0] & /*man_prefix*/ 536870912) {
+    			$$invalidate(43, filtered_manifest_contact_form_list = man_prefix
     			? manifest_contact_form_list.filter(man_contact => {
     					const name = `${man_contact.name}`;
     					return name.toLowerCase().startsWith(man_prefix.toLowerCase());
@@ -11214,7 +10317,7 @@ var app = (function () {
     			: manifest_contact_form_list);
     		}
 
-    		if ($$self.$$.dirty[1] & /*filtered_manifest_contact_form_list, manifest_index, manifest_selected_entry, manifest_obj, man_cid*/ 34624) {
+    		if ($$self.$$.dirty[1] & /*filtered_manifest_contact_form_list, manifest_selected_entry, man_cwid*/ 4288) {
     			{
     				$$invalidate(37, manifest_selected_entry = filtered_manifest_contact_form_list[manifest_index]);
 
@@ -11223,8 +10326,8 @@ var app = (function () {
     					man_title = manifest_selected_entry.info;
     					man_max_preference = manifest_obj.max_preference;
     					man_preference = manifest_selected_entry.preference;
-    					$$invalidate(41, man_cid = manifest_selected_entry.cid);
-    					man_contact_is_default = man_cid === manifest_obj.default_contact_form;
+    					$$invalidate(38, man_cwid = manifest_selected_entry.cwid);
+    					man_contact_is_default = man_cwid === manifest_obj.default_contact_form;
     				}
     			}
     		}
@@ -11233,7 +10336,7 @@ var app = (function () {
     			c_empty_fields = !c_name || c_name.length == 0 || (!c_DOB || c_DOB.length == 0) || (!c_place_of_origin || c_place_of_origin.length == 0) || c_cool_public_info.length == 0;
     		}
 
-    		if ($$self.$$.dirty[0] & /*active*/ 16 | $$self.$$.dirty[1] & /*prev_active*/ 2048) {
+    		if ($$self.$$.dirty[0] & /*active*/ 16 | $$self.$$.dirty[1] & /*prev_active*/ 256) {
     			{
     				if (prev_active !== active) {
     					message_edit_list = [];
@@ -11246,26 +10349,26 @@ var app = (function () {
     					}
     				}
 
-    				$$invalidate(42, prev_active = active);
+    				$$invalidate(39, prev_active = active);
     			}
     		}
 
-    		if ($$self.$$.dirty[0] & /*u_index, active_user, active_cid, creation_to_do*/ 101) {
+    		if ($$self.$$.dirty[0] & /*u_index, active_user, active_cwid, creation_to_do*/ 101) {
     			{
     				$$invalidate(5, creation_to_do = u_index === false || active_user && active_user.biometric === undefined);
 
-    				if (typeof active_cid === "string" && active_cid.length === 0) {
+    				if (typeof active_cwid === "string" && active_cwid.length === 0) {
     					$$invalidate(5, creation_to_do = true);
     				}
 
     				$$invalidate(17, creator_disabled = !creation_to_do);
-    				console.log(active_cid);
+    				console.log(active_cwid);
     			}
     		}
     	};
 
     	return [
-    		active_cid,
+    		active_cwid,
     		name,
     		active_user,
     		known_users,
@@ -11273,14 +10376,14 @@ var app = (function () {
     		creation_to_do,
     		u_index,
     		active_profile_image,
+    		profile_image_el,
+    		biometric_data_el,
     		src_biometric_instruct,
     		signup_status,
     		DOB,
     		place_of_origin,
     		cool_public_info,
     		business,
-    		profile_image_el,
-    		biometric_data_el,
     		green,
     		creator_disabled,
     		active_profile_biometric,
@@ -11303,10 +10406,7 @@ var app = (function () {
     		active_identity,
     		known_identities,
     		manifest_selected_entry,
-    		manifest_contact_form_list,
-    		manifest_obj,
-    		manifest_index,
-    		man_cid,
+    		man_cwid,
     		prev_active,
     		individuals,
     		selected,

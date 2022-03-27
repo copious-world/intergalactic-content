@@ -9,10 +9,14 @@
 	import { onMount } from 'svelte';
 	//
 	import * as utils from './utilities.js'
-	import * as igid from "../public/intergalactic-content/IGID.js"
+	import * as igid from "../public/copious/IGID.js"
 
 	let active_profile_image = ""; //"/favicon.png" ; // "/brent-fox-jane-18-b.jpg"
 	let active_profile_biometric = ""
+
+	let profile_image_el
+	let biometric_data_el
+
 	//
 	let src_1_name = "Drop a picture here"
 	let src_biometric_instruct = "Drop binary biometric file here"
@@ -524,8 +528,10 @@
 		// DB ACTION - store the user record with the keys that will be used by associated services
 		//
 		try {
-			let id_packet = igid.user_keys(user_data,window.store_user)
-			green = await window.add_user_locally(id_packet)  // will fetch the key (it is not riding along yet.)
+			let id_packet = igid.user_keys(user_data,window.public_store_user)
+			let human_window = await inialize_user_resources(id_packet)
+			green = await window.add_user_to_human_url(human_window,id_packet)  // will fetch the key (it is not riding along yet.)
+			await window.add_public_user(window.opener_window,id_packet.publc_info)
 		} catch (e) {
 		}
 		//
@@ -533,9 +539,7 @@
 		await get_active_users()  // updates login page and initializes the view of this user.
 		u_index = (known_users.length - 1)	// user was added to the end...
 		//
-		if ( green ) {			// human_page is a node module providing the separate use case for making the user owned frame page.
-			await inialize_user_resources(id_packet)
-		}
+
 	}
 
 

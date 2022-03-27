@@ -105,7 +105,7 @@
                 "app-dir/user_db.js" : 1,
                 "script/flexy_items_A-layout-and-menu.js" : 11,
                 "script/flexy_items_A-animation.js" : 12,
-                "for-humans/client-auth-opener.js" : 13,
+                "for-humans/human_frame_client.js" : 13,
                 "script/flexy_items_A-app-finalize.js" : 14,
                 "app-dir/window_app.js" : 2
             }
