@@ -441,24 +441,28 @@ function clonify(obj) {
 }
 
 //$>>	launch_simple_link
-//                                                  <<depends>> errorMessage
-function launch_simple_link(default_url,window_name) {
-	let launched = window.open(`https://${default_url}/`,window_name)
-	if ( !launched ) {
-		errorMessage(`could not open window or tab for link ${default_url}`)
+//
+function normalized_launch_url(default_url) {
+	let uri_of_launch = ""
+	if ( default_url.indexOf('http://') === 0 ) {
+		uri_of_launch = default_url
+	} else {
+		uri_of_launch = `https://${default_url}/`
 	}
+	return uri_of_launch
 }
 
+//                                                  <<depends>> errorMessage, normalized_launch_url
+function launch_simple_link(default_url,window_name) {
+	let uri_of_launch = normalized_launch_url(default_url)
+	let launched = window.open(uri_of_launch,window_name)
+	//
+	if ( !launched ) {
+		errorMessage(`could not open window or tab for link ${uri_of_launch}`)
+	}
+	return [launched,uri_of_launch]
+}
 
-
-//$EXPORTABLE::
-/*
-ext_of_file
-clonify
-addscript
-addstyle,
-launch_simple_link
-*/
 
 
 
@@ -545,18 +549,31 @@ async function postData(url = '', data = {}, creds = 'omit', do_stringify = true
 }
 
 
-//$EXPORTABLE::
-/*
-fetchEndPoint
-fetchUrl
-postData
-*/
+
 
 // ---- ---- ---- ---- ---- 
 
 
-// MODULE: base64 (windowized)
 
+// MODULE: GLOBAL CRYPTO (windowized)
+
+//$>>	setup_window_crypto
+function setup_window_crypto() {
+  if ( window.g_crypto === undefined ) {
+    window.g_crypto = window.crypto ? window.crypto.subtle : null
+    if ( g_crypto === null  ) {
+      alert("No cryptography support in this browser. To claim ownership of assets, please use another browser.")
+    }
+  }
+}
+
+//$EXPORTABLE::
+/*
+setup_window_crypto
+*/
+
+
+// MODULE: base64 (windowized)
 /*
 MIT License
 
@@ -581,6 +598,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
+//$>>	getBase64Code
 /*
 // This constant can also be computed with the following algorithm:
 const base64abc = [],
@@ -599,9 +617,6 @@ for (let i = 0; i < 10; ++i) {
 base64abc.push("+");
 base64abc.push("/");
 */
-
-//$>>	bytesToBase64
-
 const base64abc = [
 	"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M",
 	"N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z",
@@ -661,6 +676,7 @@ function getBase64Code(charCode) {
 	return code;
 }
 
+//$>>	bytesToBase64
 function bytesToBase64(bytes,url_no) {
 	let apha = url_no ? base64abc : base64abc_url
 	let result = '', i, l = bytes.length;
@@ -685,7 +701,6 @@ function bytesToBase64(bytes,url_no) {
 }
 
 //$>>	base64ToBytes
-
 function base64ToBytes(str) {
 	if (str.length % 4 !== 0) {
 		throw new Error("Unable to parse base64 string.");
@@ -711,21 +726,22 @@ function base64ToBytes(str) {
 	return result.subarray(0, result.length - missingOctets);
 }
 
-//$>>	base64encode
 
+//$>>	base64encode
 function base64encode(str, encoder = new TextEncoder()) {
 	return bytesToBase64(encoder.encode(str));
 }
 
 //$>>	base64decode
-
 function base64decode(str, decoder = new TextDecoder()) {
 	return decoder.decode(base64ToBytes(str));
 }
 
 
+
 //$EXPORTABLE::
 /*
+getBase64Code
 bytesToBase64
 base64ToBytes
 base64encode
@@ -733,16 +749,141 @@ base64decode
 */
 
 
+// MODULE: BASE STRING (windowized)
+
+
+let base_string = window
+
+//$>>	gen_nonce
+function gen_nonce() {
+	return btoa(window.crypto.getRandomValues(new Uint8Array(16)))
+}
+
+
+//$>>	hex_fromArrayOfBytes
+//>--
+function hex_fromArrayOfBytes(arrayOfBytes) {
+    const hexstr = arrayOfBytes.map(b => b.toString(16).padStart(2, '0')).join('');
+    return(hexstr)
+}
+//--<
+
+//$>>	hex_fromTypedArray
+//                                                  <<depends>> hex_fromArrayOfBytes
+//>--
+function hex_fromTypedArray(byteArray){
+    let arrayOfBytes = Array.from(byteArray)
+    return(hex_fromArrayOfBytes(arrayOfBytes))
+}
+//--<
+
+//$>>	hex_fromByteArray
+//                                                  <<depends>> hex_fromTypedArray,ArrayOfBytes_toByteArray
+//>--
+function hex_fromByteArray(byteArray){
+    return hex_fromTypedArray(ArrayOfBytes_toByteArray(byteArray))
+}
+//--<
+
+//$>>	hex_toArrayOfBytes
+//>--
+function hex_toArrayOfBytes(hexString) {
+    let result = [];
+    for ( let i = 0; i < hexString.length; i += 2 ) {
+      result.push(parseInt(hexString.substr(i, 2), 16));
+    }
+    return result;
+}
+//--<
+
+
+//$>>	ArrayOfBytes_toByteArray
+//>--
+function ArrayOfBytes_toByteArray(arrayOfBytes) {
+    let byteArray = new Uint8Array(arrayOfBytes)
+    return(byteArray)
+}
+//--<
+
+
+
+//$>>	hex_toByteArray
+//                                                  <<depends>> hex_toArrayOfBytes
+//>--
+function hex_toByteArray(hexstr) {
+    let aob = hex_toArrayOfBytes(hexstr)
+    return ArrayOfBytes_toByteArray(aob)
+}
+//--<
+
+//$>>	bufferToArrayBufferCycle
+//>--
+function bufferToArrayBufferCycle(buffer) {
+  var ab = new ArrayBuffer(buffer.length);
+  var view = new Uint8Array(ab);
+  for (var i = 0; i < buffer.length; ++i) {
+      view[i] = buffer[i];
+  }
+  return ab;
+}
+//--<
+
+//$>>	string_from_buffer
+//>--
+function string_from_buffer(bytes) {
+	let s = ""
+	let n = bytes.length
+	for ( let i = 0; i < n; i++ ) {
+		let c_code = bytes[i]
+		s += String.fromCharCode(c_code)
+	}
+	return s
+}
+//--<
+
+
+//$>>	buffer_from_cvs_array
+//>--
+function buffer_from_cvs_array(number_els) {
+	let els = number_els.split(',').map(el => parseInt(el))
+	let buf = new Uint8Array(els)
+	return buf
+}
+//--<
+
+//$>>	buffer_from_b64_csv
+//                                                  <<depends>> buffer_from_cvs_array
+//>--
+function buffer_from_b64_csv(b64_number_els) {
+	let numbers = atob(b64_number_els)
+	return buffer_from_cvs_array(numbers)
+}
+//--<
+
+//$EXPORTABLE::
+/*
+gen_nonce
+hex_fromArrayOfBytes
+hex_fromTypedArray
+hex_fromByteArray
+hex_toArrayOfBytes
+ArrayOfBytes_toByteArray
+hex_toByteArray
+bufferToArrayBufferCycle
+string_from_buffer
+buffer_from_cvs_array
+buffer_from_b64_csv
+*/
 
 
 
 // MODULE: CRYPTO HASH (windowized)
 
 // >> import
-
-
+//modularize>> import * as base64 from "../modules/base64.js";
 //<<
-let base64 = window
+base64 = window
+
 //$>>	do_hash_buffer
 async function do_hash_buffer(text) {
     const encoder = new TextEncoder();
@@ -801,18 +942,17 @@ to_base64_from_uint8array
 
 
 
+// MODULE: CRYPTO WRAPS (windowized)
+
+// sometimes code doesn't want to be a module. But, there is a module version of this in npm crypto-wraps
 //
 
+// ---- ---- ---- ---- ---- ---- ---- ----
+// ---- ---- ---- ---- ---- ---- ---- ----
 
+let cwraps = window 
 
-if ( window.g_crypto === undefined ) {
-    window.g_crypto = window.crypto ? window.crypto.subtle : null
-    if ( g_crypto === null  ) {
-      alert("No cryptography support in this browser. To claim ownership of assets, please use another browser.")
-    }
-    
-}
-
+//$>>	gen_nonce
 /*
 // gen_nonce
 // Parameters: optional parameter
@@ -834,7 +974,7 @@ function gen_nonce(input_bits) {
 	}
 }
 
-
+//$>>	gen_cipher_key
 /*
 // gen_cipher_key
 //    -- generates an AES key "AES-CBC",256 for encrypting and decrypting
@@ -858,12 +998,13 @@ async function gen_cipher_key() {
 }
 
 
+//$>>	pc_keypair_promise
 //>--
 // pc_keypair_promise
 // Parameters: no parameters
 // Returns: a Promise that resolves to an elliptic curve key using P-384 with sign and verify privileges
 //  -- 
-function pc_keypair_promise() {  // return
+function pc_keypair_promise() {  // return 
     // Generate a local public/private key pair
     let p =  g_crypto.generateKey({
             'name': "ECDSA",
@@ -877,6 +1018,7 @@ function pc_keypair_promise() {  // return
 //-
 
 
+//$>>	axiom_keypair_promise
 //>--
 // axiom_keypair_promise
 // Parameters: no parameters
@@ -885,7 +1027,7 @@ function pc_keypair_promise() {  // return
 function axiom_keypair_promise() {
     // Generate a local public/private key pair
     let p =  g_crypto.generateKey({
-            'name': "ECDSA",
+            'name': "ECDH",
             'namedCurve': "P-384"
         },
         true,
@@ -895,12 +1037,13 @@ function axiom_keypair_promise() {
 }
 
 
+//$>>	pc_wrapper_keypair_promise
 //>--
 // pc_wrapper_keypair_promise
 // Parameters: no parameters
 // Returns: a Promise that resolves to an RSA-OAEP key modulus 4096 hash to SHA-256 with wrapKey and unwrapKey privileges
 //  -- 
-function pc_wrapper_keypair_promise() {  // return
+function pc_wrapper_keypair_promise() {  // return 
     // Generate a local public/private key pair
     let p =  g_crypto.generateKey({
             name: "RSA-OAEP",
@@ -916,6 +1059,7 @@ function pc_wrapper_keypair_promise() {  // return
 //--<
 
 
+//$>>	aes_encryptor
 /*
 // aes_encryptor
 // Parameters:  
@@ -941,6 +1085,7 @@ async function aes_encryptor(encodable,aes_key,nonce) {
 }
 
 
+//$>>	aes_decipher_message
 /*
 // aes_decipher_message
 // Parameters:  
@@ -967,7 +1112,7 @@ async function aes_decipher_message(message,aes_key,nonce) {
 // 
 
 
-
+//$>>	galactic_user_starter_keys
 /*
 // galactic_user_starter_keys
 // Parameters: no parameters or (optional) a selector parameter
@@ -1021,7 +1166,6 @@ async function galactic_user_starter_keys(selector) {
 		sign_priv_key_str =  JSON.stringify(sign_priv_exported);
 	}
 
-
 	let axiom_pub_key_str = false
 	let axiom_priv_key_str = false
 	if ( (selector === undefined) || (selector === "derive") ) {
@@ -1067,7 +1211,7 @@ async function galactic_user_starter_keys(selector) {
 
 
 
-
+//$>>	protect_hash
 /*
 // protect_hash
 // Parameters: 
@@ -1097,6 +1241,7 @@ async function protect_hash(priv_keys,aes_key,nonce,string_to_be_signed) {
 }
 
 
+//$>>	verify_protected
 /*
 // verify_protected
 // Parameters: 
@@ -1133,6 +1278,8 @@ async function verify_protected(string_that_was_signed,encrypted_sig,pub_keys,ae
 	return false
 }
 
+
+//$>>	gen_public_key
 /*
 // gen_public_key
 // Parameters:
@@ -1145,6 +1292,7 @@ async function gen_public_key(info,store_info) {
 	//
 	info.public_key = keys.pk_str		// user info is the basis for creating a user cid the public key is part of it
 	info.signer_public_key = keys.signer_pk_str
+	info.axiom_public_key = keys.axiom_pk_str
 	//
 	let aes_key = await gen_cipher_key()
 	let storable_key = await aes_to_str(aes_key) 
@@ -1153,6 +1301,7 @@ async function gen_public_key(info,store_info) {
 	let privates = {		// private keys will be stored locally, and may offloadded from the browser at the user's discretion.
 		'priv_key' : keys.priv_key,
 		'signer_priv_key' : keys.signer_priv_key,
+		'axiom_priv_key' : keys.axiom_priv_key,
 		'signature_protect' : {
 			"key" : storable_key,
 			"nonce" : nonce
@@ -1162,6 +1311,7 @@ async function gen_public_key(info,store_info) {
 	if ( store_info ) store_info(info,privates)
 }
 
+//$>>	unwrapped_aes_key
 /*
 //>--
 // unwrapped_aes_key
@@ -1194,6 +1344,7 @@ async function unwrapped_aes_key(wrapped_aes,unwrapper_key) {
 //--<
 
 
+//$>>	derive_aes_key
 /*
 //>--
 // derive_aes_key
@@ -1202,7 +1353,7 @@ async function unwrapped_aes_key(wrapped_aes,unwrapper_key) {
 //            -- local_private : as a buffer the result of importing the key
 // Returns: aes_key as a CryptoKey structure (see crypto.subtle.generateKey) with encrypte and decrypt permissions
 */
-function derive_aes_key(remote_pub_key_buffer,local_private) {
+async function derive_aes_key(remote_pub_key_buffer,local_private) {
 	let derived_aes = await g_crypto.deriveKey(
 	  {
 		name: "ECDH",
@@ -1221,6 +1372,7 @@ function derive_aes_key(remote_pub_key_buffer,local_private) {
 }
 
 
+//$>>	key_wrapper
 /*
 // key_wrapper
 // Parameters:
@@ -1262,6 +1414,7 @@ async function key_wrapper(key_to_wrap,pub_wrapper_key) {
 }
 
 
+//$>>	key_unwrapper
 /*
 // key_unwrapper
 // Parameters:
@@ -1292,7 +1445,7 @@ async function key_unwrapper(wrapped_key,piv_wrapper_key) {
 
 
 
-
+//$>>	derive_key
 /*
 // derive_key
 // Parameters:
@@ -1323,7 +1476,7 @@ async function derive_key(sender_public_key,piv_axiom_key) {
 
 
 
-
+//$>>	aes_to_str
 /*
 // aes_to_str 
 // Parameters: 
@@ -1349,6 +1502,8 @@ async function aes_to_str(aes_key,transport_type) {
 	}
 }
 
+
+//$>>	importAESKey
 /*
 // importAESKey
 // Parameters:
@@ -1371,6 +1526,8 @@ function importAESKey(rawKey,transport_type) {
   );
 }
 
+
+//$>>	aes_from_str
 /*
 // aes_from_str
 // Parameters:
@@ -1398,6 +1555,7 @@ async function aes_from_str(aes_key_str,transport_type) {
 }
 
 
+//$>>	key_signer
 /*
 // key_signer
 // Parameters:
@@ -1440,6 +1598,7 @@ async function key_signer(data_to_sign,priv_signer_key) {
 }
 
 
+//$>>	verifier
 /*
 // verifier
 // Parameters:
@@ -1483,7 +1642,7 @@ async function verifier(was_signed_data,signature,signer_pub_key) {
 	return false
 }
 
-
+//$>>	encipher_message
 /*
 // encipher_message
 // Parameters:
@@ -1508,6 +1667,7 @@ async function encipher_message(message,aes_key,nonce) {
 // 
 
 
+//$>>	decipher_message
 /*
 // decipher_message
 // Parameters:
@@ -1535,6 +1695,7 @@ async function decipher_message(message,wrapped_key,priv_key,nonce) {
 // 
 
 
+//$>>	derived_decipher_message
 /*
 // derived_decipher_message
 // Parameters:
@@ -1562,46 +1723,44 @@ async function derived_decipher_message(message,remote_public,priv_key,nonce) {
 //
 
 
-// ----------------------------  allow certain methods to be global (up to the application to call)
-function windowize_crypto_wraps() {
-  //
-	window.gen_nonce = gen_nonce
-	window.aes_encryptor = aes_encryptor
-	window.aes_decipher_message = aes_decipher_message
-	window.pc_keypair_promise = pc_keypair_promise
-	window.pc_wrapper_keypair_promise = pc_wrapper_keypair_promise
-	window.axiom_keypair_promise = axiom_keypair_promise
-	//
-	window.galactic_user_starter_keys = galactic_user_starter_keys
-	//
-	window.gen_cipher_key = gen_cipher_key
-	window.protect_hash = protect_hash
-	window.verify_protected = verify_protected
-	window.gen_public_key = gen_public_key
-	window.unwrapped_aes_key = unwrapped_aes_key
-	window.derive_key = derive_key
-	window.aes_to_str = aes_to_str
-	window.aes_from_str = aes_from_str
-	window.key_wrapper = key_wrapper
-	window.key_unwrapper = key_unwrapper
-	window.key_signer = key_signer
-	window.verifier = verifier
-	window.encipher_message = encipher_message
-	window.decipher_message = decipher_message
-	window.derived_decipher_message = derived_decipher_message
-  //
-}
+//$EXPORTABLE::
+/*
+gen_nonce
+gen_cipher_key
+pc_keypair_promise
+axiom_keypair_promise
+pc_wrapper_keypair_promise
+aes_encryptor
+aes_decipher_message
+galactic_user_starter_keys
+protect_hash
+verify_protected
+gen_public_key
+unwrapped_aes_key
+derive_aes_key
+key_wrapper
+key_unwrapper
+derive_key
+aes_to_str
+importAESKey
+aes_from_str
+key_signer
+verifier
+encipher_message
+decipher_message
+derived_decipher_message
+*/
 
 
 
 //
-// MODULE: CRYPTO WRAPS (windowized)
+// MODULE: CWID (windowized)
 
 const HASH_SEP = '!'
 
 // >> import
 //modularize>> import * as base64 from "../modules/base64.js";
-//modularize>> import * as base64 from "../modules/base_string.js";
+//modularize>> import * as base_string from "../modules/base_string.js";
 //<<
 
 
@@ -1610,14 +1769,15 @@ let formats = false;
 let multibase = false;
 
 async function fetch_tables() {
-
-    formats = await fetch('../assets/formats.json')
-    .then(response => response.json());
-
-    multibase = await fetch('../assets/multibase.json')
+    try {
+        formats = await fetch('../assets/formats.json')
         .then(response => response.json());
-
-    return true
+    
+        multibase = await fetch('../assets/multibase.json')
+            .then(response => response.json());
+        return true
+    } catch (e) {}
+    return false
 }
 
 setTimeout(fetch_tables,0)
@@ -1935,12 +2095,18 @@ CWID
 
 
 
+//
+// MODULE: UCWID (windowized)
+
+// >> import
+
+//modularize>> import * as cwraps from './client/crypto-wraps.js';
+
+//<<
 
 
-
-
-
-export class UCWID {
+//$>>	UCWID
+class UCWID {
     //
     constructor(conf) {
         //
@@ -1949,37 +2115,13 @@ export class UCWID {
         this.key_pack = false
         this.normalizer_wait = false
         this.normalizer_promise = false
-        if ( (conf === undefined) || (conf.normalizer === undefined) ) {
-            this.normalizer_wait = true
-            let p = new Promise((resolve,reject) => {
-                (async () => {
-                    const moduleSpecifier = './normalizers/unity.js';
-                    const module = await import(moduleSpecifier)
-                    const Normal = module.Unity
-                    this.normalizer = new Normal(conf)
-                    this.normalizer_wait = false
-                    resolve(true)
-                })();
-            })
-            this.normalizer_promise = p 
+        // For non module code not relying on a server to provide lazy import (Normalized must be specified)
+        if ( typeof conf.normalizer === "function" ) {
+            this.normalizer = conf.normalizer(conf)
         } else {
-            if ( typeof conf.normalizer === 'string' ) {
-                this.normalizer_wait = true
-                let p = new Promise((resolve,reject) => {
-                    (async () => {
-                        const moduleSpecifier = conf.normalize;
-                        const module = await import(moduleSpecifier)
-                        const Normal = module[conf.class_name]
-                        this.normalizer = new Normal(conf)
-                        this.normalizer_wait = false
-                        resolve(true)
-                    })();
-                })
-                this.normalizer_promise = p 
-            } else if ( typeof this.normalizer === "function" ) {
-                this.normalizer = conf.normalizer(conf)
-            }
+            throw new Error("no normalizer")
         }
+        // 
         if ( (conf === undefined) || (conf._wrapper_key === undefined) ) {
             this.key_wait = true
             this.key_promise = new Promise((resolve,reject) => {
@@ -2072,6 +2214,13 @@ console.log(nonce)
     }
 }
 
+
+
+
+//$EXPORTABLE::
+/*
+UCWID
+*/
 
 
 
@@ -2618,9 +2767,10 @@ AppDBWrapper
 //$>>	get_file_from_file_element
 // called in response to a file selection through the system file browser
 //
-function get_file_from_file_element(file_el) {
+function get_file_from_file_element(file_el_id) {
 	let p = new Promise((resolve,reject) => {
-		let file_el = document.getElementById(file_el)
+		let file_el = document.getElementById(file_el_id)
+		if ( !file_el ) reject(false)
 		file_el.addEventListener('change',(ev) => {
 			//
 			let file = file_el.files[0]
@@ -2643,6 +2793,7 @@ function get_file_from_file_element(file_el) {
 }
 
 
+
 //$>>	generic_downloader
 function generic_downloader(dataStr) {
 	let downloadlink = document.getElementById("identity-download-link")
@@ -2662,11 +2813,9 @@ function generic_downloader(dataStr) {
 
 //$EXPORTABLE::
 /*
-get_file
+get_file_from_file_element
 generic_downloader
 */
-
-//  === ---------------------------------------  === ---------------------------------------  === --------------------------------------- 
 
 
 
@@ -2692,19 +2841,6 @@ generic_downloader
 */
 
 
-function identity_fn(data) {
-    return data
-}
-
-let g_contacts = {}
-function set_contact_map(contacts_map) {
-    g_contacts = contacts_map
-}
-
-function contact_from_ucwid(user_ucwid) {
-    let c = g_contacts[user_ucwid]
-    return c
-}
 
 function name_key_of(user_info) {
     if ( (user_info.name === undefined) || (user_info.DOB === undefined) ) {
@@ -2921,7 +3057,7 @@ async function db_startup() {
 
 
 //$>>	store_user
-async function store_user(user_information,privates) {
+async function store_user(user_information) {
     if ( !g_human_user_storage ) return(false)
     //
     let name_key = name_key_of(user_information)
@@ -2933,22 +3069,8 @@ async function store_user(user_information,privates) {
         "name" : name_key,
         "user_info" : store_u_i,
         "data" : {},
-        "ucwid" : '',
-        "dirs" :  '',
-        "files" :  '',
+        "ucwid" : user_information.ucwid,
         "stored_externally" : false
-    }
-    //
-    if ( privates.priv_key ) {
-        storage_obj.priv_key = privates.priv_key
-    }
-    //
-    if ( privates.signer_priv_key ) {
-        storage_obj.signer_priv_key = privates.signer_priv_key
-    }
-    //
-    if ( privates.signature_protect ) {
-        storage_obj.signature_protect = privates.signature_protect
     }
     //
     await g_human_user_storage.add_user(storage_obj)
@@ -2964,30 +3086,6 @@ async function get_known_users() {
     }
     return false
 }
-
-//$>>	get_user_public_wrapper_key
-async function get_user_public_wrapper_key(name_key) {
-    let user_object = await g_human_user_storage.get_user(name_key)
-    if ( user_object ) {
-        let pub_key = g_human_user_storage.current_user_info.public_key
-        return pub_key
-    }
-    return false
-}
-
-
-
-//$>>	get_user_public_signer_key
-async function get_user_public_signer_key(name_key) {
-	//
-    let user_object = await g_human_user_storage.get_user(name_key)
-    if ( user_object ) {
-        let signer_public_key = g_human_user_storage.current_user_info.signer_public_key
-        return signer_public_key
-    }
-    return false
-}
-
 
 
 //$>>	unstore_user
@@ -3041,15 +3139,6 @@ async function update_identity(identity) {
         if ( identity.profile_image ) {
             storage_obj.profile_image = identity.profile_image
         }
-        if ( identity.asset_keys ) {
-            storage_obj.asset_keys = Object.assign({},identity.asset_keys)
-        }
-        if ( identity.introductions ) {
-            storage_obj.introductions = identity.introductions
-        }
-        if ( identity.messages ) {
-            storage_obj.messages = identity.messages
-        }
         // UPDATE
         await g_human_user_storage.update_user(storage_obj)
         //
@@ -3078,55 +3167,6 @@ async function identity_from_user(user_info) {
     }
     return false
 }
-
-
-
-//$>>	fix_keys
-async function fix_keys(identity) {
-	let u_info = identity.user_info
-	if ( !u_info ) return // can't fix it
-	if ( ( identity.priv_key === undefined) || ( identity.signer_priv_key === undefined ) || ( u_info.signer_public_key === undefined ) ) {
-		try {
-			let storage_obj = await identity_from_user(u_info)
-			if ( identity.priv_key === undefined ) {
-				let keypair = await pc_wrapper_keypair_promise()
-				// ---- ---- ---- ----
-				let pub_key = keypair.publicKey
-				let priv_key = keypair.privateKey
-				let exported = await g_crypto.exportKey("jwk",pub_key);
-				let pub_key_str = JSON.stringify(exported)
-
-				let priv_exported = await g_crypto.exportKey("jwk",priv_key);
-				let priv_key_str =  JSON.stringify(priv_exported);
-				//
-				storage_obj.priv_key = priv_key_str
-				u_info.public_key = pub_key_str
-			}
-			//
-			if ( ( identity.signer_priv_key === undefined ) || ( u_info.signer_public_key === undefined ) ) {
-				let signer_pair = await pc_keypair_promise()
-				//
-				let signer_pub_key = signer_pair.publicKey
-				let signer_priv_key = signer_pair.privateKey
-
-				let sign_exported = await g_crypto.exportKey("jwk",signer_pub_key);
-				let sign_pub_key_str = JSON.stringify(sign_exported)
-
-				let sign_priv_exported = await g_crypto.exportKey("jwk",signer_priv_key);
-				let sign_priv_key_str = JSON.stringify(sign_priv_exported);
-				//
-				storage_obj.signer_priv_key = sign_priv_key_str					
-				u_info.signer_public_key = sign_pub_key_str
-			}
-
-            // UPDATE
-            await g_human_user_storage.update_user(identity)
- 
-		} catch (e) {
-		}
-	}
-}
-
 
 
 
@@ -3166,38 +3206,6 @@ async function upload_identity() {
 }
 
 
-async function add_user_locally(id_packet) {
-    //
-/*
-    let id_packet = {
-        "user" : user_data,
-        "keys" : keys,
-        "original_cwid" : key_id_pair[0],
-        "ucwid" :  key_id_pair[1]
-    }
-*/
-    //
-    return true
-}
-
-
-
-function get_file() {
-    get_file_from_file_element(`drop-click-file_loader`)
-}
-
-async function user_info_add_picture(fname,blob64) {
-    // 
-}
-
-async function load_blob_as_url(img_ucwid) {
-    //
-}
-
-
-
-
-
 
 //$EXPORTABLE::
 /*
@@ -3209,11 +3217,352 @@ update_identity
 restore_identity
 identity_from_user
 get_known_users
-get_user_public_wrapper_key
-get_user_public_signer_key
-fix_keys
 */
 
+
+
+
+// SHARED CONSTANTS
+
+
+// SITE PATE
+//
+const SITE_PAGE_TO_FRAME = "site_page_to_frame"
+const SITE_PAGE_TO_BUILDER = "site_page_to_builder"
+const SITE_PAGE_TO_ALL = "RELAY"
+const SITE_RELATES_TO_BUILDER = "site_page_request_id"
+const SITE_RELATES_TO_FRAME = "site_page_request_action"
+const SITE_RELATES_TO_ALL = "site_frame_yields_news"
+
+// FRAME PAGE
+const FRAME_PAGE_TO_HOSTED_APP = "frame_page_to_hosted_app"
+const FRAME_PAGE_TO_SITE = "frame_page_to_site"
+const FRAME_PAGE_TO_BUILDER = "frame_page_to_builder"
+const FRAME_PAGE_TO_SERVICE_WORKER = "frame_page_to_sw"
+const FRAME_PAGE_RELATES_TO_SITE = "frame_page_injector"
+const FRAME_PAGE_RELATES_TO_BUILDER = "frame_page_reponses"
+const FRAME_PAGE_RELATES_TO_SERVICE_WORKER = "frame_page_shared_action"
+const FRAME_ACTION_TO_APP = "frame_page_request_action"
+const FRAME_REQUEST_SESSION = "frame_page_request_session"
+const FRAME_ACTION_FROM_APP = "hosted_app_requests_action"
+
+// APP PAGE
+//
+const HOSTED_APP_TO_FRAME = "hosted_app_to_frame"
+const HOSTED_APP_TO_ALL = "RELAY"
+const APP_RELATES_TO_FRAME = "app_in_human_context"
+const APP_RELATES_TO_ALL = "app_in_frame_yields_news"
+
+// BUILDER PAGE
+//
+const BUILDER_PAGE_TO_FRAME = "builder_page_to_frame"
+const BUILDER_PAGE_TO_SITE = "builder_page_to_site"
+const BUILDER_RELATES_TO_SITE = "builder_page_injector"
+const BUILDER_ACTION_TO_FRAME = "builder_page_request_action"
+
+
+// actions
+const FRAME_COMPONENT_RESPOND = "respond"
+const FRAME_COMPONENT_RESPONDING = "responding"
+const FAME_ACTION_LOAD_APP = "load-app"
+const FAME_ACTION_INSTALL = "install-id"
+const FAME_ACTION_INJECT = "inject"
+const FRAME_START_SESSION = "start-session"
+const FRAME_HAS_SESSION = "has-session"
+
+// categories
+const FRAME_COMPONENT_SAY_ALIVE = "q-alive"
+const FRAME_COMPONENT_MANAGE_ID = "m-igid"
+
+
+
+let g_current_user_id = false
+let g_current_user_name = false
+let g_current_pub_identity = false
+
+
+const g_message_template =  {
+                                "category" : "",
+                                "direction" : "",
+                                "action" : "",
+                                "relationship" : ""
+                            }
+
+
+
+
+async function intergalactic_session_going() {
+    try {
+        let human_public_identity = await exists_galactic_identity()
+        if ( human_public_identity.session === undefined ) {
+            return false
+        }
+        return human_public_identity
+    } catch (e) {
+    }
+    return false
+}
+
+
+// ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
+// ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
+
+
+//
+function set_current_galactic_identity(public_id) {
+    g_current_user_id = public_id.ucwid
+    g_current_user_name = public_id.name
+    g_current_pub_identity = public_id
+}
+
+
+async function exists_galactic_identity() {
+    if ( (typeof g_human_user_storage === "undefined") || !g_human_user_storage ) { return false }
+    if ( g_current_pub_identity !== false ) {
+        return g_current_pub_identity
+    }
+    let public_id = await g_human_user_storage.get_user(name_key)
+    if ( public_id ) {
+        set_current_galactic_identity(public_id)
+        return g_current_pub_identity
+    }
+    return false
+}
+
+async function add_galactic_identity(public_identity) {
+    if ( (typeof g_human_user_storage === "undefined") || !g_human_user_storage ) { return false }
+    g_human_user_storage.add_user(public_identity)
+    return false
+}
+
+async function update_galactic_identity(public_identity) {
+    if ( (typeof g_human_user_storage === "undefined") || !g_human_user_storage ) { return false }
+    g_human_user_storage.update_user(public_identity)
+    return false
+}
+
+
+function set_current_galactic_identity(descr) {
+    for ( let el_id in descr ) {
+        let el = descr[el_id]
+        let value = el.info === "name" ? g_current_user_name : g_current_user_id
+        if ( el.type === "element" ) {
+            let el = document.getElementById(el_id)
+            if ( el ) {
+                el.innerHTML = value
+            }
+        } else if ( el.type === "field" ) {
+            let el = document.getElementById(el_id)
+            if ( el ) {
+                el.value = value
+            }
+        }
+    }
+}
+
+
+
+async function injest_identity_to_current_id(public_id) {
+	await add_galactic_identity(public_id)
+	set_current_galactic_identity(public_id)
+	set_contact_identity()
+	initLogin()
+}
+
+
+
+
+
+// ID BUILDER PAGE COM
+//
+// constants in shared constants
+//
+let g_frame_page = false
+let g_site_page = false
+
+
+
+let g_responder_tables = {
+    "human_frame" : {
+        "resolver" : false,
+        "rejector" : false
+    }
+}
+
+function alive_response(source_name) {
+    if ( g_responder_tables[source_name] !== undefined ) {
+        let p = new Promise((resolve,reject) => {
+            g_responder_tables[source_name].resolver = (relationship,action) => {
+                g_responder_tables[source_name] = {
+                    "resolver" : false,
+                    "rejector" : false            
+                }
+                resolve(true)
+            }
+            g_responder_tables[source_name].rejector = (relationship,action) => {
+                g_responder_tables[source_name] = {
+                    "resolver" : false,
+                    "rejector" : false            
+                }
+                reject(false)
+            }
+        })
+        return p    
+    }
+    return false
+}
+
+//
+let human_frame_page_application_handlers = (category,action,data,relationship) => {}
+let builder_app_site_command = (category,action,data) => {}
+//
+
+// ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
+// MESSAGE HANDLERS
+
+
+function install_site_page_response() {
+    window.addEventListener("message", (event) => {
+        let page_source = event.origin
+        let expected_site = normalized_launch_url("http://localhost:5111/")  // from common
+        if ( page_source !== expected_site ) {
+            //
+            // let opener = event.source --- the site page is assumed to be the top level of the interactions
+            try {
+                let mobj = JSON.parse(event.data)
+                let category = mobj.category
+                let relationship = mobj.relationship
+                let action = mobj.action
+                let direction = mobj.direction
+                //
+                if ( direction === SITE_PAGE_TO_BUILDER ) {
+                    if ( category === FRAME_COMPONENT_SAY_ALIVE ) {
+                        if ( action === FRAME_COMPONENT_RESPOND ) {
+                            g_site_page = event.source
+                            let message = {
+                                "category": FRAME_COMPONENT_SAY_ALIVE,
+                                "action" : FRAME_COMPONENT_RESPONDING,
+                                "data" : false
+                            }
+                            tell_site_page(message)
+                        }
+                    } else if ( relationship === SITE_RELATES_TO_BUILDER ) {
+                        let data = mobj.data
+                        builder_app_site_command(category,action,data)
+                    }
+                }
+            } catch (e) {
+            }    
+        }
+    })
+}
+
+function install_frame_page_response() {
+    window.addEventListener("message", (event) => {
+        // let opener = event.source --- the site page is assumed to be the top level of the interactions
+        try {
+            let mobj = JSON.parse(event.data)
+            let category = mobj.category
+            let relationship = mobj.relationship
+            let action = mobj.action
+            let direction = mobj.direction
+            //
+            if ( direction === FRAME_PAGE_TO_BUILDER ) {
+                if ( category === FRAME_COMPONENT_SAY_ALIVE ) {
+                    if ( action === FRAME_COMPONENT_RESPONDING ) {
+                        if ( typeof g_responder_tables.human_frame.resolver === "function" ) {
+                            g_responder_tables.human_frame.resolver(relationship,action)
+                        }
+                    }
+                } else {
+                    let data = mobj.data
+                    human_frame_page_application_handlers(category,action,data,relationship)
+                }
+            }
+        } catch (e) {
+        }
+    })
+}
+
+
+
+// ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
+// OPENERS
+
+let url_for_use = (frame_use) => {   // builder application determined...
+    return false
+}
+
+async function open_app_page_in_human_frame(human_frame_url,frame_use) {
+    let [child,uri_of_launch] = await open_cors_window(human_frame_url,("HUMAN-FRAME-" + frame_use))
+    if ( child ) {
+        g_frame_page = child
+        g_frame_cors_uri = uri_of_launch
+        let message = {
+            "category": FRAME_COMPONENT_SAY_ALIVE,
+            "action" : FRAME_COMPONENT_RESPONDING,
+            "data" : false
+        }
+        let p = alive_response("human_frame")
+        tell_frame_page(message)
+        try {
+            let ok = await p
+            if ( ok ) {
+                let frame_user_url = url_for_use(frame_use)
+                if ( frame_user_url ) {
+                    let app_message = {
+                        "category": FRAME_ACTION_LOAD_APP,
+                        "action" : FAME_ACTION_LOAD_APP,
+                        "data" : {
+                            "revise_source" : frame_user_url,
+                            "use" : frame_use
+                        }
+                    }
+                    tell_frame_page(app_message)
+                }
+            }
+        } catch (e) {}
+    }
+    return [child,uri_of_launch]
+}
+
+
+// ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
+// MESSAGE SENDERS
+
+
+function tell_site_page(message) {
+    if ( !g_site_page ) return(false)
+    let msg = Object.assign({},g_message_template)
+    msg.direction = BUILDER_PAGE_TO_SITE
+    msg.relationship = BUILDER_RELATES_TO_SITE
+    msg.action = message.action
+    msg.category = message.category
+    msg.data = message
+    let message_str = JSON.stringify(msg)
+    g_site_page.postMessage(message_str,'*')
+    return true
+}
+
+function tell_frame_page(message) {
+    if ( !g_frame_page ) return(false)
+    let msg = Object.assign({},g_message_template)
+    msg.direction = BUILDER_PAGE_TO_FRAME
+    msg.relationship = BUILDER_ACTION_TO_FRAME
+    msg.action = message.action
+    msg.category = message.category
+    msg.data = message
+    let message_str = JSON.stringify(msg)
+    g_frame_page.postMessage(message_str,'*')
+    return true
+}
+
+
+
+install_site_page_response()
+install_frame_page_response()
+
+//  === ---------------------------------------  === ---------------------------------------  === --------------------------------------- 
 
 function set_user_title(u_name) {
 	let el = document.getElementById('active-user-title')
@@ -3227,10 +3576,97 @@ function set_user_title(u_name) {
 // MODULE: USER WINDOW_APP (windowized)
 //
 
-// temporarily using pc_ prefix. There is a wv_ in a file "recorder.html"  that is for wave. This is for profile contacts.
-// Later, these all should be wrapped in a class that handles generic use cases..
-// Currently, this improper usage is contained in this file...
 
+// ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
+// ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
+// ---- ---- request_human_page
+// called by the window app component of the builder app (see template/scripts)
+async function request_human_page(human_name,public_identity) {
+    if ( human_name ) {
+        if ( human_name.length ) {
+            let postable = {
+                "human_name" : human_name,
+                "public_identity" : public_identity
+            }
+			//
+            let srver = 'http://localhost:8989/'
+            // let prot = location.protocol
+            // let sp = '//' // ${prot}${sp}
+            let data_stem = "intake"
+			//
+            try {
+                let response = await postData(`${srver}/${data_stem}`,postable)
+                if ( response.status === "OK" ) {
+                    let human_frame_url = response.human_url
+                    let [child,uri_of_launch] = await open_app_page_in_human_frame(human_frame_url,"initialize")
+                    return [child,uri_of_launch]
+                }    
+            } catch(e) {}
+
+        } else {
+            messages("please enter a value")
+        }
+    }
+    return false
+}
+
+
+async function inialize_user_resources(identity) {
+	let public_component = identity.public_component
+	//
+	let [child_window,human_frame_url] = await request_human_page(public_component.name,public_component)
+	identity.public_component.human_frame_url = human_frame_url
+	// store this locally
+	if ( g_human_user_storage ) await g_human_user_storage.update_user(identity.public_component)
+	return [child_window,identity]
+}
+
+var g_site_source_page_opener = false
+function add_site_page_opener_response() {
+	window.addEventListener("message", async (ev) => {
+		let mobj = ev.data
+		if ( mobj && (mobj.category === "alive") ) {
+			if ( mobj.direction === "id-maker-opener" ) {
+				g_site_source_page_opener = ev.source
+				console.log("User interaction is ready")
+			}
+		}
+	});	
+}
+
+
+async function add_user_to_human_url(id_packet) {
+	let message = {
+		"category": FRAME_COMPONENT_MANAGE_ID,
+		"action" : FAME_ACTION_INJECT,
+		"data" : id_packet
+
+	}
+	tell_frame_page(message)
+}
+
+
+// Give the site page what it needs to open the frame window.
+// The session will be negotiated by another page.
+//
+async function add_site_public_user(publc_info) {
+	let site_pub_info = Object.assign({},publc_info)
+	//
+	delete site_pub_info.public_key
+	delete site_pub_info.signer_public_key
+	delete site_pub_info.axiom_public_key
+	//
+	let message = {
+		"category": FRAME_COMPONENT_MANAGE_ID,
+		"action" : FAME_ACTION_INJECT,
+		"data" : publc_info
+	}
+	//
+	tell_site_page(message)
+}
+
+
+// ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
 
 function hide_thankyou_box(theBox) {
 	theBox.style.visibility = "hidden"
@@ -3251,11 +3687,6 @@ function show_thankyou_box(msg) {
 		theBox.style.zIndex = 2000
 	}
 }
-
-//  === ---------------------------------------  === ---------------------------------------  === --------------------------------------- 
-
-hide_box('error-box')
-hide_box('success-box')
 
 //  === ---------------------------------------  === ---------------------------------------  === --------------------------------------- 
 
@@ -3283,8 +3714,9 @@ function setupCaptchaClose() {
 
 
 async function startup() {
-	await pc_init_database()
-	not_https_switch()
+	setup_window_crypto()
+	await db_startup()
+	//not_https_switch()
 }
 
 

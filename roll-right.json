@@ -14,7 +14,7 @@
         "github" : {
         },
         "local" : {
-            "client/IGID" : "/public/intergalactic-content/IGID.js"
+            "client/IGID" : "/public/copious/IGID.js"
         }
     }
 }

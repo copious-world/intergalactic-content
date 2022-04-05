@@ -7420,56 +7420,56 @@ var app = (function () {
         check_empty: check_empty
     });
 
-    /*
-    // user_data
-    {
-        "name_key" : name_key,
-        "name": '',
-        "DOB" : "",
-        "place_of_origin" : "", 
-        "cool_public_info" : "", 
-        "business" : false, 
-        "public_key" : false,
-        "signer_public_key" : false,
-        "biometric" : false
+    // using window instert version
+    let crypto_wraps = window;
+
+    function make_normalizer() {
+        let user_data_normalizer = {
+            "version" : () => "1",
+            "normalize" : (user_data_str_json) => {
+                let normed_data = user_data_str_json;
+                return normed_data    
+            }
+        };
+
+        return user_data_normalizer
     }
-    */
-
-
-
-    function user_data_normalizer(user_data_str_json) {
-        let normed_data = user_data_str_json;
-        // //
-        return normed_data
-    }
-
 
     async function create_ID(user_data,wrapper_key) {
 
-        let ucwid_service = new UCWID({ "normalizer" : user_data_normalizer, "_wrapper_key" : wrapper_key });
+        let ucwid_service = new UCWID({ "normalizer" : make_normalizer, "_wrapper_key" : wrapper_key });
      
         if ( await ucwid_service.wait_for_key() ) {
             let data_as_str = JSON.stringify(user_data);
-            let ucwid = await ucwid_service.ucwid(data_as_str);
-            return [ucwid.ucwid_packet.crypto_cwid,ucwid]
+            let encoder = new TextEncoder();
+            let data_as_buffer = encoder.encode(data_as_str);
+            let ucwid = await ucwid_service.ucwid(data_as_buffer);
+            return [ucwid.ucwid,ucwid]
         }
 
         return []
 
     }
 
+    function store_igid_info(info,privates) {
+        let p_info = Object.assign({},info);
+        let bio = p_info.biometric;
+        delete p_info.biometric;
+        info.public_component = p_info;
+        info.private = Object.assign({},privates);
+        info.private.biometric = bio;
+    }
 
-    async function user_keys(user_data,store_info) {
-        let keys = await crypto_wraps.gen_public_key(user_data,store_info);
-        let wrapper_key = keys.pk_str;
-        let key_id_pair = await create_ID(user_data,wrapper_key);
-        let operational_user_info = {
-            "user" : user_data,
-            "keys" : keys,
-            "original_cwid" : key_id_pair[0],
-            "ucwid" :  key_id_pair[1]
-        };
-        return operational_user_info
+
+    async function user_keys(user_data) {
+        await crypto_wraps.gen_public_key(user_data,store_igid_info);
+        let wrapper_key = user_data.public_component.public_key;
+        let [crypto_cwid,ucwid_obj] = await create_ID(user_data,wrapper_key);
+        user_data.ccwid = crypto_cwid;
+        user_data.public_component.ccwid = crypto_cwid;
+        user_data.private.ccwid = crypto_cwid;
+        user_data.private.ucwid = ucwid_obj;
+        return user_data
     }
 
     var igid = /*#__PURE__*/Object.freeze({
@@ -7485,15 +7485,15 @@ var app = (function () {
 
     function get_each_context(ctx, list, i) {
     	const child_ctx = ctx.slice();
-    	child_ctx[116] = list[i];
-    	child_ctx[6] = i;
+    	child_ctx[112] = list[i];
+    	child_ctx[5] = i;
     	return child_ctx;
     }
 
-    // (1128:2) <Label>
+    // (1087:2) <Label>
     function create_default_slot_2(ctx) {
     	let span;
-    	let t_value = /*tab*/ ctx[118] + "";
+    	let t_value = /*tab*/ ctx[114] + "";
     	let t;
     	let span_class_value;
 
@@ -7502,22 +7502,22 @@ var app = (function () {
     			span = element("span");
     			t = text(t_value);
 
-    			attr_dev(span, "class", span_class_value = "" + (null_to_empty(/*tab*/ ctx[118] === /*active*/ ctx[4]
+    			attr_dev(span, "class", span_class_value = "" + (null_to_empty(/*tab*/ ctx[114] === /*active*/ ctx[15]
     			? "active-tab"
-    			: "plain-tab") + " svelte-qwk4tx"));
+    			: "plain-tab") + " svelte-1jdxv6t"));
 
-    			add_location(span, file, 1127, 9, 26707);
+    			add_location(span, file, 1086, 9, 25802);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, span, anchor);
     			append_dev(span, t);
     		},
     		p: function update(ctx, dirty) {
-    			if (dirty[3] & /*tab*/ 33554432 && t_value !== (t_value = /*tab*/ ctx[118] + "")) set_data_dev(t, t_value);
+    			if (dirty[3] & /*tab*/ 2097152 && t_value !== (t_value = /*tab*/ ctx[114] + "")) set_data_dev(t, t_value);
 
-    			if (dirty[0] & /*active*/ 16 | dirty[3] & /*tab*/ 33554432 && span_class_value !== (span_class_value = "" + (null_to_empty(/*tab*/ ctx[118] === /*active*/ ctx[4]
+    			if (dirty[0] & /*active*/ 32768 | dirty[3] & /*tab*/ 2097152 && span_class_value !== (span_class_value = "" + (null_to_empty(/*tab*/ ctx[114] === /*active*/ ctx[15]
     			? "active-tab"
-    			: "plain-tab") + " svelte-qwk4tx"))) {
+    			: "plain-tab") + " svelte-1jdxv6t"))) {
     				attr_dev(span, "class", span_class_value);
     			}
     		},
@@ -7530,14 +7530,14 @@ var app = (function () {
     		block,
     		id: create_default_slot_2.name,
     		type: "slot",
-    		source: "(1128:2) <Label>",
+    		source: "(1087:2) <Label>",
     		ctx
     	});
 
     	return block;
     }
 
-    // (1127:3) <Tab {tab}>
+    // (1086:3) <Tab {tab}>
     function create_default_slot_1(ctx) {
     	let label;
     	let current;
@@ -7561,7 +7561,7 @@ var app = (function () {
     		p: function update(ctx, dirty) {
     			const label_changes = {};
 
-    			if (dirty[0] & /*active*/ 16 | dirty[3] & /*$$scope, tab*/ 100663296) {
+    			if (dirty[0] & /*active*/ 32768 | dirty[3] & /*$$scope, tab*/ 6291456) {
     				label_changes.$$scope = { dirty, ctx };
     			}
 
@@ -7585,21 +7585,21 @@ var app = (function () {
     		block,
     		id: create_default_slot_1.name,
     		type: "slot",
-    		source: "(1127:3) <Tab {tab}>",
+    		source: "(1086:3) <Tab {tab}>",
     		ctx
     	});
 
     	return block;
     }
 
-    // (1125:1) <TabBar tabs={['Identify', 'User', 'About Us']} let:tab bind:active>
+    // (1084:1) <TabBar tabs={['Identify', 'User', 'About Us']} let:tab bind:active>
     function create_default_slot(ctx) {
     	let tab;
     	let current;
 
     	tab = new Tab({
     			props: {
-    				tab: /*tab*/ ctx[118],
+    				tab: /*tab*/ ctx[114],
     				$$slots: { default: [create_default_slot_1] },
     				$$scope: { ctx }
     			},
@@ -7616,9 +7616,9 @@ var app = (function () {
     		},
     		p: function update(ctx, dirty) {
     			const tab_changes = {};
-    			if (dirty[3] & /*tab*/ 33554432) tab_changes.tab = /*tab*/ ctx[118];
+    			if (dirty[3] & /*tab*/ 2097152) tab_changes.tab = /*tab*/ ctx[114];
 
-    			if (dirty[0] & /*active*/ 16 | dirty[3] & /*$$scope, tab*/ 100663296) {
+    			if (dirty[0] & /*active*/ 32768 | dirty[3] & /*$$scope, tab*/ 6291456) {
     				tab_changes.$$scope = { dirty, ctx };
     			}
 
@@ -7642,14 +7642,14 @@ var app = (function () {
     		block,
     		id: create_default_slot.name,
     		type: "slot",
-    		source: "(1125:1) <TabBar tabs={['Identify', 'User', 'About Us']} let:tab bind:active>",
+    		source: "(1084:1) <TabBar tabs={['Identify', 'User', 'About Us']} let:tab bind:active>",
     		ctx
     	});
 
     	return block;
     }
 
-    // (1285:36) 
+    // (1245:36) 
     function create_if_block_8(ctx) {
     	let div;
     	let blockquote0;
@@ -7733,47 +7733,47 @@ var app = (function () {
     			t24 = space();
     			blockquote7 = element("blockquote");
     			blockquote7.textContent = "You may user your distributed identity in any website that will take one.";
-    			attr_dev(blockquote0, "class", "svelte-qwk4tx");
-    			add_location(blockquote0, file, 1286, 2, 34113);
-    			attr_dev(b0, "class", "svelte-qwk4tx");
-    			add_location(b0, file, 1291, 5, 34343);
-    			attr_dev(blockquote1, "class", "svelte-qwk4tx");
-    			add_location(blockquote1, file, 1289, 2, 34168);
-    			attr_dev(b1, "class", "svelte-qwk4tx");
-    			add_location(b1, file, 1296, 7, 34467);
-    			attr_dev(li0, "class", "svelte-qwk4tx");
-    			add_location(li0, file, 1296, 3, 34463);
-    			attr_dev(b2, "class", "svelte-qwk4tx");
-    			add_location(b2, file, 1297, 7, 34543);
-    			attr_dev(li1, "class", "svelte-qwk4tx");
-    			add_location(li1, file, 1297, 3, 34539);
-    			attr_dev(b3, "class", "svelte-qwk4tx");
-    			add_location(b3, file, 1298, 7, 34662);
+    			attr_dev(blockquote0, "class", "svelte-1jdxv6t");
+    			add_location(blockquote0, file, 1246, 2, 33213);
+    			attr_dev(b0, "class", "svelte-1jdxv6t");
+    			add_location(b0, file, 1251, 5, 33443);
+    			attr_dev(blockquote1, "class", "svelte-1jdxv6t");
+    			add_location(blockquote1, file, 1249, 2, 33268);
+    			attr_dev(b1, "class", "svelte-1jdxv6t");
+    			add_location(b1, file, 1256, 7, 33567);
+    			attr_dev(li0, "class", "svelte-1jdxv6t");
+    			add_location(li0, file, 1256, 3, 33563);
+    			attr_dev(b2, "class", "svelte-1jdxv6t");
+    			add_location(b2, file, 1257, 7, 33643);
+    			attr_dev(li1, "class", "svelte-1jdxv6t");
+    			add_location(li1, file, 1257, 3, 33639);
+    			attr_dev(b3, "class", "svelte-1jdxv6t");
+    			add_location(b3, file, 1258, 7, 33762);
     			set_style(b4, "color", "darkseagreen");
-    			attr_dev(b4, "class", "svelte-qwk4tx");
-    			add_location(b4, file, 1298, 28, 34683);
-    			attr_dev(li2, "class", "svelte-qwk4tx");
-    			add_location(li2, file, 1298, 3, 34658);
+    			attr_dev(b4, "class", "svelte-1jdxv6t");
+    			add_location(b4, file, 1258, 28, 33783);
+    			attr_dev(li2, "class", "svelte-1jdxv6t");
+    			add_location(li2, file, 1258, 3, 33758);
     			set_style(ol, "padding-left", "4%");
-    			attr_dev(ol, "class", "svelte-qwk4tx");
-    			add_location(ol, file, 1295, 2, 34431);
-    			attr_dev(blockquote2, "class", "svelte-qwk4tx");
-    			add_location(blockquote2, file, 1293, 2, 34382);
-    			attr_dev(blockquote3, "class", "svelte-qwk4tx");
-    			add_location(blockquote3, file, 1301, 2, 34772);
-    			attr_dev(blockquote4, "class", "svelte-qwk4tx");
-    			add_location(blockquote4, file, 1304, 2, 34944);
+    			attr_dev(ol, "class", "svelte-1jdxv6t");
+    			add_location(ol, file, 1255, 2, 33531);
+    			attr_dev(blockquote2, "class", "svelte-1jdxv6t");
+    			add_location(blockquote2, file, 1253, 2, 33482);
+    			attr_dev(blockquote3, "class", "svelte-1jdxv6t");
+    			add_location(blockquote3, file, 1261, 2, 33872);
+    			attr_dev(blockquote4, "class", "svelte-1jdxv6t");
+    			add_location(blockquote4, file, 1264, 2, 34044);
     			set_style(span, "font-weight", "bold");
-    			attr_dev(span, "class", "svelte-qwk4tx");
-    			add_location(span, file, 1308, 2, 35076);
-    			attr_dev(blockquote5, "class", "svelte-qwk4tx");
-    			add_location(blockquote5, file, 1307, 2, 35061);
-    			attr_dev(blockquote6, "class", "svelte-qwk4tx");
-    			add_location(blockquote6, file, 1310, 2, 35210);
-    			attr_dev(blockquote7, "class", "svelte-qwk4tx");
-    			add_location(blockquote7, file, 1314, 2, 35556);
-    			attr_dev(div, "class", "team_message svelte-qwk4tx");
-    			add_location(div, file, 1285, 1, 34082);
+    			attr_dev(span, "class", "svelte-1jdxv6t");
+    			add_location(span, file, 1268, 2, 34176);
+    			attr_dev(blockquote5, "class", "svelte-1jdxv6t");
+    			add_location(blockquote5, file, 1267, 2, 34161);
+    			attr_dev(blockquote6, "class", "svelte-1jdxv6t");
+    			add_location(blockquote6, file, 1270, 2, 34310);
+    			attr_dev(blockquote7, "class", "svelte-1jdxv6t");
+    			add_location(blockquote7, file, 1274, 2, 34656);
+    			attr_dev(div, "class", "team_message svelte-1jdxv6t");
+    			add_location(div, file, 1245, 1, 33182);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -7821,14 +7821,14 @@ var app = (function () {
     		block,
     		id: create_if_block_8.name,
     		type: "if",
-    		source: "(1285:36) ",
+    		source: "(1245:36) ",
     		ctx
     	});
 
     	return block;
     }
 
-    // (1166:33) 
+    // (1125:33) 
     function create_if_block_2(ctx) {
     	let div17;
     	let div10;
@@ -7923,7 +7923,7 @@ var app = (function () {
     	let dispose;
 
     	function select_block_type_2(ctx, dirty) {
-    		if (/*business*/ ctx[15]) return create_if_block_7;
+    		if (/*business*/ ctx[14]) return create_if_block_7;
     		return create_else_block_3;
     	}
 
@@ -7931,7 +7931,7 @@ var app = (function () {
     	let if_block0 = current_block_type(ctx);
 
     	function select_block_type_3(ctx, dirty) {
-    		if (/*business*/ ctx[15]) return create_if_block_6;
+    		if (/*business*/ ctx[14]) return create_if_block_6;
     		return create_else_block_2;
     	}
 
@@ -7939,14 +7939,14 @@ var app = (function () {
     	let if_block1 = current_block_type_1(ctx);
 
     	function select_block_type_4(ctx, dirty) {
-    		if (/*creation_to_do*/ ctx[5]) return create_if_block_5;
+    		if (/*creation_to_do*/ ctx[4]) return create_if_block_5;
     		return create_else_block_1;
     	}
 
     	let current_block_type_2 = select_block_type_4(ctx);
     	let if_block2 = current_block_type_2(ctx);
-    	let if_block3 = /*creation_to_do*/ ctx[5] && create_if_block_4(ctx);
-    	let if_block4 = !/*creation_to_do*/ ctx[5] && create_if_block_3(ctx);
+    	let if_block3 = /*creation_to_do*/ ctx[4] && create_if_block_4(ctx);
+    	let if_block4 = !/*creation_to_do*/ ctx[4] && create_if_block_3(ctx);
 
     	const block = {
     		c: function create() {
@@ -8042,7 +8042,7 @@ var app = (function () {
     			div11 = element("div");
     			t47 = text("status: ");
     			span4 = element("span");
-    			t48 = text(/*signup_status*/ ctx[11]);
+    			t48 = text(/*signup_status*/ ctx[10]);
     			t49 = space();
     			div15 = element("div");
     			if (if_block3) if_block3.c();
@@ -8063,122 +8063,122 @@ var app = (function () {
     			t57 = space();
     			button3 = element("button");
     			button3.textContent = "▲ identity";
-    			attr_dev(br0, "class", "svelte-qwk4tx");
-    			add_location(br0, file, 1168, 3, 28071);
-    			attr_dev(div0, "class", "top_instructions svelte-qwk4tx");
-    			add_location(div0, file, 1169, 3, 28079);
-    			attr_dev(br1, "class", "svelte-qwk4tx");
-    			add_location(br1, file, 1172, 3, 28224);
+    			attr_dev(br0, "class", "svelte-1jdxv6t");
+    			add_location(br0, file, 1127, 3, 27166);
+    			attr_dev(div0, "class", "top_instructions svelte-1jdxv6t");
+    			add_location(div0, file, 1128, 3, 27174);
+    			attr_dev(br1, "class", "svelte-1jdxv6t");
+    			add_location(br1, file, 1131, 3, 27319);
     			attr_dev(label0, "for", "name");
     			set_style(label0, "display", "inline");
-    			attr_dev(label0, "class", "svelte-qwk4tx");
-    			add_location(label0, file, 1174, 4, 28261);
+    			attr_dev(label0, "class", "svelte-1jdxv6t");
+    			add_location(label0, file, 1133, 4, 27356);
     			attr_dev(input0, "id", "name");
     			attr_dev(input0, "placeholder", "Name");
     			set_style(input0, "display", "inline");
-    			attr_dev(input0, "class", "svelte-qwk4tx");
-    			add_location(input0, file, 1176, 4, 28326);
+    			attr_dev(input0, "class", "svelte-1jdxv6t");
+    			add_location(input0, file, 1135, 4, 27421);
     			attr_dev(input1, "type", "checkbox");
     			set_style(input1, "display", "inline");
-    			attr_dev(input1, "class", "svelte-qwk4tx");
-    			add_location(input1, file, 1177, 4, 28408);
-    			attr_dev(span0, "class", "svelte-qwk4tx");
-    			add_location(span0, file, 1177, 76, 28480);
-    			attr_dev(div1, "class", "inner_div svelte-qwk4tx");
-    			add_location(div1, file, 1173, 3, 28232);
-    			attr_dev(div2, "class", "inner_div svelte-qwk4tx");
-    			add_location(div2, file, 1179, 3, 28528);
-    			attr_dev(div3, "class", "inner_div svelte-qwk4tx");
-    			add_location(div3, file, 1186, 3, 28916);
+    			attr_dev(input1, "class", "svelte-1jdxv6t");
+    			add_location(input1, file, 1136, 4, 27503);
+    			attr_dev(span0, "class", "svelte-1jdxv6t");
+    			add_location(span0, file, 1136, 76, 27575);
+    			attr_dev(div1, "class", "inner_div svelte-1jdxv6t");
+    			add_location(div1, file, 1132, 3, 27327);
+    			attr_dev(div2, "class", "inner_div svelte-1jdxv6t");
+    			add_location(div2, file, 1138, 3, 27623);
+    			attr_dev(div3, "class", "inner_div svelte-1jdxv6t");
+    			add_location(div3, file, 1145, 3, 28011);
     			attr_dev(label1, "for", "self-text");
-    			attr_dev(label1, "class", "svelte-qwk4tx");
-    			add_location(label1, file, 1194, 3, 29359);
-    			attr_dev(br2, "class", "svelte-qwk4tx");
-    			add_location(br2, file, 1194, 50, 29406);
+    			attr_dev(label1, "class", "svelte-1jdxv6t");
+    			add_location(label1, file, 1153, 3, 28454);
+    			attr_dev(br2, "class", "svelte-1jdxv6t");
+    			add_location(br2, file, 1153, 50, 28501);
     			attr_dev(textarea, "id", "self-text");
     			attr_dev(textarea, "placeholder", "Something you would say to anyone about yourself");
-    			attr_dev(textarea, "class", "svelte-qwk4tx");
-    			add_location(textarea, file, 1195, 3, 29414);
-    			attr_dev(div4, "class", "inner_div svelte-qwk4tx");
-    			add_location(div4, file, 1193, 3, 29331);
-    			attr_dev(div5, "class", "add-profile-div svelte-qwk4tx");
+    			attr_dev(textarea, "class", "svelte-1jdxv6t");
+    			add_location(textarea, file, 1154, 3, 28509);
+    			attr_dev(div4, "class", "inner_div svelte-1jdxv6t");
+    			add_location(div4, file, 1152, 3, 28426);
+    			attr_dev(div5, "class", "add-profile-div svelte-1jdxv6t");
     			set_style(div5, "text-align", "center");
-    			add_location(div5, file, 1197, 3, 29548);
-    			attr_dev(b0, "class", "svelte-qwk4tx");
-    			add_location(b0, file, 1211, 6, 30260);
-    			attr_dev(div6, "class", "instructor svelte-qwk4tx");
-    			add_location(div6, file, 1210, 5, 30228);
+    			add_location(div5, file, 1156, 3, 28643);
+    			attr_dev(b0, "class", "svelte-1jdxv6t");
+    			add_location(b0, file, 1170, 6, 29355);
+    			attr_dev(div6, "class", "instructor svelte-1jdxv6t");
+    			add_location(div6, file, 1169, 5, 29323);
     			set_style(span1, "font-weight", "bolder");
     			set_style(span1, "color", "navy");
-    			attr_dev(span1, "class", "svelte-qwk4tx");
-    			add_location(span1, file, 1214, 36, 30442);
-    			attr_dev(b1, "class", "svelte-qwk4tx");
-    			add_location(b1, file, 1217, 25, 30726);
-    			attr_dev(i0, "class", "svelte-qwk4tx");
-    			add_location(i0, file, 1217, 22, 30723);
-    			attr_dev(div7, "class", "instructor svelte-qwk4tx");
-    			add_location(div7, file, 1213, 5, 30380);
-    			attr_dev(div8, "class", "instructor svelte-qwk4tx");
-    			add_location(div8, file, 1219, 5, 30813);
-    			attr_dev(blockquote0, "class", "svelte-qwk4tx");
-    			add_location(blockquote0, file, 1209, 4, 30210);
-    			attr_dev(b2, "class", "svelte-qwk4tx");
-    			add_location(b2, file, 1226, 4, 31152);
-    			attr_dev(blockquote1, "class", "svelte-qwk4tx");
-    			add_location(blockquote1, file, 1224, 4, 31050);
-    			attr_dev(b3, "class", "svelte-qwk4tx");
-    			add_location(b3, file, 1230, 96, 31441);
-    			attr_dev(i1, "class", "svelte-qwk4tx");
-    			add_location(i1, file, 1231, 13, 31479);
-    			attr_dev(i2, "class", "svelte-qwk4tx");
-    			add_location(i2, file, 1231, 44, 31510);
-    			attr_dev(blockquote2, "class", "svelte-qwk4tx");
-    			add_location(blockquote2, file, 1232, 5, 31609);
-    			attr_dev(blockquote3, "class", "svelte-qwk4tx");
-    			add_location(blockquote3, file, 1229, 4, 31332);
-    			attr_dev(blockquote4, "class", "svelte-qwk4tx");
-    			add_location(blockquote4, file, 1239, 5, 31936);
-    			attr_dev(blockquote5, "class", "svelte-qwk4tx");
-    			add_location(blockquote5, file, 1237, 4, 31863);
+    			attr_dev(span1, "class", "svelte-1jdxv6t");
+    			add_location(span1, file, 1173, 36, 29537);
+    			attr_dev(b1, "class", "svelte-1jdxv6t");
+    			add_location(b1, file, 1176, 25, 29821);
+    			attr_dev(i0, "class", "svelte-1jdxv6t");
+    			add_location(i0, file, 1176, 22, 29818);
+    			attr_dev(div7, "class", "instructor svelte-1jdxv6t");
+    			add_location(div7, file, 1172, 5, 29475);
+    			attr_dev(div8, "class", "instructor svelte-1jdxv6t");
+    			add_location(div8, file, 1178, 5, 29908);
+    			attr_dev(blockquote0, "class", "svelte-1jdxv6t");
+    			add_location(blockquote0, file, 1168, 4, 29305);
+    			attr_dev(b2, "class", "svelte-1jdxv6t");
+    			add_location(b2, file, 1185, 4, 30247);
+    			attr_dev(blockquote1, "class", "svelte-1jdxv6t");
+    			add_location(blockquote1, file, 1183, 4, 30145);
+    			attr_dev(b3, "class", "svelte-1jdxv6t");
+    			add_location(b3, file, 1189, 96, 30536);
+    			attr_dev(i1, "class", "svelte-1jdxv6t");
+    			add_location(i1, file, 1190, 13, 30574);
+    			attr_dev(i2, "class", "svelte-1jdxv6t");
+    			add_location(i2, file, 1190, 44, 30605);
+    			attr_dev(blockquote2, "class", "svelte-1jdxv6t");
+    			add_location(blockquote2, file, 1191, 5, 30704);
+    			attr_dev(blockquote3, "class", "svelte-1jdxv6t");
+    			add_location(blockquote3, file, 1188, 4, 30427);
+    			attr_dev(blockquote4, "class", "svelte-1jdxv6t");
+    			add_location(blockquote4, file, 1198, 5, 31031);
+    			attr_dev(blockquote5, "class", "svelte-1jdxv6t");
+    			add_location(blockquote5, file, 1196, 4, 30958);
     			set_style(span2, "color", "blue");
-    			attr_dev(span2, "class", "svelte-qwk4tx");
-    			add_location(span2, file, 1246, 4, 32322);
-    			attr_dev(span3, "class", "svelte-qwk4tx");
-    			add_location(span3, file, 1250, 76, 32852);
-    			attr_dev(blockquote6, "class", "svelte-qwk4tx");
-    			add_location(blockquote6, file, 1245, 4, 32305);
-    			attr_dev(div9, "class", "nice_message svelte-qwk4tx");
-    			add_location(div9, file, 1208, 3, 30179);
-    			attr_dev(div10, "class", "signerupper svelte-qwk4tx");
-    			add_location(div10, file, 1167, 2, 28042);
+    			attr_dev(span2, "class", "svelte-1jdxv6t");
+    			add_location(span2, file, 1205, 4, 31417);
+    			attr_dev(span3, "class", "svelte-1jdxv6t");
+    			add_location(span3, file, 1209, 76, 31947);
+    			attr_dev(blockquote6, "class", "svelte-1jdxv6t");
+    			add_location(blockquote6, file, 1204, 4, 31400);
+    			attr_dev(div9, "class", "nice_message svelte-1jdxv6t");
+    			add_location(div9, file, 1167, 3, 29274);
+    			attr_dev(div10, "class", "signerupper svelte-1jdxv6t");
+    			add_location(div10, file, 1126, 2, 27137);
 
-    			attr_dev(span4, "class", span4_class_value = "" + (null_to_empty(/*signup_status*/ ctx[11] === 'OK'
+    			attr_dev(span4, "class", span4_class_value = "" + (null_to_empty(/*signup_status*/ ctx[10] === 'OK'
     			? "good-status"
-    			: "bad-status") + " svelte-qwk4tx"));
+    			: "bad-status") + " svelte-1jdxv6t"));
 
-    			add_location(span4, file, 1257, 12, 33056);
-    			attr_dev(div11, "class", "signup-status svelte-qwk4tx");
-    			add_location(div11, file, 1256, 3, 33016);
-    			attr_dev(button0, "class", "svelte-qwk4tx");
-    			add_location(button0, file, 1272, 6, 33680);
-    			attr_dev(button1, "class", "svelte-qwk4tx");
-    			add_location(button1, file, 1273, 6, 33742);
-    			attr_dev(div12, "class", "contact_controls svelte-qwk4tx");
-    			add_location(div12, file, 1271, 5, 33643);
-    			attr_dev(button2, "class", "svelte-qwk4tx");
-    			add_location(button2, file, 1276, 6, 33864);
-    			attr_dev(button3, "class", "svelte-qwk4tx");
-    			add_location(button3, file, 1277, 6, 33932);
-    			attr_dev(div13, "class", "contact_controls svelte-qwk4tx");
-    			add_location(div13, file, 1275, 5, 33827);
-    			attr_dev(div14, "class", "svelte-qwk4tx");
-    			add_location(div14, file, 1270, 4, 33632);
-    			attr_dev(div15, "class", "svelte-qwk4tx");
-    			add_location(div15, file, 1259, 3, 33160);
-    			attr_dev(div16, "class", "signerupper svelte-qwk4tx");
-    			add_location(div16, file, 1255, 2, 32987);
-    			attr_dev(div17, "class", "signup-grid-container svelte-qwk4tx");
-    			add_location(div17, file, 1166, 1, 28004);
+    			add_location(span4, file, 1216, 12, 32151);
+    			attr_dev(div11, "class", "signup-status svelte-1jdxv6t");
+    			add_location(div11, file, 1215, 3, 32111);
+    			attr_dev(button0, "class", "svelte-1jdxv6t");
+    			add_location(button0, file, 1232, 6, 32780);
+    			attr_dev(button1, "class", "svelte-1jdxv6t");
+    			add_location(button1, file, 1233, 6, 32842);
+    			attr_dev(div12, "class", "contact_controls svelte-1jdxv6t");
+    			add_location(div12, file, 1231, 5, 32743);
+    			attr_dev(button2, "class", "svelte-1jdxv6t");
+    			add_location(button2, file, 1236, 6, 32964);
+    			attr_dev(button3, "class", "svelte-1jdxv6t");
+    			add_location(button3, file, 1237, 6, 33032);
+    			attr_dev(div13, "class", "contact_controls svelte-1jdxv6t");
+    			add_location(div13, file, 1235, 5, 32927);
+    			attr_dev(div14, "class", "svelte-1jdxv6t");
+    			add_location(div14, file, 1230, 4, 32732);
+    			attr_dev(div15, "class", "svelte-1jdxv6t");
+    			add_location(div15, file, 1218, 3, 32255);
+    			attr_dev(div16, "class", "signerupper svelte-1jdxv6t");
+    			add_location(div16, file, 1214, 2, 32082);
+    			attr_dev(div17, "class", "signup-grid-container svelte-1jdxv6t");
+    			add_location(div17, file, 1125, 1, 27099);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div17, anchor);
@@ -8196,7 +8196,7 @@ var app = (function () {
     			set_input_value(input0, /*name*/ ctx[1]);
     			append_dev(div1, t6);
     			append_dev(div1, input1);
-    			input1.checked = /*business*/ ctx[15];
+    			input1.checked = /*business*/ ctx[14];
     			append_dev(div1, span0);
     			append_dev(div10, t8);
     			append_dev(div10, div2);
@@ -8210,7 +8210,7 @@ var app = (function () {
     			append_dev(div4, br2);
     			append_dev(div4, t12);
     			append_dev(div4, textarea);
-    			set_input_value(textarea, /*cool_public_info*/ ctx[14]);
+    			set_input_value(textarea, /*cool_public_info*/ ctx[13]);
     			append_dev(div10, t13);
     			append_dev(div10, div5);
     			if_block2.m(div5, null);
@@ -8280,9 +8280,9 @@ var app = (function () {
 
     			if (!mounted) {
     				dispose = [
-    					listen_dev(input0, "input", /*input0_input_handler*/ ctx[47]),
-    					listen_dev(input1, "change", /*input1_change_handler*/ ctx[48]),
-    					listen_dev(textarea, "input", /*textarea_input_handler*/ ctx[53]),
+    					listen_dev(input0, "input", /*input0_input_handler*/ ctx[46]),
+    					listen_dev(input1, "change", /*input1_change_handler*/ ctx[47]),
+    					listen_dev(textarea, "input", /*textarea_input_handler*/ ctx[52]),
     					listen_dev(button0, "click", /*clear_identify_form*/ ctx[21], false, false, false),
     					listen_dev(button1, "click", /*remove_identify_seen_in_form*/ ctx[22], false, false, false),
     					listen_dev(button2, "click", /*app_download_identity*/ ctx[26], false, false, false),
@@ -8297,8 +8297,8 @@ var app = (function () {
     				set_input_value(input0, /*name*/ ctx[1]);
     			}
 
-    			if (dirty[0] & /*business*/ 32768) {
-    				input1.checked = /*business*/ ctx[15];
+    			if (dirty[0] & /*business*/ 16384) {
+    				input1.checked = /*business*/ ctx[14];
     			}
 
     			if (current_block_type === (current_block_type = select_block_type_2(ctx)) && if_block0) {
@@ -8325,8 +8325,8 @@ var app = (function () {
     				}
     			}
 
-    			if (dirty[0] & /*cool_public_info*/ 16384) {
-    				set_input_value(textarea, /*cool_public_info*/ ctx[14]);
+    			if (dirty[0] & /*cool_public_info*/ 8192) {
+    				set_input_value(textarea, /*cool_public_info*/ ctx[13]);
     			}
 
     			if (current_block_type_2 === (current_block_type_2 = select_block_type_4(ctx)) && if_block2) {
@@ -8341,15 +8341,15 @@ var app = (function () {
     				}
     			}
 
-    			if (dirty[0] & /*signup_status*/ 2048) set_data_dev(t48, /*signup_status*/ ctx[11]);
+    			if (dirty[0] & /*signup_status*/ 1024) set_data_dev(t48, /*signup_status*/ ctx[10]);
 
-    			if (dirty[0] & /*signup_status*/ 2048 && span4_class_value !== (span4_class_value = "" + (null_to_empty(/*signup_status*/ ctx[11] === 'OK'
+    			if (dirty[0] & /*signup_status*/ 1024 && span4_class_value !== (span4_class_value = "" + (null_to_empty(/*signup_status*/ ctx[10] === 'OK'
     			? "good-status"
-    			: "bad-status") + " svelte-qwk4tx"))) {
+    			: "bad-status") + " svelte-1jdxv6t"))) {
     				attr_dev(span4, "class", span4_class_value);
     			}
 
-    			if (/*creation_to_do*/ ctx[5]) {
+    			if (/*creation_to_do*/ ctx[4]) {
     				if (if_block3) {
     					if_block3.p(ctx, dirty);
     				} else {
@@ -8362,7 +8362,7 @@ var app = (function () {
     				if_block3 = null;
     			}
 
-    			if (!/*creation_to_do*/ ctx[5]) {
+    			if (!/*creation_to_do*/ ctx[4]) {
     				if (if_block4) {
     					if_block4.p(ctx, dirty);
     				} else {
@@ -8391,14 +8391,14 @@ var app = (function () {
     		block,
     		id: create_if_block_2.name,
     		type: "if",
-    		source: "(1166:33) ",
+    		source: "(1125:33) ",
     		ctx
     	});
 
     	return block;
     }
 
-    // (1133:1) {#if (active === 'Identify')}
+    // (1092:1) {#if (active === 'Identify')}
     function create_if_block(ctx) {
     	let div1;
     	let t0;
@@ -8432,17 +8432,17 @@ var app = (function () {
     			t3 = text("\n\t\t\tSet up your personal URL and frame page.\n\t\t\t");
     			br2 = element("br");
     			t4 = text("\n\t\t\tMake use of a browser extension to translate your URL into a Web3 style domain.");
-    			attr_dev(br0, "class", "svelte-qwk4tx");
-    			add_location(br0, file, 1157, 3, 27724);
-    			attr_dev(br1, "class", "svelte-qwk4tx");
-    			add_location(br1, file, 1159, 3, 27812);
-    			attr_dev(br2, "class", "svelte-qwk4tx");
-    			add_location(br2, file, 1161, 3, 27864);
-    			attr_dev(div0, "class", "front-page-explain svelte-qwk4tx");
-    			add_location(div0, file, 1155, 2, 27634);
-    			attr_dev(div1, "class", "splash-if-you-will svelte-qwk4tx");
+    			attr_dev(br0, "class", "svelte-1jdxv6t");
+    			add_location(br0, file, 1116, 3, 26819);
+    			attr_dev(br1, "class", "svelte-1jdxv6t");
+    			add_location(br1, file, 1118, 3, 26907);
+    			attr_dev(br2, "class", "svelte-1jdxv6t");
+    			add_location(br2, file, 1120, 3, 26959);
+    			attr_dev(div0, "class", "front-page-explain svelte-1jdxv6t");
+    			add_location(div0, file, 1114, 2, 26729);
+    			attr_dev(div1, "class", "splash-if-you-will svelte-1jdxv6t");
     			set_style(div1, "height", "fit-content");
-    			add_location(div1, file, 1133, 1, 26850);
+    			add_location(div1, file, 1092, 1, 25945);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div1, anchor);
@@ -8480,14 +8480,14 @@ var app = (function () {
     		block,
     		id: create_if_block.name,
     		type: "if",
-    		source: "(1133:1) {#if (active === 'Identify')}",
+    		source: "(1092:1) {#if (active === 'Identify')}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (1183:4) {:else}
+    // (1142:4) {:else}
     function create_else_block_3(ctx) {
     	let label;
     	let input;
@@ -8501,27 +8501,27 @@ var app = (function () {
     			input = element("input");
     			attr_dev(label, "for", "DOB");
     			set_style(label, "display", "inline");
-    			attr_dev(label, "class", "svelte-qwk4tx");
-    			add_location(label, file, 1183, 5, 28753);
+    			attr_dev(label, "class", "svelte-1jdxv6t");
+    			add_location(label, file, 1142, 5, 27848);
     			attr_dev(input, "id", "DOB");
     			attr_dev(input, "placeholder", "Date of Birth");
     			set_style(input, "display", "inline");
-    			attr_dev(input, "class", "svelte-qwk4tx");
-    			add_location(input, file, 1183, 59, 28807);
+    			attr_dev(input, "class", "svelte-1jdxv6t");
+    			add_location(input, file, 1142, 59, 27902);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, label, anchor);
     			insert_dev(target, input, anchor);
-    			set_input_value(input, /*DOB*/ ctx[12]);
+    			set_input_value(input, /*DOB*/ ctx[11]);
 
     			if (!mounted) {
-    				dispose = listen_dev(input, "input", /*input_input_handler_1*/ ctx[50]);
+    				dispose = listen_dev(input, "input", /*input_input_handler_1*/ ctx[49]);
     				mounted = true;
     			}
     		},
     		p: function update(ctx, dirty) {
-    			if (dirty[0] & /*DOB*/ 4096 && input.value !== /*DOB*/ ctx[12]) {
-    				set_input_value(input, /*DOB*/ ctx[12]);
+    			if (dirty[0] & /*DOB*/ 2048 && input.value !== /*DOB*/ ctx[11]) {
+    				set_input_value(input, /*DOB*/ ctx[11]);
     			}
     		},
     		d: function destroy(detaching) {
@@ -8536,14 +8536,14 @@ var app = (function () {
     		block,
     		id: create_else_block_3.name,
     		type: "else",
-    		source: "(1183:4) {:else}",
+    		source: "(1142:4) {:else}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (1181:4) {#if business }
+    // (1140:4) {#if business }
     function create_if_block_7(ctx) {
     	let label;
     	let input;
@@ -8557,27 +8557,27 @@ var app = (function () {
     			input = element("input");
     			attr_dev(label, "for", "DOB");
     			set_style(label, "display", "inline");
-    			attr_dev(label, "class", "svelte-qwk4tx");
-    			add_location(label, file, 1181, 5, 28578);
+    			attr_dev(label, "class", "svelte-1jdxv6t");
+    			add_location(label, file, 1140, 5, 27673);
     			attr_dev(input, "id", "DOB");
     			attr_dev(input, "placeholder", "Year of Inception");
     			set_style(input, "display", "inline");
-    			attr_dev(input, "class", "svelte-qwk4tx");
-    			add_location(input, file, 1181, 73, 28646);
+    			attr_dev(input, "class", "svelte-1jdxv6t");
+    			add_location(input, file, 1140, 73, 27741);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, label, anchor);
     			insert_dev(target, input, anchor);
-    			set_input_value(input, /*DOB*/ ctx[12]);
+    			set_input_value(input, /*DOB*/ ctx[11]);
 
     			if (!mounted) {
-    				dispose = listen_dev(input, "input", /*input_input_handler*/ ctx[49]);
+    				dispose = listen_dev(input, "input", /*input_input_handler*/ ctx[48]);
     				mounted = true;
     			}
     		},
     		p: function update(ctx, dirty) {
-    			if (dirty[0] & /*DOB*/ 4096 && input.value !== /*DOB*/ ctx[12]) {
-    				set_input_value(input, /*DOB*/ ctx[12]);
+    			if (dirty[0] & /*DOB*/ 2048 && input.value !== /*DOB*/ ctx[11]) {
+    				set_input_value(input, /*DOB*/ ctx[11]);
     			}
     		},
     		d: function destroy(detaching) {
@@ -8592,14 +8592,14 @@ var app = (function () {
     		block,
     		id: create_if_block_7.name,
     		type: "if",
-    		source: "(1181:4) {#if business }",
+    		source: "(1140:4) {#if business }",
     		ctx
     	});
 
     	return block;
     }
 
-    // (1190:4) {:else}
+    // (1149:4) {:else}
     function create_else_block_2(ctx) {
     	let label;
     	let input;
@@ -8613,27 +8613,27 @@ var app = (function () {
     			input = element("input");
     			attr_dev(label, "for", "POO");
     			set_style(label, "display", "inline");
-    			attr_dev(label, "class", "svelte-qwk4tx");
-    			add_location(label, file, 1190, 5, 29142);
+    			attr_dev(label, "class", "svelte-1jdxv6t");
+    			add_location(label, file, 1149, 5, 28237);
     			attr_dev(input, "id", "POO");
     			attr_dev(input, "placeholder", "Place of Origin");
     			set_style(input, "display", "inline");
-    			attr_dev(input, "class", "svelte-qwk4tx");
-    			add_location(input, file, 1190, 71, 29208);
+    			attr_dev(input, "class", "svelte-1jdxv6t");
+    			add_location(input, file, 1149, 71, 28303);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, label, anchor);
     			insert_dev(target, input, anchor);
-    			set_input_value(input, /*place_of_origin*/ ctx[13]);
+    			set_input_value(input, /*place_of_origin*/ ctx[12]);
 
     			if (!mounted) {
-    				dispose = listen_dev(input, "input", /*input_input_handler_3*/ ctx[52]);
+    				dispose = listen_dev(input, "input", /*input_input_handler_3*/ ctx[51]);
     				mounted = true;
     			}
     		},
     		p: function update(ctx, dirty) {
-    			if (dirty[0] & /*place_of_origin*/ 8192 && input.value !== /*place_of_origin*/ ctx[13]) {
-    				set_input_value(input, /*place_of_origin*/ ctx[13]);
+    			if (dirty[0] & /*place_of_origin*/ 4096 && input.value !== /*place_of_origin*/ ctx[12]) {
+    				set_input_value(input, /*place_of_origin*/ ctx[12]);
     			}
     		},
     		d: function destroy(detaching) {
@@ -8648,14 +8648,14 @@ var app = (function () {
     		block,
     		id: create_else_block_2.name,
     		type: "else",
-    		source: "(1190:4) {:else}",
+    		source: "(1149:4) {:else}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (1188:4) {#if business }
+    // (1147:4) {#if business }
     function create_if_block_6(ctx) {
     	let label;
     	let input;
@@ -8669,27 +8669,27 @@ var app = (function () {
     			input = element("input");
     			attr_dev(label, "for", "POO");
     			set_style(label, "display", "inline");
-    			attr_dev(label, "class", "svelte-qwk4tx");
-    			add_location(label, file, 1188, 5, 28966);
+    			attr_dev(label, "class", "svelte-1jdxv6t");
+    			add_location(label, file, 1147, 5, 28061);
     			attr_dev(input, "id", "POO");
     			attr_dev(input, "placeholder", "Main Office");
     			set_style(input, "display", "inline");
-    			attr_dev(input, "class", "svelte-qwk4tx");
-    			add_location(input, file, 1188, 68, 29029);
+    			attr_dev(input, "class", "svelte-1jdxv6t");
+    			add_location(input, file, 1147, 68, 28124);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, label, anchor);
     			insert_dev(target, input, anchor);
-    			set_input_value(input, /*place_of_origin*/ ctx[13]);
+    			set_input_value(input, /*place_of_origin*/ ctx[12]);
 
     			if (!mounted) {
-    				dispose = listen_dev(input, "input", /*input_input_handler_2*/ ctx[51]);
+    				dispose = listen_dev(input, "input", /*input_input_handler_2*/ ctx[50]);
     				mounted = true;
     			}
     		},
     		p: function update(ctx, dirty) {
-    			if (dirty[0] & /*place_of_origin*/ 8192 && input.value !== /*place_of_origin*/ ctx[13]) {
-    				set_input_value(input, /*place_of_origin*/ ctx[13]);
+    			if (dirty[0] & /*place_of_origin*/ 4096 && input.value !== /*place_of_origin*/ ctx[12]) {
+    				set_input_value(input, /*place_of_origin*/ ctx[12]);
     			}
     		},
     		d: function destroy(detaching) {
@@ -8704,14 +8704,14 @@ var app = (function () {
     		block,
     		id: create_if_block_6.name,
     		type: "if",
-    		source: "(1188:4) {#if business }",
+    		source: "(1147:4) {#if business }",
     		ctx
     	});
 
     	return block;
     }
 
-    // (1203:4) {:else}
+    // (1162:4) {:else}
     function create_else_block_1(ctx) {
     	let div;
     	let span0;
@@ -8728,17 +8728,17 @@ var app = (function () {
     			t1 = space();
     			span1 = element("span");
     			t2 = text(/*active_cwid*/ ctx[0]);
-    			attr_dev(span0, "class", "cwid-grabber-label svelte-qwk4tx");
-    			add_location(span0, file, 1204, 6, 30033);
-    			attr_dev(span1, "class", "cwid-grabber svelte-qwk4tx");
-    			add_location(span1, file, 1204, 69, 30096);
+    			attr_dev(span0, "class", "cwid-grabber-label svelte-1jdxv6t");
+    			add_location(span0, file, 1163, 6, 29128);
+    			attr_dev(span1, "class", "cwid-grabber svelte-1jdxv6t");
+    			add_location(span1, file, 1163, 69, 29191);
 
     			attr_dev(div, "style", div_style_value = /*green*/ ctx[16]
     			? "background-color:rgba(245,255,250,0.9)"
     			: "background-color:rgba(250,250,250,0.3)");
 
-    			attr_dev(div, "class", "svelte-qwk4tx");
-    			add_location(div, file, 1203, 5, 29916);
+    			attr_dev(div, "class", "svelte-1jdxv6t");
+    			add_location(div, file, 1162, 5, 29011);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -8765,14 +8765,14 @@ var app = (function () {
     		block,
     		id: create_else_block_1.name,
     		type: "else",
-    		source: "(1203:4) {:else}",
+    		source: "(1162:4) {:else}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (1199:4) {#if creation_to_do }
+    // (1158:4) {#if creation_to_do }
     function create_if_block_5(ctx) {
     	let div;
     	let button;
@@ -8786,16 +8786,16 @@ var app = (function () {
     			div = element("div");
     			button = element("button");
     			t = text("Create my Intergalactic Identity.");
-    			attr_dev(button, "class", "long_button svelte-qwk4tx");
+    			attr_dev(button, "class", "long_button svelte-1jdxv6t");
     			button.disabled = /*creator_disabled*/ ctx[17];
-    			add_location(button, file, 1200, 6, 29753);
+    			add_location(button, file, 1159, 6, 28848);
 
     			attr_dev(div, "style", div_style_value = /*green*/ ctx[16]
     			? "background-color:rgba(245,255,250,0.9)"
     			: "background-color:rgba(250,250,250,0.3)");
 
-    			attr_dev(div, "class", "svelte-qwk4tx");
-    			add_location(div, file, 1199, 5, 29636);
+    			attr_dev(div, "class", "svelte-1jdxv6t");
+    			add_location(div, file, 1158, 5, 28731);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -8829,14 +8829,14 @@ var app = (function () {
     		block,
     		id: create_if_block_5.name,
     		type: "if",
-    		source: "(1199:4) {#if creation_to_do }",
+    		source: "(1158:4) {#if creation_to_do }",
     		ctx
     	});
 
     	return block;
     }
 
-    // (1261:4) {#if creation_to_do }
+    // (1221:4) {#if creation_to_do }
     function create_if_block_4(ctx) {
     	let div;
     	let img;
@@ -8849,16 +8849,16 @@ var app = (function () {
     			div = element("div");
     			img = element("img");
     			if (!src_url_equal(img.src, img_src_value = /*active_profile_biometric*/ ctx[18])) attr_dev(img, "src", img_src_value);
-    			attr_dev(img, "alt", /*src_biometric_instruct*/ ctx[10]);
-    			attr_dev(img, "class", "svelte-qwk4tx");
-    			add_location(img, file, 1262, 5, 33287);
-    			attr_dev(div, "class", "picture-drop svelte-qwk4tx");
-    			add_location(div, file, 1261, 4, 33196);
+    			attr_dev(img, "alt", /*src_biometric_instruct*/ ctx[9]);
+    			attr_dev(img, "class", "svelte-1jdxv6t");
+    			add_location(img, file, 1222, 5, 32387);
+    			attr_dev(div, "class", "picture-drop svelte-1jdxv6t");
+    			add_location(div, file, 1221, 4, 32296);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
     			append_dev(div, img);
-    			/*img_binding*/ ctx[54](img);
+    			/*img_binding*/ ctx[53](img);
 
     			if (!mounted) {
     				dispose = [
@@ -8870,13 +8870,13 @@ var app = (function () {
     			}
     		},
     		p: function update(ctx, dirty) {
-    			if (dirty[0] & /*src_biometric_instruct*/ 1024) {
-    				attr_dev(img, "alt", /*src_biometric_instruct*/ ctx[10]);
+    			if (dirty[0] & /*src_biometric_instruct*/ 512) {
+    				attr_dev(img, "alt", /*src_biometric_instruct*/ ctx[9]);
     			}
     		},
     		d: function destroy(detaching) {
     			if (detaching) detach_dev(div);
-    			/*img_binding*/ ctx[54](null);
+    			/*img_binding*/ ctx[53](null);
     			mounted = false;
     			run_all(dispose);
     		}
@@ -8886,14 +8886,14 @@ var app = (function () {
     		block,
     		id: create_if_block_4.name,
     		type: "if",
-    		source: "(1261:4) {#if creation_to_do }",
+    		source: "(1221:4) {#if creation_to_do }",
     		ctx
     	});
 
     	return block;
     }
 
-    // (1266:4) {#if !creation_to_do }
+    // (1226:4) {#if !creation_to_do }
     function create_if_block_3(ctx) {
     	let div;
     	let img;
@@ -8905,17 +8905,17 @@ var app = (function () {
     		c: function create() {
     			div = element("div");
     			img = element("img");
-    			if (!src_url_equal(img.src, img_src_value = /*active_profile_image*/ ctx[7])) attr_dev(img, "src", img_src_value);
+    			if (!src_url_equal(img.src, img_src_value = /*active_profile_image*/ ctx[6])) attr_dev(img, "src", img_src_value);
     			attr_dev(img, "alt", /*src_1_name*/ ctx[19]);
-    			attr_dev(img, "class", "svelte-qwk4tx");
-    			add_location(img, file, 1267, 5, 33526);
-    			attr_dev(div, "class", "picture-drop svelte-qwk4tx");
-    			add_location(div, file, 1266, 4, 33437);
+    			attr_dev(img, "class", "svelte-1jdxv6t");
+    			add_location(img, file, 1227, 5, 32626);
+    			attr_dev(div, "class", "picture-drop svelte-1jdxv6t");
+    			add_location(div, file, 1226, 4, 32537);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
     			append_dev(div, img);
-    			/*img_binding_1*/ ctx[55](img);
+    			/*img_binding_1*/ ctx[54](img);
 
     			if (!mounted) {
     				dispose = [
@@ -8927,13 +8927,13 @@ var app = (function () {
     			}
     		},
     		p: function update(ctx, dirty) {
-    			if (dirty[0] & /*active_profile_image*/ 128 && !src_url_equal(img.src, img_src_value = /*active_profile_image*/ ctx[7])) {
+    			if (dirty[0] & /*active_profile_image*/ 64 && !src_url_equal(img.src, img_src_value = /*active_profile_image*/ ctx[6])) {
     				attr_dev(img, "src", img_src_value);
     			}
     		},
     		d: function destroy(detaching) {
     			if (detaching) detach_dev(div);
-    			/*img_binding_1*/ ctx[55](null);
+    			/*img_binding_1*/ ctx[54](null);
     			mounted = false;
     			run_all(dispose);
     		}
@@ -8943,14 +8943,14 @@ var app = (function () {
     		block,
     		id: create_if_block_3.name,
     		type: "if",
-    		source: "(1266:4) {#if !creation_to_do }",
+    		source: "(1226:4) {#if !creation_to_do }",
     		ctx
     	});
 
     	return block;
     }
 
-    // (1148:2) {:else}
+    // (1107:2) {:else}
     function create_else_block(ctx) {
     	let div1;
     	let t0;
@@ -8968,12 +8968,12 @@ var app = (function () {
     			span = element("span");
     			span.textContent = "User";
     			t3 = text(" tab.");
-    			attr_dev(span, "class", "svelte-qwk4tx");
-    			add_location(span, file, 1151, 17, 27582);
-    			attr_dev(div0, "class", "svelte-qwk4tx");
-    			add_location(div0, file, 1150, 3, 27559);
-    			attr_dev(div1, "class", "splash-if-you-will svelte-qwk4tx");
-    			add_location(div1, file, 1148, 2, 27473);
+    			attr_dev(span, "class", "svelte-1jdxv6t");
+    			add_location(span, file, 1110, 17, 26677);
+    			attr_dev(div0, "class", "svelte-1jdxv6t");
+    			add_location(div0, file, 1109, 3, 26654);
+    			attr_dev(div1, "class", "splash-if-you-will svelte-1jdxv6t");
+    			add_location(div1, file, 1107, 2, 26568);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div1, anchor);
@@ -8993,14 +8993,14 @@ var app = (function () {
     		block,
     		id: create_else_block.name,
     		type: "else",
-    		source: "(1148:2) {:else}",
+    		source: "(1107:2) {:else}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (1135:2) {#if (known_users.length > 0) }
+    // (1094:2) {#if (known_users.length > 0) }
     function create_if_block_1(ctx) {
     	let div1;
     	let t0;
@@ -9042,21 +9042,21 @@ var app = (function () {
     				each_blocks[i].c();
     			}
 
-    			attr_dev(span, "class", "svelte-qwk4tx");
-    			add_location(span, file, 1136, 23, 27003);
-    			attr_dev(br, "class", "svelte-qwk4tx");
-    			add_location(br, file, 1137, 3, 27072);
+    			attr_dev(span, "class", "svelte-1jdxv6t");
+    			add_location(span, file, 1095, 23, 26098);
+    			attr_dev(br, "class", "svelte-1jdxv6t");
+    			add_location(br, file, 1096, 3, 26167);
     			attr_dev(select, "size", 10);
     			set_style(select, "text-align", "center");
-    			attr_dev(select, "class", "svelte-qwk4tx");
-    			if (/*u_index*/ ctx[6] === void 0) add_render_callback(() => /*select_change_handler*/ ctx[46].call(select));
-    			add_location(select, file, 1140, 4, 27212);
-    			attr_dev(div0, "class", "user-options svelte-qwk4tx");
+    			attr_dev(select, "class", "svelte-1jdxv6t");
+    			if (/*u_index*/ ctx[5] === void 0) add_render_callback(() => /*select_change_handler*/ ctx[45].call(select));
+    			add_location(select, file, 1099, 4, 26307);
+    			attr_dev(div0, "class", "user-options svelte-1jdxv6t");
     			set_style(div0, "text-align", "center");
-    			add_location(div0, file, 1139, 3, 27154);
+    			add_location(div0, file, 1098, 3, 26249);
     			set_style(div1, "height", "fit-content");
-    			attr_dev(div1, "class", "svelte-qwk4tx");
-    			add_location(div1, file, 1135, 2, 26947);
+    			attr_dev(div1, "class", "svelte-1jdxv6t");
+    			add_location(div1, file, 1094, 2, 26042);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div1, anchor);
@@ -9073,11 +9073,11 @@ var app = (function () {
     				each_blocks[i].m(select, null);
     			}
 
-    			select_option(select, /*u_index*/ ctx[6]);
+    			select_option(select, /*u_index*/ ctx[5]);
 
     			if (!mounted) {
     				dispose = [
-    					listen_dev(select, "change", /*select_change_handler*/ ctx[46]),
+    					listen_dev(select, "change", /*select_change_handler*/ ctx[45]),
     					listen_dev(select, "click", /*navigate_to_user*/ ctx[27], false, false, false)
     				];
 
@@ -9113,8 +9113,8 @@ var app = (function () {
     				each_blocks.length = each_value.length;
     			}
 
-    			if (dirty[0] & /*u_index*/ 64) {
-    				select_option(select, /*u_index*/ ctx[6]);
+    			if (dirty[0] & /*u_index*/ 32) {
+    				select_option(select, /*u_index*/ ctx[5]);
     			}
     		},
     		d: function destroy(detaching) {
@@ -9129,34 +9129,34 @@ var app = (function () {
     		block,
     		id: create_if_block_1.name,
     		type: "if",
-    		source: "(1135:2) {#if (known_users.length > 0) }",
+    		source: "(1094:2) {#if (known_users.length > 0) }",
     		ctx
     	});
 
     	return block;
     }
 
-    // (1142:5) {#each known_users as maybe_user, u_index }
+    // (1101:5) {#each known_users as maybe_user, u_index }
     function create_each_block(ctx) {
     	let option;
-    	let t_value = /*maybe_user*/ ctx[116].name + "";
+    	let t_value = /*maybe_user*/ ctx[112].name + "";
     	let t;
 
     	const block = {
     		c: function create() {
     			option = element("option");
     			t = text(t_value);
-    			option.__value = /*u_index*/ ctx[6];
+    			option.__value = /*u_index*/ ctx[5];
     			option.value = option.__value;
-    			attr_dev(option, "class", "svelte-qwk4tx");
-    			add_location(option, file, 1142, 6, 27363);
+    			attr_dev(option, "class", "svelte-1jdxv6t");
+    			add_location(option, file, 1101, 6, 26458);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, option, anchor);
     			append_dev(option, t);
     		},
     		p: function update(ctx, dirty) {
-    			if (dirty[0] & /*known_users*/ 8 && t_value !== (t_value = /*maybe_user*/ ctx[116].name + "")) set_data_dev(t, t_value);
+    			if (dirty[0] & /*known_users*/ 8 && t_value !== (t_value = /*maybe_user*/ ctx[112].name + "")) set_data_dev(t, t_value);
     		},
     		d: function destroy(detaching) {
     			if (detaching) detach_dev(option);
@@ -9167,7 +9167,7 @@ var app = (function () {
     		block,
     		id: create_each_block.name,
     		type: "each",
-    		source: "(1142:5) {#each known_users as maybe_user, u_index }",
+    		source: "(1101:5) {#each known_users as maybe_user, u_index }",
     		ctx
     	});
 
@@ -9184,7 +9184,7 @@ var app = (function () {
     	let current;
 
     	function tabbar_active_binding(value) {
-    		/*tabbar_active_binding*/ ctx[45](value);
+    		/*tabbar_active_binding*/ ctx[44](value);
     	}
 
     	let tabbar_props = {
@@ -9192,24 +9192,24 @@ var app = (function () {
     		$$slots: {
     			default: [
     				create_default_slot,
-    				({ tab }) => ({ 118: tab }),
-    				({ tab }) => [0, 0, 0, tab ? 33554432 : 0]
+    				({ tab }) => ({ 114: tab }),
+    				({ tab }) => [0, 0, 0, tab ? 2097152 : 0]
     			]
     		},
     		$$scope: { ctx }
     	};
 
-    	if (/*active*/ ctx[4] !== void 0) {
-    		tabbar_props.active = /*active*/ ctx[4];
+    	if (/*active*/ ctx[15] !== void 0) {
+    		tabbar_props.active = /*active*/ ctx[15];
     	}
 
     	tabbar = new TabBar({ props: tabbar_props, $$inline: true });
     	binding_callbacks.push(() => bind(tabbar, 'active', tabbar_active_binding));
 
     	function select_block_type(ctx, dirty) {
-    		if (/*active*/ ctx[4] === 'Identify') return create_if_block;
-    		if (/*active*/ ctx[4] === 'User') return create_if_block_2;
-    		if (/*active*/ ctx[4] === 'About Us') return create_if_block_8;
+    		if (/*active*/ ctx[15] === 'Identify') return create_if_block;
+    		if (/*active*/ ctx[15] === 'User') return create_if_block_2;
+    		if (/*active*/ ctx[15] === 'About Us') return create_if_block_8;
     	}
 
     	let current_block_type = select_block_type(ctx);
@@ -9223,10 +9223,10 @@ var app = (function () {
     			br = element("br");
     			t1 = space();
     			if (if_block) if_block.c();
-    			attr_dev(br, "class", "svelte-qwk4tx");
-    			add_location(br, file, 1130, 2, 26812);
-    			attr_dev(div, "class", "svelte-qwk4tx");
-    			add_location(div, file, 1120, 0, 26486);
+    			attr_dev(br, "class", "svelte-1jdxv6t");
+    			add_location(br, file, 1089, 2, 25907);
+    			attr_dev(div, "class", "svelte-1jdxv6t");
+    			add_location(div, file, 1079, 0, 25581);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -9243,13 +9243,13 @@ var app = (function () {
     		p: function update(ctx, dirty) {
     			const tabbar_changes = {};
 
-    			if (dirty[0] & /*active*/ 16 | dirty[3] & /*$$scope, tab*/ 100663296) {
+    			if (dirty[0] & /*active*/ 32768 | dirty[3] & /*$$scope, tab*/ 6291456) {
     				tabbar_changes.$$scope = { dirty, ctx };
     			}
 
-    			if (!updating_active && dirty[0] & /*active*/ 16) {
+    			if (!updating_active && dirty[0] & /*active*/ 32768) {
     				updating_active = true;
-    				tabbar_changes.active = /*active*/ ctx[4];
+    				tabbar_changes.active = /*active*/ ctx[15];
     				add_flush_callback(() => updating_active = false);
     			}
 
@@ -9341,6 +9341,7 @@ var app = (function () {
     }
 
     function dragover_picture(ev) {
+    	ev.stopPropagation();
     	ev.preventDefault();
     }
 
@@ -9425,8 +9426,6 @@ var app = (function () {
     	let man_encrypted = false;
 
     	let active = 'Identify';
-    	let prev_active = active;
-    	let first_message = 0;
     	let green = false; // an indicator telling if this user ID is set
     	let todays_date = new Date().toLocaleString();
     	let filtered_cc_list = [];
@@ -9436,19 +9435,6 @@ var app = (function () {
 
     	// This is just a default... It will be used until the user picks something else 
     	// when editing the manifest.
-    	let selected_form_link_types = {
-    		"business": {
-    			"link": "latest-contact",
-    			"from_cwid": "QmTfD2LyTy8WGgdUkKE1Z1vAfb6HwNgmZA5kMaFAiy4fuz"
-    		},
-    		"profile": {
-    			"link": "latest-contact",
-    			"from_cwid": "QmTfD2LyTy8WGgdUkKE1Z1vAfb6HwNgmZA5kMaFAiy4fuz"
-    		}
-    	};
-
-    	let selected_form_link = selected_form_link_types["profile"];
-
     	//
     	let individuals = [
     		{
@@ -9514,7 +9500,7 @@ var app = (function () {
     		$$invalidate(0, active_cwid = "");
     		clear_cwid = "";
     		dir_view = false;
-    		$$invalidate(11, signup_status = "OK");
+    		$$invalidate(10, signup_status = "OK");
 
     		//
     		start_of_messages = 0;
@@ -9522,7 +9508,7 @@ var app = (function () {
     		messages_per_page = 100;
 
     		//
-    		$$invalidate(7, active_profile_image = "");
+    		$$invalidate(6, active_profile_image = "");
 
     		//
     		$$invalidate(28, prefix = '');
@@ -9554,7 +9540,7 @@ var app = (function () {
     		$$invalidate(16, green = false); // an indicator telling if this user ID is set
     		todays_date = new Date().toLocaleString();
 
-    		$$invalidate(40, individuals = [
+    		$$invalidate(39, individuals = [
     			{
     				"name": 'Hans Solo',
     				"DOB": "1000",
@@ -9627,6 +9613,7 @@ var app = (function () {
     				"business": false,
     				"public_key": false,
     				"signer_public_key": false,
+    				"axiom_public_key": false,
     				"biometric": false
     			};
 
@@ -9634,7 +9621,7 @@ var app = (function () {
     		}
 
     		//
-    		set(name, DOB, place_of_origin, cool_public_info, business, public_key, signer_public_key, biometric_blob) {
+    		set(name, DOB, place_of_origin, cool_public_info, business, public_key, signer_public_key, axiom_public_key, biometric_blob) {
     			let user_data = {
     				name,
     				DOB,
@@ -9643,6 +9630,7 @@ var app = (function () {
     				"business": business === undefined ? false : business,
     				public_key,
     				signer_public_key,
+    				axiom_public_key,
     				"biometric": biometric_blob
     			};
 
@@ -9783,33 +9771,33 @@ var app = (function () {
     		// USER DATA STRUCTURE
     		let contact = new Contact(); // contact of self... Stores the same info as a contact plus some special fields for local db
 
-    		contact.set(name, DOB, place_of_origin, cool_public_info, business, false, false, biometric_blob);
-
-    		//
-    		selected_form_link = selected_form_link_types[business ? "business" : "profile"];
-
-    		contact.extend_contact("form_link", selected_form_link);
-    		contact.extend_contact("answer_message", "");
+    		contact.set(name, DOB, place_of_origin, cool_public_info, business, false, false, false, biometric_blob);
 
     		//
     		let user_data = contact.identity(); // user data structure complete
 
     		//
     		// CHECK THAT THE FIELDS ARE FILLED -- make the picture part of this requirement (temporary store needed)
-    		$$invalidate(11, signup_status = "OK");
+    		$$invalidate(10, signup_status = "OK");
 
+    		//
     		if (!check_required_fields(user_data, g_required_user_fields)) {
-    			$$invalidate(11, signup_status = missing_fields("creating contact page", g_renamed_user_fields, business));
+    			$$invalidate(10, signup_status = missing_fields("creating contact page", g_renamed_user_fields, business));
     			return;
     		}
 
     		// DB ACTION - store the user record with the keys that will be used by associated services
     		//
     		try {
-    			let id_packet = user_keys(user_data, window.public_store_user);
-    			let human_window = await inialize_user_resources(id_packet);
-    			$$invalidate(16, green = await window.add_user_to_human_url(human_window, id_packet)); // will fetch the key (it is not riding along yet.)
-    			await window.add_public_user(window.opener_window, id_packet.publc_info);
+    			let id_packet = await user_keys(user_data);
+
+    			// identity is the same as id_packet but with some new fields including the url 
+    			let [human_window, identity] = await inialize_user_resources(id_packet);
+
+    			// window containing window_app
+    			$$invalidate(16, green = await window.add_user_to_human_url(human_window, identity)); // will fetch the key (it is not riding along yet.)
+
+    			await window.add_site_public_user(identity.publc_info);
     		} catch(e) {
     			
     		}
@@ -9818,7 +9806,7 @@ var app = (function () {
     		// DB ACTION ACCESS AFTER STORE -- also keep the display of local users (those who share the device)
     		await get_active_users(); // updates login page and initializes the view of this user.
 
-    		$$invalidate(6, u_index = known_users.length - 1); // user was added to the end...
+    		$$invalidate(5, u_index = known_users.length - 1); // user was added to the end...
     	} //
 
     	async function load_user_info(identity) {
@@ -9831,7 +9819,7 @@ var app = (function () {
     		//
     		if (identity.profile_image) {
     			let img_cwid = identity.profile_image;
-    			$$invalidate(7, active_profile_image = await window.load_blob_as_url(img_cwid));
+    			$$invalidate(6, active_profile_image = await window.load_blob_as_url(img_cwid));
     		}
     	}
 
@@ -9847,14 +9835,14 @@ var app = (function () {
 
     	function clear_identify_form() {
     		$$invalidate(1, name = '');
-    		$$invalidate(12, DOB = '');
-    		$$invalidate(13, place_of_origin = '');
-    		$$invalidate(14, cool_public_info = '');
+    		$$invalidate(11, DOB = '');
+    		$$invalidate(12, place_of_origin = '');
+    		$$invalidate(13, cool_public_info = '');
     		biometric_blob = '';
-    		$$invalidate(15, business = false);
+    		$$invalidate(14, business = false);
     		$$invalidate(2, active_user = false);
     		$$invalidate(35, active_identity = false);
-    		$$invalidate(6, u_index = false);
+    		$$invalidate(5, u_index = false);
     		adding_new = true;
     	}
 
@@ -9864,7 +9852,7 @@ var app = (function () {
 
     		if (index >= 0) {
     			$$invalidate(3, known_users = [...known_users.slice(0, index), ...known_users.slice(index + 1)]);
-    			$$invalidate(6, u_index = Math.min(u_index, known_users.length - 1));
+    			$$invalidate(5, u_index = Math.min(u_index, known_users.length - 1));
     			await window.unstore_user(identity);
     		}
     	}
@@ -9883,7 +9871,7 @@ var app = (function () {
     			let identity = active_identity;
 
     			if (identity) {
-    				$$invalidate(7, active_profile_image = blob64);
+    				$$invalidate(6, active_profile_image = blob64);
 
     				//
     				//				use window injected methods to store images in th IndexedDB record of the user
@@ -9907,7 +9895,7 @@ var app = (function () {
     			let items = ev.dataTransfer.items ? ev.dataTransfer.items : false;
     			let [fname, blob64] = await drop(items, files);
     			biometric_blob = blob64;
-    			$$invalidate(10, src_biometric_instruct = "Biometric has been dropped.");
+    			$$invalidate(9, src_biometric_instruct = "Biometric has been dropped.");
     		} catch(e) {
     			console.log(e); //
     		}
@@ -9932,7 +9920,7 @@ var app = (function () {
     	async function app_upload_identity() {
     		await upload_identity();
     		await get_active_users(); // updates login page and initializes the view of this user.
-    		$$invalidate(6, u_index = known_users.length - 1); // user was added to the end...
+    		$$invalidate(5, u_index = known_users.length - 1); // user was added to the end...
     	}
 
     	async function app_download_identity() {
@@ -9943,7 +9931,7 @@ var app = (function () {
     	}
 
     	function navigate_to_user(e) {
-    		$$invalidate(4, active = 'User');
+    		$$invalidate(15, active = 'User');
     	}
 
     	const writable_props = [];
@@ -9954,60 +9942,60 @@ var app = (function () {
 
     	function tabbar_active_binding(value) {
     		active = value;
-    		$$invalidate(4, active);
+    		$$invalidate(15, active);
     	}
 
     	function select_change_handler() {
     		u_index = select_value(this);
-    		$$invalidate(6, u_index);
+    		$$invalidate(5, u_index);
     	}
 
     	function input0_input_handler() {
     		name = this.value;
-    		((($$invalidate(1, name), $$invalidate(2, active_user)), $$invalidate(3, known_users)), $$invalidate(6, u_index));
+    		((($$invalidate(1, name), $$invalidate(2, active_user)), $$invalidate(3, known_users)), $$invalidate(5, u_index));
     	}
 
     	function input1_change_handler() {
     		business = this.checked;
-    		((($$invalidate(15, business), $$invalidate(2, active_user)), $$invalidate(3, known_users)), $$invalidate(6, u_index));
+    		((($$invalidate(14, business), $$invalidate(2, active_user)), $$invalidate(3, known_users)), $$invalidate(5, u_index));
     	}
 
     	function input_input_handler() {
     		DOB = this.value;
-    		((($$invalidate(12, DOB), $$invalidate(2, active_user)), $$invalidate(3, known_users)), $$invalidate(6, u_index));
+    		((($$invalidate(11, DOB), $$invalidate(2, active_user)), $$invalidate(3, known_users)), $$invalidate(5, u_index));
     	}
 
     	function input_input_handler_1() {
     		DOB = this.value;
-    		((($$invalidate(12, DOB), $$invalidate(2, active_user)), $$invalidate(3, known_users)), $$invalidate(6, u_index));
+    		((($$invalidate(11, DOB), $$invalidate(2, active_user)), $$invalidate(3, known_users)), $$invalidate(5, u_index));
     	}
 
     	function input_input_handler_2() {
     		place_of_origin = this.value;
-    		((($$invalidate(13, place_of_origin), $$invalidate(2, active_user)), $$invalidate(3, known_users)), $$invalidate(6, u_index));
+    		((($$invalidate(12, place_of_origin), $$invalidate(2, active_user)), $$invalidate(3, known_users)), $$invalidate(5, u_index));
     	}
 
     	function input_input_handler_3() {
     		place_of_origin = this.value;
-    		((($$invalidate(13, place_of_origin), $$invalidate(2, active_user)), $$invalidate(3, known_users)), $$invalidate(6, u_index));
+    		((($$invalidate(12, place_of_origin), $$invalidate(2, active_user)), $$invalidate(3, known_users)), $$invalidate(5, u_index));
     	}
 
     	function textarea_input_handler() {
     		cool_public_info = this.value;
-    		((($$invalidate(14, cool_public_info), $$invalidate(2, active_user)), $$invalidate(3, known_users)), $$invalidate(6, u_index));
+    		((($$invalidate(13, cool_public_info), $$invalidate(2, active_user)), $$invalidate(3, known_users)), $$invalidate(5, u_index));
     	}
 
     	function img_binding($$value) {
     		binding_callbacks[$$value ? 'unshift' : 'push'](() => {
     			biometric_data_el = $$value;
-    			$$invalidate(9, biometric_data_el);
+    			$$invalidate(8, biometric_data_el);
     		});
     	}
 
     	function img_binding_1($$value) {
     		binding_callbacks[$$value ? 'unshift' : 'push'](() => {
     			profile_image_el = $$value;
-    			$$invalidate(8, profile_image_el);
+    			$$invalidate(7, profile_image_el);
     		});
     	}
 
@@ -10076,16 +10064,12 @@ var app = (function () {
     		man_contact_is_default,
     		man_encrypted,
     		active,
-    		prev_active,
-    		first_message,
     		green,
     		todays_date,
     		filtered_cc_list,
     		message_op_category,
     		source_category,
     		processed_category,
-    		selected_form_link_types,
-    		selected_form_link,
     		individuals,
     		cwid_individuals_map,
     		selected,
@@ -10128,16 +10112,16 @@ var app = (function () {
     	});
 
     	$$self.$inject_state = $$props => {
-    		if ('active_profile_image' in $$props) $$invalidate(7, active_profile_image = $$props.active_profile_image);
+    		if ('active_profile_image' in $$props) $$invalidate(6, active_profile_image = $$props.active_profile_image);
     		if ('active_profile_biometric' in $$props) $$invalidate(18, active_profile_biometric = $$props.active_profile_biometric);
-    		if ('profile_image_el' in $$props) $$invalidate(8, profile_image_el = $$props.profile_image_el);
-    		if ('biometric_data_el' in $$props) $$invalidate(9, biometric_data_el = $$props.biometric_data_el);
+    		if ('profile_image_el' in $$props) $$invalidate(7, profile_image_el = $$props.profile_image_el);
+    		if ('biometric_data_el' in $$props) $$invalidate(8, biometric_data_el = $$props.biometric_data_el);
     		if ('src_1_name' in $$props) $$invalidate(19, src_1_name = $$props.src_1_name);
-    		if ('src_biometric_instruct' in $$props) $$invalidate(10, src_biometric_instruct = $$props.src_biometric_instruct);
+    		if ('src_biometric_instruct' in $$props) $$invalidate(9, src_biometric_instruct = $$props.src_biometric_instruct);
     		if ('active_cwid' in $$props) $$invalidate(0, active_cwid = $$props.active_cwid);
     		if ('clear_cwid' in $$props) clear_cwid = $$props.clear_cwid;
     		if ('dir_view' in $$props) dir_view = $$props.dir_view;
-    		if ('signup_status' in $$props) $$invalidate(11, signup_status = $$props.signup_status);
+    		if ('signup_status' in $$props) $$invalidate(10, signup_status = $$props.signup_status);
     		if ('start_of_messages' in $$props) start_of_messages = $$props.start_of_messages;
     		if ('messages_per_page' in $$props) messages_per_page = $$props.messages_per_page;
     		if ('prefix' in $$props) $$invalidate(28, prefix = $$props.prefix);
@@ -10148,10 +10132,10 @@ var app = (function () {
     		if ('p_i' in $$props) p_i = $$props.p_i;
     		if ('form_index' in $$props) form_index = $$props.form_index;
     		if ('name' in $$props) $$invalidate(1, name = $$props.name);
-    		if ('DOB' in $$props) $$invalidate(12, DOB = $$props.DOB);
-    		if ('place_of_origin' in $$props) $$invalidate(13, place_of_origin = $$props.place_of_origin);
-    		if ('cool_public_info' in $$props) $$invalidate(14, cool_public_info = $$props.cool_public_info);
-    		if ('business' in $$props) $$invalidate(15, business = $$props.business);
+    		if ('DOB' in $$props) $$invalidate(11, DOB = $$props.DOB);
+    		if ('place_of_origin' in $$props) $$invalidate(12, place_of_origin = $$props.place_of_origin);
+    		if ('cool_public_info' in $$props) $$invalidate(13, cool_public_info = $$props.cool_public_info);
+    		if ('business' in $$props) $$invalidate(14, business = $$props.business);
     		if ('biometric_blob' in $$props) biometric_blob = $$props.biometric_blob;
     		if ('c_name' in $$props) $$invalidate(31, c_name = $$props.c_name);
     		if ('c_DOB' in $$props) $$invalidate(32, c_DOB = $$props.c_DOB);
@@ -10169,13 +10153,13 @@ var app = (function () {
     		if ('active_identity' in $$props) $$invalidate(35, active_identity = $$props.active_identity);
     		if ('known_users' in $$props) $$invalidate(3, known_users = $$props.known_users);
     		if ('known_identities' in $$props) $$invalidate(36, known_identities = $$props.known_identities);
-    		if ('u_index' in $$props) $$invalidate(6, u_index = $$props.u_index);
+    		if ('u_index' in $$props) $$invalidate(5, u_index = $$props.u_index);
     		if ('adding_new' in $$props) adding_new = $$props.adding_new;
     		if ('manifest_selected_entry' in $$props) $$invalidate(37, manifest_selected_entry = $$props.manifest_selected_entry);
     		if ('manifest_selected_form' in $$props) manifest_selected_form = $$props.manifest_selected_form;
-    		if ('manifest_contact_form_list' in $$props) $$invalidate(93, manifest_contact_form_list = $$props.manifest_contact_form_list);
-    		if ('manifest_obj' in $$props) $$invalidate(94, manifest_obj = $$props.manifest_obj);
-    		if ('manifest_index' in $$props) $$invalidate(95, manifest_index = $$props.manifest_index);
+    		if ('manifest_contact_form_list' in $$props) $$invalidate(88, manifest_contact_form_list = $$props.manifest_contact_form_list);
+    		if ('manifest_obj' in $$props) $$invalidate(89, manifest_obj = $$props.manifest_obj);
+    		if ('manifest_index' in $$props) $$invalidate(90, manifest_index = $$props.manifest_index);
     		if ('man_title' in $$props) man_title = $$props.man_title;
     		if ('man_cwid' in $$props) $$invalidate(38, man_cwid = $$props.man_cwid);
     		if ('man_wrapped_key' in $$props) man_wrapped_key = $$props.man_wrapped_key;
@@ -10185,20 +10169,16 @@ var app = (function () {
     		if ('man_sel_not_customized' in $$props) man_sel_not_customized = $$props.man_sel_not_customized;
     		if ('man_contact_is_default' in $$props) man_contact_is_default = $$props.man_contact_is_default;
     		if ('man_encrypted' in $$props) man_encrypted = $$props.man_encrypted;
-    		if ('active' in $$props) $$invalidate(4, active = $$props.active);
-    		if ('prev_active' in $$props) $$invalidate(39, prev_active = $$props.prev_active);
-    		if ('first_message' in $$props) first_message = $$props.first_message;
+    		if ('active' in $$props) $$invalidate(15, active = $$props.active);
     		if ('green' in $$props) $$invalidate(16, green = $$props.green);
     		if ('todays_date' in $$props) todays_date = $$props.todays_date;
     		if ('filtered_cc_list' in $$props) filtered_cc_list = $$props.filtered_cc_list;
     		if ('message_op_category' in $$props) message_op_category = $$props.message_op_category;
     		if ('source_category' in $$props) source_category = $$props.source_category;
     		if ('processed_category' in $$props) processed_category = $$props.processed_category;
-    		if ('selected_form_link_types' in $$props) selected_form_link_types = $$props.selected_form_link_types;
-    		if ('selected_form_link' in $$props) selected_form_link = $$props.selected_form_link;
-    		if ('individuals' in $$props) $$invalidate(40, individuals = $$props.individuals);
+    		if ('individuals' in $$props) $$invalidate(39, individuals = $$props.individuals);
     		if ('cwid_individuals_map' in $$props) cwid_individuals_map = $$props.cwid_individuals_map;
-    		if ('selected' in $$props) $$invalidate(41, selected = $$props.selected);
+    		if ('selected' in $$props) $$invalidate(40, selected = $$props.selected);
     		if ('inbound_solicitation_messages' in $$props) inbound_solicitation_messages = $$props.inbound_solicitation_messages;
     		if ('inbound_contact_messages' in $$props) inbound_contact_messages = $$props.inbound_contact_messages;
     		if ('processed_messages' in $$props) processed_messages = $$props.processed_messages;
@@ -10206,18 +10186,18 @@ var app = (function () {
     		if ('message_edit_list_name' in $$props) message_edit_list_name = $$props.message_edit_list_name;
     		if ('message_edit_list' in $$props) message_edit_list = $$props.message_edit_list;
     		if ('message_edit_source' in $$props) message_edit_source = $$props.message_edit_source;
-    		if ('empty_identity' in $$props) $$invalidate(107, empty_identity = $$props.empty_identity);
-    		if ('current_index' in $$props) $$invalidate(42, current_index = $$props.current_index);
+    		if ('empty_identity' in $$props) $$invalidate(103, empty_identity = $$props.empty_identity);
+    		if ('current_index' in $$props) $$invalidate(41, current_index = $$props.current_index);
     		if ('creator_disabled' in $$props) $$invalidate(17, creator_disabled = $$props.creator_disabled);
-    		if ('creation_to_do' in $$props) $$invalidate(5, creation_to_do = $$props.creation_to_do);
+    		if ('creation_to_do' in $$props) $$invalidate(4, creation_to_do = $$props.creation_to_do);
     		if ('window_scale' in $$props) window_scale = $$props.window_scale;
     		if ('edit_popup_scale' in $$props) edit_popup_scale = $$props.edit_popup_scale;
     		if ('all_window_scales' in $$props) all_window_scales = $$props.all_window_scales;
     		if ('g_required_user_fields' in $$props) g_required_user_fields = $$props.g_required_user_fields;
     		if ('g_renamed_user_fields' in $$props) g_renamed_user_fields = $$props.g_renamed_user_fields;
     		if ('g_last_inspected_field' in $$props) g_last_inspected_field = $$props.g_last_inspected_field;
-    		if ('filtered_manifest_contact_form_list' in $$props) $$invalidate(43, filtered_manifest_contact_form_list = $$props.filtered_manifest_contact_form_list);
-    		if ('filteredIndviduals' in $$props) $$invalidate(44, filteredIndviduals = $$props.filteredIndviduals);
+    		if ('filtered_manifest_contact_form_list' in $$props) $$invalidate(42, filtered_manifest_contact_form_list = $$props.filtered_manifest_contact_form_list);
+    		if ('filteredIndviduals' in $$props) $$invalidate(43, filteredIndviduals = $$props.filteredIndviduals);
     	};
 
     	if ($$props && "$$inject" in $$props) {
@@ -10225,10 +10205,10 @@ var app = (function () {
     	}
 
     	$$self.$$.update = () => {
-    		if ($$self.$$.dirty[0] & /*prefix*/ 268435456 | $$self.$$.dirty[1] & /*individuals*/ 512) {
+    		if ($$self.$$.dirty[0] & /*prefix*/ 268435456 | $$self.$$.dirty[1] & /*individuals*/ 256) {
     			//
     			// ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
-    			$$invalidate(44, filteredIndviduals = prefix
+    			$$invalidate(43, filteredIndviduals = prefix
     			? individuals.filter(individual => {
     					const name = `${individual.name}`;
     					return name.toLowerCase().startsWith(prefix.toLowerCase());
@@ -10236,21 +10216,21 @@ var app = (function () {
     			: individuals);
     		}
 
-    		if ($$self.$$.dirty[0] & /*i*/ 1073741824 | $$self.$$.dirty[1] & /*filteredIndviduals*/ 8192) {
-    			$$invalidate(41, selected = i >= 0
+    		if ($$self.$$.dirty[0] & /*i*/ 1073741824 | $$self.$$.dirty[1] & /*filteredIndviduals*/ 4096) {
+    			$$invalidate(40, selected = i >= 0
     			? filteredIndviduals[i]
     			: empty_identity.identity());
     		}
 
-    		if ($$self.$$.dirty[1] & /*selected*/ 1024) {
+    		if ($$self.$$.dirty[1] & /*selected*/ 512) {
     			reset_inputs(selected);
     		}
 
-    		if ($$self.$$.dirty[0] & /*u_index*/ 64 | $$self.$$.dirty[1] & /*known_identities*/ 32) {
+    		if ($$self.$$.dirty[0] & /*u_index*/ 32 | $$self.$$.dirty[1] & /*known_identities*/ 32) {
     			$$invalidate(35, active_identity = known_identities[u_index]);
     		}
 
-    		if ($$self.$$.dirty[1] & /*active_identity, individuals*/ 528) {
+    		if ($$self.$$.dirty[1] & /*active_identity, individuals*/ 272) {
     			if (active_identity) {
     				filtered_cc_list = individuals.filter(ident => {
     					if (ident.cwid !== active_identity.cwid) {
@@ -10262,7 +10242,7 @@ var app = (function () {
     			}
     		}
 
-    		if ($$self.$$.dirty[0] & /*known_users, u_index*/ 72) {
+    		if ($$self.$$.dirty[0] & /*known_users, u_index*/ 40) {
     			//
     			//
     			$$invalidate(2, active_user = known_users[u_index]);
@@ -10286,19 +10266,19 @@ var app = (function () {
     			{
     				if (active_user !== undefined && active_user) {
     					$$invalidate(1, name = active_user.name);
-    					$$invalidate(12, DOB = active_user.DOB);
-    					$$invalidate(13, place_of_origin = active_user.place_of_origin);
-    					$$invalidate(14, cool_public_info = active_user.cool_public_info);
-    					$$invalidate(15, business = active_user.business);
+    					$$invalidate(11, DOB = active_user.DOB);
+    					$$invalidate(12, place_of_origin = active_user.place_of_origin);
+    					$$invalidate(13, cool_public_info = active_user.cool_public_info);
+    					$$invalidate(14, business = active_user.business);
     					adding_new = false;
     				}
     			}
     		}
 
-    		if ($$self.$$.dirty[0] & /*u_index*/ 64 | $$self.$$.dirty[1] & /*current_index, active_identity*/ 2064) {
+    		if ($$self.$$.dirty[0] & /*u_index*/ 32 | $$self.$$.dirty[1] & /*current_index, active_identity*/ 1040) {
     			{
     				if (current_index !== u_index) {
-    					$$invalidate(42, current_index = u_index);
+    					$$invalidate(41, current_index = u_index);
     					reinitialize_user_context();
     				}
 
@@ -10309,7 +10289,7 @@ var app = (function () {
     		}
 
     		if ($$self.$$.dirty[0] & /*man_prefix*/ 536870912) {
-    			$$invalidate(43, filtered_manifest_contact_form_list = man_prefix
+    			$$invalidate(42, filtered_manifest_contact_form_list = man_prefix
     			? manifest_contact_form_list.filter(man_contact => {
     					const name = `${man_contact.name}`;
     					return name.toLowerCase().startsWith(man_prefix.toLowerCase());
@@ -10317,7 +10297,7 @@ var app = (function () {
     			: manifest_contact_form_list);
     		}
 
-    		if ($$self.$$.dirty[1] & /*filtered_manifest_contact_form_list, manifest_selected_entry, man_cwid*/ 4288) {
+    		if ($$self.$$.dirty[1] & /*filtered_manifest_contact_form_list, manifest_selected_entry, man_cwid*/ 2240) {
     			{
     				$$invalidate(37, manifest_selected_entry = filtered_manifest_contact_form_list[manifest_index]);
 
@@ -10336,29 +10316,12 @@ var app = (function () {
     			c_empty_fields = !c_name || c_name.length == 0 || (!c_DOB || c_DOB.length == 0) || (!c_place_of_origin || c_place_of_origin.length == 0) || c_cool_public_info.length == 0;
     		}
 
-    		if ($$self.$$.dirty[0] & /*active*/ 16 | $$self.$$.dirty[1] & /*prev_active*/ 256) {
+    		if ($$self.$$.dirty[0] & /*u_index, active_user, active_cwid, creation_to_do*/ 53) {
     			{
-    				if (prev_active !== active) {
-    					message_edit_list = [];
-    					message_edit_source = false;
-
-    					if (active == "Introductions") {
-    						message_op_category = "intros";
-    					} else if (active == "Messages") {
-    						message_op_category = "messages";
-    					}
-    				}
-
-    				$$invalidate(39, prev_active = active);
-    			}
-    		}
-
-    		if ($$self.$$.dirty[0] & /*u_index, active_user, active_cwid, creation_to_do*/ 101) {
-    			{
-    				$$invalidate(5, creation_to_do = u_index === false || active_user && active_user.biometric === undefined);
+    				$$invalidate(4, creation_to_do = u_index === false || active_user && active_user.biometric === undefined);
 
     				if (typeof active_cwid === "string" && active_cwid.length === 0) {
-    					$$invalidate(5, creation_to_do = true);
+    					$$invalidate(4, creation_to_do = true);
     				}
 
     				$$invalidate(17, creator_disabled = !creation_to_do);
@@ -10372,7 +10335,6 @@ var app = (function () {
     		name,
     		active_user,
     		known_users,
-    		active,
     		creation_to_do,
     		u_index,
     		active_profile_image,
@@ -10384,6 +10346,7 @@ var app = (function () {
     		place_of_origin,
     		cool_public_info,
     		business,
+    		active,
     		green,
     		creator_disabled,
     		active_profile_biometric,
@@ -10407,7 +10370,6 @@ var app = (function () {
     		known_identities,
     		manifest_selected_entry,
     		man_cwid,
-    		prev_active,
     		individuals,
     		selected,
     		current_index,

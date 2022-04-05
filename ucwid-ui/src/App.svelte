@@ -89,8 +89,6 @@
 	let man_encrypted = false
 
 	let active = 'Identify';
-	let prev_active = active
-	let first_message = 0
 
 	let green = false     // an indicator telling if this user ID is set
 	let todays_date = (new Date()).toLocaleString()
@@ -103,19 +101,6 @@
 
 	// This is just a default... It will be used until the user picks something else 
 	// when editing the manifest.
-	let selected_form_link_types = {
-		"business" : {
-			"link" : "latest-contact",
-			"from_cwid" : "QmTfD2LyTy8WGgdUkKE1Z1vAfb6HwNgmZA5kMaFAiy4fuz"
-		},
-		"profile" : {
-			"link" : "latest-contact",
-			"from_cwid" : "QmTfD2LyTy8WGgdUkKE1Z1vAfb6HwNgmZA5kMaFAiy4fuz"
-		}
-	}
-
-	let selected_form_link = selected_form_link_types["profile"]
-	
 
 	//
 	let individuals = [
@@ -218,12 +203,13 @@
 				"business" : false, 
 				"public_key" : false,
 				"signer_public_key" : false,
+				"axiom_public_key" : false,
 				"biometric" : false
 			}
 			this.data = this.empty_identity
 		}
 		//
-		set(name,DOB,place_of_origin,cool_public_info,business,public_key,signer_public_key,biometric_blob) {
+		set(name,DOB,place_of_origin,cool_public_info,business,public_key,signer_public_key,axiom_public_key,biometric_blob) {
 			let user_data = {
 				"name": name,
 				"DOB" : DOB,
@@ -232,6 +218,7 @@
 				"business" : (business === undefined) ? false : business, 
 				"public_key" : public_key,
 				"signer_public_key" : signer_public_key,
+				"axiom_public_key" : axiom_public_key,
 				"biometric" : biometric_blob
 			}
 			this.data = user_data
@@ -370,18 +357,6 @@
 						|| (c_cool_public_info.length == 0))
 						
 
-	$: {
-		if ( prev_active !== active ) {
-			message_edit_list = []
-			message_edit_source = false
-			if ( active == "Introductions" ) {
-				message_op_category = "intros"
-			} else if ( active == "Messages" ) {
-				message_op_category = "messages"
-			}
-		}
-		prev_active = active
-	}
 	// ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
  
 	let creator_disabled = false
@@ -510,16 +485,14 @@
 		///
 		// USER DATA STRUCTURE
 		let contact = new Contact()		// contact of self... Stores the same info as a contact plus some special fields for local db
-		contact.set(name,DOB,place_of_origin,cool_public_info,business,false,false,biometric_blob)
-		//
-		selected_form_link = selected_form_link_types[ (business ? "business" : "profile") ]
-		contact.extend_contact("form_link",selected_form_link)
-		contact.extend_contact("answer_message","")
+		contact.set(name,DOB,place_of_origin,cool_public_info,business,false,false,false,biometric_blob)
 		//
 		let user_data = contact.identity()		// user data structure complete
 		//
 		// CHECK THAT THE FIELDS ARE FILLED -- make the picture part of this requirement (temporary store needed)
 		signup_status = "OK"
+
+		//
 		if ( !check_required_fields(user_data,g_required_user_fields) ) {
 			signup_status = missing_fields("creating contact page",g_renamed_user_fields,business)
 			return;
@@ -528,10 +501,12 @@
 		// DB ACTION - store the user record with the keys that will be used by associated services
 		//
 		try {
-			let id_packet = igid.user_keys(user_data,window.public_store_user)
-			let human_window = await inialize_user_resources(id_packet)
-			green = await window.add_user_to_human_url(human_window,id_packet)  // will fetch the key (it is not riding along yet.)
-			await window.add_public_user(window.opener_window,id_packet.publc_info)
+			let id_packet = await igid.user_keys(user_data)
+			// identity is the same as id_packet but with some new fields including the url 
+			let [human_window,identity] = await inialize_user_resources(id_packet)
+			// window containing window_app
+			green = await window.add_user_to_human_url(human_window,identity)  // will fetch the key (it is not riding along yet.)
+			await window.add_site_public_user(identity.publc_info)
 		} catch (e) {
 		}
 		//
@@ -626,9 +601,9 @@
 	}
 
 	function dragover_picture(ev) {
+		ev.stopPropagation()
 		ev.preventDefault();
 	}
-
 
 // MESSAGES MESSAGES MESSAGES MESSAGES MESSAGES MESSAGES MESSAGES MESSAGES MESSAGES MESSAGES
 // MESSAGES MESSAGES MESSAGES MESSAGES MESSAGES MESSAGES MESSAGES MESSAGES MESSAGES MESSAGES
@@ -960,22 +935,6 @@
 		cursor: pointer;
 	}
 
-	.selected_form_link-display {
-		margin-top:4px;
-		margin-bottom:4px;
-		border: solid 1px rgb(13, 48, 20);
-		padding:4px;
-		background-color: white;
-		height:200px;
-		overflow:auto;
-	}
-
-	#man_cwid {
-		font-size:smaller;
-		min-width:100%;
-		font-weight:bold;
-	}
-
 	.signup-status {
 		color: black;
 		background-color: rgb(254, 252, 245);
@@ -1258,6 +1217,7 @@
 				status: <span class={signup_status === 'OK' ? "good-status" : "bad-status"}>{signup_status}</span>
 			</div>
 			<div>
+				
 				{#if creation_to_do }
 				<div class="picture-drop"  on:drop={drop_biometric} on:dragover={dragover_picture}  >
 					<img src={active_profile_biometric} bind:this={biometric_data_el} alt={src_biometric_instruct} />

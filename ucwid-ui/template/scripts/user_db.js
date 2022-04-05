@@ -21,19 +21,6 @@
 */
 
 
-function identity_fn(data) {
-    return data
-}
-
-let g_contacts = {}
-function set_contact_map(contacts_map) {
-    g_contacts = contacts_map
-}
-
-function contact_from_ucwid(user_ucwid) {
-    let c = g_contacts[user_ucwid]
-    return c
-}
 
 function name_key_of(user_info) {
     if ( (user_info.name === undefined) || (user_info.DOB === undefined) ) {
@@ -250,7 +237,7 @@ async function db_startup() {
 
 
 //$>>	store_user
-async function store_user(user_information,privates) {
+async function store_user(user_information) {
     if ( !g_human_user_storage ) return(false)
     //
     let name_key = name_key_of(user_information)
@@ -262,22 +249,8 @@ async function store_user(user_information,privates) {
         "name" : name_key,
         "user_info" : store_u_i,
         "data" : {},
-        "ucwid" : '',
-        "dirs" :  '',
-        "files" :  '',
+        "ucwid" : user_information.ucwid,
         "stored_externally" : false
-    }
-    //
-    if ( privates.priv_key ) {
-        storage_obj.priv_key = privates.priv_key
-    }
-    //
-    if ( privates.signer_priv_key ) {
-        storage_obj.signer_priv_key = privates.signer_priv_key
-    }
-    //
-    if ( privates.signature_protect ) {
-        storage_obj.signature_protect = privates.signature_protect
     }
     //
     await g_human_user_storage.add_user(storage_obj)
@@ -293,30 +266,6 @@ async function get_known_users() {
     }
     return false
 }
-
-//$>>	get_user_public_wrapper_key
-async function get_user_public_wrapper_key(name_key) {
-    let user_object = await g_human_user_storage.get_user(name_key)
-    if ( user_object ) {
-        let pub_key = g_human_user_storage.current_user_info.public_key
-        return pub_key
-    }
-    return false
-}
-
-
-
-//$>>	get_user_public_signer_key
-async function get_user_public_signer_key(name_key) {
-	//
-    let user_object = await g_human_user_storage.get_user(name_key)
-    if ( user_object ) {
-        let signer_public_key = g_human_user_storage.current_user_info.signer_public_key
-        return signer_public_key
-    }
-    return false
-}
-
 
 
 //$>>	unstore_user
@@ -370,15 +319,6 @@ async function update_identity(identity) {
         if ( identity.profile_image ) {
             storage_obj.profile_image = identity.profile_image
         }
-        if ( identity.asset_keys ) {
-            storage_obj.asset_keys = Object.assign({},identity.asset_keys)
-        }
-        if ( identity.introductions ) {
-            storage_obj.introductions = identity.introductions
-        }
-        if ( identity.messages ) {
-            storage_obj.messages = identity.messages
-        }
         // UPDATE
         await g_human_user_storage.update_user(storage_obj)
         //
@@ -407,55 +347,6 @@ async function identity_from_user(user_info) {
     }
     return false
 }
-
-
-
-//$>>	fix_keys
-async function fix_keys(identity) {
-	let u_info = identity.user_info
-	if ( !u_info ) return // can't fix it
-	if ( ( identity.priv_key === undefined) || ( identity.signer_priv_key === undefined ) || ( u_info.signer_public_key === undefined ) ) {
-		try {
-			let storage_obj = await identity_from_user(u_info)
-			if ( identity.priv_key === undefined ) {
-				let keypair = await pc_wrapper_keypair_promise()
-				// ---- ---- ---- ----
-				let pub_key = keypair.publicKey
-				let priv_key = keypair.privateKey
-				let exported = await g_crypto.exportKey("jwk",pub_key);
-				let pub_key_str = JSON.stringify(exported)
-
-				let priv_exported = await g_crypto.exportKey("jwk",priv_key);
-				let priv_key_str =  JSON.stringify(priv_exported);
-				//
-				storage_obj.priv_key = priv_key_str
-				u_info.public_key = pub_key_str
-			}
-			//
-			if ( ( identity.signer_priv_key === undefined ) || ( u_info.signer_public_key === undefined ) ) {
-				let signer_pair = await pc_keypair_promise()
-				//
-				let signer_pub_key = signer_pair.publicKey
-				let signer_priv_key = signer_pair.privateKey
-
-				let sign_exported = await g_crypto.exportKey("jwk",signer_pub_key);
-				let sign_pub_key_str = JSON.stringify(sign_exported)
-
-				let sign_priv_exported = await g_crypto.exportKey("jwk",signer_priv_key);
-				let sign_priv_key_str = JSON.stringify(sign_priv_exported);
-				//
-				storage_obj.signer_priv_key = sign_priv_key_str					
-				u_info.signer_public_key = sign_pub_key_str
-			}
-
-            // UPDATE
-            await g_human_user_storage.update_user(identity)
- 
-		} catch (e) {
-		}
-	}
-}
-
 
 
 
@@ -495,38 +386,6 @@ async function upload_identity() {
 }
 
 
-async function add_user_locally(id_packet) {
-    //
-/*
-    let id_packet = {
-        "user" : user_data,
-        "keys" : keys,
-        "original_cwid" : key_id_pair[0],
-        "ucwid" :  key_id_pair[1]
-    }
-*/
-    //
-    return true
-}
-
-
-
-function get_file() {
-    get_file_from_file_element(`drop-click-file_loader`)
-}
-
-async function user_info_add_picture(fname,blob64) {
-    // 
-}
-
-async function load_blob_as_url(img_ucwid) {
-    //
-}
-
-
-
-
-
 
 //$$EXPORTABLE::
 /*
@@ -538,7 +397,4 @@ update_identity
 restore_identity
 identity_from_user
 get_known_users
-get_user_public_wrapper_key
-get_user_public_signer_key
-fix_keys
 */

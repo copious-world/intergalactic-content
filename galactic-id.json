@@ -62,30 +62,30 @@
                 "pc_location.js" : 1,
                 "common.js" :  {
                     "version" : 1,
-                    "include" : ["ext_of_file", "clonify", "launch_simple_link"],
+                    "include" : ["ext_of_file", "clonify", "normalized_launch_url", "launch_simple_link"],
                     "exclude" : false
                 },
-                "app-dir/base64.js" : {
+                "base64.js" : {
                     "version" : 1,
                     "transforms" : "windowize"
                 },
-                "app-dir/base_string.js" : {
+                "base_string.js" : {
                     "version" : 1,
                     "transforms" : "windowize"
                 },
-                "app-dir/crypto-hash.js" :  {
+                "crypto-hash.js" :  {
                     "version" : 1,
                     "transforms" : "windowize"
                 },
-                "app-dir/crypto-wraps.js" :  {
+                "crypto-wraps.js" :  {
                     "version" : 1,
                     "transforms" : "windowize"
                 },
-                "app-dir/cwid.js" :  {
+                "cwid.js" :  {
                     "version" : 1,
                     "transforms" : "windowize"
                 },
-                "app-dir/ucwid.js" :  {
+                "ucwid.js" :  {
                     "version" : 1,
                     "transforms" : "windowize"
                 },
@@ -105,7 +105,9 @@
                 "app-dir/user_db.js" : 1,
                 "script/flexy_items_A-layout-and-menu.js" : 11,
                 "script/flexy_items_A-animation.js" : 12,
+                "for-humans/shared_constants.js" : 1,
                 "for-humans/human_frame_client.js" : 13,
+                "for-humans/id_builder_page_tab_com.js" : 1,
                 "script/flexy_items_A-app-finalize.js" : 14,
                 "app-dir/window_app.js" : 2
             }
