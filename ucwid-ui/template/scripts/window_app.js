@@ -64,7 +64,7 @@ function add_site_page_opener_response() {
 async function add_user_to_human_url(id_packet) {
 	let message = {
 		"category": FRAME_COMPONENT_MANAGE_ID,
-		"action" : FAME_ACTION_INJECT,
+		"action" : FAME_ACTION_INSTALL,
 		"data" : id_packet
 
 	}

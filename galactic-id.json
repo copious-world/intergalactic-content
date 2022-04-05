@@ -62,7 +62,7 @@
                 "pc_location.js" : 1,
                 "common.js" :  {
                     "version" : 1,
-                    "include" : ["ext_of_file", "clonify", "normalized_launch_url", "launch_simple_link"],
+                    "include" : ["ext_of_file", "clonify", "normalized_launch_url", "launch_simple_link", "open_cors_window"],
                     "exclude" : false
                 },
                 "base64.js" : {

@@ -439,7 +439,7 @@
 
 		await startup()
 			// initialize
-		await get_active_users()  // updates login page and initializes the view of this user.
+		//await get_active_users()  // updates login page and initializes the view of this user.
 	})
 
 
@@ -505,13 +505,14 @@
 			// identity is the same as id_packet but with some new fields including the url 
 			let [human_window,identity] = await inialize_user_resources(id_packet)
 			// window containing window_app
-			green = await window.add_user_to_human_url(human_window,identity)  // will fetch the key (it is not riding along yet.)
+			green = await window.add_user_to_human_url(identity)  // will fetch the key (it is not riding along yet.)
 			await window.add_site_public_user(identity.publc_info)
 		} catch (e) {
+			console.log(e)
 		}
 		//
 		// DB ACTION ACCESS AFTER STORE -- also keep the display of local users (those who share the device)
-		await get_active_users()  // updates login page and initializes the view of this user.
+		//await get_active_users()  // updates login page and initializes the view of this user.
 		u_index = (known_users.length - 1)	// user was added to the end...
 		//
 
@@ -522,7 +523,7 @@
 		active_cwid = identity.cwid			// changes to a ucwid
 		clear_cwid = identity.clear_cwid
 		//
-		await fix_keys(identity)
+		//await fix_keys(identity)
 		//
 		if ( identity.profile_image ) {
 			let img_cwid = identity.profile_image
@@ -637,8 +638,6 @@
 		}
 	}
 
-
-
 	function navigate_to_user(e) {
 		active = 'User'
 	}
@@ -705,58 +704,6 @@
 		cursor: pointer;
 	}
 
-	.buttons {
-		clear: both;
-	}
-
-	.buttons button:disabled {
-		color:slategrey;
-		border-bottom-color: rgb(233, 237, 240);
-		cursor:not-allowed;
-	}
-
-	.buttons button {
-		background-color:rgb(255, 249, 240);
-		font-size:small;
-		border-bottom-color: rgb(236, 250, 226);
-		border-radius: 6px;
-		font-weight: 580;
-		font-style: oblique;
-	}
-
-	.buttons button:disabled:hover {
-		background-color:inherit;
-		font-size:small;
-		border-bottom-color: rgb(228, 240, 247);
-		border-radius: 6px;
-		font-weight: 580;
-		font-style: oblique;
-		cursor:not-allowed;
-	}
-
-
-	.header-button {
-		max-width:min-content;
-		border-radius: 6px;
-		padding: 1px;
-		background-color:rgb(248, 250, 248);
-	}
-
-	.header-button:hover {
-		background-color:rgb(51, 65, 28);
-		color:yellow;
-	}
-
-	.classy-small {
-		background-color:inherit;
-		font-size:small;
-		border-bottom-color: chartreuse;
-		border-radius: 6px;
-		font-weight: 580;
-		font-style: oblique;
-	}
-
-
 	.long_button {
 		width:40%;
 	}
@@ -771,15 +718,6 @@
 		cursor:not-allowed;
 	}
 
-	.button-header {
-		color:rgb(104, 51, 14);
-	}
-
-	.button-header:hover {
-		color:rgb(15, 92, 34);
-		background-color: rgba(242, 242, 210, 0.3);
-	}
-
 
 	.inner_div {
 		padding-left: 2px;
@@ -792,13 +730,6 @@
 		font-size:smaller;
 	}
 
-
-	.top-of-contact {
-		margin-bottom: 4px;
-		background-color: rgb(252, 249, 240);
-		border: cornsilk solid 1px;
-		text-align:right;
-	}
 
 	.nice_message {
 		width: 85%;
@@ -843,90 +774,6 @@
 		line-height: 200%;
 	}
 
-	.items {
-		display: flex;
-		flex-wrap: wrap;
-		margin-left: 2px;
-		margin-top: -10px;
-	}
-
-	.items .item {
-		flex: 1 0 300px;
-		box-sizing: border-box;
-		background: -webkit-linear-gradient(to right, rgba(242, 242, 210, 0.3), white);
-		background: linear-gradient(to right, rgba(242, 242, 210, 0.3), white );
-		color: #171e42;
-		padding: 10px;
-		margin-left: 2px;
-		margin-top: 0px;
-	}
-
-	.items {
-		padding-left: 5px;
-		padding-bottom: 4px;
-		padding-right: 12px;
-		font-size: 110%;
-		font-family: sans-serif;
-	}
-	
-	td, th {
-		border : 1px solid rgb(47, 79, 49);
-		border-right: none;
-		padding : 2px;
-		margin : 0px;
-	}
-
-	th {
-		color :rgb(47, 79, 49);
-		font-weight: bolder;
-		background-color: seashell;
-	}
-
-	table {
-		border-right: solid 1px darkslategray;
-	}
-
-	.subject {
-		font-weight: bold;
-	}
-
-	.sender {
-		background-color: rgb(255, 255, 255);
-		font-weight: 600;
-		color:rgb(27, 78, 31);
-		padding-left: 4px;
-	}
-
-
-	.tableFixHead {
-		overflow-y: auto;
-		height: calc(100vh - 200px);
-	}
-	.tableFixHead thead th {
-		position: sticky;
-		top: 0;
-	}
-	table {
-		border-collapse: collapse;
-		width: 100%;
-	}
-	th, td {
-		padding: 8px 16px;
-		border: 1px solid #ccc;
-	}
-	th {
-		background: #eee;
-	}
-
-	tr {
-		cursor: pointer;
-	}
-
-	.tableFixHead option {
-		cursor: pointer;
-	}
-
-
 	.user-options {
 		background-color: rgb(252, 252, 249);
 	}
@@ -949,16 +796,6 @@
 	}
 	.bad-status {
 		color: red;
-	}
-
-	.contact_form_list {
-		margin-top:4px;
-		margin-bottom:4px;
-		border: solid 1px navy;
-		padding:4px;
-		color: darkgreen;
-		background-color: rgb(253, 249, 242);
-		text-align: center;
 	}
 
 	.signup-grid-container {
@@ -993,17 +830,6 @@
 		background-color:rgb(151, 197, 114);
 	}
 
-	.picture-drop > .capture_image {
-		position:absolute; 
-		top:0px; 
-		left:0px; 
-		z-index:100; 
-		width: auto; 
-		height: inherit; 
-		border:none;
-		cursor:pointer;
-	}
-
 	.contact_controls {
 		width: calc(32vw - 96px);
 		margin: 2px;
@@ -1016,21 +842,6 @@
 		border-radius: 8px;
 	}
 
-	.manifest-grid-container {
-		display: grid;
-		grid-column-gap: 2px;
-		grid-row-gap: 2px;
-		grid-template-columns: 40% auto;
-		background-color: rgb(250, 250, 242);
-		padding: 4px;
-	}
-
-	.manifester {
-		background-color: rgb(244, 248, 244);
-		border: solid 1px darkblue;
-		padding:4px;
-	}
-	
 	.active-tab {
 		color: rgb(40, 122, 19);
 		background-color: rgb(255, 255, 255);
@@ -1039,24 +850,6 @@
 
 	.plain-tab {
 		color: rgb(1, 10, 1);
-	}
-
-	.manifest-contact-entry-instruct {
-		font-weight: 540;
-		font-style:oblique;
-		padding-right:3px;
-		color:tomato;
-		background-color: rgba(235, 225, 235, 0.61);
-	}
-
-	.man-default-selected {
-		color:rgb(56, 156, 81);
-		background-color:rgb(231, 243, 231);
-		font-weight: bold;
-		border: 1x solid rgb(7, 78, 7);
-	}
-	.man-default-not-selected {
-		color:navy;
 	}
 
 	.cwid-grabber {

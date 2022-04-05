@@ -463,6 +463,49 @@ function launch_simple_link(default_url,window_name) {
 	return [launched,uri_of_launch]
 }
 
+//$>>	open_cors_window
+const MAX_WINDOW_OPENER_TRYS_common = 10
+//
+function open_cors_window(default_url,window_name) {
+	let [child,uri_of_launch] = launch_simple_link(default_url,window_name)
+	if ( child ) {
+        let p = new Promise((resolve,reject) => {
+			let count = 0
+            let interval = setInterval(() => {
+				count++
+                try {
+                    if ( child.frames ) {
+                        clearInterval(interval);
+                        resolve([child,uri_of_launch])
+                    } else if ( count > MAX_WINDOW_OPENER_TRYS_common ) {
+						clearInterval(interval);
+						resolve(false)
+					}
+                } catch(e) {
+                    clearInterval(interval);
+                    resolve(false)
+                }
+            }, 500);
+        })
+        return p
+    } else {
+        console.log("no child window")
+    }
+	return false
+}
+
+
+//$EXPORTABLE::
+/*
+ext_of_file
+clonify
+addscript
+addstyle,
+launch_simple_link
+service_url
+open_public_window
+open_cors_window
+*/
 
 
 
@@ -3467,6 +3510,8 @@ function install_frame_page_response() {
             let action = mobj.action
             let direction = mobj.direction
             //
+
+            FRAME_PAGE_TO_BUILDER    
             if ( direction === FRAME_PAGE_TO_BUILDER ) {
                 if ( category === FRAME_COMPONENT_SAY_ALIVE ) {
                     if ( action === FRAME_COMPONENT_RESPONDING ) {
@@ -3500,7 +3545,7 @@ async function open_app_page_in_human_frame(human_frame_url,frame_use) {
         g_frame_cors_uri = uri_of_launch
         let message = {
             "category": FRAME_COMPONENT_SAY_ALIVE,
-            "action" : FRAME_COMPONENT_RESPONDING,
+            "action" : FRAME_COMPONENT_RESPOND,
             "data" : false
         }
         let p = alive_response("human_frame")
@@ -3538,7 +3583,7 @@ function tell_site_page(message) {
     msg.relationship = BUILDER_RELATES_TO_SITE
     msg.action = message.action
     msg.category = message.category
-    msg.data = message
+    msg.data = message.data
     let message_str = JSON.stringify(msg)
     g_site_page.postMessage(message_str,'*')
     return true
@@ -3551,7 +3596,7 @@ function tell_frame_page(message) {
     msg.relationship = BUILDER_ACTION_TO_FRAME
     msg.action = message.action
     msg.category = message.category
-    msg.data = message
+    msg.data = message.data
     let message_str = JSON.stringify(msg)
     g_frame_page.postMessage(message_str,'*')
     return true
@@ -3589,7 +3634,7 @@ async function request_human_page(human_name,public_identity) {
                 "public_identity" : public_identity
             }
 			//
-            let srver = 'http://localhost:8989/'
+            let srver = 'http://localhost:8989'
             // let prot = location.protocol
             // let sp = '//' // ${prot}${sp}
             let data_stem = "intake"
@@ -3638,7 +3683,7 @@ function add_site_page_opener_response() {
 async function add_user_to_human_url(id_packet) {
 	let message = {
 		"category": FRAME_COMPONENT_MANAGE_ID,
-		"action" : FAME_ACTION_INJECT,
+		"action" : FAME_ACTION_INSTALL,
 		"data" : id_packet
 
 	}
