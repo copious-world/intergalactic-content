@@ -506,7 +506,7 @@
 			let [human_window,identity] = await inialize_user_resources(id_packet)
 			// window containing window_app
 			green = await window.add_user_to_human_url(identity)  // will fetch the key (it is not riding along yet.)
-			await window.add_site_public_user(identity.publc_info)
+			await window.add_site_public_user(identity.public_component)
 		} catch (e) {
 			console.log(e)
 		}

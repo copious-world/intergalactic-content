@@ -237,26 +237,13 @@ async function db_startup() {
 
 
 //$>>	store_user
+// for this verision of store_user, it is assumed that the shape of the user information has been fully 
+// determined by the base domain page (www.of-this.world/builder ... for instance) 
 async function store_user(user_information) {
     if ( !g_human_user_storage ) return(false)
-    //
-    let name_key = name_key_of(user_information)
-    if ( !name_key ) return(false)
-    //
-    let store_u_i = Object.assign({},user_information)
-    //
-    let storage_obj = {		// prepare a data structure to store data made by this app's ipfs gateway
-        "name" : name_key,
-        "user_info" : store_u_i,
-        "data" : {},
-        "ucwid" : user_information.ucwid,
-        "stored_externally" : false
-    }
-    //
-    await g_human_user_storage.add_user(storage_obj)
+    await g_human_user_storage.add_user(user_information)
     return(true)
 }
-
 
 
 //$>>	get_known_users

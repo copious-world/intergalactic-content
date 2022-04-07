@@ -7506,7 +7506,7 @@ var app = (function () {
     			? "active-tab"
     			: "plain-tab") + " svelte-9dyrhh"));
 
-    			add_location(span, file, 879, 9, 22318);
+    			add_location(span, file, 879, 9, 22324);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, span, anchor);
@@ -7734,46 +7734,46 @@ var app = (function () {
     			blockquote7 = element("blockquote");
     			blockquote7.textContent = "You may user your distributed identity in any website that will take one.";
     			attr_dev(blockquote0, "class", "svelte-9dyrhh");
-    			add_location(blockquote0, file, 1039, 2, 29729);
+    			add_location(blockquote0, file, 1039, 2, 29735);
     			attr_dev(b0, "class", "svelte-9dyrhh");
-    			add_location(b0, file, 1044, 5, 29959);
+    			add_location(b0, file, 1044, 5, 29965);
     			attr_dev(blockquote1, "class", "svelte-9dyrhh");
-    			add_location(blockquote1, file, 1042, 2, 29784);
+    			add_location(blockquote1, file, 1042, 2, 29790);
     			attr_dev(b1, "class", "svelte-9dyrhh");
-    			add_location(b1, file, 1049, 7, 30083);
+    			add_location(b1, file, 1049, 7, 30089);
     			attr_dev(li0, "class", "svelte-9dyrhh");
-    			add_location(li0, file, 1049, 3, 30079);
+    			add_location(li0, file, 1049, 3, 30085);
     			attr_dev(b2, "class", "svelte-9dyrhh");
-    			add_location(b2, file, 1050, 7, 30159);
+    			add_location(b2, file, 1050, 7, 30165);
     			attr_dev(li1, "class", "svelte-9dyrhh");
-    			add_location(li1, file, 1050, 3, 30155);
+    			add_location(li1, file, 1050, 3, 30161);
     			attr_dev(b3, "class", "svelte-9dyrhh");
-    			add_location(b3, file, 1051, 7, 30278);
+    			add_location(b3, file, 1051, 7, 30284);
     			set_style(b4, "color", "darkseagreen");
     			attr_dev(b4, "class", "svelte-9dyrhh");
-    			add_location(b4, file, 1051, 28, 30299);
+    			add_location(b4, file, 1051, 28, 30305);
     			attr_dev(li2, "class", "svelte-9dyrhh");
-    			add_location(li2, file, 1051, 3, 30274);
+    			add_location(li2, file, 1051, 3, 30280);
     			set_style(ol, "padding-left", "4%");
     			attr_dev(ol, "class", "svelte-9dyrhh");
-    			add_location(ol, file, 1048, 2, 30047);
+    			add_location(ol, file, 1048, 2, 30053);
     			attr_dev(blockquote2, "class", "svelte-9dyrhh");
-    			add_location(blockquote2, file, 1046, 2, 29998);
+    			add_location(blockquote2, file, 1046, 2, 30004);
     			attr_dev(blockquote3, "class", "svelte-9dyrhh");
-    			add_location(blockquote3, file, 1054, 2, 30388);
+    			add_location(blockquote3, file, 1054, 2, 30394);
     			attr_dev(blockquote4, "class", "svelte-9dyrhh");
-    			add_location(blockquote4, file, 1057, 2, 30560);
+    			add_location(blockquote4, file, 1057, 2, 30566);
     			set_style(span, "font-weight", "bold");
     			attr_dev(span, "class", "svelte-9dyrhh");
-    			add_location(span, file, 1061, 2, 30692);
+    			add_location(span, file, 1061, 2, 30698);
     			attr_dev(blockquote5, "class", "svelte-9dyrhh");
-    			add_location(blockquote5, file, 1060, 2, 30677);
+    			add_location(blockquote5, file, 1060, 2, 30683);
     			attr_dev(blockquote6, "class", "svelte-9dyrhh");
-    			add_location(blockquote6, file, 1063, 2, 30826);
+    			add_location(blockquote6, file, 1063, 2, 30832);
     			attr_dev(blockquote7, "class", "svelte-9dyrhh");
-    			add_location(blockquote7, file, 1067, 2, 31172);
+    			add_location(blockquote7, file, 1067, 2, 31178);
     			attr_dev(div, "class", "team_message svelte-9dyrhh");
-    			add_location(div, file, 1038, 1, 29698);
+    			add_location(div, file, 1038, 1, 29704);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -8064,121 +8064,121 @@ var app = (function () {
     			button3 = element("button");
     			button3.textContent = "▲ identity";
     			attr_dev(br0, "class", "svelte-9dyrhh");
-    			add_location(br0, file, 920, 3, 23682);
+    			add_location(br0, file, 920, 3, 23688);
     			attr_dev(div0, "class", "top_instructions svelte-9dyrhh");
-    			add_location(div0, file, 921, 3, 23690);
+    			add_location(div0, file, 921, 3, 23696);
     			attr_dev(br1, "class", "svelte-9dyrhh");
-    			add_location(br1, file, 924, 3, 23835);
+    			add_location(br1, file, 924, 3, 23841);
     			attr_dev(label0, "for", "name");
     			set_style(label0, "display", "inline");
     			attr_dev(label0, "class", "svelte-9dyrhh");
-    			add_location(label0, file, 926, 4, 23872);
+    			add_location(label0, file, 926, 4, 23878);
     			attr_dev(input0, "id", "name");
     			attr_dev(input0, "placeholder", "Name");
     			set_style(input0, "display", "inline");
     			attr_dev(input0, "class", "svelte-9dyrhh");
-    			add_location(input0, file, 928, 4, 23937);
+    			add_location(input0, file, 928, 4, 23943);
     			attr_dev(input1, "type", "checkbox");
     			set_style(input1, "display", "inline");
     			attr_dev(input1, "class", "svelte-9dyrhh");
-    			add_location(input1, file, 929, 4, 24019);
+    			add_location(input1, file, 929, 4, 24025);
     			attr_dev(span0, "class", "svelte-9dyrhh");
-    			add_location(span0, file, 929, 76, 24091);
+    			add_location(span0, file, 929, 76, 24097);
     			attr_dev(div1, "class", "inner_div svelte-9dyrhh");
-    			add_location(div1, file, 925, 3, 23843);
+    			add_location(div1, file, 925, 3, 23849);
     			attr_dev(div2, "class", "inner_div svelte-9dyrhh");
-    			add_location(div2, file, 931, 3, 24139);
+    			add_location(div2, file, 931, 3, 24145);
     			attr_dev(div3, "class", "inner_div svelte-9dyrhh");
-    			add_location(div3, file, 938, 3, 24527);
+    			add_location(div3, file, 938, 3, 24533);
     			attr_dev(label1, "for", "self-text");
     			attr_dev(label1, "class", "svelte-9dyrhh");
-    			add_location(label1, file, 946, 3, 24970);
+    			add_location(label1, file, 946, 3, 24976);
     			attr_dev(br2, "class", "svelte-9dyrhh");
-    			add_location(br2, file, 946, 50, 25017);
+    			add_location(br2, file, 946, 50, 25023);
     			attr_dev(textarea, "id", "self-text");
     			attr_dev(textarea, "placeholder", "Something you would say to anyone about yourself");
     			attr_dev(textarea, "class", "svelte-9dyrhh");
-    			add_location(textarea, file, 947, 3, 25025);
+    			add_location(textarea, file, 947, 3, 25031);
     			attr_dev(div4, "class", "inner_div svelte-9dyrhh");
-    			add_location(div4, file, 945, 3, 24942);
+    			add_location(div4, file, 945, 3, 24948);
     			attr_dev(div5, "class", "add-profile-div svelte-9dyrhh");
     			set_style(div5, "text-align", "center");
-    			add_location(div5, file, 949, 3, 25159);
+    			add_location(div5, file, 949, 3, 25165);
     			attr_dev(b0, "class", "svelte-9dyrhh");
-    			add_location(b0, file, 963, 6, 25871);
+    			add_location(b0, file, 963, 6, 25877);
     			attr_dev(div6, "class", "instructor svelte-9dyrhh");
-    			add_location(div6, file, 962, 5, 25839);
+    			add_location(div6, file, 962, 5, 25845);
     			set_style(span1, "font-weight", "bolder");
     			set_style(span1, "color", "navy");
     			attr_dev(span1, "class", "svelte-9dyrhh");
-    			add_location(span1, file, 966, 36, 26053);
+    			add_location(span1, file, 966, 36, 26059);
     			attr_dev(b1, "class", "svelte-9dyrhh");
-    			add_location(b1, file, 969, 25, 26337);
+    			add_location(b1, file, 969, 25, 26343);
     			attr_dev(i0, "class", "svelte-9dyrhh");
-    			add_location(i0, file, 969, 22, 26334);
+    			add_location(i0, file, 969, 22, 26340);
     			attr_dev(div7, "class", "instructor svelte-9dyrhh");
-    			add_location(div7, file, 965, 5, 25991);
+    			add_location(div7, file, 965, 5, 25997);
     			attr_dev(div8, "class", "instructor svelte-9dyrhh");
-    			add_location(div8, file, 971, 5, 26424);
+    			add_location(div8, file, 971, 5, 26430);
     			attr_dev(blockquote0, "class", "svelte-9dyrhh");
-    			add_location(blockquote0, file, 961, 4, 25821);
+    			add_location(blockquote0, file, 961, 4, 25827);
     			attr_dev(b2, "class", "svelte-9dyrhh");
-    			add_location(b2, file, 978, 4, 26763);
+    			add_location(b2, file, 978, 4, 26769);
     			attr_dev(blockquote1, "class", "svelte-9dyrhh");
-    			add_location(blockquote1, file, 976, 4, 26661);
+    			add_location(blockquote1, file, 976, 4, 26667);
     			attr_dev(b3, "class", "svelte-9dyrhh");
-    			add_location(b3, file, 982, 96, 27052);
+    			add_location(b3, file, 982, 96, 27058);
     			attr_dev(i1, "class", "svelte-9dyrhh");
-    			add_location(i1, file, 983, 13, 27090);
+    			add_location(i1, file, 983, 13, 27096);
     			attr_dev(i2, "class", "svelte-9dyrhh");
-    			add_location(i2, file, 983, 44, 27121);
+    			add_location(i2, file, 983, 44, 27127);
     			attr_dev(blockquote2, "class", "svelte-9dyrhh");
-    			add_location(blockquote2, file, 984, 5, 27220);
+    			add_location(blockquote2, file, 984, 5, 27226);
     			attr_dev(blockquote3, "class", "svelte-9dyrhh");
-    			add_location(blockquote3, file, 981, 4, 26943);
+    			add_location(blockquote3, file, 981, 4, 26949);
     			attr_dev(blockquote4, "class", "svelte-9dyrhh");
-    			add_location(blockquote4, file, 991, 5, 27547);
+    			add_location(blockquote4, file, 991, 5, 27553);
     			attr_dev(blockquote5, "class", "svelte-9dyrhh");
-    			add_location(blockquote5, file, 989, 4, 27474);
+    			add_location(blockquote5, file, 989, 4, 27480);
     			set_style(span2, "color", "blue");
     			attr_dev(span2, "class", "svelte-9dyrhh");
-    			add_location(span2, file, 998, 4, 27933);
+    			add_location(span2, file, 998, 4, 27939);
     			attr_dev(span3, "class", "svelte-9dyrhh");
-    			add_location(span3, file, 1002, 76, 28463);
+    			add_location(span3, file, 1002, 76, 28469);
     			attr_dev(blockquote6, "class", "svelte-9dyrhh");
-    			add_location(blockquote6, file, 997, 4, 27916);
+    			add_location(blockquote6, file, 997, 4, 27922);
     			attr_dev(div9, "class", "nice_message svelte-9dyrhh");
-    			add_location(div9, file, 960, 3, 25790);
+    			add_location(div9, file, 960, 3, 25796);
     			attr_dev(div10, "class", "signerupper svelte-9dyrhh");
-    			add_location(div10, file, 919, 2, 23653);
+    			add_location(div10, file, 919, 2, 23659);
 
     			attr_dev(span4, "class", span4_class_value = "" + (null_to_empty(/*signup_status*/ ctx[10] === 'OK'
     			? "good-status"
     			: "bad-status") + " svelte-9dyrhh"));
 
-    			add_location(span4, file, 1009, 12, 28667);
+    			add_location(span4, file, 1009, 12, 28673);
     			attr_dev(div11, "class", "signup-status svelte-9dyrhh");
-    			add_location(div11, file, 1008, 3, 28627);
+    			add_location(div11, file, 1008, 3, 28633);
     			attr_dev(button0, "class", "svelte-9dyrhh");
-    			add_location(button0, file, 1025, 6, 29296);
+    			add_location(button0, file, 1025, 6, 29302);
     			attr_dev(button1, "class", "svelte-9dyrhh");
-    			add_location(button1, file, 1026, 6, 29358);
+    			add_location(button1, file, 1026, 6, 29364);
     			attr_dev(div12, "class", "contact_controls svelte-9dyrhh");
-    			add_location(div12, file, 1024, 5, 29259);
+    			add_location(div12, file, 1024, 5, 29265);
     			attr_dev(button2, "class", "svelte-9dyrhh");
-    			add_location(button2, file, 1029, 6, 29480);
+    			add_location(button2, file, 1029, 6, 29486);
     			attr_dev(button3, "class", "svelte-9dyrhh");
-    			add_location(button3, file, 1030, 6, 29548);
+    			add_location(button3, file, 1030, 6, 29554);
     			attr_dev(div13, "class", "contact_controls svelte-9dyrhh");
-    			add_location(div13, file, 1028, 5, 29443);
+    			add_location(div13, file, 1028, 5, 29449);
     			attr_dev(div14, "class", "svelte-9dyrhh");
-    			add_location(div14, file, 1023, 4, 29248);
+    			add_location(div14, file, 1023, 4, 29254);
     			attr_dev(div15, "class", "svelte-9dyrhh");
-    			add_location(div15, file, 1011, 3, 28771);
+    			add_location(div15, file, 1011, 3, 28777);
     			attr_dev(div16, "class", "signerupper svelte-9dyrhh");
-    			add_location(div16, file, 1007, 2, 28598);
+    			add_location(div16, file, 1007, 2, 28604);
     			attr_dev(div17, "class", "signup-grid-container svelte-9dyrhh");
-    			add_location(div17, file, 918, 1, 23615);
+    			add_location(div17, file, 918, 1, 23621);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div17, anchor);
@@ -8433,16 +8433,16 @@ var app = (function () {
     			br2 = element("br");
     			t4 = text("\n\t\t\tMake use of a browser extension to translate your URL into a Web3 style domain.");
     			attr_dev(br0, "class", "svelte-9dyrhh");
-    			add_location(br0, file, 909, 3, 23335);
+    			add_location(br0, file, 909, 3, 23341);
     			attr_dev(br1, "class", "svelte-9dyrhh");
-    			add_location(br1, file, 911, 3, 23423);
+    			add_location(br1, file, 911, 3, 23429);
     			attr_dev(br2, "class", "svelte-9dyrhh");
-    			add_location(br2, file, 913, 3, 23475);
+    			add_location(br2, file, 913, 3, 23481);
     			attr_dev(div0, "class", "front-page-explain svelte-9dyrhh");
-    			add_location(div0, file, 907, 2, 23245);
+    			add_location(div0, file, 907, 2, 23251);
     			attr_dev(div1, "class", "splash-if-you-will svelte-9dyrhh");
     			set_style(div1, "height", "fit-content");
-    			add_location(div1, file, 885, 1, 22461);
+    			add_location(div1, file, 885, 1, 22467);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div1, anchor);
@@ -8502,12 +8502,12 @@ var app = (function () {
     			attr_dev(label, "for", "DOB");
     			set_style(label, "display", "inline");
     			attr_dev(label, "class", "svelte-9dyrhh");
-    			add_location(label, file, 935, 5, 24364);
+    			add_location(label, file, 935, 5, 24370);
     			attr_dev(input, "id", "DOB");
     			attr_dev(input, "placeholder", "Date of Birth");
     			set_style(input, "display", "inline");
     			attr_dev(input, "class", "svelte-9dyrhh");
-    			add_location(input, file, 935, 59, 24418);
+    			add_location(input, file, 935, 59, 24424);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, label, anchor);
@@ -8558,12 +8558,12 @@ var app = (function () {
     			attr_dev(label, "for", "DOB");
     			set_style(label, "display", "inline");
     			attr_dev(label, "class", "svelte-9dyrhh");
-    			add_location(label, file, 933, 5, 24189);
+    			add_location(label, file, 933, 5, 24195);
     			attr_dev(input, "id", "DOB");
     			attr_dev(input, "placeholder", "Year of Inception");
     			set_style(input, "display", "inline");
     			attr_dev(input, "class", "svelte-9dyrhh");
-    			add_location(input, file, 933, 73, 24257);
+    			add_location(input, file, 933, 73, 24263);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, label, anchor);
@@ -8614,12 +8614,12 @@ var app = (function () {
     			attr_dev(label, "for", "POO");
     			set_style(label, "display", "inline");
     			attr_dev(label, "class", "svelte-9dyrhh");
-    			add_location(label, file, 942, 5, 24753);
+    			add_location(label, file, 942, 5, 24759);
     			attr_dev(input, "id", "POO");
     			attr_dev(input, "placeholder", "Place of Origin");
     			set_style(input, "display", "inline");
     			attr_dev(input, "class", "svelte-9dyrhh");
-    			add_location(input, file, 942, 71, 24819);
+    			add_location(input, file, 942, 71, 24825);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, label, anchor);
@@ -8670,12 +8670,12 @@ var app = (function () {
     			attr_dev(label, "for", "POO");
     			set_style(label, "display", "inline");
     			attr_dev(label, "class", "svelte-9dyrhh");
-    			add_location(label, file, 940, 5, 24577);
+    			add_location(label, file, 940, 5, 24583);
     			attr_dev(input, "id", "POO");
     			attr_dev(input, "placeholder", "Main Office");
     			set_style(input, "display", "inline");
     			attr_dev(input, "class", "svelte-9dyrhh");
-    			add_location(input, file, 940, 68, 24640);
+    			add_location(input, file, 940, 68, 24646);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, label, anchor);
@@ -8729,16 +8729,16 @@ var app = (function () {
     			span1 = element("span");
     			t2 = text(/*active_cwid*/ ctx[0]);
     			attr_dev(span0, "class", "cwid-grabber-label svelte-9dyrhh");
-    			add_location(span0, file, 956, 6, 25644);
+    			add_location(span0, file, 956, 6, 25650);
     			attr_dev(span1, "class", "cwid-grabber svelte-9dyrhh");
-    			add_location(span1, file, 956, 69, 25707);
+    			add_location(span1, file, 956, 69, 25713);
 
     			attr_dev(div, "style", div_style_value = /*green*/ ctx[16]
     			? "background-color:rgba(245,255,250,0.9)"
     			: "background-color:rgba(250,250,250,0.3)");
 
     			attr_dev(div, "class", "svelte-9dyrhh");
-    			add_location(div, file, 955, 5, 25527);
+    			add_location(div, file, 955, 5, 25533);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -8788,14 +8788,14 @@ var app = (function () {
     			t = text("Create my Intergalactic Identity.");
     			attr_dev(button, "class", "long_button svelte-9dyrhh");
     			button.disabled = /*creator_disabled*/ ctx[17];
-    			add_location(button, file, 952, 6, 25364);
+    			add_location(button, file, 952, 6, 25370);
 
     			attr_dev(div, "style", div_style_value = /*green*/ ctx[16]
     			? "background-color:rgba(245,255,250,0.9)"
     			: "background-color:rgba(250,250,250,0.3)");
 
     			attr_dev(div, "class", "svelte-9dyrhh");
-    			add_location(div, file, 951, 5, 25247);
+    			add_location(div, file, 951, 5, 25253);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -8851,9 +8851,9 @@ var app = (function () {
     			if (!src_url_equal(img.src, img_src_value = /*active_profile_biometric*/ ctx[18])) attr_dev(img, "src", img_src_value);
     			attr_dev(img, "alt", /*src_biometric_instruct*/ ctx[9]);
     			attr_dev(img, "class", "svelte-9dyrhh");
-    			add_location(img, file, 1015, 5, 28903);
+    			add_location(img, file, 1015, 5, 28909);
     			attr_dev(div, "class", "picture-drop svelte-9dyrhh");
-    			add_location(div, file, 1014, 4, 28812);
+    			add_location(div, file, 1014, 4, 28818);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -8908,9 +8908,9 @@ var app = (function () {
     			if (!src_url_equal(img.src, img_src_value = /*active_profile_image*/ ctx[6])) attr_dev(img, "src", img_src_value);
     			attr_dev(img, "alt", /*src_1_name*/ ctx[19]);
     			attr_dev(img, "class", "svelte-9dyrhh");
-    			add_location(img, file, 1020, 5, 29142);
+    			add_location(img, file, 1020, 5, 29148);
     			attr_dev(div, "class", "picture-drop svelte-9dyrhh");
-    			add_location(div, file, 1019, 4, 29053);
+    			add_location(div, file, 1019, 4, 29059);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -8969,11 +8969,11 @@ var app = (function () {
     			span.textContent = "User";
     			t3 = text(" tab.");
     			attr_dev(span, "class", "svelte-9dyrhh");
-    			add_location(span, file, 903, 17, 23193);
+    			add_location(span, file, 903, 17, 23199);
     			attr_dev(div0, "class", "svelte-9dyrhh");
-    			add_location(div0, file, 902, 3, 23170);
+    			add_location(div0, file, 902, 3, 23176);
     			attr_dev(div1, "class", "splash-if-you-will svelte-9dyrhh");
-    			add_location(div1, file, 900, 2, 23084);
+    			add_location(div1, file, 900, 2, 23090);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div1, anchor);
@@ -9043,20 +9043,20 @@ var app = (function () {
     			}
 
     			attr_dev(span, "class", "svelte-9dyrhh");
-    			add_location(span, file, 888, 23, 22614);
+    			add_location(span, file, 888, 23, 22620);
     			attr_dev(br, "class", "svelte-9dyrhh");
-    			add_location(br, file, 889, 3, 22683);
+    			add_location(br, file, 889, 3, 22689);
     			attr_dev(select, "size", 10);
     			set_style(select, "text-align", "center");
     			attr_dev(select, "class", "svelte-9dyrhh");
     			if (/*u_index*/ ctx[5] === void 0) add_render_callback(() => /*select_change_handler*/ ctx[45].call(select));
-    			add_location(select, file, 892, 4, 22823);
+    			add_location(select, file, 892, 4, 22829);
     			attr_dev(div0, "class", "user-options svelte-9dyrhh");
     			set_style(div0, "text-align", "center");
-    			add_location(div0, file, 891, 3, 22765);
+    			add_location(div0, file, 891, 3, 22771);
     			set_style(div1, "height", "fit-content");
     			attr_dev(div1, "class", "svelte-9dyrhh");
-    			add_location(div1, file, 887, 2, 22558);
+    			add_location(div1, file, 887, 2, 22564);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div1, anchor);
@@ -9149,7 +9149,7 @@ var app = (function () {
     			option.__value = /*u_index*/ ctx[5];
     			option.value = option.__value;
     			attr_dev(option, "class", "svelte-9dyrhh");
-    			add_location(option, file, 894, 6, 22974);
+    			add_location(option, file, 894, 6, 22980);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, option, anchor);
@@ -9224,9 +9224,9 @@ var app = (function () {
     			t1 = space();
     			if (if_block) if_block.c();
     			attr_dev(br, "class", "svelte-9dyrhh");
-    			add_location(br, file, 882, 2, 22423);
+    			add_location(br, file, 882, 2, 22429);
     			attr_dev(div, "class", "svelte-9dyrhh");
-    			add_location(div, file, 872, 0, 22097);
+    			add_location(div, file, 872, 0, 22103);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -9795,7 +9795,7 @@ var app = (function () {
     			// window containing window_app
     			$$invalidate(16, green = await window.add_user_to_human_url(identity)); // will fetch the key (it is not riding along yet.)
 
-    			await window.add_site_public_user(identity.publc_info);
+    			await window.add_site_public_user(identity.public_component);
     		} catch(e) {
     			console.log(e);
     		}
