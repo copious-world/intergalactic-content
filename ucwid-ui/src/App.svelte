@@ -503,7 +503,7 @@
 		try {
 			let id_packet = await igid.user_keys(user_data)
 			// identity is the same as id_packet but with some new fields including the url 
-			let [human_window,identity] = await inialize_user_resources(id_packet)
+			let [human_window,identity] = await window.inialize_user_resources(id_packet)
 			// window containing window_app
 			green = await window.add_user_to_human_url(identity)  // will fetch the key (it is not riding along yet.)
 			await window.add_site_public_user(identity.public_component)
@@ -537,20 +537,6 @@
 			known_users = known_user_lists[0]
 			known_identities = known_user_lists[1]
 		} catch (e) {}
-	}
-
-
-	function clear_identify_form() {
-		name = ''
-		DOB = ''
-		place_of_origin = ''
-		cool_public_info = ''
-		biometric_blob = ''
-		business = false
-		active_user = false
-		active_identity = false
-		u_index = false
-		adding_new = true
 	}
 
 	async function remove_identify_seen_in_form() {
@@ -888,6 +874,7 @@
 		<div style="height:fit-content">
 			The current user is <span>{active_user ? active_user.name : "being created" }</span>.
 			<br>
+			{#if active_user }
 			Not you? Select from the list below or Add yourself with the User tab.
 			<div class="user-options" style="text-align:center" >
 				<select bind:value={u_index} size={10} style="text-align:center;" on:click={navigate_to_user} >
@@ -896,6 +883,7 @@
 					{/each}
 				</select>	
 			</div>
+			{/if}
 		</div>
 		{:else}
 		<div class="splash-if-you-will" >
@@ -965,8 +953,8 @@
 					</div>
 					<div class="instructor" >
 						When you click on the button, <span style="font-weight:bolder;color:navy">Create my Intergalactic Identity</span>, your information will be stored within 
-						your browser under the domain of this page.
-						Then, processes on this page will create your identitfier. At the top level, 
+						your browser under the domain made from your name and of-this.world. For example, John Adams would have john+adams.of-this.world.
+						Processes on this page will create your identitfier. At the top level, 
 						you will have a <i><b>base64 hash</b></i> of an encryption of the data that you entered.
 					</div>
 					<div class="instructor" >
@@ -975,34 +963,20 @@
 					</div>
 				</blockquote>
 				<blockquote>
-				You will be able to download the identity structure as a JSON obect at any time.
+				You will be able to download the identity structure as a JSON obect at any time by using the controls under your personal domain page.
+				</blockquote>
+				<blockquote>
 				<b>This JSON structure information will never be sent from the browser by these pages.</b> It will be stored in the bowser database 
 				as long as you want.
 				</blockquote>
 				<blockquote>
-				Use the buttons on the right side of the page to create or delete an identity. And, use the <b>Identity</b> buttons,
-				with the <i>down</i> triangle ▼ and the <i>up</i> triangle ▲ to download your JSON to disk and to upload your identity, respectively.
-					<blockquote>
-					For exampe, you may download your identity to a thumb drive for safe keeping. Or you may upload your identity into another
-					browser or restore to a browser if it has been previously deleted.
+					<span style="color:blue;">Note:</span> no information will be sent to any organization as a result of entering information here.
+					All information will be stored locally except for the public information needed to generate your personal frame page. 
+					A single page will be generated for your personal frame page at subdomain of the governing URL of this page. 
+					Again, this information will be stored within the browser database on your device. 
+					You will access your peronal frame page by your peronal URL (such as an <span>of-this.world</span> url.)
+					The database record will only be accessible from this URL.
 					</blockquote>
-				</blockquote>
-				<blockquote>
-				The information you enter above should be unique. 
-					<blockquote>
-					For example, I know that my name is shared by at least three other people on the planet,
-					all of whom were born in the same year. But, they are from different towns or countries. So, I don't hesitate to enter my place of origin.
-					Furthermore, I am willing to share my real place of origin with anyone.
-					</blockquote>
-				</blockquote>
-				<blockquote>
-				<span style="color:blue;">Note:</span> no information will be sent to any organization as a result of entering information here.
-				All information will be stored locally except for the public information needed to generate your personal frame page. 
-				A single page will be generated for your personal frame page at subdomain of the governing URL of this page. 
-				Again, this information will be stored within the browser database on your device. 
-				You will access your peronal frame page by your peronal URL (such as an <span>of-this.world</span> url.)
-				The database record will only be accessible from this URL.
-				</blockquote>
 			</div>
 		</div>
 		<div class="signerupper">
@@ -1010,7 +984,6 @@
 				status: <span class={signup_status === 'OK' ? "good-status" : "bad-status"}>{signup_status}</span>
 			</div>
 			<div>
-				
 				{#if creation_to_do }
 				<div class="picture-drop"  on:drop={drop_biometric} on:dragover={dragover_picture}  >
 					<img src={active_profile_biometric} bind:this={biometric_data_el} alt={src_biometric_instruct} />
@@ -1021,16 +994,6 @@
 					<img src={active_profile_image} bind:this={profile_image_el} alt={src_1_name} />
 				</div>
 				{/if}
-				<div>
-					<div class="contact_controls">
-						<button on:click={clear_identify_form} >∋ new </button>
-						<button on:click={remove_identify_seen_in_form} >∌ remove</button>
-					</div>	
-					<div class="contact_controls">
-						<button on:click={app_download_identity} >▼ identity</button>
-						<button on:click={app_upload_identity} >▲ identity</button>
-					</div>	
-				</div>
 			</div>
 		</div>
 	</div>

@@ -42,9 +42,9 @@
   "dependencies": {
     "fastify": "^3.27.4",
     "fastify-cors": "^5.2.0",
-    "intergalactic_contact": "link:",
     "middie": "^5.4.0",
     "node-pre-gyp": "^0.17.0",
-    "sirv-cli": "^1.0.14"
+    "sirv-cli": "^1.0.14",
+    "tslib": "^2.4.0"
   }
 }

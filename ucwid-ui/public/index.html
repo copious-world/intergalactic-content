@@ -446,10 +446,17 @@ function normalized_launch_url(default_url) {
 	let uri_of_launch = ""
 	if ( default_url.indexOf('http://') === 0 ) {
 		uri_of_launch = default_url
+	} else if ( default_url.indexOf('https://') === 0 ) {
+		uri_of_launch = default_url
 	} else {
 		uri_of_launch = `https://${default_url}/`
 	}
 	return uri_of_launch
+}
+
+
+function errorMessage(str) {
+    //
 }
 
 //                                                  <<depends>> errorMessage, normalized_launch_url
@@ -3534,8 +3541,8 @@ function install_frame_page_response() {
 // ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
 // OPENERS
 
-let url_for_use = (frame_use) => {   // builder application determined...
-    return false
+let url_for_use = (base_url,frame_use) => {   // builder application determined...
+    return `${base_url}/${frame_use}`
 }
 
 async function open_app_page_in_human_frame(human_frame_url,frame_use) {
@@ -3553,7 +3560,7 @@ async function open_app_page_in_human_frame(human_frame_url,frame_use) {
         try {
             let ok = await p
             if ( ok ) {
-                let frame_user_url = url_for_use(frame_use)
+                let frame_user_url = url_for_use(human_frame_url,frame_use)
                 if ( frame_user_url ) {
                     let app_message = {
                         "category": FRAME_ACTION_LOAD_APP,
@@ -3621,6 +3628,8 @@ function set_user_title(u_name) {
 // MODULE: USER WINDOW_APP (windowized)
 //
 
+const APLLICATION_HUMAN_PAGE_SERVER = 'https://of-this.world'
+
 
 // ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
 // ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
@@ -3634,16 +3643,16 @@ async function request_human_page(human_name,public_identity) {
                 "public_identity" : public_identity
             }
 			//
-            let srver = 'http://localhost:8989'
+            let srver = APLLICATION_HUMAN_PAGE_SERVER
             // let prot = location.protocol
             // let sp = '//' // ${prot}${sp}
-            let data_stem = "intake"
+            let data_stem = "intake/"
 			//
             try {
                 let response = await postData(`${srver}/${data_stem}`,postable)
                 if ( response.status === "OK" ) {
                     let human_frame_url = response.human_url
-                    let [child,uri_of_launch] = await open_app_page_in_human_frame(human_frame_url,"initialize")
+                    let [child,uri_of_launch] = await open_app_page_in_human_frame(human_frame_url,"manager")
                     return [child,uri_of_launch]
                 }    
             } catch(e) {}
