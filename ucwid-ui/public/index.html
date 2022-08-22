@@ -3474,7 +3474,7 @@ let builder_app_site_command = (category,action,data) => {}
 function install_site_page_response() {
     window.addEventListener("message", (event) => {
         let page_source = event.origin
-        let expected_site = normalized_launch_url("http://localhost:5111/")  // from common
+        let expected_site = normalized_launch_url("https://www.of-this.world/igid-creator")  // from common
         if ( page_source !== expected_site ) {
             //
             // let opener = event.source --- the site page is assumed to be the top level of the interactions
