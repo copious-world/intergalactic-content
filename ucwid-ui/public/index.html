@@ -3314,9 +3314,9 @@ const BUILDER_ACTION_TO_FRAME = "builder_page_request_action"
 // actions
 const FRAME_COMPONENT_RESPOND = "respond"
 const FRAME_COMPONENT_RESPONDING = "responding"
-const FAME_ACTION_LOAD_APP = "load-app"
-const FAME_ACTION_INSTALL = "install-id"
-const FAME_ACTION_INJECT = "inject"
+const FRAME_ACTION_LOAD_APP = "load-app"
+const FRAME_ACTION_INSTALL = "install-id"
+const FRAME_ACTION_INJECT = "inject"
 const FRAME_START_SESSION = "start-session"
 const FRAME_HAS_SESSION = "has-session"
 
@@ -3564,7 +3564,7 @@ async function open_app_page_in_human_frame(human_frame_url,frame_use) {
                 if ( frame_user_url ) {
                     let app_message = {
                         "category": FRAME_ACTION_LOAD_APP,
-                        "action" : FAME_ACTION_LOAD_APP,
+                        "action" : FRAME_ACTION_LOAD_APP,
                         "data" : {
                             "revise_source" : frame_user_url,
                             "use" : frame_use
@@ -3692,7 +3692,7 @@ function add_site_page_opener_response() {
 async function add_user_to_human_url(id_packet) {
 	let message = {
 		"category": FRAME_COMPONENT_MANAGE_ID,
-		"action" : FAME_ACTION_INSTALL,
+		"action" : FRAME_ACTION_INSTALL,
 		"data" : id_packet
 
 	}
@@ -3712,7 +3712,7 @@ async function add_site_public_user(publc_info) {
 	//
 	let message = {
 		"category": FRAME_COMPONENT_MANAGE_ID,
-		"action" : FAME_ACTION_INJECT,
+		"action" : FRAME_ACTION_INJECT,
 		"data" : publc_info
 	}
 	//
